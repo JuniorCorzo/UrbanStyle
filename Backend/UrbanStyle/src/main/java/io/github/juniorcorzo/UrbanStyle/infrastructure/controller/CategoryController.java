@@ -1,8 +1,8 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 
 import io.github.juniorcorzo.UrbanStyle.application.service.CategoriesService;
-import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.CategoryDTO;
-import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.ResponseDTO;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.CategoryDTO;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

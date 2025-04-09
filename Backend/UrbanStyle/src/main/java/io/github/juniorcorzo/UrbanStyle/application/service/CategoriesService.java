@@ -2,9 +2,9 @@ package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.domain.entities.CategoryEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.CategoriesRepository;
-import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.CategoryDTO;
-import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.ResponseDTO;
-import org.modelmapper.ModelMapper;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.CategoryDTO;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.CategoriesMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -14,18 +14,18 @@ import java.util.List;
 @Service
 public class CategoriesService {
     private final CategoriesRepository categoriesRepository;
-    private final ModelMapper modelMapper;
+    private final CategoriesMapper categoriesMapper;
 
     @Autowired
-    public CategoriesService(CategoriesRepository categoriesRepository) {
+    public CategoriesService(CategoriesRepository categoriesRepository, CategoriesMapper categoriesMapper) {
         this.categoriesRepository = categoriesRepository;
-        modelMapper = new ModelMapper();
+        this.categoriesMapper = categoriesMapper;
     }
 
     public ResponseDTO<CategoryDTO> getAllCategories() {
         List<CategoryEntity> categories = this.categoriesRepository.findAll();
         List<CategoryDTO> categoryDTOs = categories.stream()
-                .map(category -> modelMapper.map(category, CategoryDTO.class))
+                .map(this.categoriesMapper::toDTO)
                 .toList();
 
         return new ResponseDTO<>(
@@ -36,23 +36,23 @@ public class CategoriesService {
     }
 
     public ResponseDTO<CategoryDTO> createCategory(CategoryDTO category) {
-        CategoryEntity categoryEntity = this.modelMapper.map(category, CategoryEntity.class);
+        CategoryEntity categoryEntity = this.categoriesMapper.toEntity(category);
         CategoryEntity savedCategory = this.categoriesRepository.save(categoryEntity);
 
         return new ResponseDTO<>(
                 HttpStatus.CREATED,
-                List.of(modelMapper.map(savedCategory, CategoryDTO.class)),
+                List.of(categoriesMapper.toDTO(savedCategory)),
                 "Category created successfully"
         );
     }
 
     public ResponseDTO<CategoryDTO> updateCategory(CategoryDTO category) {
-        CategoryEntity categoryEntity = this.modelMapper.map(category, CategoryEntity.class);
+        CategoryEntity categoryEntity = this.categoriesMapper.toEntity(category);
         CategoryEntity updatedCategory = this.categoriesRepository.save(categoryEntity);
 
         return new ResponseDTO<>(
                 HttpStatus.OK,
-                List.of(modelMapper.map(updatedCategory, CategoryDTO.class)),
+                List.of(this.categoriesMapper.toDTO(updatedCategory)),
                 "Category updated successfully"
         );
     }

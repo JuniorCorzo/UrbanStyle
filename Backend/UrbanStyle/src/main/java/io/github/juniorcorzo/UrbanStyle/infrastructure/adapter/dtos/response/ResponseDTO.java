@@ -1,4 +1,4 @@
-package io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos;
+package io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.springframework.http.HttpStatusCode;
