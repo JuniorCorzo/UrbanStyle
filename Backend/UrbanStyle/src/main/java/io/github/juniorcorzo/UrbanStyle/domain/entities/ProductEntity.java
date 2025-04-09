@@ -2,11 +2,7 @@ package io.github.juniorcorzo.UrbanStyle.domain.entities;
 
 import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.data.mongodb.core.mapping.FieldType;
 import org.springframework.data.mongodb.core.mapping.MongoId;
-
-import java.time.LocalDateTime;
 
 @Document(collection = "products")
 @Data
@@ -27,11 +23,3 @@ public class ProductEntity {
     private int stock;
 }
 
-@Builder
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-class Attribute {
-    private String color;
-    private String size;
-}
