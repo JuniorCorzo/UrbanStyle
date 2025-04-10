@@ -14,15 +14,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 @Service
-public class TokenService {
-    private final JwtEncoder jwtEncoder;
+public class TokenService { 
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
-
-    public TokenService(JwtEncoder jwtEncoder) {
-        this.jwtEncoder = jwtEncoder;
-    }
-
+    
     public String generateToken(Authentication authentication) {
         Instant now = Instant.now();
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
