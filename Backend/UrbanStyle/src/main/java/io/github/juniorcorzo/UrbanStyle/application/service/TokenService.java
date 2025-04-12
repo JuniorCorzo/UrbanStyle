@@ -5,9 +5,9 @@ import com.nimbusds.jose.crypto.MACSigner;
 import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.UserDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -19,14 +19,21 @@ import java.util.Date;
 public class TokenService { 
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
-    
+    private final UserService userService;
+
+    public TokenService(UserService userService) {
+        this.userService = userService;
+    }
+
     public String generateToken(Authentication authentication) {
+        UserDTO user = this.userService.getUserByCredentials(authentication.getName()).data().getFirst();
+
         Instant now = Instant.now();
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
                 .issuer("localhost:8080")
                 .issueTime(Date.from(now))
                 .expirationTime(Date.from(now.plus(30, ChronoUnit.DAYS))) // Token expiration time
-                .subject(authentication.getName())
+                .subject(user.id())
                 .build();
 
         try {
@@ -48,9 +55,10 @@ public class TokenService {
                 JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
                 return claims.getSubject();
             }
+
+            return null;
         } catch (ParseException | JOSEException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 }
