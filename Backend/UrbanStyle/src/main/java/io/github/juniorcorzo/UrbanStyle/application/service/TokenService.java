@@ -30,10 +30,11 @@ public class TokenService {
 
         Instant now = Instant.now();
         JWTClaimsSet claims = new JWTClaimsSet.Builder()
-                .issuer("localhost:8080")
+                .issuer("http://localhost:8080")
                 .issueTime(Date.from(now))
-                .expirationTime(Date.from(now.plus(30, ChronoUnit.DAYS))) // Token expiration time
-                .subject(user.id())
+                .expirationTime(Date.from(now.plus(30, ChronoUnit.DAYS)))
+                .subject(authentication.getName())
+                .claim("userId", user.id())
                 .build();
 
         try {
