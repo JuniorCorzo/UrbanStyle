@@ -14,6 +14,7 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Objects;
 
 @Service
 public class TokenService { 
@@ -49,12 +50,23 @@ public class TokenService {
     }
 
     public String extractUsername(String token) {
+        return Objects.requireNonNull(this.extractClaims(token)).getSubject();
+    }
+
+    public String extractClaim(String token, String claim) {
+        try {
+            return Objects.requireNonNull(this.extractClaims(token)).getStringClaim(claim);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private JWTClaimsSet extractClaims(String token) {
         try {
             SignedJWT signedJWT = SignedJWT.parse(token);
             JWSVerifier verifier = new MACVerifier(SECRET_KEY.getBytes());
             if (signedJWT.verify(verifier)) {
-                JWTClaimsSet claims = signedJWT.getJWTClaimsSet();
-                return claims.getSubject();
+                return signedJWT.getJWTClaimsSet();
             }
 
             return null;
