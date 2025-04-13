@@ -1,4 +1,9 @@
-<header class="w-full h-14 flex border-b justify-around items-center">
+---
+import LoginModal from "./LoginModal.astro";
+const { user } = Astro.locals;
+---
+
+<header class="w-full h-14 px-14 flex border-b justify-between items-center">
   <h1>Urban Style</h1>
   <div>
     <ul class="flex gap-6">
@@ -9,8 +14,28 @@
   </div>
   <nav>
     <ul class="flex gap-6">
-      <li><a href="">Iniciar Sesión</a></li>
-      <li><a href="">Carrito</a></li>
+      <li>
+        {
+          !user && (
+            <button id="login_button" type="button">
+              Iniciar Sesión
+            </button>
+          )
+        }
+        {user && <span>{user.name}</span>}
+        <LoginModal />
+      </li>
+      <li>
+        <button type="button">Carrito</button>
+      </li>
     </ul>
   </nav>
 </header>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+
+  $("#login_button")?.addEventListener("click", () => {
+    $<HTMLDialogElement>("#login_modal")?.showModal();
+  });
+</script>

@@ -1,0 +1,43 @@
+<dialog id="login_modal" class="py-4 px-8 border rounded inset-0 mx-auto top-6">
+  <form
+    id="login_form"
+    class="w-80 flex flex-col gap-2.5 items-center"
+    method="dialog"
+  >
+    <span class="font-bold text-2xl">INICIO DE SESIÓN</span>
+    <label>
+      <span>Email</span>
+      <input type="text" placeholder="Email" name="email" />
+    </label>
+    <label>
+      <span>Contraseña</span>
+      <input type="password" placeholder="Password" name="password" />
+    </label>
+    <button class="px-4 h-8 border rounded" type="submit">Iniciar Sesión</button
+    >
+  </form>
+</dialog>
+
+<script>
+  import type { UserCredentials } from "@/interface/user.interface";
+  import { Auth } from "@/lib/auth_manager";
+  import { $ } from "@/lib/dom-selector";
+
+  $("#login_form")?.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const { email, password } = Object.fromEntries(
+      new window.FormData(event.currentTarget as HTMLFormElement)
+    ) as unknown as UserCredentials;
+
+    Auth.getInstance().login({ email, password });
+  });
+</script>
+
+<style>
+  label {
+    @apply w-full flex flex-col justify-between gap-[5px];
+    & input {
+      @apply h-[30px] px-[4px] border rounded-[4px];
+    }
+  }
+</style>
