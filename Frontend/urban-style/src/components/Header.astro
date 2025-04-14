@@ -3,8 +3,13 @@ import LoginModal from "./LoginModal.astro";
 const { user } = Astro.locals;
 ---
 
-<header class="w-full h-14 px-14 flex border-b justify-between items-center">
-  <h1>Urban Style</h1>
+<header class="w-full h-14 px-14 flex  justify-between items-center">
+  <h1
+    onclick="window.location.href='/'"
+    class="text-xl font-bold cursor-pointer"
+  >
+    Urban Style
+  </h1>
   <div>
     <ul class="flex gap-6">
       <li><a href="">Hombres</a></li>

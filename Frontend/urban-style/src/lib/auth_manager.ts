@@ -38,7 +38,7 @@ export class Auth {
         throw new Error("Invalid session");
       }
     }
-    console.log(this.user);
+
     return this.user;
   }
 
