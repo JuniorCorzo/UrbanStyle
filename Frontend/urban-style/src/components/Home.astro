@@ -1,9 +1,6 @@
 ---
-import { Image } from "astro:assets";
 import { gatAllProducts } from "../service/product.service";
-import BorderEffect from "./BorderEffect.astro";
 import ProductCard from "./ProductCard.astro";
-import Subtitle from "./text/Subtitle.astro";
 
 const products = await gatAllProducts();
 ---
