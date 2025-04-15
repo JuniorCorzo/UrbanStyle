@@ -4,6 +4,8 @@ import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.util.List;
+
 @Document(collection = "products")
 @Data
 @Builder
@@ -17,7 +19,7 @@ public class ProductEntity {
     private String description;
     private double price;
     private double discount;
-    private String[] images;
+    private List<String> images;
     private String[] categories;
     private Attribute attributes;
     private int stock;
