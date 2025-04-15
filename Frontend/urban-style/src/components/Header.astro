@@ -3,7 +3,9 @@ import LoginModal from "./LoginModal.astro";
 const { user } = Astro.locals;
 ---
 
-<header class="w-full h-14 px-14 flex  justify-between items-center">
+<header
+  class="sticky w-full h-14 px-14 flex justify-between items-center backdrop-blur-xs bg-accent/70 z-50"
+>
   <h1
     onclick="window.location.href='/'"
     class="text-xl font-bold cursor-pointer"
