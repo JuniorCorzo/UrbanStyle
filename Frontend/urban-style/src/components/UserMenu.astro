@@ -1,0 +1,46 @@
+---
+import type { User } from "@/interface/user.interface";
+
+interface Props {
+  user: User;
+}
+
+const { user } = Astro.props;
+const { name: userName, role } = user;
+---
+
+<div class="relative text-right group">
+  <span id="user_name" class="cursor-pointer">{userName}</span>
+  <div
+    id="user_menu"
+    class="absolute hidden w-52 h-max px-3 py-4 bg-accent backdrop-blur-xs rounded-md -right-0 text-left gap-4 group-hover:flex"
+  >
+    <ul class="w-full flex flex-col gap-6">
+      <li>
+        <a href="#">Perfil</a>
+      </li>
+      <li>
+        <a href="#">Mis pedidos</a>
+      </li>
+      {
+        role === "USER" && (
+          <li>
+            <a href="/dashboard">Dashboard</a>
+          </li>
+        )
+      }
+      <li>
+        <a href="#">Cerrar sesión</a>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<style>
+  li {
+    @apply w-full px-[12px] py-[7px] rounded-[4px];
+    &:hover {
+      background-color: var(--color-hover);
+    }
+  }
+</style>
