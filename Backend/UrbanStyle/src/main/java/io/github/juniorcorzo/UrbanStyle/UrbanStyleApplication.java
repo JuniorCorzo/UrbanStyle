@@ -8,6 +8,7 @@ public class UrbanStyleApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(UrbanStyleApplication.class, args);
+		System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "debug");
 	}
 
 }

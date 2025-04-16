@@ -1,5 +1,18 @@
-<header class="w-full h-14 flex border-b justify-around items-center">
-  <h1>Urban Style</h1>
+---
+import LoginModal from "./LoginModal.astro";
+import UserMenu from "./UserMenu.astro";
+const { user } = Astro.locals;
+---
+
+<header
+  class="sticky w-full h-14 px-14 flex justify-between items-center backdrop-blur-xs bg-accent/70 z-50"
+>
+  <h1
+    onclick="window.location.href='/'"
+    class="text-xl font-bold cursor-pointer"
+  >
+    Urban Style
+  </h1>
   <div>
     <ul class="flex gap-6">
       <li><a href="">Hombres</a></li>
@@ -9,8 +22,38 @@
   </div>
   <nav>
     <ul class="flex gap-6">
-      <li><a href="">Iniciar Sesión</a></li>
-      <li><a href="">Carrito</a></li>
+      <li>
+        <button type="button">Carrito</button>
+      </li>
+      <li>
+        {
+          !user && (
+            <button id="login_button" type="button">
+              Iniciar Sesión
+            </button>
+          )
+        }
+        {user && <UserMenu user={user} />}
+        <LoginModal />
+      </li>
     </ul>
   </nav>
 </header>
+
+<style>
+  li a {
+    border: 0 solid transparent;
+    transition: all 300ms ease-in-out;
+    &:hover {
+      border-bottom: 2px solid var(--color-text);
+    }
+  }
+</style>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+
+  $("#login_button")?.addEventListener("click", () => {
+    $<HTMLDialogElement>("#login_modal")?.showModal();
+  });
+</script>

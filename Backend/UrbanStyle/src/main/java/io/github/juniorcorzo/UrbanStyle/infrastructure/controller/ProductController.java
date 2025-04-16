@@ -20,6 +20,11 @@ public class ProductController {
         return productService.getAllProducts();
     }
 
+    @GetMapping
+    public ResponseDTO<ProductDTO> getProductById(@RequestParam String id) {
+        return productService.getProductById(id);
+    }
+
     @GetMapping("/{category}")
     public ResponseDTO<ProductDTO> getAllCategories(@PathVariable String category) {
         return productService.getProductsByCategory(category);

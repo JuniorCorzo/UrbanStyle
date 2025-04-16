@@ -1,27 +1,31 @@
 ---
-import { Image } from "astro:assets";
-import { fetchProducts } from "../service/product.service";
+import { gatAllProducts } from "../service/product.service";
+import ProductCard from "./ProductCard.astro";
 
-const products = await fetchProducts();
+const products = await gatAllProducts();
 ---
 
-<section class="text-center">
-  <h2 class="text-2xl font-bold">Productos</h2>
-  <div class="grid-cols-4 p-4 gap-4">
-    {
-      products.map((product) => (
-        <div class="flex flex-col w-60 h-72 border rounded justify-center items-center">
-          <Image
-            class="aspect-square border m-4 rounded"
-            src={product.images[0]}
-            alt={product.name}
-            width={200}
-            height={200}
-          />
-          <h3>{product.name}</h3>
-          <p class="text-right">{product.price}</p>
-        </div>
-      ))
-    }
-  </div>
+<section class="flex">
+  <article class="w-full text-center">
+    <div
+      class="grid auto-rows-[15rem] grid-cols-[repeat(auto-fill,max(15rem))] pt-4 gap-20 justify-center"
+    >
+      {
+        products.map((product) => (
+          <ProductCard product={product} key={product.id} />
+        ))
+      }
+    </div>
+  </article>
 </section>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+  import { navigate } from "astro:transitions/client";
+
+  $("a")?.addEventListener("click", (event) => {
+    event.preventDefault();
+    const href = (event.currentTarget as HTMLAnchorElement).href;
+    navigate(href);
+  });
+</script>
