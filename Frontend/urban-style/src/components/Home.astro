@@ -5,9 +5,11 @@ import ProductCard from "./ProductCard.astro";
 const products = await gatAllProducts();
 ---
 
-<section class="flex justify-center">
-  <article class="w-fit text-center">
-    <div class="grid grid-cols-4 pt-4 gap-20">
+<section class="flex">
+  <article class="w-full text-center">
+    <div
+      class="grid auto-rows-[15rem] grid-cols-[repeat(auto-fill,max(15rem))] pt-4 gap-20 justify-center"
+    >
       {
         products.map((product) => (
           <ProductCard product={product} key={product.id} />
