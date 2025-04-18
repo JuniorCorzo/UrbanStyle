@@ -44,23 +44,17 @@ public class CloudflareR2Client implements StorageFileClient {
 
 
     @Override
-    public String uploadImage(String file, String fileName) {
-        try {
-            if (!file.contains(",")) throw new RuntimeException();
-            String[] splitImage = file.split(",");
-            String key = UUID.randomUUID().toString();
+    public String uploadImage(ByteBuffer imageBuffer) {
+        String key = UUID.randomUUID().toString();
 
-            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket(bucketName)
-                    .key(key)
-                    .contentType(splitImage[0].split("[:;]")[1])
-                    .build();
+        PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .contentType("image/webp")
+                .build();
 
-            PutObjectResponse response = this.s3Client.putObject(putObjectRequest, RequestBody.fromByteBuffer(this.decodeImage(splitImage[1])));
-            return String.format("%s%s", publicUrl, key);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        PutObjectResponse response = this.s3Client.putObject(putObjectRequest, RequestBody.fromByteBuffer(imageBuffer));
+        return String.format("%s%s", publicUrl, key);
     }
 
     private S3Client buildS3Client() {
@@ -75,10 +69,5 @@ public class CloudflareR2Client implements StorageFileClient {
                 .serviceConfiguration(serviceConfiguration)
                 .endpointOverride(URI.create(endpoint))
                 .build();
-    }
-
-    private ByteBuffer decodeImage(String file) throws IOException {
-        byte[] imageDecode = Base64.getDecoder().decode(file);
-        return ByteBuffer.wrap(imageDecode);
     }
 }

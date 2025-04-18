@@ -20,12 +20,14 @@ public class ProductService {
     private final ProductsRepository productsRepository;
     private final ProductMapper productMapper;
     private final StorageFileClient storageFileClient;
+    private final ImageProcessingService imageProcessingService;
 
     @Autowired
-    public ProductService(ProductsRepository productsRepository, ProductMapper productMapper, @Lazy StorageFileClient storageFileClient) {
+    public ProductService(ProductsRepository productsRepository, ProductMapper productMapper, @Lazy StorageFileClient storageFileClient, ImageProcessingService imageProcessingService) {
         this.productsRepository = productsRepository;
         this.productMapper = productMapper;
         this.storageFileClient = storageFileClient;
+        this.imageProcessingService = imageProcessingService;
     }
 
     public ResponseDTO<ProductDTO> getAllProducts() {
@@ -55,13 +57,8 @@ public class ProductService {
 
     public ResponseDTO<ProductDTO> createProduct(ProductDTO productDTO) {
         ProductEntity productEntity = this.productMapper.toEntity(productDTO);
-        String urlImage = this.storageFileClient.uploadImage(
-                productDTO
-                        .images().getFirst(),
-                productDTO.name()
-                        .replaceAll(" ", "-")
-                        .toLowerCase()
-        );
+
+        String urlImage = this.storageFileClient.uploadImage(this.imageProcessingService.convertToWebp(productDTO.images().getFirst().split(",")[1]));
 
         productEntity.setImages(Collections.singletonList(urlImage));
         ProductEntity savedProduct = this.productsRepository.save(productEntity);
