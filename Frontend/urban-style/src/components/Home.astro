@@ -1,8 +1,8 @@
 ---
-import { gatAllProducts } from "../service/product.service";
+import { getAllProducts } from "../service/product.service";
 import ProductCard from "./ProductCard.astro";
 
-const products = await gatAllProducts();
+const products = await getAllProducts();
 ---
 
 <section class="flex">
