@@ -15,9 +15,8 @@ public class BeanStorageImage {
             @Value("${cloudflare.key.access}") String accessKeyId,
             @Value("${cloudflare.key.secret}") String secretAccessKey,
             @Value("${cloudflare.endpoint}") String endpoint,
-            @Value("${cloudflare.bucket.name}") String bucketName,
-            @Value("${cloudflare.url-public}") String publicUrl
+            @Value("${cloudflare.bucket.name}") String bucketName
     ) {
-        return new CloudflareR2Client(accessKeyId, secretAccessKey, endpoint, bucketName, publicUrl);
+        return new CloudflareR2Client(accessKeyId, secretAccessKey, endpoint, bucketName);
     }
 }

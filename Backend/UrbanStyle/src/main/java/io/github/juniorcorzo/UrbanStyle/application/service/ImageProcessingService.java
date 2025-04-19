@@ -169,12 +169,12 @@ public class ImageProcessingService implements ImageProcessing {
 
 
     private byte[] decodeImage(String file) throws IOException {
-        return Base64.getDecoder().decode(file);
+        return Base64.getDecoder().decode(file.split(",")[1]);
     }
 
     private void validBufferedImage() {
         if (bufferedImage == null) {
-            throw new RuntimeException("I don't config buffered image");
+            throw new RuntimeException("I don't config buffered images");
         }
     }
 }

@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/image")
+@RequestMapping("/images")
 public class ImageProcessingController {
     private final ImageProcessingService imageProcessingService;
 
