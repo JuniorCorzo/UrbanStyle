@@ -4,11 +4,10 @@
   --font-primary: "Roboto", sans-serif;
 
   --color-primary: #fad7d7;
-  --color-secondary: #ffe5b4;
-  --color-accent: #c4e3cb;
-  --color-background: #f9f6f0;
-  --color-hover: #e0e0e0;
-  --color-text: #4a4a4a;
+  --color-secondary: #ccd0da;
+  --color-accent: #dce0e8;
+  --color-background: #eff1f5;
+  --color-text: #7c7f93;
 }
 
 @font-face {
