@@ -1,0 +1,47 @@
+---
+import { flexRender } from "@/lib/table-config";
+import { TableMediator } from "@/lib/mediator/table-mediator";
+import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
+
+const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
+const mediator = Astro.url.searchParams.get(mediatorSearchParam);
+if (!mediator) {
+  Astro.redirect("/404");
+  return;
+}
+
+const tableMediator = await TableMediator(mediator);
+if (!tableMediator) {
+  Astro.redirect("/404");
+  return;
+}
+
+const { tableConfig } = tableMediator.tableConfig();
+---
+
+<table class="table w-full max-w-10/12 border">
+  <thead class="h-11 bg-accent text-center">
+    {
+      tableConfig.getHeaderGroups().map((headerGroup) => (
+        <tr>
+          {headerGroup.headers.map((header) => (
+            <th>{header.column.columnDef?.header}</th>
+          ))}
+        </tr>
+      ))
+    }
+  </thead>
+  <tbody class="">
+    {
+      tableConfig.getRowModel().rows.map((row) => (
+        <tr>
+          {row.getVisibleCells().map((cell) => (
+            <td class="max-w-72 min-h-11 px-4 py-2 border text-center">
+              {flexRender(cell.column.columnDef?.cell, cell.getContext())}
+            </td>
+          ))}
+        </tr>
+      ))
+    }
+  </tbody>
+</table>
