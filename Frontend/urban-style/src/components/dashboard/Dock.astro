@@ -1,0 +1,51 @@
+---
+import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
+import CardDock from "./CardDock.astro";
+
+const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA;
+---
+
+<nav
+  class="relative w-fit mx-auto px-7 bottom-0 before:absolute before:w-full before:h-7 before:border before:border-border before:rounded before:left-0 before:bg-accent before:bottom-1 before:-z-10"
+  transition:persist
+>
+  <ul id="container_links" class="flex mb-2.5 justify-around gap-5">
+    <CardDock
+      title="Productos"
+      mediator={productsSearchParam}
+      svgName="shopping"
+    />
+    <CardDock
+      title="Categorías"
+      mediator={categoriesSearchParam}
+      svgName="categories"
+    />
+  </ul>
+</nav>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+  import { navigate } from "astro:transitions/client";
+  import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
+
+  const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
+
+  $("#container_links")?.addEventListener("click", (event) => {
+    console.log(event.target);
+    if (
+      !(
+        event.target instanceof HTMLLIElement ||
+        event.target instanceof HTMLImageElement
+      )
+    )
+      return;
+    if (!event.target.dataset.mediator) return;
+
+    const { mediator } = (event.target as HTMLLIElement).dataset;
+    console.log(mediator);
+
+    navigate(`/dashboard?${mediatorSearchParam}=${mediator}`, {
+      history: "replace",
+    });
+  });
+</script>

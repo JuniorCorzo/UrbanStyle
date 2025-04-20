@@ -1,14 +1,14 @@
 ---
-import { gatAllProducts } from "../service/product.service";
+import { getAllProducts } from "@/service/product.service";
 import ProductCard from "./ProductCard.astro";
 
-const products = await gatAllProducts();
+const products = await getAllProducts();
 ---
 
 <section class="flex">
   <article class="w-full text-center">
     <div
-      class="grid auto-rows-[15rem] grid-cols-[repeat(auto-fill,max(15rem))] pt-4 gap-20 justify-center"
+      class="grid auto-rows-[15rem] grid-cols-[repeat(auto-fill,max(15rem))] pt-4 gap-20 gap-y-32 justify-center"
     >
       {
         products.map((product) => (

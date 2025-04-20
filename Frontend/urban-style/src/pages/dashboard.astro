@@ -1,7 +1,13 @@
 ---
+import Table from "@/components/dashboard/Table.astro";
+import Dock from "@/components/dashboard/Dock.astro";
 import Layout from "@/layouts/Layout.astro";
 ---
 
 <Layout>
-  <h1>Dashboard</h1>
+  <section class="flex flex-col items-center">
+    <h1>Dashboard</h1>
+    <Table />
+  </section>
+  <Dock />
 </Layout>

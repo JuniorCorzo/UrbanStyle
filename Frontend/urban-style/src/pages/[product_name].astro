@@ -1,5 +1,5 @@
 ---
-import Tags from "@/components/Tags.astro";
+import Tags from "@/components/home/Tags.astro";
 import BoldText from "@/components/text/BoldText.astro";
 import RegularText from "@/components/text/RegularText.astro";
 import Subtitle from "@/components/text/Subtitle.astro";
@@ -13,7 +13,7 @@ export const prerender = false;
 const id = Astro.url.searchParams.get("id") as string;
 
 const { name, categories, attributes, description, discount, images, price } =
-	await getProductById(id);
+  await getProductById(id);
 ---
 
 <Layout>
@@ -21,10 +21,12 @@ const { name, categories, attributes, description, discount, images, price } =
     class="flex flex-col mt-16 items-center"
     transition:animate={fade({ duration: 150 })}
   >
-    <article class="grid grid-cols-[max(425px)_max(500px)] gap-12 items-center justify-center">
+    <article
+      class="grid grid-cols-[max(425px)_max(500px)] gap-12 items-center justify-center"
+    >
       <div>
         <Image
-          class=" aspect-square"
+          class="aspect-square"
           src={images[0]}
           alt={name}
           width={450}
@@ -32,10 +34,10 @@ const { name, categories, attributes, description, discount, images, price } =
           loading="lazy"
         />
       </div>
-      <div class="flex flex-col h-full px-10 gap-3.5 ">
+      <div class="flex flex-col h-full px-10 gap-3.5">
         <Subtitle class="text-2xl font-bold" Text={name} />
         <RegularText>{description}</RegularText>
-        <Tags  categories={categories} />
+        <Tags categories={categories} />
         <div class="flex flex-col gap-2">
           <RegularText>Color: {attributes.color}</RegularText>
           <RegularText>Talla: {attributes.size}</RegularText>

@@ -4,11 +4,25 @@
   --font-primary: "Roboto", sans-serif;
 
   --color-primary: #fad7d7;
-  --color-secondary: #ffe5b4;
-  --color-accent: #c4e3cb;
-  --color-background: #f9f6f0;
-  --color-hover: #e0e0e0;
-  --color-text: #4a4a4a;
+  --color-secondary: #ccd0da;
+  --color-accent: #dce0e8;
+  --color-background: #eff1f5;
+  --color-text: #4c4f69;
+  --color-border: #7c7f93;
+
+  --animation-pulse: pulse 0.2s ease-in-out infinite;
+
+  @keyframes pulse {
+    0% {
+      opacity: 0.3;
+    }
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0.3;
+    }
+  }
 }
 
 @font-face {
@@ -36,4 +50,5 @@
 
 html {
   font-family: "Roboto", sans-serif;
+  color: var(--color-text);
 }

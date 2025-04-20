@@ -1,10 +1,11 @@
 import axios from "axios";
 import type { CreateProduct, Products } from "@/interface/product.interface";
 import type { Response } from "@/interface/response.interface";
+import { PUBLIC_API_URL } from "@/config/env-config";
 
-export const gatAllProducts = async () => {
+export const getAllProducts = async () => {
   const response = await axios
-    .get("http://localhost:8080/products/all")
+    .get(`${PUBLIC_API_URL}/products/all`)
     .then((response) => {
       return response.data as Response<Products>;
     });
@@ -14,7 +15,7 @@ export const gatAllProducts = async () => {
 
 export const getProductById = async (productId: string) => {
   const response = await axios
-    .get(`http://localhost:8080/products?id=${productId}`)
+    .get(`${PUBLIC_API_URL}/products?id=${productId}`)
     .then((response) => {
       return response.data as Response<Products>;
     });
@@ -24,7 +25,7 @@ export const getProductById = async (productId: string) => {
 
 export const getProductByCategory = async (categoryName: string) => {
   const response = await axios
-    .get(`http://localhost:8080/products/category/${categoryName}`)
+    .get(`${PUBLIC_API_URL}/products/category/${categoryName}`)
     .then((response) => {
       return response.data as Response<Products>;
     });
@@ -33,7 +34,7 @@ export const getProductByCategory = async (categoryName: string) => {
 
 export const createProduct = async (product: CreateProduct) => {
   const response = await axios
-    .post("http://localhost:8080/product/create")
+    .post(`${PUBLIC_API_URL}/product/create`, product)
     .then((response) => {
       return response.data as Response<Products>;
     });
@@ -43,7 +44,7 @@ export const createProduct = async (product: CreateProduct) => {
 
 export const updateProduct = async (product: Products) => {
   const response = await axios
-    .put("http://localhost:8080/product/update")
+    .put(`${PUBLIC_API_URL}/product/update`, product)
     .then((response) => {
       return response.data as Response<Products>;
     });
@@ -53,7 +54,7 @@ export const updateProduct = async (product: Products) => {
 
 export const deleteProduct = async (productId: string) => {
   const response = await axios
-    .delete(`http://localhost:8080/product/delete/${productId}`)
+    .delete(`${PUBLIC_API_URL}/product/delete/${productId}`)
     .then((response) => {
       return response.data as Response<Products>;
     });

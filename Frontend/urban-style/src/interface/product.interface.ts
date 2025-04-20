@@ -1,5 +1,3 @@
-import { createProduct } from "@/service/product.service";
-
 export interface Products {
   id: string;
   name: string;
