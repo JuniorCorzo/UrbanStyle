@@ -7,7 +7,8 @@
   --color-secondary: #ccd0da;
   --color-accent: #dce0e8;
   --color-background: #eff1f5;
-  --color-text: #7c7f93;
+  --color-text: #4c4f69;
+  --color-border: #7c7f93;
 }
 
 @font-face {
