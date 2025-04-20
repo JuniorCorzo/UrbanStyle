@@ -19,7 +19,7 @@ if (!tableMediator) {
 const { tableConfig } = tableMediator.tableConfig();
 ---
 
-<table class="table w-full max-w-10/12 border">
+<table class="table w-full max-w-10/12 border border-border">
   <thead class="h-11 bg-accent text-center">
     {
       tableConfig.getHeaderGroups().map((headerGroup) => (
@@ -36,7 +36,7 @@ const { tableConfig } = tableMediator.tableConfig();
       tableConfig.getRowModel().rows.map((row) => (
         <tr>
           {row.getVisibleCells().map((cell) => (
-            <td class="max-w-72 min-h-11 px-4 py-2 border text-center">
+            <td class="max-w-72 min-h-11 px-4 py-2 border border-border text-center">
               {flexRender(cell.column.columnDef?.cell, cell.getContext())}
             </td>
           ))}

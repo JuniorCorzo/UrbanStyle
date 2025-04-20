@@ -36,4 +36,5 @@
 
 html {
   font-family: "Roboto", sans-serif;
+  color: var(--color-text);
 }
