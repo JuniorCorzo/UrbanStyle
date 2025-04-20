@@ -2,7 +2,6 @@
 import type { Products } from "@/interface/product.interface";
 import { Image } from "astro:assets";
 import BorderEffect from "./BorderEffect.astro";
-import Tags from "./Tags.astro";
 
 const { product } = Astro.props as {
   product: Products;
@@ -24,9 +23,9 @@ const { product } = Astro.props as {
       width={200}
       height={200}
     />
-    <div class="flex flex-col w-full gap-1">
-      <span class="w-full text-left">{product.name}</span>
-      <span class="w-full text-left font-bold">{`$ ${product.price}`}</span>
+    <div class="flex flex-col w-full gap-1 text-left">
+      <span class="w-full">{product.name}</span>
+      <span class="w-full font-bold">{`$ ${product.price}`}</span>
     </div>
   </div>
 </a>
