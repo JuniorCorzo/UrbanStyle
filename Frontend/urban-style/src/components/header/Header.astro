@@ -1,27 +1,35 @@
 ---
+import InputSearch from "@/components/header/InputSearch.astro";
 import LoginModal from "./LoginModal.astro";
 import UserMenu from "./UserMenu.astro";
 const { user } = Astro.locals;
 ---
 
 <header
-  class="sticky w-full h-14 px-14 flex justify-between items-center backdrop-blur-xs bg-accent/70 z-50"
+  class="sticky h-14 px-14 flex justify-between items-center backdrop-blur-xs bg-accent/70 top-0 z-50"
 >
   <h1
-    onclick="window.location.href='/'"
+    onclick="window.location.href='/home'"
     class="text-xl font-bold cursor-pointer"
   >
     Urban Style
   </h1>
-  <div>
-    <ul class="flex gap-6">
-      <li><a href="">Hombres</a></li>
-      <li><a href="">Mujeres</a></li>
-      <li><a href="">Buscar</a></li>
+  <div id="links_container" class="relative px-2">
+    <ul class="flex w-fit gap-6 items-center justify-center">
+      <li>
+        <a href="">Hombres</a>
+      </li>
+      <li>
+        <a href="">Mujeres</a>
+      </li>
+      <li id="search_container" class="flex items-center gap-2">
+        <span>Buscar</span>
+        <InputSearch />
+      </li>
     </ul>
   </div>
   <nav>
-    <ul class="flex gap-6">
+    <ul class="flex gap-6 px-2">
       <li>
         <button type="button">Carrito</button>
       </li>
@@ -39,16 +47,6 @@ const { user } = Astro.locals;
     </ul>
   </nav>
 </header>
-
-<style>
-  li a {
-    border: 0 solid transparent;
-    transition: all 300ms ease-in-out;
-    &:hover {
-      border-bottom: 2px solid var(--color-text);
-    }
-  }
-</style>
 
 <script>
   import { $ } from "@/lib/dom-selector";

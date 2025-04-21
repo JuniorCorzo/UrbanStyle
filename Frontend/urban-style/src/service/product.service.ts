@@ -32,6 +32,16 @@ export const getProductByCategory = async (categoryName: string) => {
   return response.data;
 };
 
+export const searchProducts = async (searchQuery: string) => {
+  const response = await axios
+    .get(`${PUBLIC_API_URL}/products/search?search=${searchQuery}`)
+    .then((response) => {
+      return response.data as Response<Products>;
+    });
+
+  return response.data;
+};
+
 export const createProduct = async (product: CreateProduct) => {
   const response = await axios
     .post(`${PUBLIC_API_URL}/product/create`, product)
