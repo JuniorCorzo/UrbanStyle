@@ -1,21 +1,21 @@
 ---
 import { getAllProducts } from "@/service/product.service";
-import ProductCard from "./ProductCard.astro";
+import ProductContainer from "./ProductContainer.astro";
+import ProductsSearchResult from "./ProductsSearchResult.astro";
+import type { Products } from "@/interface/product.interface";
 
-const products = await getAllProducts();
+const searchQuery = Astro.url.searchParams.get("search");
+
+let products: Products[] = [];
+if (!searchQuery) {
+  products = await getAllProducts();
+}
 ---
 
 <section class="flex">
   <article class="w-full text-center">
-    <div
-      class="grid auto-rows-[15rem] grid-cols-[repeat(auto-fill,max(15rem))] pt-4 gap-20 gap-y-32 justify-center"
-    >
-      {
-        products.map((product) => (
-          <ProductCard product={product} key={product.id} />
-        ))
-      }
-    </div>
+    {!searchQuery && <ProductContainer products={products} />}
+    {searchQuery && <ProductsSearchResult searchQuery={searchQuery.trim()} />}
   </article>
 </section>
 

@@ -1,0 +1,21 @@
+---
+import { searchProducts } from "@/service/product.service";
+import ProductCard from "./ProductCard.astro";
+import ProductContainer from "./ProductContainer.astro";
+
+interface Props {
+  searchQuery: string;
+}
+
+const { searchQuery } = Astro.props;
+const productSearch = await searchProducts(searchQuery);
+
+const message = productSearch.length
+  ? `Se encontraron <strong>${productSearch.length}</strong> resultados para <strong>${searchQuery}</strong>`
+  : `No se encontraron resultados para <strong>${searchQuery}</strong>`;
+---
+
+<div class="relative flex flex-col h-full gap-4">
+  <h2 set:html={message} class="text-2xl text-center" />
+  <ProductContainer products={productSearch} />
+</div>
