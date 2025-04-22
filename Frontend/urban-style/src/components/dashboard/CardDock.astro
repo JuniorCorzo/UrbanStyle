@@ -18,8 +18,9 @@ const { mediator, svgName, title } = Astro.props;
     class="w-6 h-6 aspect-square"
     data-mediator={mediator}
   />
-  <span class="absolute hidden group-hover:block top-0 animate-up">{title}</span
-  >
+  <span class="absolute hidden group-hover:block top-0 animate-up">
+    {title}
+  </span>
 </li>
 
 <style>
