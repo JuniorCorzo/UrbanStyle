@@ -1,0 +1,46 @@
+---
+import LabelInput from "./LabelInput.astro";
+import "@/styles/select.css";
+
+interface Props {
+  name?: string;
+  label?: string;
+  placeholder?: string;
+  data: { value: string; text: string }[];
+  multiple?: boolean;
+}
+
+const { name, label, placeholder, data, multiple } = Astro.props;
+---
+
+<LabelInput label={label as string}>
+  <select
+    class="w-full border-border rounded"
+    multiple={multiple}
+    name={name}
+    data-name={name}
+    data-is-multiple={multiple}
+    data-placeholder={placeholder}
+  >
+    {data.map((option) => <option value={option.value}>{option.text}</option>)}
+  </select>
+</LabelInput>
+
+<script>
+  import { $, $$ } from "@/lib/dom-selector";
+  import SlimSelect from "slim-select";
+
+  $$("select")?.forEach((select) => {
+    const { name, placeholder, isMultiple } = select.dataset;
+    new SlimSelect({
+      select: $(`select[name="${name}"]`) as Element,
+      settings: {
+        placeholderText: placeholder,
+        closeOnSelect: false,
+        allowDeselect: isMultiple ? true : false,
+      },
+    });
+  });
+</script>
+
+<style></style>

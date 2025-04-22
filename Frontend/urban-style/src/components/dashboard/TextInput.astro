@@ -1,0 +1,23 @@
+---
+import LabelInput from "./LabelInput.astro";
+
+interface Props {
+  label: string;
+  name: string;
+  placeholder: string;
+  value?: string;
+}
+
+const { label, name, placeholder, value } = Astro.props;
+---
+
+<LabelInput label={label}>
+  <input
+    class="border border-border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-accent text-text"
+    type="text"
+    id={name}
+    name={name}
+    placeholder={placeholder}
+    value={value}
+  />
+</LabelInput>
