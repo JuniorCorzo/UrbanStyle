@@ -23,25 +23,26 @@ const { name, label, placeholder, options, isMultiple } = Astro.props;
       ))
     }
   </select>
-</LabelInput>
 
-<script>
-  import { $, $$ } from "@/lib/dom-selector";
-  import SlimSelect from "slim-select";
+  <script>
+    import { $, $$ } from "@/lib/dom-selector";
+    import SlimSelect from "slim-select";
 
-  $$("select")?.forEach((select) => {
-    const { name, placeholder, isMultiple } = select.dataset;
-    const $selectElement = $(`select[name="${name}"]`) as Element;
-
-    new SlimSelect({
-      select: $selectElement,
-      settings: {
-        placeholderText: placeholder,
-        closeOnSelect: false,
-        allowDeselect: isMultiple ? true : false,
-        contentPosition: "fixed",
-        contentLocation: $("body"),
-      },
+    $$("select")?.forEach((select) => {
+      const { name, placeholder, isMultiple } = select.dataset;
+      const $selectElement = $(`select[name="${name}"]`) as Element;
+      console.log(placeholder);
+      new SlimSelect({
+        select: $selectElement,
+        settings: {
+          placeholderText: placeholder,
+          closeOnSelect: false,
+          allowDeselect: isMultiple ? true : false,
+          contentPosition: "fixed",
+          contentLocation: $("body"),
+          showOptionTooltips: true,
+        },
+      });
     });
-  });
-</script>
+  </script>
+</LabelInput>

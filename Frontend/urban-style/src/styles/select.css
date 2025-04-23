@@ -10,7 +10,7 @@
   --ss-error-color: #dc3545;
   --ss-focus-color: #4c4f69;
 
-  --ss-main-height: 30px;
+  --ss-main-height: 40px;
   --ss-content-height: 300px;
 
   --ss-spacing-l: 7px;
@@ -61,12 +61,15 @@
   background-color: var(--ss-bg-color);
   outline: 0;
   box-sizing: border-box;
-  transition: background-color var(--ss-animation-timing);
   overflow: hidden;
   z-index: 10000;
+  pointer-events: all;
 
   &:focus {
-    box-shadow: 0 0 5px var(--ss-focus-color);
+    box-shadow: 0 0 3px var(--ss-border-color);
+    border-color: var(--ss-border-color);
+    outline: 2px solid transparent;
+    outline-offset: 2px;
   }
 
   &.ss-disabled {

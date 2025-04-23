@@ -1,0 +1,127 @@
+---
+import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
+import { DashboardMediator } from "@/lib/dashboard-mediator";
+import type { FormConfig } from "@/interface/form-mediator.interface";
+import TextInput from "./TextInput.astro";
+import SelectInput from "./SelectInput.astro";
+import Subtitle from "../text/Subtitle.astro";
+
+const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
+const mediator = Astro.url.searchParams.get(mediatorSearchParam);
+if (!mediator) {
+  Astro.redirect("/404");
+  return;
+}
+
+const dashboardMediator = await DashboardMediator(mediator);
+if (!dashboardMediator) {
+  Astro.redirect("/404");
+  return;
+}
+
+const formConfig = (dashboardMediator.form?.formConfig ?? {}) as FormConfig;
+---
+
+<dialog
+  id="form_modal"
+  class="fixed w-full max-w-[45rem] pb-5 h-fit bg-background border border-border rounded inset-0 mx-auto top-[50%] translate-y-[-50%] z-50 flex-col items-center justify-center gap-2"
+>
+  <div
+    class="py-2.5 border-b border-border w-full flex items-center justify-between px-4 text-center"
+  >
+    <Subtitle Text="Añadir Producto" size="2xl" />
+    <button id="button_close" type="button" class="text-text cursor-pointer">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke-width="1.5"
+        stroke="currentColor"
+        class="size-6"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+        ></path>
+      </svg>
+    </button>
+  </div>
+  <form
+    method="dialog"
+    class="w-full max-w-[43rem] grid grid-cols-[repeat(auto-fill,minmax(13rem,18rem))] grid-flow-row-dense gap-6 justify-center pointer-events-none"
+  >
+    {
+      formConfig.fields?.map(({ type, fieldProperties }) => {
+        const {
+          name,
+          label,
+          required,
+          placeholder,
+          isMultiple,
+          options,
+          value,
+        } = fieldProperties;
+        if (type === "select") {
+          return (
+            <SelectInput
+              name={name}
+              label={label}
+              value={value}
+              placeholder={placeholder}
+              options={options}
+              isMultiple={isMultiple}
+            />
+          );
+        }
+        return (
+          <TextInput
+            name={name as string}
+            label={label as string}
+            placeholder={placeholder as string}
+            value={value}
+            required={required}
+          />
+        );
+      })
+    }
+  </form>
+  <div
+    id="modal_backdrop"
+    class="absolute hidden inset-0 backdrop-blur-xs bg-background/5 z-20"
+  >
+  </div>
+</dialog>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+
+  const $modal = $("#form_modal") as HTMLDialogElement;
+  const $modalBackdrop = $("#modal_backdrop") as HTMLDivElement;
+  $("#button_modal")?.addEventListener("click", () => {
+    $modal?.show();
+    $modal.classList.toggle("flex");
+    $modalBackdrop.classList.toggle("hidden");
+  });
+
+  $("#button_close")?.addEventListener("click", () => {
+    $modal?.close();
+  });
+
+  $modal.addEventListener("close", () => {
+    $modalBackdrop.classList.toggle("hidden");
+    $modal.classList.toggle("flex");
+  });
+
+  $modal.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      $modal?.close();
+    }
+  });
+
+  $modalBackdrop.addEventListener("click", () => {
+    $modal?.close();
+  });
+
+  document.body.appendChild($modalBackdrop);
+</script>

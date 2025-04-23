@@ -2,12 +2,23 @@
 import Table from "@/components/dashboard/Table.astro";
 import Dock from "@/components/dashboard/Dock.astro";
 import Layout from "@/layouts/Layout.astro";
+import FormModal from "@/components/dashboard/FormModal.astro";
 ---
 
 <Layout>
   <section class="flex flex-col items-center">
     <h1>Dashboard</h1>
-    <Table />
+    <div class="w-full max-w-10/12 flex flex-col items-center gap-2">
+      <div class="w-full flex justify-end">
+        <button
+          id="button_modal"
+          class="bg-accent px-3 py-0.5 rounded"
+          type="button">Añadir</button
+        >
+        <FormModal />
+      </div>
+      <Table />
+    </div>
   </section>
   <Dock />
 </Layout>
