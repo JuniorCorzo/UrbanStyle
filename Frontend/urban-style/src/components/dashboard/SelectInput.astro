@@ -1,28 +1,27 @@
 ---
+import type { FieldProperties } from "@/interface/form-mediator.interface";
 import LabelInput from "./LabelInput.astro";
 import "@/styles/select.css";
 
-interface Props {
-  name?: string;
-  label?: string;
-  placeholder?: string;
-  data: { value: string; text: string }[];
-  multiple?: boolean;
-}
+interface Props extends FieldProperties {}
 
-const { name, label, placeholder, data, multiple } = Astro.props;
+const { name, label, placeholder, options, isMultiple } = Astro.props;
 ---
 
 <LabelInput label={label as string}>
   <select
     class="w-full border-border rounded"
-    multiple={multiple}
+    multiple={isMultiple}
     name={name}
     data-name={name}
-    data-is-multiple={multiple}
+    data-is-multiple={isMultiple}
     data-placeholder={placeholder}
   >
-    {data.map((option) => <option value={option.value}>{option.text}</option>)}
+    {
+      options?.map((option) => (
+        <option value={option.value}>{option.text}</option>
+      ))
+    }
   </select>
 </LabelInput>
 
@@ -32,15 +31,17 @@ const { name, label, placeholder, data, multiple } = Astro.props;
 
   $$("select")?.forEach((select) => {
     const { name, placeholder, isMultiple } = select.dataset;
+    const $selectElement = $(`select[name="${name}"]`) as Element;
+
     new SlimSelect({
-      select: $(`select[name="${name}"]`) as Element,
+      select: $selectElement,
       settings: {
         placeholderText: placeholder,
         closeOnSelect: false,
         allowDeselect: isMultiple ? true : false,
+        contentPosition: "fixed",
+        contentLocation: $("body"),
       },
     });
   });
 </script>
-
-<style></style>

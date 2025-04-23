@@ -1,14 +1,10 @@
 ---
+import type { FieldProperties } from "@/interface/form-mediator.interface";
 import LabelInput from "./LabelInput.astro";
 
-interface Props {
-  label: string;
-  name: string;
-  placeholder: string;
-  value?: string;
-}
+interface Props extends Omit<FieldProperties, "options" | "isMultiple"> {}
 
-const { label, name, placeholder, value } = Astro.props;
+const { label, name, placeholder, value, required } = Astro.props;
 ---
 
 <LabelInput label={label}>
@@ -19,5 +15,6 @@ const { label, name, placeholder, value } = Astro.props;
     name={name}
     placeholder={placeholder}
     value={value}
+    required={required}
   />
 </LabelInput>
