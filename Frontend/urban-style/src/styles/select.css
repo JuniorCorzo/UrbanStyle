@@ -63,6 +63,7 @@
   box-sizing: border-box;
   transition: background-color var(--ss-animation-timing);
   overflow: hidden;
+  z-index: 10000;
 
   &:focus {
     box-shadow: 0 0 5px var(--ss-focus-color);
@@ -252,6 +253,7 @@
 
   &.ss-fixed {
     position: fixed;
+    z-index: 10000;
   }
 
   &.ss-open-above {
