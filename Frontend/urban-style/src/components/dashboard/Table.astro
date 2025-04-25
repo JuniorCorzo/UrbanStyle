@@ -1,6 +1,6 @@
 ---
 import { flexRender } from "@/lib/table-config";
-import { TableMediator } from "@/lib/mediator/table-mediator";
+import { DashboardMediator } from "@/lib/dashboard-mediator";
 import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
 
 const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
@@ -10,16 +10,16 @@ if (!mediator) {
   return;
 }
 
-const tableMediator = await TableMediator(mediator);
+const tableMediator = await DashboardMediator(mediator);
 if (!tableMediator) {
   Astro.redirect("/404");
   return;
 }
 
-const { tableConfig } = tableMediator.tableConfig();
+const { tableConfig } = tableMediator.table.tableConfig();
 ---
 
-<table class="table w-full max-w-10/12 border border-border">
+<table class="table w-full border border-border">
   <thead class="h-11 bg-accent text-center">
     {
       tableConfig.getHeaderGroups().map((headerGroup) => (

@@ -9,7 +9,7 @@ const { mediator, svgName, title } = Astro.props;
 ---
 
 <li
-  class="relative flex w-14 bg-background text-center aspect-square border border-border rounded justify-center items-center cursor-pointer scale-90 hover:scale-105 transition-transform duration-300"
+  class="relative flex w-14 bg-background text-center aspect-square border border-border rounded justify-center items-center cursor-pointer scale-90 hover:scale-105 transition-transform duration-300 group"
   data-mediator={mediator}
   transition:persist
 >
@@ -18,8 +18,9 @@ const { mediator, svgName, title } = Astro.props;
     class="w-6 h-6 aspect-square"
     data-mediator={mediator}
   />
-  <span class="absolute hidden group-hover:block top-0 animate-up">{title}</span
-  >
+  <span class="absolute hidden group-hover:block top-0 animate-up">
+    {title}
+  </span>
 </li>
 
 <style>

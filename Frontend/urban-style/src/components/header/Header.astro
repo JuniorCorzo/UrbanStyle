@@ -6,7 +6,8 @@ const { user } = Astro.locals;
 ---
 
 <header
-  class="sticky h-14 px-14 flex justify-between items-center backdrop-blur-xs bg-accent/70 top-0 z-50"
+  class="sticky h-14 px-14 flex justify-between items-center backdrop-blur-xs bg-accent/70 top-0 z-20"
+  transition:persist
 >
   <h1
     onclick="window.location.href='/home'"
@@ -22,7 +23,7 @@ const { user } = Astro.locals;
       <li>
         <a href="">Mujeres</a>
       </li>
-      <li id="search_container" class="flex items-center gap-2">
+      <li id="search_container" class="flex items-center gap-2 cursor-pointer">
         <span>Buscar</span>
         <InputSearch />
       </li>
