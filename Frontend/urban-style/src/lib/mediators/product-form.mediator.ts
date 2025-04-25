@@ -85,10 +85,15 @@ export async function productForm(): Promise<FormMediator> {
           required: true,
         },
       },
+      {
+        type: "file",
+        fieldProperties: {
+          label: "Imagen",
+          name: "image",
+          required: true,
+        },
+      },
     ],
-    sendData: (data) => {
-      sendProduct(data);
-    },
   };
 
   return {

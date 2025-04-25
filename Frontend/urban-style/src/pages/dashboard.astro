@@ -2,7 +2,7 @@
 import Table from "@/components/dashboard/Table.astro";
 import Dock from "@/components/dashboard/Dock.astro";
 import Layout from "@/layouts/Layout.astro";
-import FormModal from "@/components/dashboard/FormModal.astro";
+import FormModal from "@/components/dashboard/react/FormModal";
 ---
 
 <Layout>
@@ -12,13 +12,24 @@ import FormModal from "@/components/dashboard/FormModal.astro";
       <div class="w-full flex justify-end">
         <button
           id="button_modal"
-          class="bg-accent px-3 py-0.5 rounded"
-          type="button">Añadir</button
+          class="bg-accent px-3 py-0.5 rounded cursor-pointer"
+          type="button"
+          transition:persist
         >
-        <FormModal />
+          Añadir
+        </button>
+        <FormModal client:only />
       </div>
       <Table />
     </div>
   </section>
   <Dock />
 </Layout>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+
+  $("#button_modal")?.addEventListener("click", () => {
+    window.dispatchEvent(new CustomEvent("open-modal"));
+  });
+</script>

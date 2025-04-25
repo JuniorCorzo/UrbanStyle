@@ -5,11 +5,12 @@ export interface FormMediator {
 export interface FormConfig {
   title: string;
   fields: FormField[];
-  sendData: (data: FormData) => void;
 }
 
+export type FormFieldType = "select" | "text" | "file";
+
 export interface FormField {
-  type: "select" | "text";
+  type: FormFieldType;
   fieldProperties: FieldProperties;
 }
 
