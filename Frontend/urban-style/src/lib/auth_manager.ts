@@ -47,11 +47,8 @@ export class Auth {
     sessionStorage.removeItem("user_session");
   }
 
-  async createSession(user?: User) {
-    if (!user) {
-      user = await getUserById(this.userId as string);
-    }
-
+  async createSession(userParam?: User) {
+    const user = userParam ?? (await getUserById(this.userId as string));
     sessionStorage.setItem("user_session", JSON.stringify(user));
   }
 
