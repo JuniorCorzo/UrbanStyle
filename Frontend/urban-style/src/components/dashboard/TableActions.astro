@@ -9,9 +9,8 @@ const { data } = Astro.props;
 ---
 
 <div class="flex items-center justify-center gap-2">
-  <div>
+  <div id="edit">
     <button
-      id="button_edit"
       type="button"
       class="cursor-pointer"
       data-data={JSON.stringify(data)}
@@ -51,26 +50,3 @@ const { data } = Astro.props;
     </button>
   </div>
 </div>
-
-<script>
-  import type { BaseDocument } from "@/interface/base.interface";
-  import { $ } from "@/lib/dom-selector";
-  import { openModalEvent } from "@/lib/utils/open-modal-event";
-  import { selectMediator } from "@/lib/utils/select-mediator";
-
-  const handleUpdate = async (data: unknown) => {
-    const dashboardMediator = await selectMediator();
-    if (dashboardMediator) {
-      const { formConfig } = dashboardMediator.form;
-      openModalEvent(formConfig);
-    }
-  };
-
-  $("#button_edit")?.addEventListener("click", (e) => {
-    const { data } = (e.currentTarget as HTMLButtonElement).dataset;
-    if (!data) return;
-
-    const parsedData = JSON.parse(data);
-    handleUpdate(parsedData);
-  });
-</script>

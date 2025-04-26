@@ -64,3 +64,27 @@ tableConfig.setOptions((prev) => ({
     }
   </tbody>
 </table>
+
+<script>
+  import { $, $$ } from "@/lib/dom-selector";
+  import { openModalEvent } from "@/lib/utils/open-modal-event";
+  import { selectMediator } from "@/lib/utils/select-mediator";
+
+  const handleUpdate = async (data: unknown) => {
+    const dashboardMediator = await selectMediator();
+    if (dashboardMediator) {
+      const { formConfig } = dashboardMediator.form;
+      openModalEvent(formConfig);
+    }
+  };
+
+  $$("#edit").forEach((edit) => {
+    edit.querySelector("button")?.addEventListener("click", (e) => {
+      const { data } = (e.currentTarget as HTMLButtonElement).dataset;
+      if (!data) return;
+
+      const parsedData = JSON.parse(data);
+      handleUpdate(parsedData);
+    });
+  });
+</script>
