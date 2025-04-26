@@ -62,7 +62,6 @@
   outline: 0;
   box-sizing: border-box;
   overflow: hidden;
-  z-index: 10000;
   pointer-events: all;
 
   &:focus {
@@ -247,7 +246,6 @@
   transform: scaleY(0);
   transform-origin: center top;
   overflow: hidden;
-  z-index: 10000;
 
   &.ss-relative {
     position: relative;
