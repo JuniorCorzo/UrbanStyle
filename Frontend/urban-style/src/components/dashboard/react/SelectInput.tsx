@@ -11,13 +11,14 @@ export default function SelectInput({
   label,
   placeholder,
   options,
+  value,
   isMultiple,
 }: SelectInputProps) {
   const selectRef = useRef<HTMLSelectElement>(null);
 
   useEffect(() => {
     if (selectRef.current) {
-      new SlimSelect({
+      const slim = new SlimSelect({
         select: selectRef.current,
         settings: {
           placeholderText: placeholder,
@@ -28,9 +29,12 @@ export default function SelectInput({
           showOptionTooltips: true,
         },
       });
-    }
-  }, [placeholder, isMultiple]);
 
+      if (value) slim.setSelected(value);
+    }
+  }, [placeholder, isMultiple, value]);
+
+  console.log(value);
   return (
     <LabelInput label={label}>
       <select
@@ -38,6 +42,7 @@ export default function SelectInput({
         className="w-full border-border rounded"
         multiple={isMultiple}
         name={name}
+        value={value}
         data-name={name}
         data-is-multiple={isMultiple}
         data-placeholder={placeholder}

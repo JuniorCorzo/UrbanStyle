@@ -1,5 +1,6 @@
-export interface Category {
-  id: string;
+import type { BaseDocument } from "./base.interface";
+
+export interface Category extends BaseDocument {
   name: string;
   description: string;
 }

@@ -1,19 +1,24 @@
-import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
 import type { FormConfig } from "@/interface/form-mediator.interface";
-import { DashboardMediator } from "@/lib/dashboard-mediator";
 import { $ } from "@/lib/dom-selector";
-import { useEffect, useState, type FormEvent } from "react";
+import type { OpenModalEvent } from "@/lib/utils/open-modal-event";
+import { useEffect, useState, type FormEvent, type MouseEvent } from "react";
 
 export function useFormModal() {
   const [formData, setFormData] = useState<FormConfig>();
   const [isOpen, setIsOpen] = useState(false);
-  const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
-  const searchParam = new URLSearchParams(document.location.search).get(
-    mediatorSearchParam
-  );
 
-  const handleModal = () => {
+  const handleModal = (
+    event?: CustomEvent<OpenModalEvent> | MouseEvent<HTMLButtonElement>
+  ) => {
     setIsOpen((prev) => !prev);
+    if (event instanceof CustomEvent && event.detail) {
+      const { formData } = event.detail;
+      setFormData(formData);
+    }
+    handleBackdrop();
+  };
+
+  const handleBackdrop = () => {
     const $modalBackdrop = $("#modal_backdrop");
     $modalBackdrop?.classList.toggle("hidden");
     $modalBackdrop?.addEventListener("click", () => handleModal());
@@ -30,17 +35,13 @@ export function useFormModal() {
   };
 
   useEffect(() => {
-    (async () => {
-      const dashboardMediator = await DashboardMediator(searchParam as string);
-      const formConfig = dashboardMediator?.form.formConfig;
-      setFormData(formConfig);
-    })();
-  }, [searchParam]);
-
-  useEffect(() => {
-    window.addEventListener("open-modal", handleModal);
+    window.addEventListener("open-modal", (e: Event) =>
+      handleModal(e as CustomEvent<OpenModalEvent>)
+    );
     return () => {
-      window.removeEventListener("open-modal", handleModal);
+      window.removeEventListener("open-modal", (e: Event) =>
+        handleModal(e as CustomEvent<OpenModalEvent>)
+      );
     };
   });
 

@@ -2,6 +2,9 @@
 import { flexRender } from "@/lib/table-config";
 import { DashboardMediator } from "@/lib/dashboard-mediator";
 import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
+import type { ColumnDef } from "@tanstack/table-core";
+import TableActions from "./TableActions.astro";
+import type { BaseDocument } from "@/interface/base.interface";
 
 const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
 const mediator = Astro.url.searchParams.get(mediatorSearchParam);
@@ -17,6 +20,15 @@ if (!tableMediator) {
 }
 
 const { tableConfig } = tableMediator.table.tableConfig();
+const actionsColumns: ColumnDef<unknown> = {
+  id: "actions",
+  header: "Acciones",
+};
+
+tableConfig.setOptions((prev) => ({
+  ...prev,
+  columns: [...prev.columns, actionsColumns],
+}));
 ---
 
 <table class="table w-full border border-border">
@@ -37,7 +49,14 @@ const { tableConfig } = tableMediator.table.tableConfig();
         <tr>
           {row.getVisibleCells().map((cell) => (
             <td class="max-w-72 min-h-11 px-4 py-2 border border-border text-center">
-              {flexRender(cell.column.columnDef?.cell, cell.getContext())}
+              {flexRender(
+                cell.column.id === "actions" ? (
+                  <TableActions data={row.original as BaseDocument} />
+                ) : (
+                  cell.column.columnDef?.cell
+                ),
+                cell.getContext()
+              )}
             </td>
           ))}
         </tr>

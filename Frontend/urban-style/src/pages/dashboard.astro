@@ -8,7 +8,9 @@ import FormModal from "@/components/dashboard/react/FormModal";
 <Layout>
   <section class="flex flex-col items-center">
     <h1>Dashboard</h1>
-    <div class="w-full max-w-10/12 flex flex-col items-center gap-2">
+    <article
+      class="w-full max-w-10/12 flex flex-col items-center gap-2 overflow-auto"
+    >
       <div class="w-full flex justify-end">
         <button
           id="button_modal"
@@ -21,15 +23,22 @@ import FormModal from "@/components/dashboard/react/FormModal";
         <FormModal client:only />
       </div>
       <Table />
-    </div>
+    </article>
   </section>
   <Dock />
 </Layout>
 
 <script>
   import { $ } from "@/lib/dom-selector";
+  import { openModalEvent } from "@/lib/utils/open-modal-event";
+  import { selectMediator } from "@/lib/utils/select-mediator";
 
-  $("#button_modal")?.addEventListener("click", () => {
-    window.dispatchEvent(new CustomEvent("open-modal"));
-  });
+  const handleMediator = async () => {
+    const dashboardMediator = await selectMediator();
+    if (dashboardMediator) {
+      openModalEvent(dashboardMediator.form.formConfig);
+    }
+  };
+
+  $("#button_modal")?.addEventListener("click", handleMediator);
 </script>
