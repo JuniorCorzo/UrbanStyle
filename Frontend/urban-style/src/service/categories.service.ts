@@ -4,7 +4,6 @@ import type { Response } from "@/interface/response.interface";
 import axios from "axios";
 
 export async function getAllCategories() {
-  console.log("PUBLIC_API_URL", PUBLIC_API_URL);
   const response = await axios
     .get(`${import.meta.env.PUBLIC_API_URL}/categories/all`)
     .then((response) => {
