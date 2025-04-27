@@ -36,7 +36,7 @@ import FormModal from "@/components/dashboard/react/FormModal";
   const handleMediator = async () => {
     const dashboardMediator = await selectMediator();
     if (dashboardMediator) {
-      openModalEvent(dashboardMediator.form.formConfig);
+      openModalEvent(dashboardMediator.form.formConfig());
     }
   };
 
