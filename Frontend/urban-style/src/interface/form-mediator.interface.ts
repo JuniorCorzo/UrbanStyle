@@ -17,7 +17,7 @@ export interface FormField {
 export interface FieldProperties {
   label?: string;
   name?: string;
-  value?: string;
+  value?: string | string[];
   placeholder?: string;
   required?: boolean;
   options?: SelectOptions[];

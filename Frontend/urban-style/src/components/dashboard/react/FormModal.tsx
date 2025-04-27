@@ -12,7 +12,7 @@ function FormModal() {
       id="form_modal"
       className="w-full max-w-[45rem] max-h-10/12 pb-5 h-fit bg-background border border-border rounded inset-0 mx-auto top-[50%] translate-y-[-50%] z-50 flex-col items-center justify-center overflow-auto"
     >
-      <div className="sticky top-0 py-2.5 bg-accent border-b border-border  w-full flex items-center justify-between px-4 text-center">
+      <div className="sticky top-0 py-2.5 bg-accent border-b border-border  w-full flex items-center justify-between px-4 text-center z-50">
         <h2 className="font-bold text-text text-2xl">Añadir Producto</h2>
         <button
           onClick={handleModal}

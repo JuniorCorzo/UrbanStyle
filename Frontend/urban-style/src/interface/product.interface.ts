@@ -1,5 +1,6 @@
-export interface Products {
-  id: string;
+import type { BaseDocument } from "./base.interface";
+
+export interface Products extends BaseDocument {
   name: string;
   description: string;
   price: number;
