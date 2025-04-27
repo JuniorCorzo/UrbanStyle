@@ -34,7 +34,6 @@ export default function SelectInput({
     }
   }, [placeholder, isMultiple, value]);
 
-  console.log(value);
   return (
     <LabelInput label={label}>
       <select
