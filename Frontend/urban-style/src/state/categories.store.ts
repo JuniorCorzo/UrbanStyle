@@ -2,9 +2,9 @@ import type { Category } from "@/interface/category.interface";
 import { getAllCategories } from "@/service/categories.service";
 import { map } from "nanostores";
 
-export async function categoriesStore() {
-  const categoriesStore = map<Category[]>();
+const categoriesStore = map<Category[]>();
 
+export async function CategoriesStore() {
   if (categoriesStore.get().length === 0) {
     const categories = await getAllCategories();
     categoriesStore.set(categories);

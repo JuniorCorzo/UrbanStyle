@@ -2,9 +2,10 @@ import type { Products } from "@/interface/product.interface";
 import { getAllProducts } from "@/service/product.service";
 import { map } from "nanostores";
 
+const productStore = map<Products[]>();
+
 export async function ProductStore() {
-  const productStore = map<Products[]>();
-  if (productStore.get().length === 0) {
+  if (!productStore.get().length) {
     const products = await getAllProducts();
     productStore.set(products);
   }
