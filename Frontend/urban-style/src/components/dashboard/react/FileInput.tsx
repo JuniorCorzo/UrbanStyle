@@ -1,4 +1,8 @@
-export default function FileInput() {
+import type { FieldProperties } from "@/interface/form-mediator.interface";
+
+interface Props extends FieldProperties {}
+
+export default function FileInput({ name }: Props) {
   return (
     <div className="relative h-48 rounded-lg border-2 border-border bg-background flex justify-center items-center hover:custom-ring transition-shadow duration-300 ease-in-out col-span-full">
       <div className="absolute flex flex-col items-center">
@@ -28,7 +32,7 @@ export default function FileInput() {
       </div>
 
       <input
-        name=""
+        name={name}
         className="h-full w-full opacity-0 cursor-pointer pointer-events-auto"
         type="file"
       />

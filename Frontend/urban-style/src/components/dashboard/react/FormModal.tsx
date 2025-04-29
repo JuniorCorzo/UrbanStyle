@@ -44,14 +44,15 @@ function FormModal() {
         data-astro-reload
         onSubmit={handleSubmit}
       >
-        {formData?.fields?.map(({ type, fieldProperties }, index) => {
+        {formData?.fields?.map(({ type, fieldProperties }) => {
           const { name } = fieldProperties;
+
           if (type === "select") {
             return <SelectInput key={name} {...fieldProperties} />;
           }
 
           if (type === "file") {
-            return <FileInput key={name} />;
+            return <FileInput key={name} {...fieldProperties} />;
           }
 
           return <TextInput key={name} {...fieldProperties} />;
