@@ -25,7 +25,7 @@ import FormModal from "@/components/dashboard/react/FormModal";
       <Table />
     </article>
   </section>
-  <Dock client:idle />
+  <Dock />
 </Layout>
 
 <script>
@@ -36,7 +36,8 @@ import FormModal from "@/components/dashboard/react/FormModal";
   const handleMediator = async () => {
     const dashboardMediator = await selectMediator();
     if (dashboardMediator) {
-      openModalEvent(await dashboardMediator.form.formConfig());
+      const { formConfig, sendData } = dashboardMediator.form;
+      openModalEvent(await formConfig(), sendData);
     }
   };
 
