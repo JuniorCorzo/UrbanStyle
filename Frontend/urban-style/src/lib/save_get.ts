@@ -7,7 +7,7 @@ export function safeGet<D extends BaseDocument>(
   obj: D,
   path: string | string[],
   defaultValue: unknown = ""
-): D {
+): unknown {
   const keys = Array.isArray(path)
     ? path
     : path
