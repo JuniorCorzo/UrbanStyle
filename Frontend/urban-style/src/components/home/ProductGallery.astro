@@ -1,14 +1,15 @@
 ---
-import { getAllProducts } from "@/service/product.service";
 import ProductContainer from "./ProductContainer.astro";
 import ProductsSearchResult from "./ProductsSearchResult.astro";
 import type { Products } from "@/interface/product.interface";
+import { ProductStore } from "@/state/product.store";
 
 const searchQuery = Astro.url.searchParams.get("search");
 
 let products: Products[] = [];
 if (!searchQuery) {
-  products = await getAllProducts();
+  const { productStore } = await ProductStore();
+  products = productStore.get();
 }
 ---
 

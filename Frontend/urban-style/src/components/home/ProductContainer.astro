@@ -13,7 +13,7 @@ const { products } = Astro.props;
   class="w-full grid auto-rows-[15rem] grid-cols-[repeat(auto-fill,max(15rem))] pt-4 gap-20 gap-y-32 justify-center"
 >
   {
-    products.map((product) => (
+    products?.map((product) => (
       <ProductCard product={product} key={product.id} />
     ))
   }
