@@ -1,20 +1,14 @@
 ---
-import type { BaseDocument } from "@/interface/base.interface";
-
 interface Props {
-  data: BaseDocument;
+  id: string;
 }
 
-const { data } = Astro.props;
+const { id } = Astro.props;
 ---
 
 <div class="flex items-center justify-center gap-2">
-  <div id="edit">
-    <button
-      type="button"
-      class="cursor-pointer"
-      data-data={JSON.stringify(data)}
-    >
+  <div id="edit" transition:persist>
+    <button type="button" class="cursor-pointer" data-id={id}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
@@ -32,7 +26,7 @@ const { data } = Astro.props;
     </button>
   </div>
   <div>
-    <button type="button" class="cursor-pointer" data-id={data.id}>
+    <button type="button" class="cursor-pointer" data-id={id}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

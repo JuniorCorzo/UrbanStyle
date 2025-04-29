@@ -51,7 +51,7 @@ tableConfig.setOptions((prev) => ({
             <td class="max-w-72 min-h-11 px-4 py-2 border border-border text-center">
               {flexRender(
                 cell.column.id === "actions" ? (
-                  <TableActions data={row.original as BaseDocument} />
+                  <TableActions id={(row.original as BaseDocument).id} />
                 ) : (
                   cell.column.columnDef?.cell
                 ),
@@ -66,25 +66,24 @@ tableConfig.setOptions((prev) => ({
 </table>
 
 <script>
-  import { $, $$ } from "@/lib/dom-selector";
+  import { $$ } from "@/lib/dom-selector";
   import { openModalEvent } from "@/lib/utils/open-modal-event";
   import { selectMediator } from "@/lib/utils/select-mediator";
 
-  const handleUpdate = async (data: unknown) => {
+  const handleUpdate = async (id: string) => {
     const dashboardMediator = await selectMediator();
     if (dashboardMediator) {
       const { formConfig } = dashboardMediator.form;
-      openModalEvent(formConfig);
+      openModalEvent(await formConfig(id));
     }
   };
 
   $$("#edit").forEach((edit) => {
     edit.querySelector("button")?.addEventListener("click", (e) => {
-      const { data } = (e.currentTarget as HTMLButtonElement).dataset;
-      if (!data) return;
+      const { id } = (e.currentTarget as HTMLButtonElement).dataset;
+      if (!id) return;
 
-      const parsedData = JSON.parse(data);
-      handleUpdate(parsedData);
+      handleUpdate(id);
     });
   });
 </script>
