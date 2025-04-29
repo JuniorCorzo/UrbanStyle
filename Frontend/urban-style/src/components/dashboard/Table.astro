@@ -73,8 +73,8 @@ tableConfig.setOptions((prev) => ({
   const handleUpdate = async (id: string) => {
     const dashboardMediator = await selectMediator();
     if (dashboardMediator) {
-      const { formConfig } = dashboardMediator.form;
-      openModalEvent(await formConfig(id));
+      const { formConfig, sendData } = dashboardMediator.form;
+      openModalEvent(await formConfig(id), sendData, id);
     }
   };
 
