@@ -1,5 +1,6 @@
 export interface FormMediator {
-  formConfig: FormConfig;
+  formConfig: (id?: string) => Promise<FormConfig>;
+  sendData: (formData: FormData) => void;
 }
 
 export interface FormConfig {

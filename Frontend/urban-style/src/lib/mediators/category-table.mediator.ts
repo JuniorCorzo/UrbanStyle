@@ -2,10 +2,10 @@ import type { Category } from "@/interface/category.interface";
 import type { ITableMediator } from "@/interface/table-mediator.interface";
 import { createColumnHelper } from "@tanstack/table-core";
 import { createTableConfig } from "../table-config";
-import { getAllCategories } from "@/service/categories.service";
+import { CategoriesStore } from "@/state/categories.store";
 
 export async function categoriesTable(): Promise<ITableMediator> {
-  const categories = await getAllCategories();
+  const categories = (await CategoriesStore()).categoriesStore.get();
   const columnAccessor = createColumnHelper<Category>();
   const columns = [
     columnAccessor.accessor("name", {

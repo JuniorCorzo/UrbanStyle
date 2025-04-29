@@ -7,7 +7,8 @@ import { productForm } from "./mediators/product-form.mediator";
 import { categoriesForm } from "./mediators/category-form.mediator";
 
 export async function DashboardMediator(
-  mediator: string | null
+  mediator: string | null,
+  id?: string
 ): Promise<{ table: ITableMediator; form: FormMediator } | undefined> {
   const {
     categoriesSearchParam: categories_search_param,

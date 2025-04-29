@@ -5,7 +5,7 @@ import { map } from "nanostores";
 const categoriesStore = map<Category[]>();
 
 export async function CategoriesStore() {
-  if (categoriesStore.get().length === 0) {
+  if (!categoriesStore.get().length) {
     const categories = await getAllCategories();
     categoriesStore.set(categories);
   }
