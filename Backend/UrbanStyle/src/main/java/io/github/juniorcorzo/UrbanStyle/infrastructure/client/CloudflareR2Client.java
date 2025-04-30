@@ -63,12 +63,12 @@ public class CloudflareR2Client implements StorageFileClient {
     private S3Client buildS3Client() {
         S3Configuration serviceConfiguration = S3Configuration.builder()
                 .pathStyleAccessEnabled(true)
+                .chunkedEncodingEnabled(false)
                 .build();
 
-        assert endpoint != null;
         return S3Client.builder()
                 .credentialsProvider(() -> AwsBasicCredentials.create(this.accessKeyId, this.secretAccessKey))
-                .region(Region.of("auto"))
+                .region(Region.US_EAST_1)
                 .serviceConfiguration(serviceConfiguration)
                 .endpointOverride(URI.create(endpoint))
                 .build();
