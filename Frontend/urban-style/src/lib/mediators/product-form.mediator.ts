@@ -38,6 +38,7 @@ export async function productForm(): Promise<FormMediator> {
     }
 
     createProduct(formDataToProduct(productData) as CreateProduct);
+    (await ProductStore()).productStoreUpdate();
   };
 
   const formConfig = async (productId?: string): Promise<FormConfig> => {

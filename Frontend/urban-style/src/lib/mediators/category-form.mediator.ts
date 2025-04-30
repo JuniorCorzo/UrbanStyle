@@ -7,17 +7,19 @@ import { createCategory, updateCategory } from "@/service/categories.service";
 import { CategoriesStore } from "@/state/categories.store";
 
 export async function categoriesForm(id?: string): Promise<FormMediator> {
-  const sendData = (formData: FormData) => {
+  const sendData = async (formData: FormData) => {
     const categoryData = Object.fromEntries(
       formData.entries()
     ) as unknown as Category;
 
     if (categoryData.id) {
-      updateCategory(categoryData);
+      await updateCategory(categoryData);
+      (await CategoriesStore()).categoriesStoreUpdate();
       return;
     }
 
     createCategory(categoryData);
+    (await CategoriesStore()).categoriesStoreUpdate();
   };
 
   const formConfig = async (categoryId?: string): Promise<FormConfig> => {
