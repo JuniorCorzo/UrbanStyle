@@ -1,3 +1,5 @@
+export type SendForm = (formData: FormData) => void;
+
 export interface FormMediator {
   formConfig: (id?: string) => Promise<FormConfig>;
   sendData: (formData: FormData) => void;
