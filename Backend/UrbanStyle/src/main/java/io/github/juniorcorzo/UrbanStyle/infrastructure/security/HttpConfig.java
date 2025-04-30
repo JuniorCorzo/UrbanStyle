@@ -36,6 +36,7 @@ public class HttpConfig {
                                     .requestMatchers("/auth/login").permitAll()
                                     .requestMatchers(HttpMethod.GET, "/**").permitAll()
                                     .requestMatchers(HttpMethod.POST, "/users/create").permitAll();
+
                             auth.anyRequest().authenticated();
                         }
                 )
