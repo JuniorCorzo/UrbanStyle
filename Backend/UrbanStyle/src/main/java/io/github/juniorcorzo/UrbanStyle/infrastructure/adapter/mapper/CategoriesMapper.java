@@ -10,6 +10,7 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring")
 public interface CategoriesMapper {
     @Mappings({
+            @Mapping(target = "id", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description")
     })

@@ -9,7 +9,6 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserEntity {
-    @Setter(AccessLevel.NONE)
     @MongoId
     private String id;
     private String name;
