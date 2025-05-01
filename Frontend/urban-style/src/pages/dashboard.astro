@@ -2,7 +2,8 @@
 import Table from "@/components/dashboard/Table.astro";
 import Dock from "@/components/dashboard/Dock.astro";
 import Layout from "@/layouts/Layout.astro";
-import FormModal from "@/components/dashboard/react/FormModal";
+import FormSaveModal from "@/components/dashboard/react/FormSaveModal";
+import FormDeleteModal from "@/components/dashboard/react/FormDeleteModal";
 ---
 
 <Layout>
@@ -20,7 +21,8 @@ import FormModal from "@/components/dashboard/react/FormModal";
         >
           Añadir
         </button>
-        <FormModal client:only />
+        <FormSaveModal client:only />
+        <FormDeleteModal client:only />
       </div>
       <Table />
     </article>

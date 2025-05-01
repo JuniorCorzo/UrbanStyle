@@ -95,6 +95,7 @@ export function useFormModal() {
     window.addEventListener("open-modal", (e: Event) =>
       handleModal(e as CustomEvent<OpenModalEvent>)
     );
+
     return () => {
       window.removeEventListener("open-modal", (e: Event) =>
         handleModal(e as CustomEvent<OpenModalEvent>)

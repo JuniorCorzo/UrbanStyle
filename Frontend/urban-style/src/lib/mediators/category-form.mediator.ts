@@ -3,7 +3,11 @@ import type {
   FormConfig,
   FormMediator,
 } from "@/interface/form-mediator.interface";
-import { createCategory, updateCategory } from "@/service/categories.service";
+import {
+  createCategory,
+  deleteCategory,
+  updateCategory,
+} from "@/service/categories.service";
 import { CategoriesStore } from "@/state/categories.store";
 
 export async function categoriesForm(id?: string): Promise<FormMediator> {
@@ -22,13 +26,17 @@ export async function categoriesForm(id?: string): Promise<FormMediator> {
     (await CategoriesStore()).categoriesStoreUpdate();
   };
 
+  const sendDelete = (id: string) => {
+    deleteCategory(id);
+  };
+
   const formConfig = async (categoryId?: string): Promise<FormConfig> => {
     const category = (await CategoriesStore()).categoriesStore
       .get()
       .filter(({ id }) => id === categoryId)[0];
 
     const form: FormConfig = {
-      title: "Categories",
+      title: "Categoría",
       fields: [
         {
           type: "text",
@@ -59,5 +67,6 @@ export async function categoriesForm(id?: string): Promise<FormMediator> {
   return {
     formConfig,
     sendData,
+    sendDelete,
   };
 }

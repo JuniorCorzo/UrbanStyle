@@ -1,9 +1,12 @@
+import Backdrop from "./Backdrop";
 import FileInput from "./FileInput";
 import SelectInput from "./SelectInput";
 import TextInput from "./TextInput";
+import { useBackdrop } from "./hooks/useBackdrop";
 import { useFormModal } from "./hooks/useFormModal";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
-function FormModal() {
+function FormSaveModal() {
   const { isOpen, handleModal, formData, handleSubmit } = useFormModal();
 
   return (
@@ -20,22 +23,7 @@ function FormModal() {
           type="button"
           className="text-text cursor-pointer"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="1.5"
-            stroke="currentColor"
-            className="size-6"
-            aria-label="Close modal"
-          >
-            <title id="closeModalTitle">Close modal</title>
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-            />
-          </svg>
+          <XMarkIcon className="size-6" />
         </button>
       </div>
       <form
@@ -66,12 +54,9 @@ function FormModal() {
           </button>
         </div>
       </form>
-      <div
-        id="modal_backdrop"
-        className="absolute hidden inset-0 backdrop-blur-xs bg-background/5 z-20"
-      />
+      <Backdrop />
     </dialog>
   );
 }
 
-export default FormModal;
+export default FormSaveModal;

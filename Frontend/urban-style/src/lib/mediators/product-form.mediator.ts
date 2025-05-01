@@ -8,7 +8,11 @@ import { ProductStore } from "@/state/product.store";
 import type { CreateProduct, Products } from "@/interface/product.interface";
 import { CategoriesStore } from "@/state/categories.store";
 import { imageToBase64 } from "../utils/image-to-base64";
-import { createProduct, updateProduct } from "@/service/product.service";
+import {
+  createProduct,
+  deleteProduct,
+  updateProduct,
+} from "@/service/product.service";
 import { formDataToProduct } from "@/adapter/product.adapters";
 
 export async function productForm(): Promise<FormMediator> {
@@ -41,13 +45,17 @@ export async function productForm(): Promise<FormMediator> {
     (await ProductStore()).productStoreUpdate();
   };
 
+  const sendDelete = (id: string) => {
+    deleteProduct(id);
+  };
+
   const formConfig = async (productId?: string): Promise<FormConfig> => {
     const productData = (await ProductStore()).productStore
       .get()
       .filter(({ id }) => id === productId)[0];
 
     const form: FormConfig = {
-      title: "Product Form",
+      title: "Producto",
       fields: [
         {
           type: "text",
@@ -147,5 +155,6 @@ export async function productForm(): Promise<FormMediator> {
   return {
     formConfig,
     sendData: sendProduct,
+    sendDelete,
   };
 }
