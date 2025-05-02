@@ -44,7 +44,9 @@ export const searchProducts = async (searchQuery: string) => {
 
 export const createProduct = async (product: CreateProduct) => {
   const response = await axios
-    .post(`${PUBLIC_API_URL}/product/create`, product)
+    .post(`${PUBLIC_API_URL}/products/create`, product, {
+      withCredentials: true,
+    })
     .then((response) => {
       return response.data as Response<Products>;
     });
@@ -54,7 +56,9 @@ export const createProduct = async (product: CreateProduct) => {
 
 export const updateProduct = async (product: Products) => {
   const response = await axios
-    .put(`${PUBLIC_API_URL}/product/update`, product)
+    .put(`${PUBLIC_API_URL}/products/update`, product, {
+      withCredentials: true,
+    })
     .then((response) => {
       return response.data as Response<Products>;
     });
@@ -64,7 +68,9 @@ export const updateProduct = async (product: Products) => {
 
 export const deleteProduct = async (productId: string) => {
   const response = await axios
-    .delete(`${PUBLIC_API_URL}/product/delete/${productId}`)
+    .delete(`${PUBLIC_API_URL}/products/delete/${productId}`, {
+      withCredentials: true,
+    })
     .then((response) => {
       return response.data as Response<Products>;
     });

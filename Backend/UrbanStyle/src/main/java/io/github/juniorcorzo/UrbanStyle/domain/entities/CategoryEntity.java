@@ -10,7 +10,6 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 @NoArgsConstructor
 public class CategoryEntity {
     @MongoId
-    @Setter(AccessLevel.NONE)
     private String id;
     private String name;
     private String description;

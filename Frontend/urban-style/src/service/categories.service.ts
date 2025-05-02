@@ -5,7 +5,7 @@ import axios from "axios";
 
 export async function getAllCategories() {
   const response = await axios
-    .get(`${import.meta.env.PUBLIC_API_URL}/categories/all`)
+    .get(`${PUBLIC_API_URL}/categories/all`)
     .then((response) => {
       return response.data as Response<Category>;
     });
@@ -15,7 +15,9 @@ export async function getAllCategories() {
 
 export async function createCategory(category: CreateCategory) {
   const response = await axios
-    .post(`${import.meta.env.PUBLIC_API_URL}/categories/create`, category)
+    .post(`${PUBLIC_API_URL}/categories/create`, category, {
+      withCredentials: true,
+    })
     .then((response) => {
       return response.data as Response<Category>;
     });
@@ -24,7 +26,9 @@ export async function createCategory(category: CreateCategory) {
 }
 export async function updateCategory(category: Category) {
   const response = await axios
-    .put(`${import.meta.env.PUBLIC_API_URL}/categories/update`, category)
+    .put(`${PUBLIC_API_URL}/categories/update`, category, {
+      withCredentials: true,
+    })
     .then((response) => {
       return response.data as Response<Category>;
     });
@@ -33,7 +37,9 @@ export async function updateCategory(category: Category) {
 }
 export async function deleteCategory(categoryId: string) {
   const response = await axios
-    .delete(`${import.meta.env.PUBLIC_API_URL}/categories/delete/${categoryId}`)
+    .delete(`${PUBLIC_API_URL}/categories/delete/${categoryId}`, {
+      withCredentials: true,
+    })
     .then((response) => {
       return response.data as Response<Category>;
     });

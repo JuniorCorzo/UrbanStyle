@@ -7,6 +7,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @Component
+@Slf4j
 public class JwtCookieFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
     private final CustomerUserDetailsService userDetailsService;
@@ -33,6 +35,8 @@ public class JwtCookieFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain
     ) throws ServletException, IOException {
+        log.info("Processing Authentication by cookie for the endpoint {}", request.getRequestURI());
+
         Cookie[] cookies = request.getCookies();
         if (cookies == null) {
             filterChain.doFilter(request, response);
@@ -43,6 +47,7 @@ public class JwtCookieFilter extends OncePerRequestFilter {
                 .filter(cookie -> cookie.getName().equals("accessToken"))
                 .findFirst()
                 .map(Cookie::getValue);
+
 
         String email = tokenService.extractUsername(
                 token.orElse(null)

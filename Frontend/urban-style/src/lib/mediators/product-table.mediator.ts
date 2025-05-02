@@ -1,11 +1,11 @@
 import type { Products } from "@/interface/product.interface";
 import type { ITableMediator } from "@/interface/table-mediator.interface";
-import { getAllProducts } from "@/service/product.service";
-import { createColumnHelper, type Table } from "@tanstack/table-core";
+import { createColumnHelper } from "@tanstack/table-core";
 import { createTableConfig } from "../table-config";
+import { ProductStore } from "@/state/product.store";
 
 export async function productTable(): Promise<ITableMediator> {
-  const products = await getAllProducts();
+  const products = (await ProductStore()).productStore.get();
 
   const columnAccessor = createColumnHelper<Products>();
   const columns = [

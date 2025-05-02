@@ -30,14 +30,30 @@ const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA;
 
   const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
 
+  let isNavigating = false;
+
   $("#container_links")?.addEventListener("click", (event) => {
+    if (isNavigating) return;
+
+    const target = event.target as HTMLElement;
     if (
-      !(event.target instanceof HTMLLIElement) &&
-      !(event.target instanceof HTMLImageElement)
+      !(target instanceof HTMLLIElement) &&
+      !(target instanceof HTMLImageElement)
     ) {
       return;
     }
-    const { mediator } = (event.target as HTMLLIElement).dataset;
-    navigate(`/dashboard?${mediatorSearchParam}=${mediator}`);
+
+    isNavigating = true;
+    const mediator = target.dataset.mediator;
+
+    if (mediator) {
+      navigate(`/dashboard?${mediatorSearchParam}=${mediator}`, {
+        history: "replace",
+      });
+
+      setTimeout(() => {
+        isNavigating = false;
+      }, 500);
+    }
   });
 </script>

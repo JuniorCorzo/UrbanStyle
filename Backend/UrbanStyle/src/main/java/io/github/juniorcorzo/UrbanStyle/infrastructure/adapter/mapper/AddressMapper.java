@@ -9,6 +9,7 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring")
 public interface AddressMapper {
     @Mappings({
+            @Mapping(target = "id", source = "id"),
             @Mapping(target = "userId", source = "userId"),
             @Mapping(target = "street", source = "street"),
             @Mapping(target = "city", source = "city"),

@@ -9,6 +9,7 @@ import org.mapstruct.Mappings;
 @Mapper(componentModel = "spring")
 public interface ProductMapper {
     @Mappings({
+            @Mapping(target = "id", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "description", source = "description"),
             @Mapping(target = "images", source = "images"),

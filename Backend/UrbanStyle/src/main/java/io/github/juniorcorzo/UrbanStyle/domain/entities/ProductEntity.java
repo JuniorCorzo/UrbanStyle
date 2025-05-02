@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 public class ProductEntity {
     @MongoId
-    @Setter(AccessLevel.NONE)
     private String id;
     private String name;
     private String description;

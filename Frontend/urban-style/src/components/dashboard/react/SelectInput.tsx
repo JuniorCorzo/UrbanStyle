@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import SlimSelect from "slim-select";
 import type { FieldProperties } from "@/interface/form-mediator.interface";
 import LabelInput from "./LabelInput";
@@ -15,6 +15,9 @@ export default function SelectInput({
   isMultiple,
 }: SelectInputProps) {
   const selectRef = useRef<HTMLSelectElement>(null);
+  const [selectValue, setSelectValue] = useState(value);
+
+  useEffect(() => setSelectValue(value), [value]);
 
   useEffect(() => {
     if (selectRef.current) {
@@ -30,11 +33,10 @@ export default function SelectInput({
         },
       });
 
-      if (value) slim.setSelected(value);
+      if (selectValue) slim.setSelected(selectValue);
     }
-  }, [placeholder, isMultiple, value]);
+  }, [placeholder, isMultiple, selectValue]);
 
-  console.log(value);
   return (
     <LabelInput label={label}>
       <select
@@ -42,7 +44,6 @@ export default function SelectInput({
         className="w-full border-border rounded"
         multiple={isMultiple}
         name={name}
-        value={value}
         data-name={name}
         data-is-multiple={isMultiple}
         data-placeholder={placeholder}
