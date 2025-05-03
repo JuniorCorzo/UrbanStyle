@@ -1,6 +1,6 @@
 package io.github.juniorcorzo.UrbanStyle.domain.enums;
 
-public enum StatusEnums {
+public enum OrderStatus {
     PROCESSING,
     SENT,
     DELIVERED,
