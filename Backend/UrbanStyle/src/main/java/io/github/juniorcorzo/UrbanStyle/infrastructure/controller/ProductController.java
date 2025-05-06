@@ -1,6 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 
 import io.github.juniorcorzo.UrbanStyle.application.service.ProductService;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.ProductDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.ProductImagesDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
@@ -26,6 +27,11 @@ public class ProductController {
     @GetMapping
     public ResponseDTO<ProductDTO> getProductById(@RequestParam String id) {
         return productService.getProductById(id);
+    }
+
+    @GetMapping("/group")
+    public ResponseDTO<ProductAggregationDomain> groupProductsByCategories(){
+        return this.productService.groupProductsByCategories();
     }
 
     @GetMapping("/{category}")

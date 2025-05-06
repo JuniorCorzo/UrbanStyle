@@ -1,11 +1,13 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.ProductsRepository;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.ProductDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.ProductImagesDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.ProductMapper;
+import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -49,6 +51,10 @@ public class ProductService {
                 List.of(this.productMapper.toDTO(productResponse)),
                 "Product retrieved successfully"
         );
+    }
+
+    public ResponseDTO<ProductAggregationDomain> groupProductsByCategories(){
+        return new ResponseDTO<>(HttpStatus.OK, this.productsRepository.groupAllByCategories(), "Product retrieved successfully");
     }
 
     public ResponseDTO<ProductDTO> getProductsByCategory(String categoryId) {
