@@ -7,16 +7,15 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.Produ
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.ProductImagesDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.ProductMapper;
-import org.apache.catalina.connector.Response;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 
 @Service
+@Slf4j
 public class ProductService {
     private final ProductsRepository productsRepository;
     private final ProductMapper productMapper;
@@ -53,7 +52,7 @@ public class ProductService {
         );
     }
 
-    public ResponseDTO<ProductAggregationDomain> groupProductsByCategories(){
+    public ResponseDTO<ProductAggregationDomain> groupProductsByCategories() {
         return new ResponseDTO<>(HttpStatus.OK, this.productsRepository.groupAllByCategories(), "Product retrieved successfully");
     }
 
@@ -85,30 +84,22 @@ public class ProductService {
 
     public ResponseDTO<ProductDTO> createProduct(ProductDTO productDTO) {
         ProductEntity productEntity = this.productMapper.toEntity(productDTO);
-        try {
-            Future<List<String>> futureImages = this.imageStorageService.sendImagesToStorage(productDTO.images());
-            productEntity.setImages(futureImages.get());
-            System.out.println(productEntity.getImages());
-            ProductEntity savedProduct = this.productsRepository.save(productEntity);
-            return new ResponseDTO<>(
-                    HttpStatus.CREATED,
-                    List.of(this.productMapper.toDTO(savedProduct)),
-                    "Product created successfully"
-            );
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        List<String> futureImages = this.imageStorageService.sendImagesToStorage(productDTO.images());
+        productEntity.setImages(futureImages);
+
+        ProductEntity savedProduct = this.productsRepository.save(productEntity);
+        return new ResponseDTO<>(
+                HttpStatus.CREATED,
+                List.of(this.productMapper.toDTO(savedProduct)),
+                "Product created successfully"
+        );
     }
 
     public ResponseDTO<ProductDTO> addImages(ProductImagesDTO productImagesDTO) {
-        try {
-            List<String> keyImages = this.imageStorageService.sendImagesToStorage(productImagesDTO.images()).get();
-            this.productsRepository.saveImagesToProduct(productImagesDTO.productId(), keyImages);
+        List<String> keyImages = this.imageStorageService.sendImagesToStorage(productImagesDTO.images());
+        this.productsRepository.saveImagesToProduct(productImagesDTO.productId(), keyImages);
 
-            return new ResponseDTO<>(HttpStatus.OK, "Images added successfully");
-        } catch (InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e);
-        }
+        return new ResponseDTO<>(HttpStatus.OK, "Images added successfully");
     }
 
     public ResponseDTO<ProductDTO> updateProduct(ProductDTO productDTO) {
@@ -129,7 +120,7 @@ public class ProductService {
     }
 
     public ResponseDTO<ProductDTO> deleteImagesFromProduct(ProductImagesDTO productImagesDTO) {
-        System.out.println(productImagesDTO);
+        this.imageStorageService.deleteImagesFromStorage(productImagesDTO.images());
         this.productsRepository.deleteImagesFromProduct(productImagesDTO.productId(), productImagesDTO.images());
         return new ResponseDTO<>(HttpStatus.OK, "Images deleted successfully");
     }
