@@ -1,6 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderHistory;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.OrderRepository;
@@ -27,6 +28,23 @@ public class OrderService {
                 allOrders,
                 "Orders retrieved successfully"
         );
+    }
+
+    public ResponseDTO<SalesRecord> getProductsMoreSold() {
+        return new ResponseDTO<>(
+                HttpStatus.OK,
+                this.orderRepository.findProductsMoreSold(),
+                "Orders retrieved successfully"
+        );
+    }
+
+    public ResponseDTO<SalesRecord> getCategoryMoreSold() {
+        return new ResponseDTO<>(
+                HttpStatus.OK,
+                this.orderRepository.findCategoriesMoreSold(),
+                "Orders retrieved successfully"
+        );
+
     }
 
     public ResponseDTO<OrdersDTO> getOrdersByUserId(String userId) {

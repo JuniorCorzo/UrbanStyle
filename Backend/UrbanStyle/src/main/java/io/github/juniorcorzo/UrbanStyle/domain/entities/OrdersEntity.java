@@ -14,7 +14,7 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Document("Orders")
+@Document("orders")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
