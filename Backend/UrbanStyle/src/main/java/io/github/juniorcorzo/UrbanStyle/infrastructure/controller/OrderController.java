@@ -1,6 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 
 import io.github.juniorcorzo.UrbanStyle.application.service.OrderService;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.OrdersDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
@@ -21,6 +22,16 @@ public class OrderController {
     @GetMapping("/by")
     public ResponseDTO<OrdersDTO> getOrdersByUserId(@RequestParam("user-id") String userId) {
         return this.orderService.getOrdersByUserId(userId);
+    }
+
+    @GetMapping("/products-most-sold")
+    public ResponseDTO<SalesRecord> getProductsMoreSold() {
+        return this.orderService.getProductsMoreSold();
+    }
+
+    @GetMapping("/categories-most-sold")
+    public ResponseDTO<SalesRecord> getCategoryMoreSold() {
+        return this.orderService.getCategoryMoreSold();
     }
 
     @PostMapping("/create")
