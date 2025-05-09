@@ -1,5 +1,5 @@
 ---
-import Table from "@/components/dashboard/Table.astro";
+import Table from "@/components/dashboard/react/Table";
 import Dock from "@/components/dashboard/Dock.astro";
 import Layout from "@/layouts/Layout.astro";
 import FormSaveModal from "@/components/dashboard/react/FormSaveModal";
@@ -24,7 +24,7 @@ import FormDeleteModal from "@/components/dashboard/react/FormDeleteModal";
         <FormSaveModal client:only />
         <FormDeleteModal client:only />
       </div>
-      <Table />
+      <Table client:only />
     </article>
   </section>
   <Dock />

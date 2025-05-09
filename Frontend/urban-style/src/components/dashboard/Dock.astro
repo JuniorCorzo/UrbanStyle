@@ -25,35 +25,25 @@ const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA;
 
 <script>
   import { $ } from "@/lib/dom-selector";
-  import { navigate } from "astro:transitions/client";
   import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
 
   const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
 
-  let isNavigating = false;
-
   $("#container_links")?.addEventListener("click", (event) => {
-    if (isNavigating) return;
-
     const target = event.target as HTMLElement;
+
     if (
       !(target instanceof HTMLLIElement) &&
       !(target instanceof HTMLImageElement)
     ) {
       return;
     }
-
-    isNavigating = true;
     const mediator = target.dataset.mediator;
 
     if (mediator) {
-      navigate(`/dashboard?${mediatorSearchParam}=${mediator}`, {
-        history: "replace",
-      });
-
-      setTimeout(() => {
-        isNavigating = false;
-      }, 500);
+      const url = new URL(window.location.href);
+      url.searchParams.set(mediatorSearchParam, mediator);
+      window.history.replaceState({}, "", url);
     }
   });
 </script>
