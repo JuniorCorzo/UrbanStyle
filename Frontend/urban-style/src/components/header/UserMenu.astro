@@ -30,7 +30,7 @@ const { name: userName, role } = user;
         )
       }
       <li>
-        <a href="#">Cerrar sesión</a>
+        <button id="logout" class="cursor-pointer">Cerrar sesión</button>
       </li>
     </ul>
   </div>
@@ -38,9 +38,20 @@ const { name: userName, role } = user;
 
 <style>
   li {
-    @apply w-full px-[12px] py-[7px] rounded-[4px];
+    @apply w-full px-[12px] py-[7px] rounded-[4px] cursor-pointer;
     &:hover {
       background-color: var(--color-secondary);
     }
   }
 </style>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+  import { logout } from "@/service/auth.service";
+
+  document.addEventListener("astro:page-load", () => {
+    $("#logout")?.addEventListener("click", () => {
+      logout().then(() => location.replace("/home"));
+    });
+  });
+</script>

@@ -27,6 +27,8 @@ if (!searchQuery) {
   $("a")?.addEventListener("click", (event) => {
     event.preventDefault();
     const href = (event.currentTarget as HTMLAnchorElement).href;
-    navigate(href);
+    navigate(href, {
+      history: "push",
+    });
   });
 </script>

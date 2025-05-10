@@ -40,10 +40,10 @@ const { user } = Astro.locals;
             <button id="login_button" type="button">
               Iniciar Sesión
             </button>
+          <LoginModal />
           )
         }
         {user && <UserMenu user={user} />}
-        <LoginModal />
       </li>
     </ul>
   </nav>
