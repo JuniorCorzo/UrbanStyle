@@ -49,6 +49,7 @@ public class AuthController {
                 ResponseCookie.from("accessToken", "chaooooo-no-vuelvas-a-volver")
                         .httpOnly(true)
                         .maxAge(0)
+                        .path("/")
                         .build()
                         .toString()
         );

@@ -25,7 +25,7 @@ export class Auth {
     this.setUserId(userId);
 
     this.createSession();
-    window.location.href = "/";
+    location.replace("/home");
   }
 
   // this function is used to check if the user cookie is valid in the

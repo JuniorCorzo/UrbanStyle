@@ -9,31 +9,33 @@
 <script>
   import { $ } from "@/lib/dom-selector";
 
-  const $searchContainer = $("#search_container");
-  const $searchInputContainer = $("input[name='search-query']");
+  document.addEventListener("astro:page-load", () => {
+    const $searchContainer = $("#search_container");
+    const $searchInputContainer = $("input[name='search-query']");
 
-  $searchContainer?.addEventListener("click", (event) => {
-    const target = event.target;
-    if (
-      target instanceof HTMLDivElement ||
-      target instanceof HTMLInputElement
-    ) {
-      return;
-    }
-
-    $searchInputContainer?.classList.toggle("hidden");
-    $searchInputContainer?.classList.toggle("flex");
-  });
-
-  $searchInputContainer?.addEventListener("keyup", (event) => {
-    const input = event.target as HTMLInputElement;
-    if (event.key === "Enter") {
-      if (input.value.trim() !== "") {
-        const searchParam = new URLSearchParams(location.search);
-        searchParam.set("search", input.value);
-        location.search = searchParam.toString();
+    $searchContainer?.addEventListener("click", (event) => {
+      const target = event.target;
+      if (
+        target instanceof HTMLDivElement ||
+        target instanceof HTMLInputElement
+      ) {
+        return;
       }
-    }
+
+      $searchInputContainer?.classList.toggle("hidden");
+      $searchInputContainer?.classList.toggle("flex");
+    });
+
+    $searchInputContainer?.addEventListener("keyup", (event) => {
+      const input = event.target as HTMLInputElement;
+      if (event.key === "Enter") {
+        if (input.value.trim() !== "") {
+          const searchParam = new URLSearchParams(location.search);
+          searchParam.set("search", input.value);
+          location.search = searchParam.toString();
+        }
+      }
+    });
   });
 </script>
 

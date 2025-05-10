@@ -5,10 +5,11 @@ import type {
 } from "@/interface/user.interface";
 import type { Response } from "@/interface/response.interface";
 import axios from "axios";
+import { PUBLIC_API_URL } from "@/config/env-config";
 
 export const AuthRequest = async (userCredentials: UserCredentials) => {
   return await axios
-    .post<AuthResponse>("http://localhost:8080/auth/login", userCredentials, {
+    .post<AuthResponse>(`${PUBLIC_API_URL}/auth/login`, userCredentials, {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
@@ -25,7 +26,7 @@ export const AuthRequest = async (userCredentials: UserCredentials) => {
 
 export const verifyToken = async (cookie: string) => {
   return await axios
-    .get<User>("http://localhost:8080/auth/verify", {
+    .get<User>(`${PUBLIC_API_URL}/auth/verify`, {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
@@ -43,7 +44,7 @@ export const verifyToken = async (cookie: string) => {
 
 export const logout = async () => {
   return await axios
-    .get("http://localhost:8080/auth/sign-out", {
+    .delete(`${PUBLIC_API_URL}/auth/sign-out`, {
       withCredentials: true,
       headers: {
         "Content-Type": "application/json",
