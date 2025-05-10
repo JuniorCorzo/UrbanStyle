@@ -36,7 +36,7 @@ export async function productTable(): Promise<ITableMediator> {
     columnAccessor.accessor("attributes", {
       header: "Atributos",
       cell: (info) =>
-        `Color: ${info.getValue().color} Talla: ${info.getValue().size}`,
+        `Color: ${info.getValue()?.color} Talla: ${info.getValue()?.size}`,
     }),
   ];
 
