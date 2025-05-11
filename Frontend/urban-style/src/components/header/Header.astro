@@ -29,12 +29,12 @@ const { user } = Astro.locals;
       </li>
     </ul>
   </div>
-  <nav>
-    <ul class="flex gap-6 px-2">
+  <nav class="relative h-full">
+    <ul class="flex h-full gap-6 px-2">
       <li>
         <button type="button">Carrito</button>
       </li>
-      <li>
+      <li class=" group">
         {
           !user && (
             <button id="login_button" type="button">
@@ -48,6 +48,12 @@ const { user } = Astro.locals;
     </ul>
   </nav>
 </header>
+
+<style>
+  nav ul li {
+    @apply h-full flex items-center;
+  }
+</style>
 
 <script>
   import { $ } from "@/lib/dom-selector";
