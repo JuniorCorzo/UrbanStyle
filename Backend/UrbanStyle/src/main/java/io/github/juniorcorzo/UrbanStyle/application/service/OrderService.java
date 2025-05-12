@@ -1,6 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderHistory;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
@@ -44,7 +45,6 @@ public class OrderService {
                 this.orderRepository.findCategoriesMoreSold(),
                 "Orders retrieved successfully"
         );
-
     }
 
     public ResponseDTO<OrdersDTO> getOrdersByUserId(String userId) {
@@ -60,6 +60,13 @@ public class OrderService {
         );
     }
 
+    public ResponseDTO<ReportSalesDTO> reportSalesByDay() {
+        return new ResponseDTO<>(
+                HttpStatus.OK,
+                this.orderRepository.reportSalesByDays(),
+                "Orders retrieved successfully"
+        );
+    }
     public ResponseDTO<OrdersDTO> createOrder(OrdersDTO insertOrder) {
         OrdersEntity orderSaved = this.orderRepository.save(this.orderMapper.toEntity(insertOrder));
 

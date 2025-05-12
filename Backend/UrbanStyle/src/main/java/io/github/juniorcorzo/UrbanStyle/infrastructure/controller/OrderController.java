@@ -1,6 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 
 import io.github.juniorcorzo.UrbanStyle.application.service.OrderService;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.OrdersDTO;
@@ -32,6 +33,11 @@ public class OrderController {
     @GetMapping("/categories-most-sold")
     public ResponseDTO<SalesRecord> getCategoryMoreSold() {
         return this.orderService.getCategoryMoreSold();
+    }
+
+    @GetMapping("/report-sales")
+    public ResponseDTO<ReportSalesDTO> reportSalesByDay() {
+        return this.orderService.reportSalesByDay();
     }
 
     @PostMapping("/create")
