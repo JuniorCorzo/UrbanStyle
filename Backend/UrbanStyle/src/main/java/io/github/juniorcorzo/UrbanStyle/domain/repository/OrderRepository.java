@@ -18,6 +18,7 @@ public interface OrderRepository extends ListCrudRepository<OrdersEntity, String
     List<OrdersEntity> findAllOrdersByUserId(String userId);
 
     @Aggregation(pipeline = {
+            "{ $match: { status: 'DELIVERED' } }",
             "{ '$unwind': '$products' }",
             "{ '$group': { _id: '$products.name', 'sold': { $sum: '$products.quantity' } } }",
             "{ '$project': { '_id': 0, 'sold': 1, name: '$_id' } }",
@@ -28,6 +29,7 @@ public interface OrderRepository extends ListCrudRepository<OrdersEntity, String
 
     @Aggregation(
             pipeline = {
+                    "{ $match: { status: 'DELIVERED' } }",
                     "{ $unwind: '$products' }",
                     "{ $lookup: { from: 'products', localField: 'products.productId', foreignField: '_id', as: 'product_info' } }",
                     "{ $unwind: { path: '$product_info' } }",
