@@ -26,6 +26,7 @@ const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA;
 <script>
   import { $ } from "@/lib/dom-selector";
   import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
+  import { dispatchMediatorEvent } from "@/lib/utils/change-mediator-event";
 
   const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
 
@@ -44,6 +45,7 @@ const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA;
       const url = new URL(window.location.href);
       url.searchParams.set(mediatorSearchParam, mediator);
       window.history.replaceState({}, "", url);
+      dispatchMediatorEvent({ mediator });
     }
   });
 </script>
