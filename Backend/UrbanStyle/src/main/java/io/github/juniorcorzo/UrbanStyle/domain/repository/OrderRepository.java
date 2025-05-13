@@ -1,6 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.domain.repository;
 
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderHistory;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -17,6 +18,7 @@ public interface OrderRepository extends ListCrudRepository<OrdersEntity, String
     List<OrdersEntity> findAllOrdersByUserId(String userId);
 
     @Aggregation(pipeline = {
+            "{ $match: { status: 'DELIVERED' } }",
             "{ '$unwind': '$products' }",
             "{ '$group': { _id: '$products.name', 'sold': { $sum: '$products.quantity' } } }",
             "{ '$project': { '_id': 0, 'sold': 1, name: '$_id' } }",
@@ -27,6 +29,7 @@ public interface OrderRepository extends ListCrudRepository<OrdersEntity, String
 
     @Aggregation(
             pipeline = {
+                    "{ $match: { status: 'DELIVERED' } }",
                     "{ $unwind: '$products' }",
                     "{ $lookup: { from: 'products', localField: 'products.productId', foreignField: '_id', as: 'product_info' } }",
                     "{ $unwind: { path: '$product_info' } }",
@@ -38,6 +41,15 @@ public interface OrderRepository extends ListCrudRepository<OrdersEntity, String
             }
     )
     List<SalesRecord> findCategoriesMoreSold();
+
+    @Aggregation(pipeline = {
+            "{ $match: { status: 'DELIVERED' } }",
+            "{ $unwind: { path: '$products' } }",
+            "{ $group: { _id: { year: { $year: '$orderDate' }, month: { $month: '$orderDate' }, day: { $dayOfMonth: '$orderDate' } }, sales: { $sum: '$products.quantity' }, total: { $sum: '$total' } } }",
+            "{ $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } }",
+            "{ $project: { _id: 0, date:  { $dateFromParts: { year: '$_id.year', month: '$_id.month', day: '$_id.day' } }, sales: 1, total: 1 } }"
+    })
+    List<ReportSalesDTO> reportSalesByDays();
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$set': { 'status': ?1}, '$push': { 'history': ?2 } }")
