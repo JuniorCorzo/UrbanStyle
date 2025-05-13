@@ -1,9 +1,9 @@
 import Backdrop from "./Backdrop";
-import FileInput from "./FileInput";
-import SelectInput from "./SelectInput";
-import TextInput from "./TextInput";
-import { useBackdrop } from "./hooks/useBackdrop";
-import { useFormModal } from "./hooks/useFormModal";
+import FileInput from "../inputs/FileInput";
+import SelectInput from "../inputs/SelectInput";
+import TextInput from "../inputs/TextInput";
+import { useBackdrop } from "../../hooks/useBackdrop";
+import { useFormModal } from "../../hooks/useFormModal";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 
 function FormSaveModal() {
