@@ -1,14 +1,18 @@
 ---
-import Table from "@/components/dashboard/react/Table";
 import Dock from "@/components/dashboard/Dock.astro";
 import Layout from "@/layouts/Layout.astro";
-import FormSaveModal from "@/components/dashboard/react/FormSaveModal";
-import FormDeleteModal from "@/components/dashboard/react/FormDeleteModal";
+import FormSaveModal from "@/components/dashboard/react/components/modals/FormSaveModal";
+import FormDeleteModal from "@/components/dashboard/react/components/modals/FormDeleteModal";
+import { TableItems } from "@/components/dashboard/react/TableItems";
+import TableMostSold from "@/components/dashboard/react/components/TableMostSold";
 ---
 
 <Layout>
   <section class="flex flex-col items-center">
     <h1>Dashboard</h1>
+    <article>
+      <TableMostSold client:only />
+    </article>
     <article
       class="w-full max-w-10/12 flex flex-col items-center gap-2 overflow-auto"
     >
@@ -24,7 +28,7 @@ import FormDeleteModal from "@/components/dashboard/react/FormDeleteModal";
         <FormSaveModal client:only />
         <FormDeleteModal client:only />
       </div>
-      <Table client:only />
+      <TableItems client:only />
     </article>
   </section>
   <Dock />
