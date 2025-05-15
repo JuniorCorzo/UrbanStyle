@@ -42,14 +42,13 @@ public interface OrderRepository extends ListCrudRepository<OrdersEntity, String
     )
     List<SalesRecord> findCategoriesMoreSold();
 
+
     @Aggregation(pipeline = {
+            "{ $unwind: '$products' }",
             "{ $match: { status: 'DELIVERED' } }",
-            "{ $unwind: { path: '$products' } }",
-            "{ $group: { _id: { year: { $year: '$orderDate' }, month: { $month: '$orderDate' }, day: { $dayOfMonth: '$orderDate' } }, sales: { $sum: '$products.quantity' }, total: { $sum: '$total' } } }",
-            "{ $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 } }",
-            "{ $project: { _id: 0, date:  { $dateFromParts: { year: '$_id.year', month: '$_id.month', day: '$_id.day' } }, sales: 1, total: 1 } }"
+            "{ $facet: { day: [ { $group: { _id: { $dateToString: { format: '%Y-%m-%d', date: '$orderDate' } }, sales: { $sum: '$products.quantity' }, total: { $sum: '$total' } } }, { $sort: { '_id': 1 } }, { $project: { _id: 0, date: { $dateToString: { format: '%d-%m-%Y', date: { $dateFromString: { dateString: '$_id' } } } }, sales: 1, total: 1 } } ], month: [ { $group: { _id: { $dateToString: { format: '%Y-%m', date: '$orderDate' } }, sales: { $sum: 1 }, total: { $sum: '$total' } } }, { $sort: { '_id': 1 } }, { $project: { _id: 0, date: { $dateToString: { format: '%m-%Y', date: { $dateFromString: { dateString: '$_id' } } } }, sales: 1, total: 1 } } ] } }"
     })
-    List<ReportSalesDTO> reportSalesByDays();
+    List<ReportSalesDTO> reportSales();
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$set': { 'status': ?1}, '$push': { 'history': ?2 } }")

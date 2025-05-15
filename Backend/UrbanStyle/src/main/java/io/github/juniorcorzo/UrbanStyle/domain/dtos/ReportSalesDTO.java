@@ -1,10 +1,10 @@
 package io.github.juniorcorzo.UrbanStyle.domain.dtos;
 
-import java.time.LocalDate;
+import java.util.List;
 
 public record ReportSalesDTO(
-        LocalDate date,
-        int sales,
-        double total
+        List<SalesDataDTO> day,
+        List<SalesDataDTO> month
+
 ) {
 }
