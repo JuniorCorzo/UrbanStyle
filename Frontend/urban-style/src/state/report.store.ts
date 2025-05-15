@@ -4,7 +4,7 @@ import { map } from "nanostores";
 
 const productMoreSoldStore = map<BestSeller[]>();
 const categoriesMoreSoldStore = map<BestSeller[]>();
-const reportSalesStore = map<ReportSales[]>();
+export const reportSalesStore = map<ReportSales[]>();
 
 export function ReportStore() {
   const getProductsMoreSold = async () => {
@@ -37,5 +37,6 @@ export function ReportStore() {
   return {
     getProductsMoreSold,
     getCategoriesMoreSold,
+    getReportSales,
   };
 }

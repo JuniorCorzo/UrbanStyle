@@ -16,7 +16,7 @@ export default function Table({ tableConfig }: Props) {
         {tableConfig?.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <th key={header.id}>
+              <th className="px-2" key={header.id}>
                 {flexRender(
                   header.column.columnDef?.header,
                   header.getContext()
