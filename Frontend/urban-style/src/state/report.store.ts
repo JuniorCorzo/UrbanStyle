@@ -4,7 +4,7 @@ import { map } from "nanostores";
 
 const productMoreSoldStore = map<BestSeller[]>();
 const categoriesMoreSoldStore = map<BestSeller[]>();
-export const reportSalesStore = map<ReportSales[]>();
+export const reportSalesStore = map<ReportSales>();
 
 export function ReportStore() {
   const getProductsMoreSold = async () => {
@@ -26,9 +26,10 @@ export function ReportStore() {
   };
 
   const getReportSales = async () => {
-    if (!reportSalesStore.get().length) {
+    if (reportSalesStore.get().day == undefined) {
       const report = await ReportService().reportSales();
       reportSalesStore.set(report);
+      console.log(reportSalesStore.get().day);
     }
 
     return reportSalesStore.get();

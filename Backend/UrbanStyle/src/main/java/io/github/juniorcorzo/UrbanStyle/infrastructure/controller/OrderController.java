@@ -36,8 +36,8 @@ public class OrderController {
     }
 
     @GetMapping("/report-sales")
-    public ResponseDTO<ReportSalesDTO> reportSalesByDay() {
-        return this.orderService.reportSalesByDay();
+    public ResponseDTO<ReportSalesDTO> reportSales() {
+        return this.orderService.reportSales();
     }
 
     @PostMapping("/create")

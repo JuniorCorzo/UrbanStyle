@@ -60,10 +60,10 @@ public class OrderService {
         );
     }
 
-    public ResponseDTO<ReportSalesDTO> reportSalesByDay() {
+    public ResponseDTO<ReportSalesDTO> reportSales() {
         return new ResponseDTO<>(
                 HttpStatus.OK,
-                this.orderRepository.reportSalesByDays(),
+                this.orderRepository.reportSales(),
                 "Orders retrieved successfully"
         );
     }

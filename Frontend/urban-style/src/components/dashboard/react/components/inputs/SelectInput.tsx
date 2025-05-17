@@ -4,7 +4,11 @@ import type { FieldProperties } from "@/interface/form-mediator.interface";
 import LabelInput from "./LabelInput";
 import "@/styles/select.css";
 
-interface SelectInputProps extends FieldProperties {}
+interface SelectInputProps extends FieldProperties {
+  search?: boolean;
+  closeOnSelect?: boolean;
+  onChange?: (value: string) => void;
+}
 
 export default function SelectInput({
   name,
@@ -13,29 +17,47 @@ export default function SelectInput({
   options,
   value,
   isMultiple,
+  search = true,
+  closeOnSelect = false,
+  onChange,
 }: SelectInputProps) {
   const selectRef = useRef<HTMLSelectElement>(null);
   const [selectValue, setSelectValue] = useState(value);
 
   useEffect(() => setSelectValue(value), [value]);
+  useEffect(() => {
+    if (onChange) {
+      onChange(selectValue as string);
+    }
+  }, [selectValue]);
 
   useEffect(() => {
     if (selectRef.current) {
       const slim = new SlimSelect({
         select: selectRef.current,
+        events: {
+          afterChange(newVal) {
+            if (newVal.length > 1) {
+              return;
+            }
+            console.log(newVal[0].value);
+            setSelectValue(() => newVal[0].value);
+          },
+        },
         settings: {
           placeholderText: placeholder,
-          closeOnSelect: false,
+          closeOnSelect: closeOnSelect,
           allowDeselect: !!isMultiple,
           contentPosition: "fixed",
           contentLocation: document.body,
           showOptionTooltips: true,
+          showSearch: search,
         },
       });
 
       if (selectValue) slim.setSelected(selectValue);
     }
-  }, [placeholder, isMultiple, selectValue]);
+  }, [placeholder, isMultiple]);
 
   return (
     <LabelInput label={label}>

@@ -9,12 +9,35 @@ import ChartComponent from "@/components/dashboard/react/components/ChartCompone
 import { ReportStore } from "@/state/report.store";
 
 const reportData = await ReportStore().getReportSales();
+const salesLastMonth = reportData.month[reportData.month.length - 2];
 ---
 
 <Layout>
   <section class="flex flex-col items-center">
     <h1>Dashboard</h1>
     <article class="w-full max-w-10/12 grid grid-cols-3 gap-5">
+      <div class="grid grid-cols-3 gap-5 col-span-3">
+        <div
+          class="flex flex-col gap-1 px-5 py-2.5 border border-border rounded"
+        >
+          <span class="text-text text-1xl text-left"
+            >Ingresos del último mes:
+          </span>
+          <span class="text-text text-center font-bold text-6xl"
+            >{salesLastMonth.total}
+          </span>
+        </div>
+        <div
+          class="flex flex-col gap-1 px-5 py-2.5 border border-border rounded"
+        >
+          <span class="text-text text-1xl text-left"
+            >Ventas del último mes:
+          </span>
+          <span class="text-text text-center font-bold text-6xl"
+            >{salesLastMonth.sales}
+          </span>
+        </div>
+      </div>
       <div
         class="flex flex-col justify-center border col-span-2 border-border text-center py-2.5 px-5 rounded"
       >
@@ -22,9 +45,9 @@ const reportData = await ReportStore().getReportSales();
         <ChartComponent client:load reportData={reportData} />
       </div>
       <div
-        class="relative flex flex-col border border-border text-center items-center justify-center py-3 px-5 rounded"
+        class="flex flex-col border border-border text-center items-center justify-center py-3 px-5 rounded"
       >
-        <span class="absolute top-2 text-lg">Productos Mas Vendidos</span>
+        <span class="text-lg">Productos Mas Vendidos</span>
         <TableMostSold client:load />
       </div>
     </article>
