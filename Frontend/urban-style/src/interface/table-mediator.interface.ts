@@ -5,4 +5,5 @@ export type TableConfig = () => { tableConfig: ITable };
 
 export interface ITableMediator {
   tableConfig: TableConfig;
+  mostSoldTable: TableConfig;
 }

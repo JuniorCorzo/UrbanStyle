@@ -1,18 +1,22 @@
 import { flexRender } from "@/lib/table-config";
 import TableActions from "./TableActions";
 import type { BaseDocument } from "@/interface/base.interface";
-import { useTable } from "./hooks/useTable";
+import Cell from "./Cell";
+import type { ITable } from "@/interface/table-mediator.interface";
+import { useState } from "react";
 
-export default function Table() {
-  const { tableConfig } = useTable();
+interface Props {
+  tableConfig: ITable | undefined;
+}
 
+export default function Table({ tableConfig }: Props) {
   return (
     <table className="table w-full border border-border">
       <thead className="h-11 bg-accent text-center">
         {tableConfig?.getHeaderGroups().map((headerGroup) => (
           <tr key={headerGroup.id}>
             {headerGroup.headers.map((header) => (
-              <th key={header.id}>
+              <th className="px-2" key={header.id}>
                 {flexRender(
                   header.column.columnDef?.header,
                   header.getContext()
@@ -26,10 +30,7 @@ export default function Table() {
         {tableConfig?.getRowModel().rows.map((row) => (
           <tr key={row.id}>
             {row.getVisibleCells().map((cell) => (
-              <td
-                key={cell.id}
-                className="max-w-72 min-h-11 px-4 py-2 border border-border text-center"
-              >
+              <Cell key={cell.id}>
                 {flexRender(
                   cell.column.id === "actions" ? (
                     <TableActions id={(row.original as BaseDocument).id} />
@@ -38,7 +39,7 @@ export default function Table() {
                   ),
                   cell.getContext()
                 )}
-              </td>
+              </Cell>
             ))}
           </tr>
         ))}

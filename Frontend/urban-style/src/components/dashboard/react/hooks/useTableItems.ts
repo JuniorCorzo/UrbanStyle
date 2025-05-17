@@ -3,9 +3,8 @@ import { selectMediator } from "@/lib/utils/select-mediator";
 import type { ColumnDef } from "@tanstack/table-core";
 import { useEffect, useState } from "react";
 
-export function useTable() {
+export function useTableItems() {
   const [tableConfig, setTableConfig] = useState<ITable>();
-  const searchParam = new URLSearchParams();
 
   const getTableConfig = async () => {
     const table = (await selectMediator())?.table.tableConfig();
@@ -28,8 +27,10 @@ export function useTable() {
   };
 
   useEffect(() => {
+    window.addEventListener("change-mediator", getTableConfig);
     getTableConfig();
-  }, [searchParam]);
+    return () => window.removeEventListener("change-mediator", getTableConfig);
+  }, []);
 
   return {
     tableConfig,

@@ -1,14 +1,33 @@
 ---
-import Table from "@/components/dashboard/react/Table";
 import Dock from "@/components/dashboard/Dock.astro";
 import Layout from "@/layouts/Layout.astro";
-import FormSaveModal from "@/components/dashboard/react/FormSaveModal";
-import FormDeleteModal from "@/components/dashboard/react/FormDeleteModal";
+import FormSaveModal from "@/components/dashboard/react/components/modals/FormSaveModal";
+import FormDeleteModal from "@/components/dashboard/react/components/modals/FormDeleteModal";
+import { TableItems } from "@/components/dashboard/react/TableItems";
+import TableMostSold from "@/components/dashboard/react/components/TableMostSold";
+import ChartComponent from "@/components/dashboard/react/components/ChartComponent";
+import { ReportStore } from "@/state/report.store";
+
+const reportData = await ReportStore().getReportSales();
 ---
 
 <Layout>
   <section class="flex flex-col items-center">
     <h1>Dashboard</h1>
+    <article class="w-full max-w-10/12 grid grid-cols-3 gap-5">
+      <div
+        class="flex flex-col justify-center border col-span-2 border-border text-center py-2.5 px-5 rounded"
+      >
+        <span class="text-lg">Historial de Ventas</span>
+        <ChartComponent client:load reportData={reportData} />
+      </div>
+      <div
+        class="relative flex flex-col border border-border text-center items-center justify-center py-3 px-5 rounded"
+      >
+        <span class="absolute top-2 text-lg">Productos Mas Vendidos</span>
+        <TableMostSold client:load />
+      </div>
+    </article>
     <article
       class="w-full max-w-10/12 flex flex-col items-center gap-2 overflow-auto"
     >
@@ -24,7 +43,7 @@ import FormDeleteModal from "@/components/dashboard/react/FormDeleteModal";
         <FormSaveModal client:only />
         <FormDeleteModal client:only />
       </div>
-      <Table client:only />
+      <TableItems client:only />
     </article>
   </section>
   <Dock />

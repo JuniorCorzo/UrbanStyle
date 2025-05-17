@@ -1,5 +1,5 @@
 import ModalHeader from "./ModalHeader";
-import { useDeleteModal } from "./hooks/useDeleteModal";
+import { useDeleteModal } from "../../hooks/useDeleteModal";
 
 export default function FormDeleteModal() {
   const { title, dialogRef, handleClose, handleOpen, handleSendRequest } =
