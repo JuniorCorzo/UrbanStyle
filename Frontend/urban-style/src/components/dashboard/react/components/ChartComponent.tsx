@@ -1,19 +1,26 @@
-import { useEffect, useLayoutEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ColorType, createChart, LineSeries } from "lightweight-charts";
 import type { ReportSales } from "@/interface/report.interface";
+import { convertToIso } from "@/lib/utils/convert-date";
+import SelectInput from "./inputs/SelectInput";
 
 interface Props {
-  reportData: ReportSales[];
+  reportData: ReportSales;
 }
 
 export default function ChartComponent({ reportData }: Props) {
   const $containerChartRef = useRef<HTMLDivElement>(null);
+  const [timeType, setTimeType] = useState("day");
 
   const colors = {
     backgroundColor: "#eff1f5",
     lineColor: "#7c7f93",
     textColor: "#4c4f69",
   };
+
+  useEffect(() => {
+    console.log(timeType);
+  }, [timeType]);
 
   useEffect(() => {
     if (!$containerChartRef.current) return;
@@ -45,6 +52,7 @@ export default function ChartComponent({ reportData }: Props) {
         },
       },
     });
+
     chart.timeScale().fitContent();
     chart.timeScale().applyOptions({
       borderColor: colors.lineColor,
@@ -53,14 +61,15 @@ export default function ChartComponent({ reportData }: Props) {
     const lineSeries = chart.addSeries(LineSeries, {
       color: colors.lineColor,
     });
-    console.log(reportData);
+
     lineSeries.priceScale().applyOptions({
       borderColor: colors.lineColor,
     });
+
     lineSeries.setData(
-      reportData.map(({ date, sales }) => {
+      reportData[timeType as keyof ReportSales].map(({ date, sales }) => {
         return {
-          time: date,
+          time: convertToIso(date),
           value: sales,
         };
       })
@@ -71,7 +80,24 @@ export default function ChartComponent({ reportData }: Props) {
       window.removeEventListener("resize", handleResize);
       chart.remove();
     };
-  }, [reportData, $containerChartRef.current?.clientWidth]);
+  }, [reportData, $containerChartRef.current?.clientWidth, timeType]);
 
-  return <div ref={$containerChartRef} className="w-full h-80 px-3" />;
+  return (
+    <div className="flex flex-col gap-5">
+      <div className="w-40 text-left">
+        <SelectInput
+          value={timeType}
+          label="Agrupar por"
+          search={false}
+          closeOnSelect={true}
+          onChange={setTimeType}
+          options={[
+            { value: "day", text: "Dia" },
+            { value: "month", text: "Mes" },
+          ]}
+        />
+      </div>
+      <div ref={$containerChartRef} className="w-full h-80 px-3" />;
+    </div>
+  );
 }
