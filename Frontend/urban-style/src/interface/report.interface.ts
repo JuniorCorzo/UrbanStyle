@@ -3,8 +3,13 @@ export interface BestSeller {
   sold: number;
 }
 
-export interface ReportSales {
+export interface SalesData {
   date: string;
   sales: number;
   total: number;
+}
+
+export interface ReportSales {
+  day: SalesData[];
+  month: SalesData[];
 }

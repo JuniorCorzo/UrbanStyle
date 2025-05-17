@@ -25,10 +25,10 @@ export function ReportService() {
   };
 
   const reportSales = async () => {
-    const resultRequest: ReportSales[] = await axios
+    const resultRequest: ReportSales = await axios
       .get(`${PUBLIC_API_URL}/orders/report-sales`)
       .then((response) => {
-        return (response.data as Response<ReportSales>).data;
+        return (response.data as Response<ReportSales>).data[0];
       });
 
     return resultRequest;
