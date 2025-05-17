@@ -97,7 +97,7 @@ export default function ChartComponent({ reportData }: Props) {
           ]}
         />
       </div>
-      <div ref={$containerChartRef} className="w-full h-80 px-3" />;
+      <div ref={$containerChartRef} className="w-full h-80 px-3" />
     </div>
   );
 }
