@@ -1,16 +1,15 @@
 ---
 const { categories } = Astro.props as {
-	categories: string[];
+  categories: string[];
 };
 ---
 
-
 <div class="flex gap-2">
-    {
-      categories.map((category) => (
-        <span class="text-base bg-slate-900 text-amber-50 px-1.5 py-1 rounded-lg">
-          {category}
-        </span>
-      ))
-    }
-  </div>
+  {
+    categories.map((category) => (
+      <span class="text-base bg-accent text-text px-1.5 py-1 rounded-lg">
+        {category}
+      </span>
+    ))
+  }
+</div>

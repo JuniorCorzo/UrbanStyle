@@ -1,0 +1,52 @@
+---
+import Button from "@/components/Button.astro";
+import Counter from "@/components/home/Counter.astro";
+import Tags from "@/components/home/Tags.astro";
+import BoldText from "@/components/text/BoldText.astro";
+import RegularText from "@/components/text/RegularText.astro";
+import Subtitle from "@/components/text/Subtitle.astro";
+import type { Products } from "@/interface/product.interface";
+
+import { Image } from "astro:assets";
+import { fade } from "astro:transitions";
+
+interface Props {
+  product: Products;
+}
+
+const { product } = Astro.props;
+const { name, categories, attributes, description, stock, images, price } =
+  product;
+---
+
+<section
+  class="flex max-h-96 items-top justify-center gap-x-20"
+  transition:animate={fade({ duration: 150 })}
+>
+  <article>
+    <div>
+      <Image
+        class="aspect-square"
+        src={images[0]}
+        alt={name}
+        width={380}
+        height={380}
+        loading="lazy"
+      />
+    </div>
+  </article>
+  <article class="flex flex-col h-full px-10 gap-3.5 justify-center">
+    <Subtitle Text={name} />
+    <RegularText>{description}</RegularText>
+    <Tags categories={categories} />
+    <div class="flex flex-col gap-2">
+      <RegularText>Color: {attributes.color}</RegularText>
+      <RegularText>Talla: {attributes.size}</RegularText>
+    </div>
+    <BoldText Text={`$ ${price}`} />
+    <div class="flex flex-col gap-2">
+      <Counter maxNumber={stock} />
+      <Button class="w-full" size="md"> Añadir al Carrito </Button>
+    </div>
+  </article>
+</section>

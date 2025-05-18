@@ -1,0 +1,25 @@
+---
+import ProductCard from "@/components/home/ProductCard.astro";
+import Subtitle from "@/components/text/Subtitle.astro";
+import { getProductByCategory } from "@/service/product.service";
+
+interface Props {
+  categoryName: string;
+}
+const { categoryName } = Astro.props;
+
+const productsRecommended = await getProductByCategory(categoryName);
+---
+
+<section class="w-full flex flex-col items-center gap-10">
+  <article class="w-fit flex flex-col gap-2">
+    <Subtitle Text="Productos Relacionados" size="2xl" />
+    <div class="w-fit flex gap-2 flex-wrap">
+      {
+        productsRecommended.map((product) => (
+          <ProductCard product={product} borderEffect={false} />
+        ))
+      }
+    </div>
+  </article>
+</section>
