@@ -19,10 +19,6 @@ export default function ChartComponent({ reportData }: Props) {
   };
 
   useEffect(() => {
-    console.log(timeType);
-  }, [timeType]);
-
-  useEffect(() => {
     if (!$containerChartRef.current) return;
 
     const handleResize = () => {
