@@ -1,0 +1,99 @@
+---
+import { PlusIcon, MinusIcon } from "@heroicons/react/24/outline";
+import Button from "../Button.astro";
+
+interface Props {
+  maxNumber: number;
+}
+
+const { maxNumber } = Astro.props;
+console.log(maxNumber);
+---
+
+<div class="flex">
+  <div class="flex w-fit border border-border rounded">
+    <Button
+      id="decrement"
+      class="flex items-center rounded-tr-[0] rounded-br-[0] border-0 justify-center aspect-square size-10"
+      size="sm"
+    >
+      <MinusIcon className="size-5" />
+    </Button>
+    <input
+      type="number"
+      class="w-fit min-w-14 border-l border-r border-border text-center focus:outline-none focus:custom-ring"
+      value="1"
+      min="1"
+      max={maxNumber}
+    />
+    <Button
+      id="increment"
+      class="flex items-center rounded-tl-[0] rounded-bl-[0] border-0 justify-center aspect-square size-10"
+      size="sm"
+    >
+      <PlusIcon className="size-5" />
+    </Button>
+  </div>
+</div>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+
+  const $inputNumber = $('input[type="number"]') as HTMLInputElement;
+
+  const handleIncrement = () => {
+    if ($inputNumber.valueAsNumber >= Number($inputNumber.max)) {
+      $inputNumber.value = $inputNumber.max;
+      return;
+    }
+
+    $inputNumber.valueAsNumber++;
+  };
+  const handleDecrement = () => {
+    if ($inputNumber.min >= $inputNumber.value) {
+      $inputNumber.value = $inputNumber.min;
+      return;
+    }
+
+    $inputNumber.valueAsNumber--;
+  };
+
+  const handleValidate = () => {
+    let value = $inputNumber.valueAsNumber;
+
+    if (isNaN(value) || value < Number($inputNumber.min)) {
+      $inputNumber.value = $inputNumber.min;
+      return;
+    }
+
+    if (value > Number($inputNumber.max)) {
+      $inputNumber.value = $inputNumber.max;
+    }
+  };
+
+  document.addEventListener("astro:page-load", () => {
+    $inputNumber.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        handleValidate();
+      }
+    });
+    $inputNumber.addEventListener("blur", handleValidate);
+    $("#decrement")?.addEventListener("click", handleDecrement);
+    $("#increment")?.addEventListener("click", handleIncrement);
+  });
+</script>
+
+<style>
+  <style>
+/* Oculta las flechas en Chrome, Safari, Edge, Opera */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Oculta las flechas en Firefox */
+  input[type="number"] {
+    -moz-appearance: textfield;
+  }
+</style>

@@ -25,7 +25,7 @@ export const getProductById = async (productId: string) => {
 
 export const getProductByCategory = async (categoryName: string) => {
   const response = await axios
-    .get(`${PUBLIC_API_URL}/products/category/${categoryName}`)
+    .get(`${PUBLIC_API_URL}/products/${categoryName}`)
     .then((response) => {
       return response.data as Response<Products>;
     });

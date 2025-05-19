@@ -1,53 +1,16 @@
 ---
-import Tags from "@/components/home/Tags.astro";
-import BoldText from "@/components/text/BoldText.astro";
-import RegularText from "@/components/text/RegularText.astro";
-import Subtitle from "@/components/text/Subtitle.astro";
 import Layout from "@/layouts/Layout.astro";
-import { getProductById } from "@/service/product.service";
-import Image from "astro/components/Image.astro";
-import { fade } from "astro:transitions";
+import ProductSection from "@/sections/ProductSection.astro";
+import RecommendedProductsSection from "@/sections/RecommendedProductsSection.astro";
+import { ProductStore } from "@/state/product.store";
 
-export const prerender = false;
+const productId = Astro.url.searchParams.get("id");
 
-const id = Astro.url.searchParams.get("id") as string;
-
-const { name, categories, attributes, description, discount, images, price } =
-  await getProductById(id);
+const { productStore } = await ProductStore();
+const productById = productStore.get().filter(({ id }) => id === productId)[0];
 ---
 
 <Layout>
-  <section
-    class="flex flex-col mt-16 items-center"
-    transition:animate={fade({ duration: 150 })}
-  >
-    <article
-      class="grid grid-cols-[max(425px)_max(500px)] gap-12 items-center justify-center"
-    >
-      <div>
-        <Image
-          class="aspect-square"
-          src={images[0]}
-          alt={name}
-          width={450}
-          height={450}
-          loading="lazy"
-        />
-      </div>
-      <div class="flex flex-col h-full px-10 gap-3.5">
-        <Subtitle class="text-2xl font-bold" Text={name} />
-        <RegularText>{description}</RegularText>
-        <Tags categories={categories} />
-        <div class="flex flex-col gap-2">
-          <RegularText>Color: {attributes.color}</RegularText>
-          <RegularText>Talla: {attributes.size}</RegularText>
-        </div>
-        <BoldText Text={`$ ${price}`} />
-        <button
-          class="relative mt-4 bg-blue-500 text-white px-4 py-2 rounded cursor-pointer bottom-0"
-          >Add to Cart</button
-        >
-      </div>
-    </article>
-  </section>
+  <ProductSection product={productById} />
+  <RecommendedProductsSection categoryName={productById.categories[0]} />
 </Layout>
