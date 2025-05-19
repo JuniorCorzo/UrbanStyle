@@ -19,7 +19,7 @@ public class ShoppingCartController {
         return this.shoppingCardService.getShoppingCartByUserId(userId);
     }
 
-    @PostMapping("/create")
+    @PostMapping("/add-product")
     public ResponseDTO<ShoppingCartDTO> createShoppingCart(@RequestBody ShoppingCartDTO insertShoppingCard) {
         return this.shoppingCardService.addProductsToCart(insertShoppingCard);
     }

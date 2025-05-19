@@ -53,6 +53,7 @@ public class ShoppingCartService {
     public ResponseDTO<ShoppingCartDTO> updateProductCart(ShoppingCartDTO card) {
         final ProductSummary product = card.items().getFirst();
         final String cartId = String.format("shoppingCart:%s", card.userId());
+        // This checks if a cart exists using the cart ID and verifies if the product ID is the same
         if (card.items().size() != 1 || !this.hashOperations.hasKey(cartId, String.format("productId:%s", product.productId()))) {
             throw new RuntimeException("Cart not found");
         }
