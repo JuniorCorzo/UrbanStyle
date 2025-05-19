@@ -20,7 +20,7 @@ const { name, categories, attributes, description, stock, images, price } =
 ---
 
 <section
-  class="flex max-h-96 items-top justify-center gap-x-20"
+  class="flex max-h-[450] items-top justify-center gap-x-20"
   transition:animate={fade({ duration: 150 })}
 >
   <article>
@@ -29,8 +29,8 @@ const { name, categories, attributes, description, stock, images, price } =
         class="aspect-square"
         src={images[0]}
         alt={name}
-        width={380}
-        height={380}
+        width={450}
+        height={450}
         loading="lazy"
       />
     </div>
@@ -43,7 +43,7 @@ const { name, categories, attributes, description, stock, images, price } =
       <RegularText>Color: {attributes.color}</RegularText>
       <RegularText>Talla: {attributes.size}</RegularText>
     </div>
-    <BoldText Text={`$ ${price}`} />
+    <Subtitle size="3xl" Text={`$ ${price}`} />
     <div class="flex flex-col gap-2">
       <Counter maxNumber={stock} />
       <Button class="w-full" size="md"> Añadir al Carrito </Button>
