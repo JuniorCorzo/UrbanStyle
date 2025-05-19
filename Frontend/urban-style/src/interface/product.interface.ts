@@ -13,5 +13,9 @@ export interface Products extends BaseDocument {
   };
   stock: number;
 }
-
+export interface ProductSummary
+  extends Pick<Products, "name" | "price" | "discount"> {
+  productId: Products["id"];
+  quantity: number;
+}
 export interface CreateProduct extends Omit<Products, "id"> {}
