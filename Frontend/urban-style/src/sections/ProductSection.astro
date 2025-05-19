@@ -14,6 +14,8 @@ interface Props {
 }
 
 const { product } = Astro.props;
+
+const userId = Astro.locals.user.id;
 const { name, categories, attributes, description, stock, images, price } =
   product;
 ---
@@ -45,11 +47,58 @@ const { name, categories, attributes, description, stock, images, price } =
       </div>
       <Subtitle size="3xl" Text={`$ ${price}`} />
       <div class="flex flex-col gap-2">
-        <Counter maxNumber={stock} />
-        <Button class="w-full h-fit max-w-2xs" size="md">
+        <Counter id="product_quantity" maxNumber={stock} />
+        <Button
+          id="add_cart"
+          class="w-full h-fit max-w-2xs"
+          size="md"
+          data-user-id={userId}
+        >
           Añadir al Carrito
         </Button>
       </div>
     </div>
   </article>
 </section>
+
+<script>
+  import type { Cart } from "@/interface/cart.interface";
+  import { $ } from "@/lib/dom-selector";
+  import { CartService } from "@/service/cart.service";
+  import { cartStore } from "@/state/cart.state";
+  import { ProductStore } from "@/state/product.store";
+
+  const productId = new URLSearchParams(location.search).get("id");
+
+  const handleClick = async (event: MouseEvent) => {
+    if (!productId) return;
+    const { userId } = (event.target as HTMLButtonElement).dataset;
+
+    const { productStore } = await ProductStore();
+    const { name, price, discount } = productStore
+      .get()
+      .filter(({ id }) => id === productId)[0];
+    const productQuantity = ($("#product_quantity") as HTMLInputElement)
+      .valueAsNumber;
+
+    const productToCart: Cart = {
+      userId: userId as string,
+      items: [
+        {
+          productId: productId,
+          name,
+          discount,
+          price,
+          quantity: productQuantity,
+        },
+      ],
+    };
+
+    const cartInserted = await CartService().addProductToCart(productToCart);
+    cartStore.set(cartInserted);
+  };
+
+  document.addEventListener("astro:page-load", () => {
+    $("#add_cart")?.addEventListener("click", handleClick);
+  });
+</script>
