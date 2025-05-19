@@ -4,13 +4,14 @@ import Button from "../Button.astro";
 
 interface Props {
   maxNumber: number;
+  id?: string;
 }
 
-const { maxNumber } = Astro.props;
+const { maxNumber, id } = Astro.props;
 console.log(maxNumber);
 ---
 
-<div class="flex">
+<div class="flex" transition:persist>
   <div class="flex w-fit border border-border rounded">
     <Button
       id="decrement"
@@ -20,6 +21,7 @@ console.log(maxNumber);
       <MinusIcon className="size-5" />
     </Button>
     <input
+      id={id}
       type="number"
       class="w-fit min-w-14 border-l border-r border-border text-center focus:outline-none focus:custom-ring"
       value="1"
@@ -72,6 +74,7 @@ console.log(maxNumber);
   };
 
   document.addEventListener("astro:page-load", () => {
+    $inputNumber.value = $inputNumber.min;
     $inputNumber.addEventListener("keydown", (event) => {
       if (event.key === "Enter") {
         handleValidate();
