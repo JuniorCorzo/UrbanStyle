@@ -20,11 +20,11 @@ const { name, categories, attributes, description, stock, images, price } =
 ---
 
 <section
-  class="flex max-h-[450] items-top justify-center gap-x-20"
+  class="flex flex-wrap min-h-[450] mx-auto max-w-11/12 items-top justify-center gap-x-20 gap-y-10 px-20"
   transition:animate={fade({ duration: 150 })}
 >
-  <article>
-    <div>
+  <article class="basis-[25rem] grow">
+    <div class="w-fit mx-auto">
       <Image
         class="aspect-square"
         src={images[0]}
@@ -35,18 +35,22 @@ const { name, categories, attributes, description, stock, images, price } =
       />
     </div>
   </article>
-  <article class="flex flex-col h-full px-10 gap-3.5 justify-center">
-    <Subtitle Text={name} />
-    <RegularText>{description}</RegularText>
-    <Tags categories={categories} />
-    <div class="flex flex-col gap-2">
-      <RegularText>Color: {attributes.color}</RegularText>
-      <RegularText>Talla: {attributes.size}</RegularText>
-    </div>
-    <Subtitle size="3xl" Text={`$ ${price}`} />
-    <div class="flex flex-col gap-2">
-      <Counter maxNumber={stock} />
-      <Button class="w-full" size="md"> Añadir al Carrito </Button>
+  <article class="basis-0 grow-[999] min-w-[26rem]">
+    <div class="w-fit h-full mx-auto flex flex-col gap-2 justify-center">
+      <Subtitle Text={name} />
+      <RegularText>{description}</RegularText>
+      <Tags categories={categories} />
+      <div class="flex flex-col gap-2">
+        <RegularText>Color: {attributes.color}</RegularText>
+        <RegularText>Talla: {attributes.size}</RegularText>
+      </div>
+      <Subtitle size="3xl" Text={`$ ${price}`} />
+      <div class="flex flex-col gap-2">
+        <Counter maxNumber={stock} />
+        <Button class="w-full h-fit max-w-2xs" size="md">
+          Añadir al Carrito
+        </Button>
+      </div>
     </div>
   </article>
 </section>

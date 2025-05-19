@@ -7,6 +7,7 @@ interface Props {
 }
 
 const { maxNumber } = Astro.props;
+console.log(maxNumber);
 ---
 
 <div class="flex">
@@ -20,7 +21,7 @@ const { maxNumber } = Astro.props;
     </Button>
     <input
       type="number"
-      class="w-full border-l border-r border-border text-center focus:outline-none focus:custom-ring"
+      class="w-fit min-w-14 border-l border-r border-border text-center focus:outline-none focus:custom-ring"
       value="1"
       min="1"
       max={maxNumber}
