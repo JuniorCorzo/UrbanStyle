@@ -31,15 +31,12 @@ export class Auth {
   // this function is used to check if the user cookie is valid in the
   // server side
   public async validateSession(cookie: string) {
-    if (this.user === null) {
-      const user = await verifyToken(cookie);
-      this.user = user;
-      if (!user) {
-        throw new Error("Invalid session");
-      }
+    const user = await verifyToken(cookie);
+    if (!user) {
+      throw new Error("Invalid session");
     }
 
-    return this.user;
+    return user;
   }
 
   public async logout() {
@@ -52,8 +49,9 @@ export class Auth {
     sessionStorage.setItem("user_session", JSON.stringify(user));
   }
 
-  public getUserId(): string | null {
-    return this.userId;
+  public getUserId(): string | undefined {
+    console.log(this.user);
+    return this.user?.id;
   }
 
   public setUserId(userId: string): void {

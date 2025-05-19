@@ -6,6 +6,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
     const cookie = context.request.headers.get("cookie");
     if (cookie) {
       const user = await Auth.getInstance().validateSession(cookie as string);
+      if (!user) return next();
       context.locals.user = user;
     }
   } catch (error) {
