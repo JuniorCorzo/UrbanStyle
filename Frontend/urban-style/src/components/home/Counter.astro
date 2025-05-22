@@ -8,17 +8,17 @@ interface Props {
   value?: string;
 }
 
-const { maxNumber, id, value = "1" } = Astro.props;
+const { maxNumber, id, value = "1", ...props } = Astro.props;
 ---
 
 <div class="flex" transition:persist>
-  <div class="flex w-fit border border-border rounded">
+  <div class="flex w-fit border border-border rounded" {...props}>
     <Button
       id="decrement"
       class="flex items-center rounded-tr-[0] rounded-br-[0] border-0 justify-center aspect-square size-10"
       size="sm"
     >
-      <MinusIcon className="size-5" />
+      <MinusIcon className="size-5 pointer-events-none" />
     </Button>
     <input
       id={id}
@@ -34,7 +34,7 @@ const { maxNumber, id, value = "1" } = Astro.props;
       class="flex items-center rounded-tl-[0] rounded-bl-[0] border-0 justify-center aspect-square size-10"
       size="sm"
     >
-      <PlusIcon className="size-5" />
+      <PlusIcon className="size-5 pointer-events-none" />
     </Button>
   </div>
 </div>
