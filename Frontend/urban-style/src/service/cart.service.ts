@@ -28,6 +28,27 @@ export function CartService() {
     return resultRequest;
   };
 
+  const updateQuantityProductInCart = async (
+    userId: string,
+    productId: string,
+    quantity: number
+  ) => {
+    const resultRequest: Cart = await axios
+      .patch(
+        `${PUBLIC_API_URL}/shopping-cart/change-quantity?user-id=${userId}&product-id=${productId}&quantity=${quantity}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      )
+      .then((response) => {
+        const data = (response.data as Response<Cart>).data[0];
+        return data;
+      });
+
+    return resultRequest;
+  };
+
   const updateProductInCart = async (cart: Cart) => {
     const resultRequest: Cart = await axios
       .post(`${PUBLIC_API_URL}/shopping-cart/update-product`, cart, {
@@ -59,6 +80,7 @@ export function CartService() {
   return {
     getCartByUserId,
     addProductToCart,
+    updateQuantityProductInCart,
     updateProductInCart,
     removeProductFromCart,
   };
