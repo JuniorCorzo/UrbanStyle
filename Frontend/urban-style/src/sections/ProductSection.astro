@@ -65,6 +65,7 @@ const { name, categories, attributes, description, stock, images, price } =
   import type { Cart } from "@/interface/cart.interface";
   import { $ } from "@/lib/dom-selector";
   import { CartService } from "@/service/cart.service";
+  import { updateCartState } from "@/service/updateCartState";
   import { cartStore } from "@/state/cart.state";
   import { ProductStore } from "@/state/product.store";
 
@@ -94,8 +95,13 @@ const { name, categories, attributes, description, stock, images, price } =
       ],
     };
 
-    const cartInserted = await CartService().addProductToCart(productToCart);
-    cartStore.set(cartInserted);
+    await CartService()
+      .addProductToCart(productToCart)
+      .then((cart) => {
+        updateCartState(cart)
+          .then((response) => response)
+          .catch(console.error);
+      });
   };
 
   document.addEventListener("astro:page-load", () => {

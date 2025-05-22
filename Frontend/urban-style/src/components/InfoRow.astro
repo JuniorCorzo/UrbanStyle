@@ -1,0 +1,14 @@
+---
+interface Props {
+  label: string;
+  value: string | number;
+  class?: string;
+}
+
+const { label, value, class: className = "" } = Astro.props;
+---
+
+<span class:list={[className, "flex justify-between"]}>
+  <span>{label}</span>
+  <span set:html={value} />
+</span>

@@ -1,0 +1,116 @@
+---
+import Button from "@/components/Button.astro";
+import Counter from "@/components/home/Counter.astro";
+import InfoRow from "@/components/InfoRow.astro";
+import Subtitle from "@/components/text/Subtitle.astro";
+import { CartStore } from "@/state/cart.state";
+import { ProductStore } from "@/state/product.store";
+import { TrashIcon } from "@heroicons/react/24/outline";
+
+const userId = Astro.locals.user.id;
+const { getCartByUserId, calculateTotal } = await CartStore(userId);
+const { getProductById } = await ProductStore();
+
+const items = getCartByUserId()?.items || [];
+console.log(getCartByUserId());
+const total = calculateTotal();
+---
+
+<section id="cart-section" class="flex">
+  <article class="flex flex-col gap-14 grow">
+    {
+      items.map(({ productId, name, price, quantity }) => (
+        <div class="flex gap-5 px-20">
+          <div>
+            <img
+              class="size-40 object-cover aspect-square"
+              src={getProductById(productId).get()?.images[0]}
+              alt={name}
+            />
+          </div>
+          <div class="w-full flex justify-between">
+            <div class="flex flex-col">
+              <div class="flex grow flex-col gap-1">
+                <Subtitle size="xl" Text={name} />
+                <span>
+                  Color: <strong>Rojo</strong>
+                </span>
+                <span>
+                  Talla: <strong>S</strong>
+                </span>
+              </div>
+              <div class="basis-5">
+                <Button
+                  id="remove-product"
+                  class="flex bg-transparent border-0 items-center gap-2 hover:ring-0 hover:scale-105"
+                  size="custom"
+                  data-product-id={productId}
+                  data-user-id={userId}
+                >
+                  <TrashIcon className="size-6 stroke-maroon pointer-events-none" />
+                  <span class="text-maroon font-semibold pointer-events-none">
+                    Remover
+                  </span>
+                </Button>
+              </div>
+            </div>
+            <div class="flex flex-col gap-1 items-end">
+              <Counter
+                maxNumber={getProductById(productId).get()?.stock || 0}
+                value={quantity.toString()}
+              />
+              <Subtitle size="lg" Text={`$${price}/u`} />
+              <Subtitle size="lg" Text={`$${(price * quantity).toFixed(2)}`} />
+            </div>
+          </div>
+        </div>
+      ))
+    }
+  </article>
+  <article class="flex flex-col basis-96 gap-1 mt-5 pr-7">
+    <Subtitle size="xl" Text="Detalles" />
+    <div class="flex flex-col border-border gap-11 pt-5">
+      <div class="flex flex-col gap-1">
+        <InfoRow label="Total" value={`<strong>${total}</strong>`} />
+        <InfoRow label="Envió" value="<strong>Gratis</strong>" />
+        <InfoRow
+          class="pt-5"
+          label="Total con Iva"
+          value={`<strong>${(total + total * 0.19).toFixed(2)}</strong>`}
+        />
+      </div>
+      <Button> Realizar el pedido por WhatsApp </Button>
+    </div>
+  </article>
+</section>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+  import { CartService } from "@/service/cart.service";
+  import { updateCartState } from "@/service/updateCartState";
+
+  const $sectionCart = $("#cart-section");
+  const handleClick = (event: MouseEvent) => {
+    const $target = event.target as HTMLElement;
+    if ($target.id === "remove-product") {
+      const { userId, productId } = $target.dataset;
+      if (!userId || !productId) return;
+
+      CartService()
+        .removeProductFromCart(userId, productId)
+        .then((response) => {
+          updateCartState(response)
+            .then((response) => {
+              if (response.status === 204) {
+                location.reload();
+              }
+            })
+            .catch(console.error);
+        });
+    }
+  };
+
+  document.addEventListener("astro:page-load", () => {
+    $sectionCart?.addEventListener("click", handleClick);
+  });
+</script>

@@ -5,10 +5,10 @@ import Button from "../Button.astro";
 interface Props {
   maxNumber: number;
   id?: string;
+  value?: string;
 }
 
-const { maxNumber, id } = Astro.props;
-console.log(maxNumber);
+const { maxNumber, id, value = "1" } = Astro.props;
 ---
 
 <div class="flex" transition:persist>
@@ -24,9 +24,10 @@ console.log(maxNumber);
       id={id}
       type="number"
       class="w-fit min-w-14 border-l border-r border-border text-center focus:outline-none focus:custom-ring"
-      value="1"
+      value={value}
       min="1"
       max={maxNumber}
+      data-value={value}
     />
     <Button
       id="increment"
@@ -39,11 +40,11 @@ console.log(maxNumber);
 </div>
 
 <script>
-  import { $ } from "@/lib/dom-selector";
+  import { $, $$ } from "@/lib/dom-selector";
 
-  const $inputNumber = $('input[type="number"]') as HTMLInputElement;
+  const $inputsNumber = $$('input[type="number"]') as NodeList;
 
-  const handleIncrement = () => {
+  const handleIncrement = ($inputNumber: HTMLInputElement) => {
     if ($inputNumber.valueAsNumber >= Number($inputNumber.max)) {
       $inputNumber.value = $inputNumber.max;
       return;
@@ -51,7 +52,7 @@ console.log(maxNumber);
 
     $inputNumber.valueAsNumber++;
   };
-  const handleDecrement = () => {
+  const handleDecrement = ($inputNumber: HTMLInputElement) => {
     if ($inputNumber.min >= $inputNumber.value) {
       $inputNumber.value = $inputNumber.min;
       return;
@@ -60,7 +61,7 @@ console.log(maxNumber);
     $inputNumber.valueAsNumber--;
   };
 
-  const handleValidate = () => {
+  const handleValidate = ($inputNumber: HTMLInputElement) => {
     let value = $inputNumber.valueAsNumber;
 
     if (isNaN(value) || value < Number($inputNumber.min)) {
@@ -74,15 +75,26 @@ console.log(maxNumber);
   };
 
   document.addEventListener("astro:page-load", () => {
-    $inputNumber.value = $inputNumber.min;
-    $inputNumber.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        handleValidate();
-      }
+    $inputsNumber.forEach(($input) => {
+      const $inputNumber = $input as HTMLInputElement;
+      $inputNumber.value = $inputNumber.dataset.value as string;
+
+      $inputNumber.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          handleValidate($inputNumber);
+        }
+      });
+
+      $inputNumber.addEventListener("blur", () => handleValidate($inputNumber));
+
+      ($inputNumber?.parentElement as HTMLDivElement)
+        ?.querySelector("#decrement")
+        ?.addEventListener("click", () => handleDecrement($inputNumber));
+
+      ($inputNumber?.parentElement as HTMLDivElement)
+        ?.querySelector("#increment")
+        ?.addEventListener("click", () => handleIncrement($inputNumber));
     });
-    $inputNumber.addEventListener("blur", handleValidate);
-    $("#decrement")?.addEventListener("click", handleDecrement);
-    $("#increment")?.addEventListener("click", handleIncrement);
   });
 </script>
 
