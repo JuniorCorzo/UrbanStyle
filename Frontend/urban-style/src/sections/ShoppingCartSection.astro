@@ -91,11 +91,12 @@ const total = calculateTotal();
 </section>
 
 <script>
-  import { $ } from "@/lib/dom-selector";
+  import { $, $$ } from "@/lib/dom-selector";
   import { CartService } from "@/service/cart.service";
   import { updateCartState } from "@/service/updateCartState";
+  import { navigate } from "astro:transitions/client";
 
-  const $sectionCart = $("#cart-section");
+  const debounceTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 
   const handleRemoveItem = ($target: HTMLElement) => {
     const { userId, productId } = $target.dataset;
@@ -113,8 +114,6 @@ const total = calculateTotal();
           .catch(console.error);
       });
   };
-
-  const debounceTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 
   const handleChangeQuantity = ($target: HTMLElement) => {
     const { userId, productId } = ($target.parentElement as HTMLDivElement)
@@ -134,7 +133,9 @@ const total = calculateTotal();
       CartService()
         .updateQuantityProductInCart(userId, productId, $input.valueAsNumber)
         .then((cart) => {
-          updateCartState(cart).then(() => location.reload());
+          updateCartState(cart).then(() =>
+            navigate(location.pathname, { history: "replace" })
+          );
           $input.setAttribute("data-value", cart.items[0].quantity.toString());
         });
     }, 300);
@@ -151,15 +152,25 @@ const total = calculateTotal();
       handleChangeQuantity($target);
       return;
     }
+  };
 
-    if ($target.id === "quantity_input") {
-      ($target as HTMLInputElement).addEventListener("blur", () => {
-        handleChangeQuantity($target);
+  const initCounterListeners = () => {
+    $$<HTMLDivElement>("#quantity_input").forEach(($input) => {
+      // Evita duplicar listeners
+      $input.onblur = null;
+      $input.addEventListener("blur", () => {
+        handleChangeQuantity($input);
       });
-    }
+    });
+
+    $("#cart-section")?.addEventListener("click", handleClick);
   };
 
   document.addEventListener("astro:page-load", () => {
-    $sectionCart?.addEventListener("click", handleClick);
+    initCounterListeners();
+  });
+
+  document.addEventListener("astro:after-swap", () => {
+    initCounterListeners();
   });
 </script>
