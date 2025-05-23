@@ -31,7 +31,6 @@ const cartLength = (await CartStore(id)).getCartByUserId()?.items.length || 0;
 
     document.addEventListener("cart-count", (event) => {
       if (!$cartCount) return;
-      console.log(event);
       const customEvent = event as CustomEvent<CartCountEvent>;
       const { cartLength } = customEvent.detail;
       $cartCount.textContent = cartLength === 0 ? "" : `(${cartLength})`;

@@ -9,6 +9,5 @@ export function dispatchCartCountEvent(cartLength: number) {
     bubbles: true,
   });
 
-  console.log("Dispatching cart-count event:", event);
   document.dispatchEvent(customEvent);
 }
