@@ -40,44 +40,45 @@ const { maxNumber, id, value = "1", ...props } = Astro.props;
 </div>
 
 <script>
-  import { $, $$ } from "@/lib/dom-selector";
-
-  const $inputsNumber = $$('input[type="number"]') as NodeList;
+  import { $$ } from "@/lib/dom-selector";
 
   const handleIncrement = ($inputNumber: HTMLInputElement) => {
     if ($inputNumber.valueAsNumber >= Number($inputNumber.max)) {
       $inputNumber.value = $inputNumber.max;
       return;
     }
-
     $inputNumber.valueAsNumber++;
   };
+
   const handleDecrement = ($inputNumber: HTMLInputElement) => {
     if ($inputNumber.min >= $inputNumber.value) {
       $inputNumber.value = $inputNumber.min;
       return;
     }
-
     $inputNumber.valueAsNumber--;
   };
 
   const handleValidate = ($inputNumber: HTMLInputElement) => {
     let value = $inputNumber.valueAsNumber;
-
     if (isNaN(value) || value < Number($inputNumber.min)) {
       $inputNumber.value = $inputNumber.min;
       return;
     }
-
     if (value > Number($inputNumber.max)) {
       $inputNumber.value = $inputNumber.max;
     }
   };
 
-  document.addEventListener("astro:page-load", () => {
+  // Función para inicializar los listeners SIEMPRE sobre los inputs actuales
+  const initCounterListeners = () => {
+    const $inputsNumber = $$('input[type="number"]');
     $inputsNumber.forEach(($input) => {
       const $inputNumber = $input as HTMLInputElement;
       $inputNumber.value = $inputNumber.dataset.value as string;
+
+      // Limpia listeners previos
+      $inputNumber.onkeydown = null;
+      $inputNumber.onblur = null;
 
       $inputNumber.addEventListener("keydown", (event) => {
         if (event.key === "Enter") {
@@ -87,27 +88,34 @@ const { maxNumber, id, value = "1", ...props } = Astro.props;
 
       $inputNumber.addEventListener("blur", () => handleValidate($inputNumber));
 
-      ($inputNumber?.parentElement as HTMLDivElement)
+      const $parent = $inputNumber.parentElement as HTMLDivElement;
+      const $decrement = $parent?.querySelector("#decrement");
+      const $increment = $parent?.querySelector("#increment");
+
+      // Limpia listeners previos
+      $decrement?.replaceWith($decrement.cloneNode(true));
+      $increment?.replaceWith($increment.cloneNode(true));
+
+      $parent
         ?.querySelector("#decrement")
         ?.addEventListener("click", () => handleDecrement($inputNumber));
-
-      ($inputNumber?.parentElement as HTMLDivElement)
+      $parent
         ?.querySelector("#increment")
         ?.addEventListener("click", () => handleIncrement($inputNumber));
     });
-  });
+  };
+
+  document.addEventListener("astro:page-load", initCounterListeners);
+  document.addEventListener("astro:after-swap", initCounterListeners);
 </script>
 
 <style>
-  <style>
-/* Oculta las flechas en Chrome, Safari, Edge, Opera */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 
-  /* Oculta las flechas en Firefox */
   input[type="number"] {
     -moz-appearance: textfield;
   }
