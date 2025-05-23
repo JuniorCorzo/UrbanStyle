@@ -1,0 +1,30 @@
+---
+import Button from "../Button.astro";
+import InfoRow from "../InfoRow.astro";
+import Subtitle from "../text/Subtitle.astro";
+
+interface Props {
+  calculateTotal: () => number;
+}
+
+const { calculateTotal } = Astro.props;
+const total = calculateTotal();
+---
+
+<article
+  class="flex flex-col border-2 border-border basis-96 gap-1 py-3 px-5 mr-3 pr-7 rounded"
+>
+  <Subtitle size="xl" Text="Detalles" />
+  <div class="flex flex-col border-border gap-11 pt-5">
+    <div class="flex flex-col gap-1">
+      <InfoRow label="Total" value={`<strong>${total}</strong>`} />
+      <InfoRow label="Envió" value="<strong>Gratis</strong>" />
+      <InfoRow
+        class="pt-5"
+        label="Total con Iva"
+        value={`<strong id="total">${(total + total * 0.19).toFixed(2)}</strong>`}
+      />
+    </div>
+    <Button> Realizar el pedido por WhatsApp </Button>
+  </div>
+</article>

@@ -1,0 +1,47 @@
+---
+import type { ProductSummary } from "@/interface/product.interface";
+import Subtitle from "../text/Subtitle.astro";
+import { ProductStore } from "@/state/product.store";
+import Counter from "../home/Counter.astro";
+import ProductDetailsCard from "./ProductDetailsCard.astro";
+
+interface Props {
+  userId: string;
+  items: ProductSummary[];
+}
+
+const { items, userId } = Astro.props;
+const { getProductById } = await ProductStore();
+---
+
+<article class="flex flex-col px-7 gap-14 grow">
+  {
+    items.map(({ productId, name, price, quantity }) => (
+      <div class="flex gap-5">
+        <div class="w-full flex justify-between">
+          <ProductDetailsCard
+            name={name}
+            productId={productId}
+            userId={userId}
+            getProductById={getProductById}
+          />
+          <div class="flex flex-col gap-1 items-end">
+            <Counter
+              id="quantity_input"
+              maxNumber={getProductById(productId).get()?.stock || 0}
+              value={quantity.toString()}
+              data-user-id={userId}
+              data-product-id={productId}
+            />
+            <Subtitle id="price_unit" size="lg" Text={`$${price}/u`} />
+            <Subtitle
+              id="product_total"
+              size="lg"
+              Text={`$${(price * quantity).toFixed(2)}`}
+            />
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</article>
