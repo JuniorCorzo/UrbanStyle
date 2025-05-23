@@ -2,19 +2,24 @@
 import InputSearch from "@/components/header/InputSearch.astro";
 import LoginModal from "./LoginModal.astro";
 import UserMenu from "./UserMenu.astro";
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { CartStore } from "@/state/cart.state";
 const { user } = Astro.locals;
+const cartLength = (await CartStore(user.id)).getCartByUserId()?.items.length
 ---
 
 <header
   class="sticky h-14 px-14 flex justify-between items-center backdrop-blur-xs bg-accent/70 top-0 z-20"
   transition:persist
 >
+<div>
   <h1
-    onclick="window.location.href='/home'"
+    id="home"
     class="text-xl font-bold cursor-pointer"
   >
     Urban Style
   </h1>
+</div>
   <div id="links_container" class="relative px-2">
     <ul class="flex w-fit gap-6 items-center justify-center">
       <li>
@@ -32,9 +37,12 @@ const { user } = Astro.locals;
   <nav class="relative h-full">
     <ul class="flex h-full gap-6 px-2">
       <li>
-        <a href="http://localhost:4321/shopping-cart/" type="button">Carrito</a>
+        <a id="to_cart" class="flex backdrop-blur-xs gap-1 border rounded px-3 py-1 justify-center items-center hover:scale-110 transition-all" title="Carrito de Compras" href="/shopping-cart" type="button">
+          <ShoppingCartIcon className="size-5 pointer-events-none"/>
+          <span class="text-sm pointer-events-none">{`Carrito ${cartLength === 0 ? '' : `(${cartLength})`}`}</span>
+        </a>
       </li>
-      <li class=" group">
+      <li class="group">
         {
           !user && (
             <button id="login_button" type="button">
@@ -57,8 +65,26 @@ const { user } = Astro.locals;
 
 <script>
   import { $ } from "@/lib/dom-selector";
+import { navigate } from "astro:transitions/client";
 
-  $("#login_button")?.addEventListener("click", () => {
-    $<HTMLDialogElement>("#login_modal")?.showModal();
-  });
+  const initializeListener = () => {
+    $<HTMLAnchorElement>("#to_cart")?.addEventListener('click', (event) => {
+      event.preventDefault()
+      const href = (event.currentTarget as HTMLAnchorElement).href
+      navigate(href, {
+        history: 'push'
+      })
+    })
+
+    $('#home')?.addEventListener('click', () => {
+      navigate('/home', {
+        history: 'push'
+      })
+    } )
+
+    $("#login_button")?.addEventListener("click", () => {
+      $<HTMLDialogElement>("#login_modal")?.showModal();
+    });
+  }
+  document.addEventListener('astro:page-load', initializeListener)
 </script>
