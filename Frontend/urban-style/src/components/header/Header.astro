@@ -2,19 +2,22 @@
 import InputSearch from "@/components/header/InputSearch.astro";
 import LoginModal from "./LoginModal.astro";
 import UserMenu from "./UserMenu.astro";
+import CartAnchor from "./CartAnchor.astro";
 const { user } = Astro.locals;
 ---
 
 <header
-  class="sticky h-14 px-14 flex justify-between items-center backdrop-blur-xs bg-accent/70 top-0 z-20"
+  class="sticky min-h-14 px-14 flex justify-between items-center backdrop-blur-xs bg-accent/70 top-0 z-20"
   transition:persist
 >
+<div>
   <h1
-    onclick="window.location.href='/home'"
+    id="home"
     class="text-xl font-bold cursor-pointer"
   >
     Urban Style
   </h1>
+</div>
   <div id="links_container" class="relative px-2">
     <ul class="flex w-fit gap-6 items-center justify-center">
       <li>
@@ -32,9 +35,9 @@ const { user } = Astro.locals;
   <nav class="relative h-full">
     <ul class="flex h-full gap-6 px-2">
       <li>
-        <button type="button">Carrito</button>
+        <CartAnchor />
       </li>
-      <li class=" group">
+      <li class="group">
         {
           !user && (
             <button id="login_button" type="button">
@@ -57,8 +60,20 @@ const { user } = Astro.locals;
 
 <script>
   import { $ } from "@/lib/dom-selector";
+import { navigate } from "astro:transitions/client";
 
-  $("#login_button")?.addEventListener("click", () => {
-    $<HTMLDialogElement>("#login_modal")?.showModal();
-  });
+  const initializeListener = () => {
+    
+
+    $('#home')?.addEventListener('click', () => {
+      navigate('/home', {
+        history: 'push'
+      })
+    } )
+
+    $("#login_button")?.addEventListener("click", () => {
+      $<HTMLDialogElement>("#login_modal")?.showModal();
+    });
+  }
+  document.addEventListener('astro:page-load', initializeListener)
 </script>

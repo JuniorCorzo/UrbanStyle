@@ -20,7 +20,7 @@ public class ShoppingCartService {
     private final HashOperations<String, String, ProductSummary> hashOperations;
 
     public ResponseDTO<ShoppingCartDTO> getShoppingCartByUserId(String userId) {
-        final String cardId = String.format("shoppingCart:%s", userId);
+        final String cardId = this.getCartId(userId);
         Map<String, ProductSummary> hash = this.hashOperations.entries(cardId);
         System.out.println(hash);
         return new ResponseDTO<>(
@@ -33,10 +33,10 @@ public class ShoppingCartService {
     }
 
     public ResponseDTO<ShoppingCartDTO> addProductsToCart(ShoppingCartDTO card) {
-        final String cartId = String.format("shoppingCart:%s", card.userId());
+        final String cartId = this.getCartId(card.userId());
 
         card.items().forEach(item ->
-                this.hashOperations.put(cartId, String.format("productId:%s", item.productId()), item)
+                this.hashOperations.put(cartId, this.getProductId(item.productId()), item)
         );
         Map<String, ProductSummary> currentProducts = this.hashOperations.entries(cartId);
 
@@ -50,19 +50,36 @@ public class ShoppingCartService {
         );
     }
 
+    public ResponseDTO<ShoppingCartDTO> changeQuantityProduct(String userId, String productId, int quantity) {
+        final String cartId = this.getCartId(userId);
+        final String productCartId = this.getProductId(productId);
+
+        ProductSummary product = this.hashOperations.get(cartId, productCartId);
+        assert product != null;
+
+        ProductSummary updateProduct = ProductSummary.builder()
+                .productId(product.productId())
+                .name(product.name())
+                .quantity(quantity)
+                .price(product.price())
+                .discount(product.discount())
+                .build();
+
+        return this.updateProductCart(new ShoppingCartDTO(userId, List.of(updateProduct)));
+    }
+
     public ResponseDTO<ShoppingCartDTO> updateProductCart(ShoppingCartDTO card) {
         final ProductSummary product = card.items().getFirst();
-        final String cartId = String.format("shoppingCart:%s", card.userId());
-        if (card.items().size() != 1 || !this.hashOperations.hasKey(cartId, String.format("productId:%s", product.productId()))) {
+        final String cartId = this.getCartId(card.userId());
+        final String productId = this.getProductId(product.productId());
+        // This checks if a cart exists using the cart ID and verifies if the product ID is the same
+        if (card.items().size() != 1 || !this.hashOperations.hasKey(cartId, productId)) {
             throw new RuntimeException("Cart not found");
         }
 
         this.hashOperations.put(
                 cartId,
-                String.format(
-                        "productId:%s",
-                        product.productId()
-                ),
+                productId,
                 product
         );
 
@@ -106,5 +123,13 @@ public class ShoppingCartService {
                 HttpStatus.OK,
                 "Cart deleted successfully"
         );
+    }
+
+    private String getCartId(String userId) {
+        return String.format("shoppingCart:%s", userId);
+    }
+
+    private String getProductId(String productId) {
+        return String.format("productId:%s", productId);
     }
 }

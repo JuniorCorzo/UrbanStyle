@@ -1,0 +1,55 @@
+---
+const { productId, name, userId, getProductById } = Astro.props;
+import Subtitle from "../text/Subtitle.astro";
+import Button from "../Button.astro";
+import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
+import type { Products } from "@/interface/product.interface";
+import type { ReadableAtom } from "nanostores";
+import { Image } from "astro:assets";
+
+interface Props {
+  productId: string;
+  name: string;
+  userId: string;
+  getProductById: (productId: string) => ReadableAtom<Products | undefined>;
+}
+---
+
+<div class="flex gap-5">
+  <div>
+    <Image
+      class=""
+      src={`${getProductById(productId).get()?.images[0]}`}
+      alt={name}
+      width={225}
+      height={225}
+    />
+  </div>
+  <div class="w-full flex justify-between">
+    <div class="flex flex-col">
+      <div class="flex grow flex-col gap-1">
+        <Subtitle size="xl" Text={name} />
+        <span>
+          Color: <strong>Rojo</strong>
+        </span>
+        <span>
+          Talla: <strong>S</strong>
+        </span>
+      </div>
+      <div class="basis-5">
+        <Button
+          id="remove-product"
+          class="flex bg-transparent border-0 items-center gap-2 hover:ring-0 hover:scale-105"
+          size="custom"
+          data-product-id={productId}
+          data-user-id={userId}
+        >
+          <TrashIcon className="size-6 stroke-maroon pointer-events-none" />
+          <span class="text-maroon font-semibold pointer-events-none">
+            Remover
+          </span>
+        </Button>
+      </div>
+    </div>
+  </div>
+</div>

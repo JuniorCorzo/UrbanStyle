@@ -1,0 +1,49 @@
+---
+import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { CartStore } from "@/state/cart.state";
+
+const id = Astro.locals?.user?.id;
+if (!id) return;
+const cartLength = (await CartStore(id)).getCartByUserId()?.items.length || 0;
+---
+
+<a
+  id="to_cart"
+  class="flex backdrop-blur-xs gap-1 border rounded px-3 py-1 justify-center items-center hover:scale-110 transition-all"
+  title="Carrito de Compras"
+  href="/shopping-cart"
+  type="button"
+>
+  <ShoppingCartIcon className="size-5 pointer-events-none" />
+  <span class="text-sm pointer-events-none">
+    Carrito
+    <span id="cart_count">{cartLength === 0 ? "" : `(${cartLength})`}</span>
+  </span>
+</a>
+
+<script>
+  import { $ } from "@/lib/dom-selector";
+  import type { CartCountEvent } from "@/lib/utils/cart-count-event";
+  import { navigate } from "astro:transitions/client";
+
+  const initializedListener = () => {
+    const $cartCount = $<HTMLSpanElement>("#cart_count");
+
+    document.addEventListener("cart-count", (event) => {
+      if (!$cartCount) return;
+      const customEvent = event as CustomEvent<CartCountEvent>;
+      const { cartLength } = customEvent.detail;
+      $cartCount.textContent = cartLength === 0 ? "" : `(${cartLength})`;
+    });
+
+    $<HTMLAnchorElement>("#to_cart")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      const href = (event.currentTarget as HTMLAnchorElement).href;
+      navigate(href, {
+        history: "push",
+      });
+    });
+  };
+
+  document.addEventListener("astro:page-load", initializedListener);
+</script>

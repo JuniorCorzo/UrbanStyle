@@ -4,95 +4,118 @@ import Button from "../Button.astro";
 
 interface Props {
   maxNumber: number;
+  id?: string;
+  value?: string;
 }
 
-const { maxNumber } = Astro.props;
-console.log(maxNumber);
+const { maxNumber, id, value = "1", ...props } = Astro.props;
 ---
 
-<div class="flex">
-  <div class="flex w-fit border border-border rounded">
+<div class="flex" transition:persist>
+  <div class="flex w-fit border border-border rounded" {...props}>
     <Button
       id="decrement"
       class="flex items-center rounded-tr-[0] rounded-br-[0] border-0 justify-center aspect-square size-10"
       size="sm"
     >
-      <MinusIcon className="size-5" />
+      <MinusIcon className="size-5 pointer-events-none" />
     </Button>
     <input
+      id={id}
       type="number"
       class="w-fit min-w-14 border-l border-r border-border text-center focus:outline-none focus:custom-ring"
-      value="1"
+      value={value}
       min="1"
       max={maxNumber}
+      data-value={value}
     />
     <Button
       id="increment"
       class="flex items-center rounded-tl-[0] rounded-bl-[0] border-0 justify-center aspect-square size-10"
       size="sm"
     >
-      <PlusIcon className="size-5" />
+      <PlusIcon className="size-5 pointer-events-none" />
     </Button>
   </div>
 </div>
 
 <script>
-  import { $ } from "@/lib/dom-selector";
+  import { $$ } from "@/lib/dom-selector";
 
-  const $inputNumber = $('input[type="number"]') as HTMLInputElement;
-
-  const handleIncrement = () => {
+  const handleIncrement = ($inputNumber: HTMLInputElement) => {
     if ($inputNumber.valueAsNumber >= Number($inputNumber.max)) {
       $inputNumber.value = $inputNumber.max;
       return;
     }
-
     $inputNumber.valueAsNumber++;
   };
-  const handleDecrement = () => {
+
+  const handleDecrement = ($inputNumber: HTMLInputElement) => {
     if ($inputNumber.min >= $inputNumber.value) {
       $inputNumber.value = $inputNumber.min;
       return;
     }
-
     $inputNumber.valueAsNumber--;
   };
 
-  const handleValidate = () => {
+  const handleValidate = ($inputNumber: HTMLInputElement) => {
     let value = $inputNumber.valueAsNumber;
-
     if (isNaN(value) || value < Number($inputNumber.min)) {
       $inputNumber.value = $inputNumber.min;
       return;
     }
-
     if (value > Number($inputNumber.max)) {
       $inputNumber.value = $inputNumber.max;
     }
   };
 
-  document.addEventListener("astro:page-load", () => {
-    $inputNumber.addEventListener("keydown", (event) => {
-      if (event.key === "Enter") {
-        handleValidate();
-      }
+  // Función para inicializar los listeners SIEMPRE sobre los inputs actuales
+  const initCounterListeners = () => {
+    const $inputsNumber = $$('input[type="number"]');
+    $inputsNumber.forEach(($input) => {
+      const $inputNumber = $input as HTMLInputElement;
+      $inputNumber.value = $inputNumber.dataset.value as string;
+
+      // Limpia listeners previos
+      $inputNumber.onkeydown = null;
+      $inputNumber.onblur = null;
+
+      $inputNumber.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          handleValidate($inputNumber);
+        }
+      });
+
+      $inputNumber.addEventListener("blur", () => handleValidate($inputNumber));
+
+      const $parent = $inputNumber.parentElement as HTMLDivElement;
+      const $decrement = $parent?.querySelector("#decrement");
+      const $increment = $parent?.querySelector("#increment");
+
+      // Limpia listeners previos
+      $decrement?.replaceWith($decrement.cloneNode(true));
+      $increment?.replaceWith($increment.cloneNode(true));
+
+      $parent
+        ?.querySelector("#decrement")
+        ?.addEventListener("click", () => handleDecrement($inputNumber));
+      $parent
+        ?.querySelector("#increment")
+        ?.addEventListener("click", () => handleIncrement($inputNumber));
     });
-    $inputNumber.addEventListener("blur", handleValidate);
-    $("#decrement")?.addEventListener("click", handleDecrement);
-    $("#increment")?.addEventListener("click", handleIncrement);
-  });
+  };
+
+  document.addEventListener("astro:page-load", initCounterListeners);
+  document.addEventListener("astro:after-swap", initCounterListeners);
 </script>
 
 <style>
-  <style>
-/* Oculta las flechas en Chrome, Safari, Edge, Opera */
-input[type="number"]::-webkit-inner-spin-button,
-input[type="number"]::-webkit-outer-spin-button {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
 
-  /* Oculta las flechas en Firefox */
   input[type="number"] {
     -moz-appearance: textfield;
   }

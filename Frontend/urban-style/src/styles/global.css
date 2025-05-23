@@ -9,6 +9,7 @@
   --color-background: #eff1f5;
   --color-text: #4c4f69;
   --color-border: #7c7f93;
+  --color-maroon: #e64553;
 
   --animation-pulse: pulse 0.2s ease-in-out infinite;
 
@@ -33,13 +34,13 @@
 }
 @font-face {
   font-family: "Roboto";
-  src: url("fonts/Roboto-Bold.woff2") format("woff2");
+  src: url("/fonts/Roboto-Bold.woff2") format("woff2");
   font-weight: bold;
   font-display: swap;
 }
 @font-face {
   font-family: "Roboto";
-  src: url("fonts/Roboto-Medium.woff2") format("woff2");
+  src: url("/fonts/Roboto-Medium.woff2") format("woff2");
   font-weight: 500;
   font-display: swap;
 }

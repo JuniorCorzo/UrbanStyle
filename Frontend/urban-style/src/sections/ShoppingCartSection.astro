@@ -1,0 +1,107 @@
+---
+import CartDetails from "@/components/shopping-cart/CartDetails.astro";
+import CartItems from "@/components/shopping-cart/CartItems.astro";
+import EmptyCartMessage from "@/components/shopping-cart/EmptyCartMessage.astro";
+import { CartStore } from "@/state/cart.state";
+
+const userId = Astro.locals.user.id;
+const { getCartByUserId, calculateTotal } = await CartStore(userId);
+
+const items = getCartByUserId()?.items || [];
+---
+
+<section id="cart-section" class="flex">
+  {
+    items.length !== 0 ? (
+      <CartItems userId={userId} items={items} />
+    ) : (
+      <EmptyCartMessage />
+    )
+  }
+  <CartDetails calculateTotal={calculateTotal} />
+</section>
+
+<script>
+  import { $, $$ } from "@/lib/dom-selector";
+  import { CartService } from "@/service/cart.service";
+  import { updateCartState } from "@/service/updateCartState";
+  import { navigate } from "astro:transitions/client";
+
+  const debounceTimers: Record<string, ReturnType<typeof setTimeout>> = {};
+
+  const handleRemoveItem = ($target: HTMLElement) => {
+    const { userId, productId } = $target.dataset;
+    if (!userId || !productId) return;
+
+    CartService()
+      .removeProductFromCart(userId, productId)
+      .then((response) => {
+        updateCartState(response)
+          .then((response) => {
+            if (response.status === 204) {
+              location.reload();
+            }
+          })
+          .catch(console.error);
+      });
+  };
+
+  const handleChangeQuantity = ($target: HTMLElement) => {
+    const { userId, productId } = ($target.parentElement as HTMLDivElement)
+      ?.dataset;
+
+    const $input = $target.parentElement?.querySelector(
+      "#quantity_input"
+    ) as HTMLInputElement;
+
+    if (!userId || !productId || $input.dataset.value === $input.value) return;
+
+    if (debounceTimers[productId]) {
+      clearTimeout(debounceTimers[productId]);
+    }
+
+    debounceTimers[productId] = setTimeout(() => {
+      CartService()
+        .updateQuantityProductInCart(userId, productId, $input.valueAsNumber)
+        .then((cart) => {
+          updateCartState(cart).then(() =>
+            navigate(location.pathname, { history: "replace" })
+          );
+          $input.setAttribute("data-value", cart.items[0].quantity.toString());
+        });
+    }, 300);
+  };
+
+  const handleClick = (event: MouseEvent) => {
+    const $target = event.target as HTMLElement;
+    if ($target.id === "remove-product") {
+      handleRemoveItem($target);
+      return;
+    }
+
+    if ($target.id === "increment" || $target.id === "decrement") {
+      handleChangeQuantity($target);
+      return;
+    }
+  };
+
+  const initCounterListeners = () => {
+    $$<HTMLDivElement>("#quantity_input").forEach(($input) => {
+      // Evita duplicar listeners
+      $input.onblur = null;
+      $input.addEventListener("blur", () => {
+        handleChangeQuantity($input);
+      });
+    });
+
+    $("#cart-section")?.addEventListener("click", handleClick);
+  };
+
+  document.addEventListener("astro:page-load", () => {
+    initCounterListeners();
+  });
+
+  document.addEventListener("astro:after-swap", () => {
+    initCounterListeners();
+  });
+</script>
