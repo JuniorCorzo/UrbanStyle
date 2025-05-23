@@ -1,6 +1,7 @@
 ---
 import CartDetails from "@/components/shopping-cart/CartDetails.astro";
 import CartItems from "@/components/shopping-cart/CartItems.astro";
+import EmptyCartMessage from "@/components/shopping-cart/EmptyCartMessage.astro";
 import { CartStore } from "@/state/cart.state";
 
 const userId = Astro.locals.user.id;
@@ -10,7 +11,13 @@ const items = getCartByUserId()?.items || [];
 ---
 
 <section id="cart-section" class="flex">
-  <CartItems userId={userId} items={items} />
+  {
+    items.length !== 0 ? (
+      <CartItems userId={userId} items={items} />
+    ) : (
+      <EmptyCartMessage />
+    )
+  }
   <CartDetails calculateTotal={calculateTotal} />
 </section>
 
