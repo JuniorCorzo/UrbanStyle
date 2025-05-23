@@ -15,7 +15,7 @@ interface Props {
 
 const { product } = Astro.props;
 
-const userId = Astro.locals.user.id;
+const userId = Astro.locals.user?.id;
 const { name, categories, attributes, description, stock, images, price } =
   product;
 ---
