@@ -21,10 +21,10 @@ const { name, categories, attributes, description, stock, images, price } =
 ---
 
 <section
-  class="flex flex-wrap min-h-[450] mx-auto max-w-11/12 items-top justify-center gap-x-20 gap-y-10 px-20"
+  class="flex flex-wrap min-h-[450] mx-auto h-fit items-top justify-center gap-x-20 gap-y-10"
   transition:animate={fade({ duration: 150 })}
 >
-  <article class="basis-[25rem] grow">
+  <article class="basis-[25rem]">
     <div class="w-fit mx-auto">
       <Image
         class="aspect-square"
@@ -36,8 +36,12 @@ const { name, categories, attributes, description, stock, images, price } =
       />
     </div>
   </article>
-  <article class="basis-0 grow-[999] min-w-[26rem]">
-    <div class="w-fit h-full mx-auto flex flex-col gap-2 justify-center">
+  <article
+    class="flex items-center justify-center basis-0 grow-[999] min-w-[26rem]"
+  >
+    <div
+      class="w-fit min-w-[450px] h-full flex flex-col gap-2 px-8 py-5 rounded justify-center"
+    >
       <Subtitle Text={name} />
       <RegularText>{description}</RegularText>
       <Tags categories={categories} />
