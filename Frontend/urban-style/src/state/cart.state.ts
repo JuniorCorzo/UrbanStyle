@@ -23,9 +23,8 @@ export async function CartStore(userId: string) {
     const cartIndex = cartStore
       .get()
       .findIndex(({ userId: id }) => userId === id);
-    cartStore.get()[cartIndex] = cart;
 
-    console.log(cartStore.get());
+    cartStore.get()[cartIndex] = cart;
   };
 
   const calculateTotal = () => {
