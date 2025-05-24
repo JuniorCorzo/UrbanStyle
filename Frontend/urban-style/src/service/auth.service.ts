@@ -16,7 +16,7 @@ export const AuthRequest = async (userCredentials: UserCredentials) => {
       },
     })
     .then((response) => {
-      return response.data as AuthResponse;
+      return response;
     })
     .catch((error) => {
       console.error("Authentication error:", error);
