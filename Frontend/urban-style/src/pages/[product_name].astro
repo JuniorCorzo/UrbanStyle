@@ -12,5 +12,5 @@ const productById = productStore.get().filter(({ id }) => id === productId)[0];
 
 <Layout>
   <ProductSection product={productById} />
-  <RecommendedProductsSection categoryName={productById.categories[0]} />
+  <RecommendedProductsSection categoryName={productById?.categories[0]} />
 </Layout>
