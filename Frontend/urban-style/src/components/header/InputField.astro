@@ -1,0 +1,27 @@
+---
+import type { JSX } from "astro/jsx-runtime";
+import MessageError from "./MessageError.astro";
+
+interface Props {
+  label: string;
+  name: string;
+  type?: JSX.IntrinsicElements["input"]["type"];
+  placeholder?: string;
+  errorId: string;
+}
+
+const { label, name, type, placeholder, errorId } = Astro.props;
+---
+
+<label
+  class="w-full flex flex-col border-l-3 border-transparent px-2 justify-center gap-1 text-text transition-all duration-300"
+>
+  <span>{label}:</span>
+  <MessageError errorId={errorId} />
+  <input
+    class="h-10 px-1 border-2 border-border rounded focus:outline-0 focus:custom-ring"
+    type={type || "text"}
+    placeholder={placeholder}
+    name={name}
+  />
+</label>
