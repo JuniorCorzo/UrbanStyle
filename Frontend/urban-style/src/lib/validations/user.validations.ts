@@ -30,7 +30,13 @@ export const createUserSchema = userCredentialsSchema
       .string({ required_error: "El nombre de usuario es requerido" })
       .min(3, "El nombre de usuario debe tener al menos 3 caracteres")
       .max(32, "El nombre de usuario no puede exceder los 32 caracteres"),
-    phone: z.string().min(10, "Número inválido").max(10, "Número inválido"),
+    phone: z
+      .string()
+      .min(10, "Número inválido")
+      .max(10, "Número inválido")
+      .refine((number) => /^\d{10}$/.test(number), {
+        message: "Número inválido",
+      }),
     password: passwordSchema,
     confirm_password: z.string({
       required_error: "La confirmación de contraseña es requerida",
