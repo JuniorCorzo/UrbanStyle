@@ -4,11 +4,13 @@ import InputField from "@/components/header/InputField.astro";
 import Subtitle from "@/components/text/Subtitle.astro";
 ---
 
-<section class="min-h-dvh flex items-center justify-center">
+<section
+  class="relative min-h-dvh flex sm:items-center items-start sm:py-0 py-5 justify-center"
+>
   <article
-    class="w-md max-h-[44rem] mx-4 my-2 bg-accent/50 border-2 border-border backdrop-blur-sm py-11 shadow-xl rounded-xl overflow-auto"
+    class="w-md sm:landscape:max-h-[44rem] landscape:max-h-96 mx-4 my-2 bg-accent/50 border-2 border-border backdrop-blur-sm pb-5 pt-10 shadow-xl rounded-xl overflow-auto"
   >
-    <div class="text-center h-fit">
+    <div class="text-center h-12">
       <h1 class="font-bold text-3xl">Crear cuenta</h1>
       <Subtitle
         class="font-normal"
@@ -21,7 +23,7 @@ import Subtitle from "@/components/text/Subtitle.astro";
         id="sign-up_form"
         class="flex flex-col w-full max-w-md rounded px-8 pt-6 pb-8 gap-4"
       >
-        <div class="">
+        <div>
           <InputField
             label="Nombre de usuario"
             placeholder="Nombre de usuario"
@@ -29,7 +31,7 @@ import Subtitle from "@/components/text/Subtitle.astro";
             name="username"
           />
         </div>
-        <div class="">
+        <div>
           <InputField
             label="Correo electrónico"
             placeholder="Correo electrónico"
@@ -54,7 +56,7 @@ import Subtitle from "@/components/text/Subtitle.astro";
             type="password"
           />
         </div>
-        <div class="">
+        <div>
           <InputField
             label="Confirmar contraseña"
             type="password"
@@ -63,8 +65,15 @@ import Subtitle from "@/components/text/Subtitle.astro";
             errorId="confirm_password_error"
           />
         </div>
-        <div class="w-full flex items-center justify-center">
-          <Button class="w-full max-w-md" size="md">¡Listo, regístrate!</Button>
+        <div
+          class="w-full flex flex-col-reverse sm:flex-row items-center justify-center gap-2 sm:gap-4"
+        >
+          <Button id="go_to_home" class="w-full" size="md">
+            <span>Volver al inicio</span>
+          </Button>
+          <Button class="w-full" size="md" type="submit"
+            >¡Listo, regístrate!</Button
+          >
         </div>
       </form>
     </div>
@@ -108,6 +117,10 @@ import Subtitle from "@/components/text/Subtitle.astro";
           return;
         }
       }
+    });
+
+    $("#go_to_home")?.addEventListener("click", () => {
+      navigate("/home");
     });
   };
 
