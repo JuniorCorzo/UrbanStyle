@@ -7,7 +7,7 @@ export interface User extends BaseDocument {
   phone: string;
 }
 
-export interface CreateUser extends Omit<User, "id"> {
+export interface CreateUser extends Omit<User, "id" | "role"> {
   password: string;
 }
 
