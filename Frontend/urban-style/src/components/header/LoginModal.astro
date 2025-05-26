@@ -50,7 +50,8 @@ import MessageError from "./MessageError.astro";
 
       <div class="flex justify-between w-full">
         <a
-          href="/register"
+          id="to_sign-up"
+          href="/sign-up"
           class="text-sm text-text border-b border-transparent hover:border-border transition-all"
         >
           Crear cuenta
@@ -69,12 +70,10 @@ import MessageError from "./MessageError.astro";
 <script>
   import type { UserCredentials } from "@/interface/user.interface";
   import { $ } from "@/lib/dom-selector";
-  import {
-    toggleErrorMessage,
-    toggleErrorMessagesWithLabel,
-  } from "@/lib/showErrorMessages";
+  import { showError, toggleErrorMessage } from "@/lib/showErrorMessages";
   import { userCredentialsSchema } from "@/lib/validations/user.validations";
   import { AuthRequest } from "@/service/auth.service";
+  import { navigate } from "astro:transitions/client";
   import z from "zod";
 
   const sendLoginRequest = (
@@ -110,25 +109,6 @@ import MessageError from "./MessageError.astro";
       });
   };
 
-  const showError = (
-    error: z.ZodError,
-    $emailError: HTMLElement,
-    $passwordError: HTMLElement
-  ) => {
-    const fieldErrors = error.flatten().fieldErrors;
-    if (fieldErrors.email) {
-      toggleErrorMessagesWithLabel(fieldErrors.email[0], $emailError);
-    } else {
-      toggleErrorMessagesWithLabel("", $emailError);
-    }
-
-    if (fieldErrors.password) {
-      toggleErrorMessagesWithLabel(fieldErrors.password[0], $passwordError);
-    } else {
-      toggleErrorMessagesWithLabel("", $passwordError);
-    }
-  };
-
   const initializeListeners = () => {
     const $loginModal = $<HTMLDialogElement>("#login_modal");
     const $loginForm = $<HTMLFormElement>("#login_form");
@@ -147,14 +127,9 @@ import MessageError from "./MessageError.astro";
         const result = userCredentialsSchema.parse(userCredentials);
         if (!$spanError) return;
         sendLoginRequest(result, $spanError);
-        showError(
-          new z.ZodError([]),
-          $emailError as HTMLElement,
-          $passwordError as HTMLElement
-        );
       } catch (error) {
         if (error instanceof z.ZodError && $emailError && $passwordError) {
-          showError(error, $emailError, $passwordError);
+          showError(error);
         }
       }
     });
@@ -166,6 +141,12 @@ import MessageError from "./MessageError.astro";
       if ($target === $dialog) {
         $dialog.close();
       }
+    });
+
+    $<HTMLAnchorElement>("to_sign-up")?.addEventListener("click", (event) => {
+      event.preventDefault();
+      const $anchorElement = event.currentTarget as HTMLAnchorElement;
+      navigate($anchorElement.href);
     });
 
     $("#login_button")?.addEventListener("click", () => {

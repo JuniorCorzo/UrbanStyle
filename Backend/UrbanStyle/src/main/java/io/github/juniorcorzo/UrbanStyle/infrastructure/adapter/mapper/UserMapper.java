@@ -13,7 +13,7 @@ public interface UserMapper {
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "email", source = "email"),
             @Mapping(target = "password", source = "password"),
-            @Mapping(target = "role", source = "role"),
+            @Mapping(target = "role", source = "role", defaultValue = "USER"),
             @Mapping(target = "phone", source = "phone"),
     })
     UserEntity toEntity(UserDTO userDto);

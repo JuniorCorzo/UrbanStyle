@@ -1,7 +1,6 @@
 import type { JwtClaims } from "@/interface/jwt-payload.interface";
 import type { User, UserCredentials } from "@/interface/user.interface";
 import { AuthRequest, verifyToken } from "@/service/auth.service";
-import { getUserById } from "@/service/user.service";
 import { jwtDecode } from "jwt-decode";
 
 export class Auth {
@@ -20,11 +19,10 @@ export class Auth {
   }
 
   public async login(userCredentials: UserCredentials) {
-    this.setToken((await AuthRequest(userCredentials)).accessToken);
     const { userId } = jwtDecode<JwtClaims>(this.accessToken as string);
     this.setUserId(userId);
 
-    this.createSession();
+    // this.createSession();
     location.replace("/home");
   }
 
@@ -44,10 +42,10 @@ export class Auth {
     sessionStorage.removeItem("user_session");
   }
 
-  async createSession(userParam?: User) {
-    const user = userParam ?? (await getUserById(this.userId as string));
-    sessionStorage.setItem("user_session", JSON.stringify(user));
-  }
+  // async createSession(userParam?: User) {
+  //   const user = userParam ?? (await getUserById(this.userId as string));
+  //   sessionStorage.setItem("user_session", JSON.stringify(user));
+  // }
 
   public getUserId(): string | undefined {
     console.log(this.user);

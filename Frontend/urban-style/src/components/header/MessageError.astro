@@ -10,6 +10,8 @@ const { errorId } = Astro.props;
 <span
   class="flex gap-1 items-center text-maroon opacity-0 transition-opacity duration-300"
 >
-  <ExclamationCircleIcon className="hidden invisible size-6" />
-  <span id={errorId} class="transition-all"></span>
+  <span class="hidden invisible min-w-6 min-h-6">
+    <ExclamationCircleIcon className="size-6" />
+  </span>
+  <span id={errorId} class="transition-all text-pretty font-bold"></span>
 </span>

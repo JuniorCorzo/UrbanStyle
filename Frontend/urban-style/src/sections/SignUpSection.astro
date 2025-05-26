@@ -1,0 +1,129 @@
+---
+import Button from "@/components/Button.astro";
+import InputField from "@/components/header/InputField.astro";
+import Subtitle from "@/components/text/Subtitle.astro";
+import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+---
+
+<section
+  class="relative min-h-dvh flex sm:items-center items-start sm:py-0 py-5 justify-center"
+>
+  <article
+    class="w-md sm:landscape:max-h-[44rem] landscape:max-h-96 mx-4 my-2 bg-accent/50 border-2 border-border backdrop-blur-sm pb-5 pt-10 shadow-xl rounded-xl overflow-auto"
+  >
+    <div class="text-center h-12">
+      <h1 class="font-bold text-3xl">Crear cuenta</h1>
+      <Subtitle
+        class="font-normal"
+        size="lg"
+        Text="¡Únete y empieza tu aventura!"
+      />
+    </div>
+    <div class="flex flex-col items-center justify-center mt-1">
+      <form
+        id="sign-up_form"
+        class="flex flex-col w-full max-w-md rounded px-8 pt-6 pb-8 gap-4"
+      >
+        <div>
+          <InputField
+            label="Nombre de usuario"
+            placeholder="Nombre de usuario"
+            errorId="username_error"
+            name="username"
+          />
+        </div>
+        <div>
+          <InputField
+            label="Correo electrónico"
+            placeholder="Correo electrónico"
+            name="email"
+            errorId="email_error"
+          />
+        </div>
+        <div>
+          <InputField
+            label="Numero telefónico"
+            placeholder="3124038345"
+            name="phone"
+            errorId="phone_error"
+          />
+        </div>
+        <div class="">
+          <InputField
+            label="Contraseña"
+            placeholder="Contraseña"
+            name="password"
+            errorId="password_error"
+            type="password"
+          />
+        </div>
+        <div>
+          <InputField
+            label="Confirmar contraseña"
+            type="password"
+            placeholder="Confirmar contraseña"
+            name="confirm_password"
+            errorId="confirm_password_error"
+          />
+        </div>
+        <div
+          class="w-full flex flex-col-reverse sm:flex-row items-center justify-center gap-2 sm:gap-4"
+        >
+          <Button id="go_to_home" class="w-full" size="md">
+            <span>Volver al inicio</span>
+          </Button>
+          <Button class="w-full" size="md" type="submit"
+            >¡Listo, regístrate!</Button
+          >
+        </div>
+      </form>
+    </div>
+  </article>
+</section>
+
+<script>
+  import { userSchemeToUser } from "@/adapter/user.adapter";
+  import { $ } from "@/lib/dom-selector";
+  import { showError } from "@/lib/showErrorMessages";
+  import {
+    createUserSchema,
+    type CreateUserValid,
+  } from "@/lib/validations/user.validations";
+  import { UserService } from "@/service/user.service";
+  import { navigate } from "astro:transitions/client";
+  import z from "zod";
+
+  const sendRequest = (user: CreateUserValid) => {
+    UserService.signUp(userSchemeToUser(user));
+    navigate("/home");
+  };
+
+  const initializeListener = () => {
+    const $form = $<HTMLFormElement>("#sign-up_form");
+
+    $form?.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const formData = new FormData($form);
+      const data = Object.fromEntries(formData) as Record<
+        string,
+        string
+      > as CreateUserValid;
+
+      try {
+        const userCreate = createUserSchema.parse(data);
+        sendRequest(userCreate);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          showError(error);
+          return;
+        }
+      }
+    });
+
+    $("#go_to_home")?.addEventListener("click", () => {
+      navigate("/home");
+    });
+  };
+
+  document.addEventListener("astro:page-load", initializeListener);
+</script>
