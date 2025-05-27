@@ -1,5 +1,6 @@
 package io.github.juniorcorzo.UrbanStyle.domain.entities;
 
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.CategorySummary;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +27,7 @@ public class ProductEntity {
     private double discount;
     private List<String> images;
     @TextIndexed
-    private String[] categories;
+    private CategorySummary[] categories;
     private Attribute attributes;
     private int stock;
 }

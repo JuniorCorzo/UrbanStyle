@@ -1,6 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.CategorySummary;
 
 import java.util.List;
 
@@ -12,7 +13,7 @@ public record ProductDTO(
         List<String> images,
         double price,
         double discount,
-        String[] categories,
+        CategorySummary[] categories,
         AttributesDTO attributes,
         int stock
 ) {}
