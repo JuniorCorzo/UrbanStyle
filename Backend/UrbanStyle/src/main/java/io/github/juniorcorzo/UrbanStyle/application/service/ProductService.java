@@ -100,11 +100,8 @@ public class ProductService {
     }
 
     public ResponseDTO<ProductDTO> updateProduct(ProductDTO productDTO) {
-
         ProductEntity productEntity = this.productMapper.toEntity(productDTO);
-        String name = this.productsRepository.findById(productDTO.id()).orElseThrow().getName();
-
-        if (productDTO.name().equals(name)) {
+        if (this.productsRepository.findNameById(productDTO.id()).equals(productDTO.name())) {
             ProductEntity updatedProduct = this.productsRepository.save(productEntity);
             return new ResponseDTO<>(HttpStatus.OK, List.of(this.productMapper.toDTO(updatedProduct)), "Product updated successfully");
         }

@@ -3,7 +3,6 @@ package io.github.juniorcorzo.UrbanStyle.domain.repository;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import org.springframework.data.mongodb.repository.Aggregation;
-import org.springframework.data.mongodb.repository.DeleteQuery;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
 import org.springframework.data.repository.ListCrudRepository;
@@ -21,6 +20,9 @@ public interface ProductsRepository extends ListCrudRepository<ProductEntity, St
 
     @Query("{ '$text': { '$search': '?0'} }")
     List<ProductEntity> searchProducts(String search);
+
+    @Query(  value = "{ '_id': ?0 }", fields = "{ name: 1, _id: 0 }")
+    String findNameById(String id);
 
     @Query("{ 'categories': ?0 }")
     List<ProductEntity> findByCategory(String category);
