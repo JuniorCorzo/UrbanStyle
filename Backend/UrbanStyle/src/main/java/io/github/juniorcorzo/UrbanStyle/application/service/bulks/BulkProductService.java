@@ -1,4 +1,4 @@
-package io.github.juniorcorzo.UrbanStyle.application.service;
+package io.github.juniorcorzo.UrbanStyle.application.service.bulks;
 
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;

@@ -1,5 +1,6 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
+import io.github.juniorcorzo.UrbanStyle.application.service.bulks.BulkProductService;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.ProductsRepository;
