@@ -1,0 +1,24 @@
+services:
+  urban_style_db:
+    image: mongo:8.0.0
+    container_name: mongo_db
+    ports:
+      - "27017:27017"
+    command: ['--replSet', "rs0", '--bind_ip_all']
+    volumes:
+      - mongo_data:/data/db
+  shopping_cart_db:
+    image: redis:8.0-alpine
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "redis.conf"]
+    volumes:
+      - redis_data:/data
+      - ./redis.conf:/data/redis.conf:Z
+
+
+
+volumes:
+  mongo_data:
+
+  redis_data:
