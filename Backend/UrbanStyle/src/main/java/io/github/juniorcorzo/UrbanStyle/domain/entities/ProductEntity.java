@@ -27,7 +27,7 @@ public class ProductEntity {
     private double discount;
     private List<String> images;
     @TextIndexed
-    private CategorySummary[] categories;
+    private List<CategorySummary> categories;
     private Attribute attributes;
     private int stock;
 }
