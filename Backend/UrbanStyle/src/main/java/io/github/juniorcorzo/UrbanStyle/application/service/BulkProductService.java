@@ -5,6 +5,7 @@ import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.ProductDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.mongodb.core.BulkOperations;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -13,18 +14,29 @@ import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BulkProductService {
     private final MongoTemplate mongoTemplate;
     private final ProductMapper productMapper;
 
     @Transactional
     public ProductDTO updateProduct(ProductEntity productEntity) {
-        ProductEntity resultReplace = replaceProduct(productEntity);
-        this.changeProductNameInOrders(resultReplace.getId(), productEntity.getName());
+        long timeStart = Instant.now().toEpochMilli();
+        try {
+            log.info("Updating product {}", productEntity.getId());
+            ProductEntity resultReplace = replaceProduct(productEntity);
+            this.changeProductNameInOrders(resultReplace.getId(), productEntity.getName());
+            log.info("Product {} updated in {} ms", productEntity.getId(), Instant.now().toEpochMilli() - timeStart);
 
-        return productMapper.toDTO(resultReplace);
+            return productMapper.toDTO(resultReplace);
+        } catch (Exception e) {
+            log.error("Error updating product {}", productEntity.getId(), e);
+            throw new RuntimeException(e);
+        }
     }
 
     private ProductEntity replaceProduct(ProductEntity productEntity) {
