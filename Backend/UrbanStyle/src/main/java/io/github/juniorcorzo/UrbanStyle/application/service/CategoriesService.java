@@ -1,26 +1,23 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
+import io.github.juniorcorzo.UrbanStyle.application.service.bulks.BulkCategoryService;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.CategoryEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.CategoriesRepository;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.CategoryDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.CategoriesMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CategoriesService {
     private final CategoriesRepository categoriesRepository;
     private final CategoriesMapper categoriesMapper;
-
-    @Autowired
-    public CategoriesService(CategoriesRepository categoriesRepository, CategoriesMapper categoriesMapper) {
-        this.categoriesRepository = categoriesRepository;
-        this.categoriesMapper = categoriesMapper;
-    }
+    private final BulkCategoryService bulkCategoryService;
 
     public ResponseDTO<CategoryDTO> getAllCategories() {
         List<CategoryEntity> categories = this.categoriesRepository.findAll();
@@ -48,11 +45,20 @@ public class CategoriesService {
 
     public ResponseDTO<CategoryDTO> updateCategory(CategoryDTO category) {
         CategoryEntity categoryEntity = this.categoriesMapper.toEntity(category);
-        CategoryEntity updatedCategory = this.categoriesRepository.save(categoryEntity);
+        if (this.categoriesRepository.findNameById(category.id()).equals(category.name())) {
+            CategoryEntity updatedCategory = this.categoriesRepository.save(categoryEntity);
+            return new ResponseDTO<>(
+                    HttpStatus.OK,
+                    List.of(this.categoriesMapper.toDTO(updatedCategory)),
+                    "Category updated successfully"
+            );
+        }
+
+        CategoryDTO updatedCategory = this.bulkCategoryService.updateCategory(categoryEntity);
 
         return new ResponseDTO<>(
                 HttpStatus.OK,
-                List.of(this.categoriesMapper.toDTO(updatedCategory)),
+                List.of(updatedCategory),
                 "Category updated successfully"
         );
     }
