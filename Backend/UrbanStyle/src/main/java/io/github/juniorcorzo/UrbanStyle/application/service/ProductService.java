@@ -7,8 +7,8 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.Produ
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.ProductImagesDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.ProductMapper;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -16,17 +16,13 @@ import java.util.List;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ProductService {
     private final ProductsRepository productsRepository;
     private final ProductMapper productMapper;
     private final ImageStorageService imageStorageService;
+    private final BulkProductService bulkProductService;
 
-    @Autowired
-    public ProductService(ProductsRepository productsRepository, ProductMapper productMapper, ImageStorageService imageStorageService) {
-        this.productsRepository = productsRepository;
-        this.productMapper = productMapper;
-        this.imageStorageService = imageStorageService;
-    }
 
     public ResponseDTO<ProductDTO> getAllProducts() {
         List<ProductDTO> products = this.productsRepository.findAll()
@@ -103,10 +99,18 @@ public class ProductService {
     }
 
     public ResponseDTO<ProductDTO> updateProduct(ProductDTO productDTO) {
-        ProductEntity productEntity = this.productMapper.toEntity(productDTO);
-        ProductEntity updatedProduct = this.productsRepository.save(productEntity);
 
-        return new ResponseDTO<>(HttpStatus.OK, List.of(this.productMapper.toDTO(updatedProduct)), "Product updated successfully");
+        ProductEntity productEntity = this.productMapper.toEntity(productDTO);
+        String name = this.productsRepository.findById(productDTO.id()).orElseThrow().getName();
+
+        if (productDTO.name().equals(name)) {
+            ProductEntity updatedProduct = this.productsRepository.save(productEntity);
+            return new ResponseDTO<>(HttpStatus.OK, List.of(this.productMapper.toDTO(updatedProduct)), "Product updated successfully");
+        }
+
+
+        ProductDTO updatedProduct = this.bulkProductService.updateProduct(productEntity);
+        return new ResponseDTO<>(HttpStatus.OK, List.of(updatedProduct), "Product` updated successfully");
     }
 
     public ResponseDTO<ProductDTO> deleteProduct(String id) {
