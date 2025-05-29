@@ -1,5 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
+import io.github.juniorcorzo.UrbanStyle.application.exceptions.FailedDeletingImagesToR2;
+import io.github.juniorcorzo.UrbanStyle.application.exceptions.FailedSendImagesToR2;
 import io.github.juniorcorzo.UrbanStyle.domain.clients.StorageFileClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,31 +31,38 @@ public class ImageStorageService {
     public List<String> sendImagesToStorage(List<String> images) {
         final long startTime = Instant.now().toEpochMilli();
         log.info("Sending {} images to Cloudflare R2", images.size());
-        List<CompletableFuture<String>> prevSendImage = images.stream()
-                .map(image -> CompletableFuture.supplyAsync(() -> {
-                            ByteBuffer imageWebp = this.imageProcessingService.convertToWebp(image);
-                            return this.storageFileClient.uploadImage(imageWebp);
-                        }, executorService)
-                ).toList();
-        List<String> sendImage;
+
         try {
-            sendImage = CompletableFuture.allOf(prevSendImage.toArray(new CompletableFuture[0]))
+            List<CompletableFuture<String>> prevSendImage = images.stream()
+                    .map(image -> CompletableFuture.supplyAsync(() -> {
+                                ByteBuffer imageWebp = this.imageProcessingService.convertToWebp(image);
+                                return this.storageFileClient.uploadImage(imageWebp);
+                            }, executorService)
+                    ).toList();
+
+            List<String> sendImage = CompletableFuture.allOf(prevSendImage.toArray(new CompletableFuture[0]))
                     .thenApply(i -> prevSendImage.stream()
                             .map(CompletableFuture::join)
                             .toList()).get();
-        } catch (InterruptedException | ExecutionException e) {
-            log.error("Error sending images to Cloudflare R2", e);
-            throw new RuntimeException(e);
-        }
-        log.info("Sending {} images to Cloudflare R2 completed in {} ms", images.size(), Instant.now().toEpochMilli() - startTime);
 
-        return sendImage;
+            log.info("Sending {} images to Cloudflare R2 completed in {} ms", images.size(), Instant.now().toEpochMilli() - startTime);
+            return sendImage;
+        } catch (InterruptedException | ExecutionException e) {
+            log.error("Error sending images to Cloudflare R2: {}", e.getMessage(), e);
+            throw new FailedSendImagesToR2();
+        }
     }
 
     public void deleteImagesFromStorage(List<String> images) {
         log.info("Delete {} images to Cloudflare R2", images.size());
+        try {
+
         images.forEach(image -> this.executorService
                 .submit(() -> this.storageFileClient.deleteImage(image))
         );
+        } catch (Exception e) {
+            log.error("Error deleting images to Cloudflare R2: {}", e.getMessage(), e);
+            throw new FailedDeletingImagesToR2();
+        }
     }
 }

@@ -1,15 +1,20 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
+import io.github.juniorcorzo.UrbanStyle.application.exceptions.FailedChangeStatusInOrder;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderHistory;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
+import io.github.juniorcorzo.UrbanStyle.domain.enums.DocumentsName;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
+import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DocumentNotFound;
+import io.github.juniorcorzo.UrbanStyle.domain.exceptions.SaveDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.OrderRepository;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.OrdersDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +23,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
@@ -67,56 +73,61 @@ public class OrderService {
                 "Orders retrieved successfully"
         );
     }
-    public ResponseDTO<OrdersDTO> createOrder(OrdersDTO insertOrder) {
-        OrdersEntity orderSaved = this.orderRepository.save(this.orderMapper.toEntity(insertOrder));
 
-        return new ResponseDTO<>(
-                HttpStatus.CREATED,
-                List.of(this.orderMapper.toDTO(orderSaved)),
-                "Order created successfully"
-        );
+    public ResponseDTO<OrdersDTO> createOrder(OrdersDTO insertOrder) {
+        try {
+            OrdersEntity orderSaved = this.orderRepository.save(this.orderMapper.toEntity(insertOrder));
+
+            return new ResponseDTO<>(
+                    HttpStatus.CREATED,
+                    List.of(this.orderMapper.toDTO(orderSaved)),
+                    "Order created successfully"
+            );
+        } catch (Exception e) {
+            log.error("Error creating order", e);
+            throw new SaveDocumentFailed(DocumentsName.ORDER);
+        }
     }
 
     public ResponseDTO<OrdersDTO> updateOrder(OrdersDTO updateOrder) {
-        OrdersEntity orderUpdated = this.orderRepository.save(this.orderMapper.toEntity(updateOrder));
+        try {
+            OrdersEntity orderUpdated = this.orderRepository.save(this.orderMapper.toEntity(updateOrder));
 
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                List.of(this.orderMapper.toDTO(orderUpdated)),
-                "Order updated successfully"
-        );
+            return new ResponseDTO<>(
+                    HttpStatus.OK,
+                    List.of(this.orderMapper.toDTO(orderUpdated)),
+                    "Order updated successfully"
+            );
+        } catch (RuntimeException e) {
+            log.error("Error updating order", e);
+            throw new SaveDocumentFailed(DocumentsName.ORDER);
+        }
     }
 
     public ResponseDTO<OrdersDTO> changeStatus(String orderId, OrderStatus status) {
-        this.orderRepository.changeOrderStatus(
-                orderId,
-                status.toString(),
-                new OrderHistory(status, LocalDateTime.now())
-        );
-        OrdersEntity statusChange = this.orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        try {
+            this.orderRepository.changeOrderStatus(
+                    orderId,
+                    status.toString(),
+                    new OrderHistory(status, LocalDateTime.now())
+            );
+            OrdersEntity statusChange = this.orderRepository
+                    .findById(orderId)
+                    .orElseThrow(() -> new DocumentNotFound(DocumentsName.ORDER, orderId));
 
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                List.of(this.orderMapper.toDTO(statusChange)),
-                "Order status changed successfully"
-        );
+            return new ResponseDTO<>(
+                    HttpStatus.OK,
+                    List.of(this.orderMapper.toDTO(statusChange)),
+                    "Order status changed successfully"
+            );
+        } catch (RuntimeException e) {
+            log.error("Failed to change status in order with id {}", orderId, e);
+            throw new FailedChangeStatusInOrder();
+        }
     }
 
     public ResponseDTO<OrdersDTO> cancelOrder(String orderId) {
         final OrderStatus status = OrderStatus.CANCELED;
-        this.orderRepository.changeOrderStatus(
-                orderId,
-                status.toString(),
-                new OrderHistory(status, LocalDateTime.now())
-        );
-        OrdersEntity orderCanceled = this.orderRepository
-                .findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
-
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                List.of(this.orderMapper.toDTO(orderCanceled)),
-                "Order canceled successfully"
-        );
+        return this.changeStatus(orderId, status);
     }
 }
