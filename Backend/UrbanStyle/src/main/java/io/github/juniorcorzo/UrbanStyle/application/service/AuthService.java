@@ -6,7 +6,6 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.User
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
@@ -22,11 +21,11 @@ public class AuthService {
     public String login(UserCredentials credentials) {
         try {
 
-        UsernamePasswordAuthenticationToken authToken =
-                new UsernamePasswordAuthenticationToken(credentials.email(), credentials.password());
+            UsernamePasswordAuthenticationToken authToken =
+                    new UsernamePasswordAuthenticationToken(credentials.email(), credentials.password());
 
-        this.authenticationManager.authenticate(authToken);
-        return tokenService.generateToken(authToken);
+            this.authenticationManager.authenticate(authToken);
+            return tokenService.generateToken(authToken);
         } catch (Exception e) {
             log.error("Error logging in: {}", e.getMessage(), e);
             throw new CredentialsNotValid();

@@ -1,6 +1,5 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.security;
 
-import com.nimbusds.jose.KeyLengthException;
 import io.github.juniorcorzo.UrbanStyle.application.service.CustomerUserDetailsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,9 +20,9 @@ import javax.crypto.spec.SecretKeySpec;
 @Slf4j
 @SuppressWarnings("unused")
 public class SecureBeans {
+    private final CustomerUserDetailsService customerUserDetailsService;
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
-    private final CustomerUserDetailsService customerUserDetailsService;
 
     public SecureBeans(@Lazy CustomerUserDetailsService customerUserDetailsService) {
         this.customerUserDetailsService = customerUserDetailsService;
@@ -60,7 +59,7 @@ public class SecureBeans {
     }
 
     @Bean
-    public JwtDecoder jwtDecoder() throws KeyLengthException {
+    public JwtDecoder jwtDecoder() {
         return NimbusJwtDecoder.withSecretKey(new SecretKeySpec(SECRET_KEY.getBytes(), "HmacSHA256")).build();
     }
 }
