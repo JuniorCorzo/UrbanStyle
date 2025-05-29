@@ -1,8 +1,10 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,12 +20,11 @@ import java.util.List;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class HttpConfig {
-    private  final JwtCookieFilter jwtCookieFilter;
-
-    public HttpConfig(JwtCookieFilter jwtCookieFilter) {
-        this.jwtCookieFilter = jwtCookieFilter;
-    }
+    private final JwtCookieFilter jwtCookieFilter;
+    private final AuthenticationManager authenticationManager;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -32,9 +33,9 @@ public class HttpConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> {
                             auth
-                                    .requestMatchers("/auth/login").permitAll()
-                                    .requestMatchers(HttpMethod.GET, "/**").permitAll()
+                                    .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
                                     .requestMatchers(HttpMethod.POST, "/users/create").permitAll()
+                                    .requestMatchers(HttpMethod.GET, "/**").permitAll()
                                     .requestMatchers("/orders/all").authenticated();
 
                             auth.anyRequest().authenticated();
@@ -42,6 +43,7 @@ public class HttpConfig {
                 )
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authenticationManager(authenticationManager)
                 .addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
@@ -49,7 +51,7 @@ public class HttpConfig {
 
     CorsConfigurationSource corsConfiguration() {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        corsConfig.setAllowedOrigins(List.of("http://localhost:4321/"));
+        corsConfig.setAllowedOrigins(List.of("http://localhost:4321"));
         corsConfig.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         corsConfig.setAllowedHeaders(List.of("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"));
         corsConfig.setExposedHeaders(List.of("Authorization", "X-Requested-With", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
