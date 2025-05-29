@@ -2,6 +2,7 @@ package io.github.juniorcorzo.UrbanStyle.infrastructure.security;
 
 import com.nimbusds.jose.KeyLengthException;
 import io.github.juniorcorzo.UrbanStyle.application.service.CustomerUserDetailsService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,8 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import javax.crypto.spec.SecretKeySpec;
 
 @Configuration
+@Slf4j
+@SuppressWarnings("unused")
 public class SecureBeans {
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
@@ -48,6 +51,7 @@ public class SecureBeans {
      */
     @Bean
     public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
+        log.info("Creating AuthenticationManager bean");
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(this.customerUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
