@@ -1,10 +1,16 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductSummary;
+import io.github.juniorcorzo.UrbanStyle.domain.enums.DocumentsName;
+import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DeleteDocumentFailed;
+import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DocumentNotFound;
+import io.github.juniorcorzo.UrbanStyle.domain.exceptions.SaveDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.ShoppingCartDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,21 +39,25 @@ public class ShoppingCartService {
     }
 
     public ResponseDTO<ShoppingCartDTO> addProductsToCart(ShoppingCartDTO card) {
-        final String cartId = this.getCartId(card.userId());
+        try {
+            final String cartId = this.getCartId(card.userId());
+            card.items().forEach(item ->
+                    this.hashOperations.put(cartId, this.getProductId(item.productId()), item)
+            );
+            Map<String, ProductSummary> currentProducts = this.hashOperations.entries(cartId);
 
-        card.items().forEach(item ->
-                this.hashOperations.put(cartId, this.getProductId(item.productId()), item)
-        );
-        Map<String, ProductSummary> currentProducts = this.hashOperations.entries(cartId);
-
-        return new ResponseDTO<>(
-                HttpStatus.CREATED,
-                List.of(new ShoppingCartDTO(
-                        card.userId(),
-                        currentProducts.values().stream().toList()
-                )),
-                "Cart created successfully"
-        );
+            return new ResponseDTO<>(
+                    HttpStatus.CREATED,
+                    List.of(new ShoppingCartDTO(
+                            card.userId(),
+                            currentProducts.values().stream().toList()
+                    )),
+                    "Cart created successfully"
+            );
+        } catch (Exception e) {
+            log.error("Error creating cart", e);
+            throw new SaveDocumentFailed(DocumentsName.SHOPPING_CART);
+        }
     }
 
     public ResponseDTO<ShoppingCartDTO> changeQuantityProduct(String userId, String productId, int quantity) {
@@ -74,29 +84,36 @@ public class ShoppingCartService {
         final String productId = this.getProductId(product.productId());
         // This checks if a cart exists using the cart ID and verifies if the product ID is the same
         if (card.items().size() != 1 || !this.hashOperations.hasKey(cartId, productId)) {
-            throw new RuntimeException("Cart not found");
+            throw new DocumentNotFound(DocumentsName.SHOPPING_CART, cartId);
         }
 
-        this.hashOperations.put(
-                cartId,
-                productId,
-                product
-        );
+        try {
+            this.hashOperations.put(
+                    cartId,
+                    productId,
+                    product
+            );
 
-        Map<String, ProductSummary> currentProducts = this.hashOperations.entries(cartId);
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                List.of(new ShoppingCartDTO(
-                        card.userId(),
-                        currentProducts.values().stream().toList()
-                )),
-                "Product update in cart updated successfully"
-        );
+            Map<String, ProductSummary> currentProducts = this.hashOperations.entries(cartId);
+            return new ResponseDTO<>(
+                    HttpStatus.OK,
+                    List.of(new ShoppingCartDTO(
+                            card.userId(),
+                            currentProducts.values().stream().toList()
+                    )),
+                    "Product update in cart updated successfully"
+            );
+        } catch (RuntimeException e) {
+            log.error("Error updating product in cart", e);
+            throw new SaveDocumentFailed(DocumentsName.SHOPPING_CART);
+        }
     }
 
     public ResponseDTO<ShoppingCartDTO> removeProductCar(String userId, String productId) {
-        String cartId = String.format("shoppingCart:%s", userId);
-        String productCartId = String.format("productId:%s", productId);
+        final String cartId = String.format("shoppingCart:%s", userId);
+        final String productCartId = String.format("productId:%s", productId);
+
+        try {
 
         this.hashOperations.delete(
                 cartId,
@@ -112,10 +129,16 @@ public class ShoppingCartService {
                 )),
                 "Product delete of cart deleted successfully"
         );
+        } catch (RuntimeException e) {
+            log.error("Error deleting product in cart", e);
+            throw new DeleteDocumentFailed(DocumentsName.SHOPPING_CART, cartId);
+        }
     }
 
     public ResponseDTO<ShoppingCartDTO> removeShoppingCart(String userId) {
-        String cardId = String.format("shoppingCart:%s", userId);
+        final String cardId = String.format("shoppingCart:%s", userId);
+        try {
+
         Set<String> keys = this.hashOperations.keys(cardId);
         this.hashOperations.delete(cardId, keys.toArray());
 
@@ -123,12 +146,20 @@ public class ShoppingCartService {
                 HttpStatus.OK,
                 "Cart deleted successfully"
         );
+        } catch (RuntimeException e){
+            log.error("Error deleting cart", e);
+            throw new DeleteDocumentFailed(DocumentsName.SHOPPING_CART, cardId);
+        }
     }
 
+    @NotNull
+    @Contract(pure = true)
     private String getCartId(String userId) {
         return String.format("shoppingCart:%s", userId);
     }
 
+    @NotNull
+    @Contract(pure = true)
     private String getProductId(String productId) {
         return String.format("productId:%s", productId);
     }

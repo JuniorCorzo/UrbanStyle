@@ -8,15 +8,16 @@ import org.springframework.data.mongodb.repository.Update;
 import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductsRepository extends ListCrudRepository<ProductEntity, String> {
 
     @Aggregation(pipeline = {
             "{ '$unwind': '$categories' }",
-            "{ '$group': { _id: '$categories', products: { $push: '$$ROOT' } } }",
+            "{ '$group': { _id: '$categories.name', products: { $push: '$$ROOT' } } }",
             "{ '$project': { categories: '$_id', products: 1, _id: 0 } }"
     })
-    List<ProductAggregationDomain> groupAllByCategories();
+    Optional<List<ProductAggregationDomain>> groupAllByCategories();
 
     @Query("{ '$text': { '$search': '?0'} }")
     List<ProductEntity> searchProducts(String search);
@@ -24,8 +25,8 @@ public interface ProductsRepository extends ListCrudRepository<ProductEntity, St
     @Query(  value = "{ '_id': ?0 }", fields = "{ name: 1, _id: 0 }")
     String findNameById(String id);
 
-    @Query("{ 'categories': ?0 }")
-    List<ProductEntity> findByCategory(String category);
+    @Query("{ 'categories.name': ?0 }")
+    Optional<List<ProductEntity>> findByCategory(String category);
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$push': { 'images': { '$each': ?1} } }")
