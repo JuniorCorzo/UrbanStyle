@@ -6,6 +6,7 @@ import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdMustExis
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
+import io.github.juniorcorzo.UrbanStyle.domain.enums.Roles;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -24,7 +25,7 @@ public record UserDTO(
         @NotBlank(groups = {OnCreate.class})
         String password,
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
-        String role,
+        Roles role,
         @NotNull
         @Pattern(regexp = "^\\d{10}$", message = "Phone must be numeric")
         String phone
