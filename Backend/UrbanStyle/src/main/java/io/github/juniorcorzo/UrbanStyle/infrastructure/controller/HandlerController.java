@@ -9,8 +9,13 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @ControllerAdvice
 @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -28,9 +33,9 @@ public class HandlerController {
     @ExceptionHandler(IdFormatNotValid.class)
     public ResponseEntity<ResponseError> handleIdFormatNotValid(IdFormatNotValid e) {
         return new ResponseEntity<>(new ResponseError(
-                HttpStatus.CONFLICT,
+                HttpStatus.BAD_REQUEST,
                 e.getMessage()
-        ), HttpStatus.CONFLICT);
+        ), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SaveDocumentFailed.class)
@@ -111,5 +116,20 @@ public class HandlerController {
                 HttpStatus.UNAUTHORIZED,
                 e.getMessage()
         ), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ResponseError> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {
+        Map<String, String> errors = new HashMap<>();
+        e.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+
+        return new ResponseEntity<>(new ResponseError(
+                HttpStatus.BAD_REQUEST,
+                errors
+        ), HttpStatus.BAD_REQUEST);
     }
 }

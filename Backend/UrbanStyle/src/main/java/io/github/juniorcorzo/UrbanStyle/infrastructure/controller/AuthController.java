@@ -6,6 +6,9 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.User
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.AuthResponse;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -15,15 +18,13 @@ import java.time.Duration;
 
 @RestController
 @RequestMapping("/auth")
+@RequiredArgsConstructor
+@SuppressWarnings("unused")
 public class AuthController {
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
-
     @PostMapping("/login")
-    public AuthResponse login(@RequestBody UserCredentials credentials, HttpServletResponse response) {
+    public AuthResponse login(@Valid @RequestBody UserCredentials credentials, HttpServletResponse response) {
         String accessToken = authService.login(credentials);
         ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken)
                 .httpOnly(true)
@@ -37,8 +38,7 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
-    public ResponseDTO<UserDTO> verify(@CookieValue("accessToken") String token) {
-        System.out.println(token);
+    public ResponseDTO<UserDTO> verify(@NotBlank @CookieValue("accessToken") String token) {
         return this.authService.verifySession(token);
     }
     

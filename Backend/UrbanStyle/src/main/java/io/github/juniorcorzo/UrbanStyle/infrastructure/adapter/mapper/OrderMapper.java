@@ -1,7 +1,8 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper;
 
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
-import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.OrdersDTO;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.OrdersSaveDTO;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.OrdersResponseDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Mappings;
@@ -16,9 +17,8 @@ public interface OrderMapper {
             @Mapping(target = "address", source = "address"),
             @Mapping(target = "paymentMethod", source = "paymentMethod"),
             @Mapping(target = "orderDate", source = "orderDate"),
-            @Mapping(target = "history", source = "history")
     })
-    OrdersEntity toEntity(OrdersDTO ordersDTO);
+    OrdersEntity toEntity(OrdersSaveDTO ordersSaveDTO);
 
     @Mappings({
             @Mapping(target = "id", source = "id"),
@@ -31,5 +31,5 @@ public interface OrderMapper {
             @Mapping(target = "orderDate", source = "orderDate"),
             @Mapping(target = "history", source = "history")
     })
-    OrdersDTO toDTO(OrdersEntity ordersEntity);
+    OrdersResponseDTO toDTO(OrdersEntity ordersEntity);
 }
