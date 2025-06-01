@@ -8,6 +8,7 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.Res
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,16 +26,19 @@ public class CategoryController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<CategoryDTO> createCategory(@Validated(OnCreate.class) @RequestBody CategoryDTO categoryDTO) {
         return this.categoryService.createCategory(categoryDTO);
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<CategoryDTO> updateCategory(@Validated(OnUpdate.class) @RequestBody CategoryDTO categoryDTO) {
         return this.categoryService.updateCategory(categoryDTO);
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<CategoryDTO> deleteCategory(@NotBlank @PathVariable String id) {
         return this.categoryService.deleteCategory(id);
     }

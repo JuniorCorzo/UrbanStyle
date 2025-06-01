@@ -7,6 +7,7 @@ import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.UserDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,11 +29,13 @@ public class UserController {
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('USER')")
     public ResponseDTO<UserDTO> updateUser(@Validated(OnUpdate.class) @RequestBody UserDTO userDTO) {
         return userService.updateUser(userDTO);
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<UserDTO> deleteUser(@IdFormatConstraint @PathVariable String id) {
         return userService.deleteUser(id);
     }

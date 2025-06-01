@@ -12,6 +12,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Duration;
@@ -38,11 +39,13 @@ public class AuthController {
     }
 
     @GetMapping("/verify")
+    @PreAuthorize("hasRole('USER')")
     public ResponseDTO<UserDTO> verify(@NotBlank @CookieValue("accessToken") String token) {
         return this.authService.verifySession(token);
     }
     
     @DeleteMapping("/sign-out")
+    @PreAuthorize("hasRole('USER')")
     public ResponseDTO<Object> signOut(HttpServletResponse response){
         response.addHeader(
                 HttpHeaders.SET_COOKIE,
