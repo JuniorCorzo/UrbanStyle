@@ -4,6 +4,7 @@ import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.DocumentsName;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DeleteDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DocumentNotFound;
+import io.github.juniorcorzo.UrbanStyle.domain.exceptions.FieldExists;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.SaveDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.UserRepository;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.UserDTO;
@@ -11,6 +12,7 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.Res
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,11 +41,13 @@ public class UserService {
         try {
             UserEntity userEntity = userMapper.toEntity(userDTO);
             userEntity.setPassword(passwordEncoder.encode(userDTO.password()));
-
             UserEntity savedUser = this.userRepository.save(userEntity);
 
             return new ResponseDTO<>(HttpStatus.CREATED, List.of(userMapper.toDto(savedUser)), "User created");
-        } catch (Exception e) {
+        } catch (DuplicateKeyException e) {
+            log.error("Field already exists: Email - {}", userDTO.email());
+            throw new FieldExists("Email", userDTO.email());
+        } catch (RuntimeException e) {
             log.error("Error creating user: {}", e.getMessage(), e);
             throw new SaveDocumentFailed(DocumentsName.USER);
         }
@@ -55,6 +59,9 @@ public class UserService {
             UserEntity updatedUser = this.userRepository.save(userEntity);
 
             return new ResponseDTO<>(HttpStatus.OK, List.of(userMapper.toDto(updatedUser)), "User updated");
+        } catch (DuplicateKeyException e) {
+            log.error("Field already exists: Email: {}", userDTO.email());
+            throw new FieldExists("Email", userDTO.email());
         } catch (Exception e) {
             log.error("Error updating user: {}", e.getMessage(), e);
             throw new SaveDocumentFailed(DocumentsName.USER);
@@ -63,7 +70,6 @@ public class UserService {
 
     public ResponseDTO<UserDTO> deleteUser(String id) {
         try {
-
             UserEntity userEntity = this.userRepository.findById(id).orElseThrow(() -> new DocumentNotFound(DocumentsName.USER, id));
             this.userRepository.delete(userEntity);
 
@@ -73,4 +79,6 @@ public class UserService {
             throw new DeleteDocumentFailed(DocumentsName.USER, id);
         }
     }
+
+
 }
