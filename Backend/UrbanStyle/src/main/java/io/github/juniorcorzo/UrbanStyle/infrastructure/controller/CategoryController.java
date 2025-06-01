@@ -1,13 +1,14 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 
 import io.github.juniorcorzo.UrbanStyle.application.service.CategoriesService;
+import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
+import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.CategoryDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,12 +25,12 @@ public class CategoryController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO<CategoryDTO> createCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+    public ResponseDTO<CategoryDTO> createCategory(@Validated(OnCreate.class) @RequestBody CategoryDTO categoryDTO) {
         return this.categoryService.createCategory(categoryDTO);
     }
 
     @PutMapping("/update")
-    public ResponseDTO<CategoryDTO> updateCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
+    public ResponseDTO<CategoryDTO> updateCategory(@Validated(OnUpdate.class) @RequestBody CategoryDTO categoryDTO) {
         return this.categoryService.updateCategory(categoryDTO);
     }
 

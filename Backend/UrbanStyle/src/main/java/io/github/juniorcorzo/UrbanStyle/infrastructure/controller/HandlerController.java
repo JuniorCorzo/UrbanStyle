@@ -33,9 +33,9 @@ public class HandlerController {
     @ExceptionHandler(IdFormatNotValid.class)
     public ResponseEntity<ResponseError> handleIdFormatNotValid(IdFormatNotValid e) {
         return new ResponseEntity<>(new ResponseError(
-                HttpStatus.CONFLICT,
+                HttpStatus.BAD_REQUEST,
                 e.getMessage()
-        ), HttpStatus.CONFLICT);
+        ), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(SaveDocumentFailed.class)

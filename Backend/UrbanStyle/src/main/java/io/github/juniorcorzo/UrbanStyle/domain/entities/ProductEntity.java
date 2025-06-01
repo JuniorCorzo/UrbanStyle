@@ -24,7 +24,7 @@ public class ProductEntity {
     @TextIndexed
     private String description;
     private double price;
-    private double discount;
+    private byte discount;
     private List<String> images;
     @TextIndexed
     private List<CategorySummary> categories;

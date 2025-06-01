@@ -1,11 +1,13 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 
 import io.github.juniorcorzo.UrbanStyle.application.service.ProductService;
+import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatConstraint;
+import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
+import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.ProductDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.ProductImagesDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
-
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -26,12 +28,12 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseDTO<ProductDTO> getProductById(@NotBlank @RequestParam String id) {
+    public ResponseDTO<ProductDTO> getProductById(@IdFormatConstraint @RequestParam String id) {
         return productService.getProductById(id);
     }
 
     @GetMapping("/group")
-    public ResponseDTO<ProductAggregationDomain> groupProductsByCategories(){
+    public ResponseDTO<ProductAggregationDomain> groupProductsByCategories() {
         return this.productService.groupProductsByCategories();
     }
 
@@ -47,7 +49,7 @@ public class ProductController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
-    public ResponseDTO<ProductDTO> createProduct(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseDTO<ProductDTO> createProduct(@Validated(OnCreate.class) @RequestBody ProductDTO productDTO) {
         return productService.createProduct(productDTO);
     }
 
@@ -58,17 +60,17 @@ public class ProductController {
     }
 
     @PutMapping("/update")
-    public ResponseDTO<ProductDTO> updateProduct(@Valid @RequestBody ProductDTO productDTO) {
+    public ResponseDTO<ProductDTO> updateProduct(@Validated(OnUpdate.class) @RequestBody ProductDTO productDTO) {
         return productService.updateProduct(productDTO);
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseDTO<ProductDTO> deleteProduct(@NotBlank @PathVariable String id) {
+    public ResponseDTO<ProductDTO> deleteProduct(@IdFormatConstraint @PathVariable String id) {
         return productService.deleteProduct(id);
     }
 
     @DeleteMapping("/delete-images")
-    public ResponseDTO<ProductDTO> deleteImagesFromProduct(@NotBlank @RequestBody ProductImagesDTO productImagesDTO) {
+    public ResponseDTO<ProductDTO> deleteImagesFromProduct(@Valid @RequestBody ProductImagesDTO productImagesDTO) {
         return productService.deleteImagesFromProduct(productImagesDTO);
     }
 }
