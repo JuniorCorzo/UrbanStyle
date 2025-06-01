@@ -17,6 +17,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -24,6 +26,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 @Component
 @Slf4j
@@ -55,12 +59,15 @@ public class JwtCookieFilter extends OncePerRequestFilter {
 
         try {
             String email = tokenService.extractUsername(token);
+            String role = tokenService.extractClaim(token, "userRole");
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
+                System.out.println(authorities);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         this.userDetailsService,
                         email,
-                        null
+                        authorities
                 );
 
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

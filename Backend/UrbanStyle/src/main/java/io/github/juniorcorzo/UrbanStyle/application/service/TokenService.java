@@ -38,6 +38,7 @@ public class TokenService {
                 .expirationTime(Date.from(now.plus(30, ChronoUnit.DAYS)))
                 .subject(authentication.getName())
                 .claim("userId", user.id())
+                .claim("userRole", user.role())
                 .build();
     }
 
