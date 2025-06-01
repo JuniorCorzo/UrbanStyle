@@ -1,7 +1,6 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper;
 
 import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
-import io.github.juniorcorzo.UrbanStyle.domain.enums.Roles;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.UserDTO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
