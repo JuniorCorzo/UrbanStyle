@@ -3,6 +3,7 @@ package io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatConstraint;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdMustExists;
+import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.CategorySummary;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
@@ -20,14 +21,14 @@ public record ProductDTO(
         String name,
         @NotBlank
         String description,
-        @NotNull
-        @Size(min = 1, message = "Images must be provided")
+        @NotNull(groups = OnCreate.class)
+        @Size(min = 1, message = "Images must be provided", groups = OnCreate.class)
         List<String> images,
         @DecimalMin(value = "1000.00", message = "Price must be greater than 1000")
         double price,
-        @DecimalMin(value = "0.0", message = "Discount must be greater than or equal to 0")
-        @DecimalMax(value = "100.0", message = "Discount must be less than or equal to 100")
-        double discount,
+        @Min(value = 0, message = "Discount must be greater than or equal to 0")
+        @Max(value = 100, message = "Discount must be less than or equal to 100")
+        byte discount,
         @Valid
         @NotNull
         @Size(min = 1, message = "Categories must be provided")
