@@ -1,16 +1,17 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request;
 
-import jakarta.validation.constraints.NotBlank;
+import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatConstraint;
+import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdMustExists;
+import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public record ProductImagesDTO(
-        @NotBlank
-        @NotNull
+        @IdFormatConstraint
+        @IdMustExists(entity = ProductEntity.class)
         String productId,
         @NotEmpty
-        @NotNull
         List<String> images
-) { }
+) {
+}

@@ -10,7 +10,8 @@ import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DocumentNotFound;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.SaveDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.OrderRepository;
-import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.OrdersDTO;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.OrdersSaveDTO;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.OrdersResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
@@ -28,8 +29,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
 
-    public ResponseDTO<OrdersDTO> getALlOrders() {
-        List<OrdersDTO> allOrders = this.orderRepository.findAll().stream().map(orderMapper::toDTO).toList();
+    public ResponseDTO<OrdersResponseDTO> getALlOrders() {
+        List<OrdersResponseDTO> allOrders = this.orderRepository.findAll().stream().map(orderMapper::toDTO).toList();
         return new ResponseDTO<>(
                 HttpStatus.OK,
                 allOrders,
@@ -53,8 +54,8 @@ public class OrderService {
         );
     }
 
-    public ResponseDTO<OrdersDTO> getOrdersByUserId(String userId) {
-        List<OrdersDTO> ordersByUser = this.orderRepository.findAllOrdersByUserId(userId)
+    public ResponseDTO<OrdersResponseDTO> getOrdersByUserId(String userId) {
+        List<OrdersResponseDTO> ordersByUser = this.orderRepository.findAllOrdersByUserId(userId)
                 .stream()
                 .map(orderMapper::toDTO)
                 .toList();
@@ -74,7 +75,7 @@ public class OrderService {
         );
     }
 
-    public ResponseDTO<OrdersDTO> createOrder(OrdersDTO insertOrder) {
+    public ResponseDTO<OrdersResponseDTO> createOrder(OrdersSaveDTO insertOrder) {
         try {
             OrdersEntity orderSaved = this.orderRepository.save(this.orderMapper.toEntity(insertOrder));
 
@@ -89,7 +90,7 @@ public class OrderService {
         }
     }
 
-    public ResponseDTO<OrdersDTO> updateOrder(OrdersDTO updateOrder) {
+    public ResponseDTO<OrdersResponseDTO> updateOrder(OrdersSaveDTO updateOrder) {
         try {
             OrdersEntity orderUpdated = this.orderRepository.save(this.orderMapper.toEntity(updateOrder));
 
@@ -104,7 +105,7 @@ public class OrderService {
         }
     }
 
-    public ResponseDTO<OrdersDTO> changeStatus(String orderId, OrderStatus status) {
+    public ResponseDTO<OrdersResponseDTO> changeStatus(String orderId, OrderStatus status) {
         try {
             this.orderRepository.changeOrderStatus(
                     orderId,
@@ -126,7 +127,7 @@ public class OrderService {
         }
     }
 
-    public ResponseDTO<OrdersDTO> cancelOrder(String orderId) {
+    public ResponseDTO<OrdersResponseDTO> cancelOrder(String orderId) {
         final OrderStatus status = OrderStatus.CANCELED;
         return this.changeStatus(orderId, status);
     }
