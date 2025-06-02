@@ -2,6 +2,7 @@ package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.DocumentsName;
+import io.github.juniorcorzo.UrbanStyle.domain.enums.Roles;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DeleteDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DocumentNotFound;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.FieldExists;
@@ -68,6 +69,16 @@ public class UserService {
         }
     }
 
+    public ResponseDTO<UserDTO> changeAdminRole(String id) {
+        this.changeStatus(id, Roles.ROLE_ADMIN);
+        return new ResponseDTO<>(HttpStatus.OK, this.getUserById(id).data(), "User role updated");
+    }
+
+    public ResponseDTO<UserDTO> changeUserRole(String id) {
+        this.changeStatus(id, Roles.ROLE_USER);
+        return new ResponseDTO<>(HttpStatus.OK, this.getUserById(id).data(), "User role updated");
+    }
+
     public ResponseDTO<UserDTO> deleteUser(String id) {
         try {
             UserEntity userEntity = this.userRepository.findById(id).orElseThrow(() -> new DocumentNotFound(DocumentsName.USER, id));
@@ -80,5 +91,8 @@ public class UserService {
         }
     }
 
+    private void changeStatus(String id, Roles role) {
+        this.userRepository.changeRole(id, role);
+    }
 
 }
