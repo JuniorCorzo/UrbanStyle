@@ -1,4 +1,4 @@
-package io.github.juniorcorzo.UrbanStyle.infrastructure.security;
+package io.github.juniorcorzo.UrbanStyle.infrastructure.filters;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.juniorcorzo.UrbanStyle.application.service.CustomerUserDetailsService;
