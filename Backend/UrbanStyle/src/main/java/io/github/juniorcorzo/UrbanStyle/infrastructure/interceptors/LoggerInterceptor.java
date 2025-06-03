@@ -1,4 +1,4 @@
-package io.github.juniorcorzo.UrbanStyle.infrastructure.config;
+package io.github.juniorcorzo.UrbanStyle.infrastructure.interceptors;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
