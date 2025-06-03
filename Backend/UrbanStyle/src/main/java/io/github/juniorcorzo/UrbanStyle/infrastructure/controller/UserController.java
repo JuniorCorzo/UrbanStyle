@@ -8,6 +8,7 @@ import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.UserDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
@@ -38,7 +39,7 @@ public class UserController {
 
     @PutMapping("/update")
     @PreAuthorize("hasRole('USER')")
-    public ResponseDTO<UserDTO> updateUser(@Validated(OnUpdate.class) @RequestBody UserDTO userDTO) {
+    public ResponseDTO<UserDTO> updateUser(@Validated(OnUpdate.class) @RequestBody UserDTO userDTO, @NotBlank @RequestParam("user-id") String userId) {
         return userService.updateUser(userDTO);
     }
 
