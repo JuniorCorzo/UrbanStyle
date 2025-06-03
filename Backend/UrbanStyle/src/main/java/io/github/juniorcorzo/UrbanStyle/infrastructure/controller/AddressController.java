@@ -8,6 +8,7 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.Addre
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,21 +21,25 @@ public class AddressController {
     private final AddressService addressService;
 
     @GetMapping("/by/users/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseDTO<AddressDTO> getAddressByUserId(@NotBlank @IdFormatConstraint @PathVariable String id) {
         return addressService.getAddressByUserId(id);
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('USER')")
     public ResponseDTO<AddressDTO> createAddress(@Validated(OnCreate.class) @RequestBody AddressDTO addressDTO) {
         return addressService.createAddress(addressDTO);
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('USER')")
     public ResponseDTO<AddressDTO> updateAddress(@Validated(OnUpdate.class) @RequestBody AddressDTO addressDTO) {
         return addressService.updateAddress(addressDTO);
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('USER')")
     public ResponseDTO<AddressDTO> deleteAddress(@NotBlank @IdFormatConstraint @PathVariable String id) {
         return addressService.deleteAddress(id);
     }

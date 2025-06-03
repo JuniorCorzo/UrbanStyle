@@ -29,7 +29,7 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
 
-    public ResponseDTO<OrdersResponseDTO> getALlOrders() {
+    public ResponseDTO<OrdersResponseDTO> getAllOrders() {
         List<OrdersResponseDTO> allOrders = this.orderRepository.findAll().stream().map(orderMapper::toDTO).toList();
         return new ResponseDTO<>(
                 HttpStatus.OK,

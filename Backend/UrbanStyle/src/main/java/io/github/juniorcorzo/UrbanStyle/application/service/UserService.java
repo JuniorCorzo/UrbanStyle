@@ -2,6 +2,7 @@ package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.DocumentsName;
+import io.github.juniorcorzo.UrbanStyle.domain.enums.Roles;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DeleteDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DocumentNotFound;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.FieldExists;
@@ -56,8 +57,9 @@ public class UserService {
     public ResponseDTO<UserDTO> updateUser(UserDTO userDTO) {
         try {
             UserEntity userEntity = userMapper.toEntity(userDTO);
-            UserEntity updatedUser = this.userRepository.save(userEntity);
+            this.userRepository.updateUser(userEntity);
 
+            UserEntity updatedUser = this.userRepository.findById(userDTO.id()).orElseThrow(() -> new DocumentNotFound(DocumentsName.USER, userDTO.id()));
             return new ResponseDTO<>(HttpStatus.OK, List.of(userMapper.toDto(updatedUser)), "User updated");
         } catch (DuplicateKeyException e) {
             log.error("Field already exists: Email: {}", userDTO.email());
@@ -66,6 +68,16 @@ public class UserService {
             log.error("Error updating user: {}", e.getMessage(), e);
             throw new SaveDocumentFailed(DocumentsName.USER);
         }
+    }
+
+    public ResponseDTO<UserDTO> changeAdminRole(String id) {
+        this.changeStatus(id, Roles.ROLE_ADMIN);
+        return new ResponseDTO<>(HttpStatus.OK, this.getUserById(id).data(), "User role updated");
+    }
+
+    public ResponseDTO<UserDTO> changeUserRole(String id) {
+        this.changeStatus(id, Roles.ROLE_USER);
+        return new ResponseDTO<>(HttpStatus.OK, this.getUserById(id).data(), "User role updated");
     }
 
     public ResponseDTO<UserDTO> deleteUser(String id) {
@@ -80,5 +92,8 @@ public class UserService {
         }
     }
 
+    private void changeStatus(String id, Roles role) {
+        this.userRepository.changeRole(id, role);
+    }
 
 }

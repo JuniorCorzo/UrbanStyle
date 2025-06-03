@@ -12,6 +12,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,27 +50,32 @@ public class ProductController {
 
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<ProductDTO> createProduct(@Validated(OnCreate.class) @RequestBody ProductDTO productDTO) {
         return productService.createProduct(productDTO);
     }
 
     @PostMapping("/add-images")
     @ResponseStatus(HttpStatus.OK)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<ProductDTO> addImages(@Valid @RequestBody ProductImagesDTO productDTO) {
         return this.productService.addImages(productDTO);
     }
 
     @PutMapping("/update")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<ProductDTO> updateProduct(@Validated(OnUpdate.class) @RequestBody ProductDTO productDTO) {
         return productService.updateProduct(productDTO);
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<ProductDTO> deleteProduct(@IdFormatConstraint @PathVariable String id) {
         return productService.deleteProduct(id);
     }
 
     @DeleteMapping("/delete-images")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<ProductDTO> deleteImagesFromProduct(@Valid @RequestBody ProductImagesDTO productImagesDTO) {
         return productService.deleteImagesFromProduct(productImagesDTO);
     }

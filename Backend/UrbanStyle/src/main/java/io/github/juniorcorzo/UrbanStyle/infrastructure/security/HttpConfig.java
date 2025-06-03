@@ -1,11 +1,14 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.security;
 
+import io.github.juniorcorzo.UrbanStyle.infrastructure.filters.JwtCookieFilter;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.filters.UserIdMatchesTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,11 +22,13 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
+@EnableWebSecurity
+@EnableMethodSecurity
 @SuppressWarnings("unused")
 public class HttpConfig {
     private final JwtCookieFilter jwtCookieFilter;
+    private final UserIdMatchesTokenFilter userIdMatchesTokenFilter;
     private final AuthenticationManager authenticationManager;
 
     @Bean
@@ -33,7 +38,7 @@ public class HttpConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) -> {
                             auth
-                                    .requestMatchers(HttpMethod.POST,"/auth/login").permitAll()
+                                    .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                     .requestMatchers(HttpMethod.POST, "/users/create").permitAll()
                                     .requestMatchers(HttpMethod.GET, "/**").permitAll()
                                     .requestMatchers("/orders/all").authenticated();
@@ -44,7 +49,8 @@ public class HttpConfig {
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationManager(authenticationManager)
-                .addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(userIdMatchesTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
@@ -56,6 +62,7 @@ public class HttpConfig {
         corsConfig.setAllowedHeaders(List.of("Origin", "Content-Type", "Accept", "Authorization", "X-Requested-With"));
         corsConfig.setExposedHeaders(List.of("Authorization", "X-Requested-With", "Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
         corsConfig.setAllowCredentials(true);
+
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
         return source;

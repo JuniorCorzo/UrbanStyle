@@ -30,22 +30,26 @@ public class TokenService {
         this.userService = userService;
     }
 
-    private static JWTClaimsSet getJwtClaimsSet(Authentication authentication, UserDTO user) {
+    private static JWTClaimsSet getJwtClaimsSet(UserDTO user) {
         Instant now = Instant.now();
         return new JWTClaimsSet.Builder()
                 .issuer("http://localhost:8080")
                 .issueTime(Date.from(now))
                 .expirationTime(Date.from(now.plus(30, ChronoUnit.DAYS)))
-                .subject(authentication.getName())
+                .subject(user.email())
                 .claim("userId", user.id())
+                .claim("userRole", user.role())
                 .build();
     }
 
     public String generateToken(Authentication authentication) {
-        try {
             UserDTO user = this.userService.getUserByCredentials(authentication.getName()).data().getFirst();
-            JWTClaimsSet claims = getJwtClaimsSet(authentication, user);
+        return this.generateToken(user);
+    }
 
+    public String generateToken(UserDTO user) {
+        try {
+            JWTClaimsSet claims = getJwtClaimsSet(user);
             JWSHeader header = new JWSHeader(JWSAlgorithm.HS256);
             SignedJWT signedJWT = new SignedJWT(header, claims);
             JWSSigner signer = new MACSigner(SECRET_KEY.getBytes());

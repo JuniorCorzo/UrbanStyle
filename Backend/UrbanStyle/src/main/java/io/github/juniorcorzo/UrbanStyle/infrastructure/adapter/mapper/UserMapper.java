@@ -8,12 +8,12 @@ import org.mapstruct.Mappings;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
-    @Mappings({
+    @Mappings(value = {
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "email", source = "email"),
             @Mapping(target = "password", source = "password"),
-            @Mapping(target = "role", source = "role", defaultValue = "USER"),
+            @Mapping(target = "role", source = "role", defaultValue = "ROLE_USER"),
             @Mapping(target = "phone", source = "phone"),
     })
     UserEntity toEntity(UserDTO userDto);

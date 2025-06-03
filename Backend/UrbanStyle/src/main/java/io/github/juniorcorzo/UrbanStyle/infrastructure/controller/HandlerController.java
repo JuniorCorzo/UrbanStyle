@@ -132,4 +132,12 @@ public class HandlerController {
                 errors
         ), HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(UserIdMismatchException.class)
+    public ResponseEntity<ResponseError> handleUserIdMismatchException(UserIdMismatchException e) {
+        return new ResponseEntity<>(new ResponseError(
+                HttpStatus.UNAUTHORIZED,
+                e.getMessage()
+        ), HttpStatus.UNAUTHORIZED);
+    }
 }
