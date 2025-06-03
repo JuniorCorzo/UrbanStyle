@@ -57,8 +57,9 @@ public class UserService {
     public ResponseDTO<UserDTO> updateUser(UserDTO userDTO) {
         try {
             UserEntity userEntity = userMapper.toEntity(userDTO);
-            UserEntity updatedUser = this.userRepository.save(userEntity);
+            this.userRepository.updateUser(userEntity);
 
+            UserEntity updatedUser = this.userRepository.findById(userDTO.id()).orElseThrow(() -> new DocumentNotFound(DocumentsName.USER, userDTO.id()));
             return new ResponseDTO<>(HttpStatus.OK, List.of(userMapper.toDto(updatedUser)), "User updated");
         } catch (DuplicateKeyException e) {
             log.error("Field already exists: Email: {}", userDTO.email());
