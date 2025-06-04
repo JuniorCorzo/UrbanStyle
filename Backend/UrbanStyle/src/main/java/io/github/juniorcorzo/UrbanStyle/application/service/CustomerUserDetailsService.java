@@ -1,6 +1,8 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
-import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.UserDTO;
+import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
+import io.github.juniorcorzo.UrbanStyle.domain.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -8,23 +10,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class CustomerUserDetailsService implements UserDetailsService {
-    private final UserService userService;
-
-    public CustomerUserDetailsService(UserService userService) {
-        this.userService = userService;
-    }
+    private final UserRepository userRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        UserDTO user = userService.getUserByCredentials(email)
-                .data()
-                .getFirst();
-
+        UserEntity user = userRepository.findUserByEmail(email);
 
         return User
                 .withUsername(email)
-                .password(user.password())
+                .password(user.getPassword())
                 .build();
     }
 }
