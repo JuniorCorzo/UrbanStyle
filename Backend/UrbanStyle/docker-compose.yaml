@@ -17,6 +17,8 @@ services:
     volumes:
       - mongo_data:/data/db
       - mongo_config:/data/configdb
+    networks:
+      - urban_style_network
 
   shopping_cart_db:
     image: redis:8.0-alpine
@@ -27,8 +29,30 @@ services:
     volumes:
       - redis_data:/data
       - ./redis.conf:/data/redis.conf:Z
+    networks:
+      - urban_style_network
+
+  urban_style_api:
+    image: docker.io/library/urban-style:${VERSION}
+    container_name: backend
+    ports:
+      - '8080:8080'
+    depends_on:
+      - urban_style_db
+      - shopping_cart_db
+    env_file:
+      - .env.development
+    networks:
+      - urban_style_network
 
 
+networks:
+  urban_style_network:
+    name: urban_style_network
+    driver: "bridge"
+    ipam:
+      config:
+        - subnet: 192.168.101.0/24
 
 volumes:
   mongo_data:
