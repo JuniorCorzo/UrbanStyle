@@ -9,8 +9,6 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.Shopp
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -152,14 +150,10 @@ public class ShoppingCartService {
         }
     }
 
-    @NotNull
-    @Contract(pure = true)
     private String getCartId(String userId) {
         return String.format("shoppingCart:%s", userId);
     }
 
-    @NotNull
-    @Contract(pure = true)
     private String getProductId(String productId) {
         return String.format("productId:%s", productId);
     }
