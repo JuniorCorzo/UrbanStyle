@@ -20,7 +20,7 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 
 import javax.crypto.spec.SecretKeySpec;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 @Slf4j
 @SuppressWarnings("unused")
 public class SecureBeans {
@@ -28,7 +28,7 @@ public class SecureBeans {
     @Value("${SECRET_KEY}")
     private String SECRET_KEY;
 
-    public SecureBeans(@Lazy CustomerUserDetailsService customerUserDetailsService) {
+    public SecureBeans(CustomerUserDetailsService customerUserDetailsService) {
         this.customerUserDetailsService = customerUserDetailsService;
     }
 
