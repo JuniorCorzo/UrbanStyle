@@ -51,7 +51,7 @@ public class ProductController {
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseDTO<ProductDTO> createProduct(@Validated(OnCreate.class) @RequestBody ProductDTO productDTO) {
+    public ResponseDTO<ProductDTO> createProduct(@Validated(OnCreate.class) @Valid @RequestBody ProductDTO productDTO) {
         return productService.createProduct(productDTO);
     }
 
