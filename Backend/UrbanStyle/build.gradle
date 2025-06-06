@@ -1,59 +1,63 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.5.0'
-	id 'io.spring.dependency-management' version '1.1.7'
-	id 'org.graalvm.buildtools.native' version '0.10.6'
+    id 'java'
+    id 'org.springframework.boot' version '3.5.0'
+    id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.graalvm.buildtools.native' version '0.10.6'
 }
 
 def env = new Properties()
-file('.env').withReader { reader -> env.load(reader)}
+file('.env').withReader { reader -> env.load(reader) }
 
 group = 'io.github.juniorcorzo'
 version = env.getProperty("VERSION")
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
 }
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation(platform("software.amazon.awssdk:bom:2.31.21"))
-	implementation("software.amazon.awssdk:s3")
-	implementation 'com.github.usefulness:webp-imageio:0.9.0'
-	implementation 'org.imgscalr:imgscalr-lib:4.2'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.mapstruct:mapstruct:1.6.3'
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    implementation(platform("software.amazon.awssdk:bom:2.31.21"))
+    implementation("software.amazon.awssdk:s3")
+    implementation 'com.github.usefulness:webp-imageio:0.9.0'
+    implementation 'org.imgscalr:imgscalr-lib:4.2'
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
+    implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.mapstruct:mapstruct:1.6.3'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
 tasks.named('test') {
-	useJUnitPlatform()
+    useJUnitPlatform()
 }
 
 graalvmNative {
     binaries {
         main {
+            resources {
+
+            }
+
             buildArgs.add('--initialize-at-build-time=org.springframework.util.PropertyPlaceholderHelper')
             buildArgs.add('--initialize-at-build-time=org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder')
             buildArgs.add('--initialize-at-run-time=io.netty.channel.DefaultFileRegion')
@@ -61,16 +65,19 @@ graalvmNative {
             buildArgs.add('--initialize-at-run-time=io.netty.channel.unix.Errors')
             buildArgs.add('--initialize-at-run-time=io.netty.channel.unix.IovArray')
             buildArgs.add('--initialize-at-run-time=io.netty.channel.unix.Socket')
-		}
+        }
     }
 }
 
 
-bootBuildImage {
-	builder = 'paketobuildpacks/builder-jammy-tiny:latest'
-	environment = [
-			'BP_NATIVE_IMAGE': 'true',
-			'BP_JVM_VERSION': '21',
-			'BP_SPRING_AOT_ENABLED': 'true'
-	]
+springBoot {
+    bootBuildImage {
+        builder = 'paketobuildpacks/builder-jammy-tiny:latest'
+        environment = [
+                'BP_NATIVE_IMAGE'      : 'true',
+                'BP_JVM_VERSION'       : '21',
+                'BP_SPRING_AOT_ENABLED': 'true'
+        ]
+        dependsOn = ['copyWebPLib']
+    }
 }
