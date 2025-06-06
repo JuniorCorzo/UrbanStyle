@@ -62,7 +62,6 @@ public class JwtCookieFilter extends OncePerRequestFilter {
 
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
-                System.out.println(authorities);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                         this.userDetailsService,
                         email,
