@@ -16,18 +16,18 @@ public record UserDTO(
         @IdFormatConstraint(groups = OnUpdate.class)
         @IdMustExists(entity = UserEntity.class, groups = {OnUpdate.class})
         String id,
-        @NotBlank
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String name,
-        @NotBlank
-        @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email must be valid")
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
+        @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email must be valid", groups = {OnCreate.class, OnUpdate.class})
         String email,
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         @NotBlank(groups = {OnCreate.class})
         String password,
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         Roles role,
-        @NotNull
-        @Pattern(regexp = "^\\d{10}$", message = "Phone must be numeric")
+        @NotNull(groups = {OnCreate.class, OnUpdate.class})
+        @Pattern(regexp = "^\\d{10}$", message = "Phone must be numeric", groups = {OnCreate.class, OnUpdate.class})
         String phone
 ) {
 
