@@ -17,27 +17,27 @@ public record ProductDTO(
         @IdFormatConstraint(groups = OnUpdate.class)
         @IdMustExists(entity = ProductEntity.class, groups = OnUpdate.class)
         String id,
-        @NotBlank
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String name,
-        @NotBlank
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String description,
         @NotNull(groups = OnCreate.class)
         @Size(min = 1, message = "Images must be provided", groups = OnCreate.class)
         List<String> images,
-        @DecimalMin(value = "1000.00", message = "Price must be greater than 1000")
+        @DecimalMin(value = "1000.00", message = "Price must be greater than 1000", groups = {OnCreate.class, OnUpdate.class})
         double price,
-        @Min(value = 0, message = "Discount must be greater than or equal to 0")
-        @Max(value = 100, message = "Discount must be less than or equal to 100")
+        @Min(value = 0, message = "Discount must be greater than or equal to 0", groups = {OnCreate.class, OnUpdate.class})
+        @Max(value = 100, message = "Discount must be less than or equal to 100", groups = {OnCreate.class, OnUpdate.class})
         byte discount,
         @Valid
-        @NotNull
+        @NotNull(groups = {OnCreate.class, OnUpdate.class})
         @Size(min = 1, message = "Categories must be provided")
         List<CategorySummary> categories,
         @Valid
-        @NotNull
+        @NotNull(groups = {OnCreate.class, OnUpdate.class})
         AttributesDTO attributes,
-        @Min(value = 1, message = "Stock must be greater than 0")
-        @Max(value = 9999, message = "Stock must be less than 10000")
+        @Min(value = 1, message = "Stock must be greater than 0", groups = {OnCreate.class, OnUpdate.class})
+        @Max(value = 9999, message = "Stock must be less than 10000", groups = {OnCreate.class, OnUpdate.class})
         int stock
 ) {
 }

@@ -1,0 +1,15 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="UrbanStyleApplication" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="io.github.juniorcorzo.UrbanStyle.UrbanStyleApplication" />
+    <module name="urban-style.main" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="io.github.juniorcorzo.UrbanStyle.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

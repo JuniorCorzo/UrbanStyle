@@ -3,6 +3,7 @@ package io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatConstraint;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdMustExists;
+import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
 import jakarta.validation.constraints.NotBlank;
@@ -14,21 +15,21 @@ public record AddressDTO(
         @IdFormatConstraint(groups = OnUpdate.class)
         @IdMustExists(entity = AddressDTO.class, groups = OnUpdate.class)
         String id,
-        @NotBlank
-        @IdFormatConstraint()
-        @IdMustExists(entity = UserEntity.class)
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
+        @IdFormatConstraint(groups = {OnCreate.class, OnUpdate.class})
+        @IdMustExists(entity = UserEntity.class, groups = {OnCreate.class, OnUpdate.class})
         String userId,
-        @NotBlank
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String street,
-        @NotBlank
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String city,
-        @NotBlank
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String state,
-        @NotBlank
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String country,
-        @NotBlank
-        @Pattern(regexp = "^\\d{6}$", message = "Postal code must be numeric")
-        @Size(min = 6, max = 6, message = "Postal code must be 6 characters")
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
+        @Pattern(regexp = "^\\d{6}$", message = "Postal code must be numeric", groups = {OnCreate.class, OnUpdate.class})
+        @Size(min = 6, max = 6, message = "Postal code must be 6 characters", groups = {OnCreate.class, OnUpdate.class})
         String postalCode
 ) {
 }
