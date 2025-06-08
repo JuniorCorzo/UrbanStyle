@@ -26,10 +26,9 @@ export function ReportStore() {
   };
 
   const getReportSales = async () => {
-    if (reportSalesStore.get().day == undefined) {
+    if (reportSalesStore.get()?.day == undefined) {
       const report = await ReportService().reportSales();
       reportSalesStore.set(report);
-      console.log(reportSalesStore.get().day);
     }
 
     return reportSalesStore.get();
