@@ -54,10 +54,6 @@ tasks.named('test') {
 graalvmNative {
     binaries {
         main {
-            resources {
-
-            }
-
             buildArgs.add('--initialize-at-build-time=org.springframework.util.PropertyPlaceholderHelper')
             buildArgs.add('--initialize-at-build-time=org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder')
             buildArgs.add('--initialize-at-run-time=io.netty.channel.DefaultFileRegion')
@@ -78,6 +74,5 @@ springBoot {
                 'BP_JVM_VERSION'       : '21',
                 'BP_SPRING_AOT_ENABLED': 'true'
         ]
-        dependsOn = ['copyWebPLib']
     }
 }
