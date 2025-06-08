@@ -27,8 +27,8 @@ public class UserController {
 
     private final TokenService tokenService;
 
-    @GetMapping("/{id}")
-    public ResponseDTO<UserDTO> getUserById(@IdFormatConstraint @PathVariable String id) {
+    @GetMapping
+    public ResponseDTO<UserDTO> getUserById(@IdFormatConstraint @RequestParam("user-id") String id) {
         return userService.getUserById(id);
     }
 
