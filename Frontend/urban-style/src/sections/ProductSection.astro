@@ -86,7 +86,7 @@ if (name === undefined) {
   import { $ } from "@/lib/dom-selector";
   import { dispatchCartCountEvent } from "@/lib/utils/cart-count-event";
   import { CartService } from "@/service/cart.service";
-  import { updateCartState } from "@/service/updateCartState";
+  import { updateCartState } from "@/state/updateCartState";
   import { ProductStore } from "@/state/product.store";
 
   const productId = new URLSearchParams(location.search).get("id");
