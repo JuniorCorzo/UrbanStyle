@@ -1,15 +1,20 @@
 import { PUBLIC_API_URL } from "@/config/env-config";
 import type { Cart } from "@/interface/cart.interface";
 import type { Response } from "@/interface/response.interface";
-import { cartStore } from "@/state/cart.state";
 import axios from "axios";
 
 export function CartService() {
   const getCartByUserId = async (userId: string) => {
     const resultRequest: Cart = await axios
-      .get(`${PUBLIC_API_URL}/shopping-cart?user-id=${userId}`)
+      .get(`${PUBLIC_API_URL}/shopping-cart?user-id=${userId}`, {
+        withCredentials: true,
+      })
       .then((response) => {
         return (response.data as Response<Cart>).data[0];
+      })
+      .catch((error) => {
+        console.error("Error fetching cart user by ID:", error);
+        throw error;
       });
 
     return resultRequest;
