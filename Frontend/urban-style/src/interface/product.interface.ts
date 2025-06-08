@@ -1,4 +1,10 @@
 import type { BaseDocument } from "./base.interface";
+import type { Category } from "./category.interface";
+
+type AttributesItem = {
+  name: string;
+  quantity: number;
+};
 
 export interface Products extends BaseDocument {
   name: string;
@@ -6,10 +12,10 @@ export interface Products extends BaseDocument {
   price: number;
   discount: number;
   images: string[];
-  categories: string[];
+  categories: Pick<Category, "id" | "name">[];
   attributes: {
-    color: string;
-    size: string;
+    color: AttributesItem[];
+    size: AttributesItem[];
   };
   stock: number;
 }

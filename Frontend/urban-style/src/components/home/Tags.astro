@@ -1,14 +1,16 @@
 ---
+import type { Category } from "@/interface/category.interface";
+
 const { categories } = Astro.props as {
-  categories: string[];
+  categories: Pick<Category, "id" | "name">[];
 };
 ---
 
 <div class="flex gap-2">
   {
-    categories.map((category) => (
+    categories.map(({ name }) => (
       <span class="text-base bg-accent text-text px-1.5 py-1 rounded-lg">
-        {category}
+        {name}
       </span>
     ))
   }
