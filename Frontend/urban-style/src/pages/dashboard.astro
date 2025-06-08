@@ -9,7 +9,7 @@ import ChartComponent from "@/components/dashboard/react/components/ChartCompone
 import { ReportStore } from "@/state/report.store";
 
 const reportData = await ReportStore().getReportSales();
-const salesLastMonth = reportData.month[reportData.month.length - 2];
+const salesLastMonth = reportData?.month[reportData.month.length - 2];
 ---
 
 <Layout>
@@ -24,7 +24,7 @@ const salesLastMonth = reportData.month[reportData.month.length - 2];
             >Ingresos del último mes:
           </span>
           <span class="text-text text-center font-bold text-6xl"
-            >{salesLastMonth.total}
+            >{salesLastMonth?.total}
           </span>
         </div>
         <div
@@ -34,7 +34,7 @@ const salesLastMonth = reportData.month[reportData.month.length - 2];
             >Ventas del último mes:
           </span>
           <span class="text-text text-center font-bold text-6xl"
-            >{salesLastMonth.sales}
+            >{salesLastMonth?.sales}
           </span>
         </div>
       </div>
