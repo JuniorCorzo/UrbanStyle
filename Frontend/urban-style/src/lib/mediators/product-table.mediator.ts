@@ -29,7 +29,7 @@ export async function productTable(): Promise<ITableMediator> {
       cell: (info) =>
         info
           .getValue()
-          .map((category) => category)
+          .map((category) => category.name)
           .join(", "),
     }),
     columnAccessor.accessor("stock", {
@@ -42,7 +42,13 @@ export async function productTable(): Promise<ITableMediator> {
     columnAccessor.accessor("attributes", {
       header: "Atributos",
       cell: (info) =>
-        `Color: ${info.getValue()?.color} Talla: ${info.getValue()?.size}`,
+        `Color: ${info
+          .getValue()
+          ?.color.map(({ name }) => name)
+          .join(", ")} Talla: ${info
+          .getValue()
+          ?.size.map(({ name }) => name)
+          .join(", ")}`,
     }),
   ];
 

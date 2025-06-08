@@ -105,7 +105,7 @@ export async function productForm(): Promise<FormMediator> {
             isMultiple: true,
             required: true,
             options: categories,
-            value: productData?.categories ?? "",
+            value: productData?.categories.map(({ id }) => id) ?? "",
           },
         },
         {
@@ -119,13 +119,13 @@ export async function productForm(): Promise<FormMediator> {
           },
         },
         {
-          type: "select",
+          type: "text",
           fieldProperties: {
             label: "Talla",
             name: "size",
             placeholder: "Talla del producto",
             required: true,
-            value: productData?.attributes.size ?? "",
+            value: productData?.attributes.size.map(({ name }) => name) ?? "",
           },
         },
         {
@@ -135,7 +135,7 @@ export async function productForm(): Promise<FormMediator> {
             name: "color",
             placeholder: "Color del producto",
             required: true,
-            value: productData?.attributes?.color ?? "",
+            value: productData?.attributes?.color.map(({ name }) => name) ?? "",
           },
         },
         {
