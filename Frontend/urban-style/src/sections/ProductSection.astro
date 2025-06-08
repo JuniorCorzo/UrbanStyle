@@ -57,12 +57,14 @@ if (name === undefined) {
           options={attributes.color.map(({ name }) => {
             return { text: name, value: name };
           })}
+          client:only
         />
         <SelectInput
           label="Talla"
           options={attributes.size.map(({ name }) => {
             return { text: name, value: name };
           })}
+          client:only
         />
       </div>
       <Subtitle size="3xl" Text={`$ ${price}`} />
