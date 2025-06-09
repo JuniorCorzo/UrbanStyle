@@ -1,11 +1,13 @@
 package io.github.juniorcorzo.UrbanStyle.domain.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.Builder;
 import org.springframework.http.HttpStatus;
 
 import java.util.Map;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@Builder
 public record ResponseError(
         HttpStatus status,
         String error,
