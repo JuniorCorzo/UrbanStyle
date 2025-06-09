@@ -23,7 +23,7 @@ const { name: userName, role } = user;
         <a href="#">Mis pedidos</a>
       </li>
       {
-        role === "USER" && (
+        role === "ROLE_ADMIN" && (
           <li>
             <a href="/dashboard?mediator=products">Dashboard</a>
           </li>

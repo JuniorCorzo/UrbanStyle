@@ -18,7 +18,7 @@ public class ShoppingCartController {
     private final ShoppingCartService shoppingCardService;
 
     @GetMapping
-    @PreAuthorize("hasRole('USER')")
+//    @PreAuthorize("hasRole('USER')")
     public ResponseDTO<ShoppingCartDTO> getShoppingCartByUserId(@IdFormatConstraint @RequestParam("user-id") String userId) {
         return this.shoppingCardService.getShoppingCartByUserId(userId);
     }

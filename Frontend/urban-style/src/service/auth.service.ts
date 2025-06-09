@@ -37,7 +37,7 @@ export const verifyToken = async (cookie: string) => {
       return (response.data as unknown as Response<User>).data[0];
     })
     .catch((error) => {
-      //   console.error("Token verification error:", error);
+      console.error("Token verification error:", error);
       throw error;
     });
 };

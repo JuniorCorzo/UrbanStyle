@@ -1,9 +1,11 @@
 ---
 import Button from "@/components/Button.astro";
+import SelectInput from "@/components/dashboard/react/components/inputs/SelectInput";
 import Counter from "@/components/home/Counter.astro";
 import Tags from "@/components/home/Tags.astro";
 import RegularText from "@/components/text/RegularText.astro";
 import Subtitle from "@/components/text/Subtitle.astro";
+import { PUBLIC_API_URL } from "@/config/env-config";
 import type { Products } from "@/interface/product.interface";
 
 import { Image } from "astro:assets";
@@ -32,7 +34,7 @@ if (name === undefined) {
     <div class="w-fit mx-auto">
       <Image
         class="aspect-square"
-        src={images[0]}
+        src={`${PUBLIC_API_URL}/images/width=450,height=450/${images[0]}`}
         alt={name}
         width={450}
         height={450}
@@ -50,8 +52,22 @@ if (name === undefined) {
       <RegularText>{description}</RegularText>
       <Tags categories={categories} />
       <div class="flex flex-col gap-2">
-        <RegularText>Color: {attributes.color}</RegularText>
-        <RegularText>Talla: {attributes.size}</RegularText>
+        <SelectInput
+          label="Color"
+          search={false}
+          options={attributes.color.map(({ name }) => {
+            return { text: name, value: name };
+          })}
+          client:only
+        />
+        <SelectInput
+          label="Talla"
+          search={false}
+          options={attributes.size.map(({ name }) => {
+            return { text: name, value: name };
+          })}
+          client:only
+        />
       </div>
       <Subtitle size="3xl" Text={`$ ${price}`} />
       <div class="flex flex-col gap-2">
@@ -74,7 +90,7 @@ if (name === undefined) {
   import { $ } from "@/lib/dom-selector";
   import { dispatchCartCountEvent } from "@/lib/utils/cart-count-event";
   import { CartService } from "@/service/cart.service";
-  import { updateCartState } from "@/service/updateCartState";
+  import { updateCartState } from "@/state/updateCartState";
   import { ProductStore } from "@/state/product.store";
 
   const productId = new URLSearchParams(location.search).get("id");

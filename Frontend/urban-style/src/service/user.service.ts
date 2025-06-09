@@ -6,7 +6,7 @@ import axios from "axios";
 export class UserService {
   public static async getUserById(userId: string) {
     return await axios
-      .get<User>(`http://localhost:8080/users/${userId}`, {
+      .get<User>(`http://localhost:8080/users?user-id=${userId}`, {
         headers: {
           "Content-Type": "application/json",
         },
