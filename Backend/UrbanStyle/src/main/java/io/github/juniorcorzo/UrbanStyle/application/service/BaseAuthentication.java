@@ -1,13 +1,7 @@
-package io.github.juniorcorzo.UrbanStyle.infrastructure.filters;
+package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import io.github.juniorcorzo.UrbanStyle.application.service.CustomerUserDetailsService;
-import io.github.juniorcorzo.UrbanStyle.application.service.TokenService;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ResponseError;
-import io.github.juniorcorzo.UrbanStyle.domain.exceptions.TokenValidationException;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -20,42 +14,25 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-@Component
+
 @Slf4j
 @RequiredArgsConstructor
-public class JwtCookieFilter extends OncePerRequestFilter {
+@Service
+public class BaseAuthentication {
     private final TokenService tokenService;
     private final CustomerUserDetailsService userDetailsService;
     private final ObjectMapper objectMapper;
 
-
-    @Override
-    protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain filterChain
-    ) throws ServletException, IOException {
-        Cookie[] cookies = request.getCookies();
-        if (cookies == null) {
-            filterChain.doFilter(request, response);
-            return;
-        }
-
-        log.info("Processing Authentication by cookie for the endpoint {}", request.getRequestURI());
-        String token = Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals("accessToken"))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElseThrow(TokenValidationException::new);
-
+    public void authenticate(HttpServletRequest request,
+                             HttpServletResponse response,
+                             String token
+    ) throws IOException {
         try {
             String email = tokenService.extractUsername(token);
             String role = tokenService.extractClaim(token, "userRole");
@@ -63,8 +40,8 @@ public class JwtCookieFilter extends OncePerRequestFilter {
             if (SecurityContextHolder.getContext().getAuthentication() == null) {
                 Collection<GrantedAuthority> authorities = List.of(new SimpleGrantedAuthority(role));
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        this.userDetailsService,
-                        email,
+                        this.userDetailsService.loadUserByUsername(email),
+                        null,
                         authorities
                 );
 
@@ -74,7 +51,6 @@ public class JwtCookieFilter extends OncePerRequestFilter {
                         .setAuthentication(authentication);
             }
 
-            filterChain.doFilter(request, response);
         } catch (RuntimeException e) {
             log.error("Error processing authentication by cookie: {}", e.getMessage(), e);
             this.sendErrorResponse(response, e.getMessage());
@@ -97,4 +73,6 @@ public class JwtCookieFilter extends OncePerRequestFilter {
 
         response.getWriter().write(this.objectMapper.writeValueAsString(responseError));
     }
+
 }
+
