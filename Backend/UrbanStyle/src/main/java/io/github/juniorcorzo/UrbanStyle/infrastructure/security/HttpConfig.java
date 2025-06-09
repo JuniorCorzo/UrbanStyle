@@ -1,13 +1,13 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.security;
 
-import io.github.juniorcorzo.UrbanStyle.infrastructure.filters.JwtCookieFilter;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.exceptions.CustomAuthenticationEntrypoint;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.filters.AuthenticationFilter;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.filters.UserIdMatchesTokenFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -27,15 +27,17 @@ import java.util.List;
 @EnableMethodSecurity
 @SuppressWarnings("unused")
 public class HttpConfig {
-    private final JwtCookieFilter jwtCookieFilter;
+    private final AuthenticationFilter authenticationFilter;
     private final UserIdMatchesTokenFilter userIdMatchesTokenFilter;
     private final AuthenticationManager authenticationManager;
+    private final CustomAuthenticationEntrypoint authenticationEntrypoint;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .cors((cors) -> cors.configurationSource(corsConfiguration()))
                 .csrf(AbstractHttpConfigurer::disable)
+                .exceptionHandling(exception -> exception.authenticationEntryPoint(authenticationEntrypoint))
                 .authorizeHttpRequests((auth) -> {
                             auth
                                     .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
@@ -46,10 +48,9 @@ public class HttpConfig {
                             auth.anyRequest().authenticated();
                         }
                 )
-                .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationManager(authenticationManager)
-                .addFilterBefore(jwtCookieFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .addFilterAfter(userIdMatchesTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
