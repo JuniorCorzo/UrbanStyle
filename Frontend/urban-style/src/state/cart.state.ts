@@ -4,9 +4,10 @@ import { computed, map } from "nanostores";
 
 export const cartStore = map<Cart[]>();
 
-export async function CartStore(userId: string) {
+export async function CartStore(userId: string, token: string) {
   if (!cartStore.get().length) {
-    await fetchAndInsertCart(userId);
+    console.log(token);
+    await fetchAndInsertCart(userId, token);
   }
 
   const getCartByUserId = () => {
@@ -15,8 +16,8 @@ export async function CartStore(userId: string) {
 
   const cartByUser = getCartByUserId();
   if (!cartByUser) {
-    await fetchAndInsertCart(userId);
-    return CartStore(userId);
+    await fetchAndInsertCart(userId, token);
+    return CartStore(userId, token);
   }
 
   const insertProductInCart = (cart: Cart) => {
@@ -48,11 +49,14 @@ export async function CartStore(userId: string) {
   return { cartStore, calculateTotal, getCartByUserId, insertProductInCart };
 }
 
-const fetchAndInsertCart = async (userId: string) => {
+const fetchAndInsertCart = async (userId: string, token: string) => {
   await CartService()
-    .getCartByUserId(userId)
+    .getCartByUserId(userId, token)
     .then((cart) => {
       const prevCart = !cartStore.get().length ? [] : cartStore.get();
       cartStore.set([...prevCart, cart]);
+    })
+    .catch((err) => {
+      throw Error(err);
     });
 };

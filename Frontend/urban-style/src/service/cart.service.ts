@@ -4,10 +4,15 @@ import type { Response } from "@/interface/response.interface";
 import axios from "axios";
 
 export function CartService() {
-  const getCartByUserId = async (userId: string) => {
+  const getCartByUserId = async (userId: string, token: string) => {
+    console.log("accessToken", token);
+
     const resultRequest: Cart = await axios
       .get(`${PUBLIC_API_URL}/shopping-cart?user-id=${userId}`, {
         withCredentials: true,
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       })
       .then((response) => {
         return (response.data as Response<Cart>).data[0];
