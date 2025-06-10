@@ -1,13 +1,15 @@
 import { defineMiddleware } from "astro:middleware";
-import { Auth } from "./lib/auth_manager";
+import { verifyToken } from "./service/auth.service";
 
 export const onRequest = defineMiddleware(async (context, next) => {
   try {
     const cookie = context.request.headers.get("cookie");
     if (cookie) {
-      const user = await Auth.getInstance().validateSession(cookie as string);
+      const user = await verifyToken(cookie);
       if (!user) return next();
+
       context.locals.user = user;
+      context.locals.accessToken = cookie.split("=")[1];
     }
   } catch (error) {
     console.error("Error validating session");
