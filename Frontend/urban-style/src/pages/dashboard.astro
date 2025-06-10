@@ -8,7 +8,9 @@ import TableMostSold from "@/components/dashboard/react/components/TableMostSold
 import ChartComponent from "@/components/dashboard/react/components/ChartComponent";
 import { ReportStore } from "@/state/report.store";
 
-const reportData = await ReportStore().getReportSales();
+const { accessToken } = Astro.locals;
+
+const reportData = await ReportStore(accessToken).getReportSales();
 const salesLastMonth = reportData?.month[reportData.month.length - 2];
 ---
 

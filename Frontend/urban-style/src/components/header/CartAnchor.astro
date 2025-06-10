@@ -2,9 +2,12 @@
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
 import { CartStore } from "@/state/cart.state";
 
-const id = Astro.locals?.user?.id;
+const { user, accessToken } = Astro.locals;
+const id = user?.id;
+
 if (!id) return;
-const cartLength = (await CartStore(id)).getCartByUserId()?.items.length || 0;
+const cartLength =
+  (await CartStore(id, accessToken)).getCartByUserId()?.items.length || 0;
 ---
 
 <a

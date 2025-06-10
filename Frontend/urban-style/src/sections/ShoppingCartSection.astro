@@ -4,8 +4,15 @@ import CartItems from "@/components/shopping-cart/CartItems.astro";
 import EmptyCartMessage from "@/components/shopping-cart/EmptyCartMessage.astro";
 import { CartStore } from "@/state/cart.state";
 
-const userId = Astro.locals.user?.id;
-const { getCartByUserId, calculateTotal } = await CartStore(userId);
+const { user, accessToken } = Astro.locals;
+const { id: userId } = user;
+
+if (!accessToken) return;
+
+const { getCartByUserId, calculateTotal } = await CartStore(
+  userId,
+  accessToken
+);
 
 const items = getCartByUserId()?.items || [];
 ---
