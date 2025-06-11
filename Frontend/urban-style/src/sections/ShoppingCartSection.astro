@@ -5,8 +5,7 @@ import EmptyCartMessage from "@/components/shopping-cart/EmptyCartMessage.astro"
 import { CartStore } from "@/state/cart.state";
 
 const { user, accessToken } = Astro.locals;
-const { id: userId } = user;
-
+const userId = user?.id;
 if (!accessToken) return;
 
 const { getCartByUserId, calculateTotal } = await CartStore(
