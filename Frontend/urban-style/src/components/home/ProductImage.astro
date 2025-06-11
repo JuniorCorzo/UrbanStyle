@@ -1,0 +1,22 @@
+---
+import { Image } from "astro:assets";
+import { PUBLIC_API_URL } from "@/config/env-config";
+
+interface Props {
+  alt: string;
+  images: string[];
+}
+
+const { alt, images } = Astro.props;
+---
+
+<div class="w-fit mx-auto">
+  <Image
+    class="aspect-square"
+    src={`${PUBLIC_API_URL}/images/width=450,height=450/${images[0]}`}
+    alt={alt}
+    width={450}
+    height={450}
+    loading="lazy"
+  />
+</div>
