@@ -34,19 +34,19 @@ public class OrderController {
     }
 
     @GetMapping("/products-most-sold")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<SalesRecord> getProductsMoreSold() {
         return this.orderService.getProductsMoreSold();
     }
 
     @GetMapping("/categories-most-sold")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<SalesRecord> getCategoryMoreSold() {
         return this.orderService.getCategoryMoreSold();
     }
 
     @GetMapping("/report-sales")
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<ReportSalesDTO> reportSales() {
         return this.orderService.reportSales();
     }

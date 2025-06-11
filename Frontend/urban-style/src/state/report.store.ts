@@ -6,7 +6,7 @@ const productMoreSoldStore = map<BestSeller[]>();
 const categoriesMoreSoldStore = map<BestSeller[]>();
 export const reportSalesStore = map<ReportSales>();
 
-export function ReportStore() {
+export function ReportStore(token: string) {
   const getProductsMoreSold = async () => {
     if (!productMoreSoldStore.get().length) {
       const report = await ReportService().productsMoreSold();
@@ -27,7 +27,7 @@ export function ReportStore() {
 
   const getReportSales = async () => {
     if (reportSalesStore.get()?.day == undefined) {
-      const report = await ReportService().reportSales();
+      const report = await ReportService().reportSales(token);
       reportSalesStore.set(report);
     }
 
