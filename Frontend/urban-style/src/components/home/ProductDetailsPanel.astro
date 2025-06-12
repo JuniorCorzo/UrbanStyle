@@ -1,0 +1,116 @@
+---
+import Subtitle from "@/components/text/Subtitle.astro";
+import RegularText from "@/components/text/RegularText.astro";
+import Tags from "@/components/home/Tags.astro";
+import SelectInput from "@/components/dashboard/react/components/inputs/SelectInput";
+import Counter from "@/components/home/Counter.astro";
+import Button from "@/components/Button.astro";
+import type { Products } from "@/interface/product.interface";
+
+interface Props {
+  userId: string;
+  product: Products;
+}
+
+const { userId, product } = Astro.props;
+const { name, description, categories, attributes, price, stock } = product;
+---
+
+<div
+  class="w-fit min-w-[450px] h-full flex flex-col gap-2 px-8 py-5 rounded justify-center"
+>
+  <Subtitle Text={name} />
+  <RegularText>{description}</RegularText>
+  <Tags categories={categories} />
+  <Subtitle
+    size="3xl"
+    class="py-3"
+    Text={`$ ${price.toLocaleString()}`}
+    title="Precio"
+  />
+  <div class="w-full min-h-[42px] flex flex-col sm:flex-row gap-4">
+    <div class="grow">
+      <SelectInput
+        label="Color"
+        search={false}
+        options={attributes.color.map(({ name }) => ({
+          text: name,
+          value: name,
+        }))}
+        client:only
+      />
+    </div>
+    <div class="basis-1/3">
+      <SelectInput
+        label="Talla"
+        search={false}
+        options={attributes.size.map(({ name }) => ({
+          text: name,
+          value: name,
+        }))}
+        client:only
+      />
+    </div>
+  </div>
+  <div class="flex flex-col gap-5 pt-5">
+    <Counter id="product_quantity" maxNumber={stock} />
+    <Button
+      id="add_cart"
+      class="bg-accent/70 w-full h-fit max-w-lg"
+      size="md"
+      data-user-id={userId}
+    >
+      Añadir al Carrito
+    </Button>
+  </div>
+</div>
+
+<script>
+  import type { Cart } from "@/interface/cart.interface";
+  import { $ } from "@/lib/dom-selector";
+  import { dispatchCartCountEvent } from "@/lib/utils/cart-count-event";
+  import { CartService } from "@/service/cart.service";
+  import { updateCartState } from "@/state/updateCartState";
+  import { ProductStore } from "@/state/product.store";
+
+  const productId = new URLSearchParams(location.search).get("id");
+
+  const handleClick = async (event: MouseEvent) => {
+    if (!productId) return;
+    const { userId } = (event.target as HTMLButtonElement).dataset;
+
+    const { productStore } = await ProductStore();
+    const { name, price, discount } = productStore
+      .get()
+      .filter(({ id }) => id === productId)[0];
+    const productQuantity = ($("#product_quantity") as HTMLInputElement)
+      .valueAsNumber;
+
+    const productToCart: Cart = {
+      userId: userId as string,
+      items: [
+        {
+          productId: productId,
+          name,
+          discount,
+          price,
+          quantity: productQuantity,
+        },
+      ],
+    };
+
+    CartService()
+      .addProductToCart(productToCart)
+      .then(async (cart) => {
+        await updateCartState(cart)
+          .then((response) => response.status === 201)
+          .catch(console.error);
+
+        dispatchCartCountEvent(cart.items.length);
+      });
+  };
+
+  document.addEventListener("astro:page-load", () => {
+    $("#add_cart")?.addEventListener("click", handleClick);
+  });
+</script>

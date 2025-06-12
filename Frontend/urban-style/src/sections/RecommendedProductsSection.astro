@@ -11,17 +11,21 @@ const { categoryName } = Astro.props;
 const productsRecommended = await getProductByCategory(categoryName);
 ---
 
-<section class="w-11/12 flex flex-col items-center gap-10 mx-auto">
-  <article class="w-fit flex flex-col gap-2">
-    <Subtitle Text="Productos Relacionados" size="2xl" />
-    <div class="w-full flex gap-2 flex-wrap justify-center">
-      {
-        productsRecommended.map((product) => (
-          <div class="grow basis-5">
-            <ProductCard product={product} borderEffect={false} />
-          </div>
-        ))
-      }
-    </div>
-  </article>
-</section>
+<div class="px-6">
+  <section class="w-full flex gap-10">
+    <article class="w-full flex flex-col gap-2">
+      <Subtitle Text="Productos Relacionados" size="2xl" />
+      <div
+        class="w-full flex gap-2 flex-wrap justify-center sm:justify-start items-center sm:items-start"
+      >
+        {
+          productsRecommended.map((product) => (
+            <div>
+              <ProductCard product={product} borderEffect={false} />
+            </div>
+          ))
+        }
+      </div>
+    </article>
+  </section>
+</div>
