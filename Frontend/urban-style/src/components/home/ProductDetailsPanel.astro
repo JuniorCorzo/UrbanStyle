@@ -22,8 +22,14 @@ const { name, description, categories, attributes, price, stock } = product;
   <Subtitle Text={name} />
   <RegularText>{description}</RegularText>
   <Tags categories={categories} />
-  <div class="w-full flex gap-2">
-    <div class="max-w-32 h-10 grow">
+  <Subtitle
+    size="3xl"
+    class="py-3"
+    Text={`$ ${price.toLocaleString()}`}
+    title="Precio"
+  />
+  <div class="w-full min-h-[42px] flex flex-col sm:flex-row gap-4">
+    <div class="grow">
       <SelectInput
         label="Color"
         search={false}
@@ -34,7 +40,7 @@ const { name, description, categories, attributes, price, stock } = product;
         client:only
       />
     </div>
-    <div class="basis-12">
+    <div class="basis-1/3">
       <SelectInput
         label="Talla"
         search={false}
@@ -46,12 +52,11 @@ const { name, description, categories, attributes, price, stock } = product;
       />
     </div>
   </div>
-  <Subtitle size="3xl" Text={`$ ${price.toLocaleString()}`} />
-  <div class="flex flex-col gap-2">
+  <div class="flex flex-col gap-5 pt-5">
     <Counter id="product_quantity" maxNumber={stock} />
     <Button
       id="add_cart"
-      class="bg-accent/70 w-full h-fit max-w-2xs"
+      class="bg-accent/70 w-full h-fit max-w-lg"
       size="md"
       data-user-id={userId}
     >
