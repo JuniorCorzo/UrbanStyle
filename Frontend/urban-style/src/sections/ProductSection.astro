@@ -1,14 +1,8 @@
 ---
-import Button from "@/components/Button.astro";
-import SelectInput from "@/components/dashboard/react/components/inputs/SelectInput";
-import Counter from "@/components/home/Counter.astro";
-import Tags from "@/components/home/Tags.astro";
-import RegularText from "@/components/text/RegularText.astro";
-import Subtitle from "@/components/text/Subtitle.astro";
-import { PUBLIC_API_URL } from "@/config/env-config";
+import ProductDetailsPanel from "@/components/home/ProductDetailsPanel.astro";
+import ProductImage from "@/components/home/ProductImage.astro";
 import type { Products } from "@/interface/product.interface";
 
-import { Image } from "astro:assets";
 import { fade } from "astro:transitions";
 
 interface Props {
@@ -18,119 +12,22 @@ interface Props {
 const { product } = Astro.props;
 
 const userId = Astro.locals.user?.id;
-const { name, categories, attributes, description, stock, images, price } =
-  product || [];
-
-if (name === undefined) {
+const { description, images } = product || [];
+if (description === undefined) {
   return;
 }
 ---
 
-<section
-  class="flex flex-wrap min-h-[450] mx-auto h-fit items-top justify-center gap-x-20 gap-y-10"
-  transition:animate={fade({ duration: 150 })}
->
-  <article class="basis-[25rem]">
-    <div class="w-fit mx-auto">
-      <Image
-        class="aspect-square"
-        src={`${PUBLIC_API_URL}/images/width=450,height=450/${images[0]}`}
-        alt={name}
-        width={450}
-        height={450}
-        loading="lazy"
-      />
-    </div>
-  </article>
-  <article
-    class="flex items-center justify-center basis-0 grow-[999] min-w-[26rem]"
+<div class="px-6">
+  <section
+    class="bg-crust/10 backdrop-blur-2xl backdrop-brightness-105 flex flex-wrap min-h-[450] rounded-2xl px-16 py-10 justify-center items-center gap-x-20 gap-y-10 shadow shadow-crust/70"
+    transition:animate={fade({ duration: 150 })}
   >
-    <div
-      class="w-fit min-w-[450px] h-full flex flex-col gap-2 px-8 py-5 rounded justify-center"
-    >
-      <Subtitle Text={name} />
-      <RegularText>{description}</RegularText>
-      <Tags categories={categories} />
-      <div class="flex flex-col gap-2">
-        <SelectInput
-          label="Color"
-          search={false}
-          options={attributes.color.map(({ name }) => {
-            return { text: name, value: name };
-          })}
-          client:only
-        />
-        <SelectInput
-          label="Talla"
-          search={false}
-          options={attributes.size.map(({ name }) => {
-            return { text: name, value: name };
-          })}
-          client:only
-        />
-      </div>
-      <Subtitle size="3xl" Text={`$ ${price}`} />
-      <div class="flex flex-col gap-2">
-        <Counter id="product_quantity" maxNumber={stock} />
-        <Button
-          id="add_cart"
-          class="w-full h-fit max-w-2xs"
-          size="md"
-          data-user-id={userId}
-        >
-          Añadir al Carrito
-        </Button>
-      </div>
-    </div>
-  </article>
-</section>
-
-<script>
-  import type { Cart } from "@/interface/cart.interface";
-  import { $ } from "@/lib/dom-selector";
-  import { dispatchCartCountEvent } from "@/lib/utils/cart-count-event";
-  import { CartService } from "@/service/cart.service";
-  import { updateCartState } from "@/state/updateCartState";
-  import { ProductStore } from "@/state/product.store";
-
-  const productId = new URLSearchParams(location.search).get("id");
-
-  const handleClick = async (event: MouseEvent) => {
-    if (!productId) return;
-    const { userId } = (event.target as HTMLButtonElement).dataset;
-
-    const { productStore } = await ProductStore();
-    const { name, price, discount } = productStore
-      .get()
-      .filter(({ id }) => id === productId)[0];
-    const productQuantity = ($("#product_quantity") as HTMLInputElement)
-      .valueAsNumber;
-
-    const productToCart: Cart = {
-      userId: userId as string,
-      items: [
-        {
-          productId: productId,
-          name,
-          discount,
-          price,
-          quantity: productQuantity,
-        },
-      ],
-    };
-
-    CartService()
-      .addProductToCart(productToCart)
-      .then(async (cart) => {
-        await updateCartState(cart)
-          .then((response) => response.status === 201)
-          .catch(console.error);
-
-        dispatchCartCountEvent(cart.items.length);
-      });
-  };
-
-  document.addEventListener("astro:page-load", () => {
-    $("#add_cart")?.addEventListener("click", handleClick);
-  });
-</script>
+    <article class="basis-[25rem]">
+      <ProductImage alt={description} images={images} />
+    </article>
+    <article class="flex grow-[999] min-w-[26rem] max-w-lg">
+      <ProductDetailsPanel product={product} userId={userId} />
+    </article>
+  </section>
+</div>
