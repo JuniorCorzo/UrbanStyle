@@ -11,8 +11,8 @@ interface Props {
 const { maxNumber, id, value = "1", ...props } = Astro.props;
 ---
 
-<div class="flex" transition:persist>
-  <div class="flex w-fit border border-border rounded" {...props}>
+<div class="w-full flex" transition:persist>
+  <div class="w-full flex border border-border rounded" {...props}>
     <Button
       id="decrement"
       class="flex items-center rounded-tr-[0] rounded-br-[0] border-0 justify-center aspect-square size-10"
@@ -23,7 +23,7 @@ const { maxNumber, id, value = "1", ...props } = Astro.props;
     <input
       id={id}
       type="number"
-      class="w-fit min-w-14 border-l border-r border-border text-center focus:outline-none focus:custom-ring"
+      class="w-full min-w-14 border-l border-r border-border text-center focus:outline-none focus:custom-ring"
       value={value}
       min="1"
       max={maxNumber}
