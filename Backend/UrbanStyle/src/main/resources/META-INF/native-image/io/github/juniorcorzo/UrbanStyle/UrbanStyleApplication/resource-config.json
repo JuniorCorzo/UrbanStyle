@@ -33,16 +33,6 @@
   }, {
     "pattern":"\\QMETA-INF/services/java.util.spi.ResourceBundleControlProvider\\E"
   }, {
-    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageInputStreamSpi\\E"
-  }, {
-    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageOutputStreamSpi\\E"
-  }, {
-    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageReaderSpi\\E"
-  }, {
-    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageTranscoderSpi\\E"
-  }, {
-    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageWriterSpi\\E"
-  }, {
     "pattern":"\\QMETA-INF/services/javax.xml.transform.TransformerFactory\\E"
   }, {
     "pattern":"\\QMETA-INF/services/org.apache.juli.logging.Log\\E"
@@ -109,6 +99,8 @@
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/application/service/AuthService.class\\E"
   }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/application/service/BaseAuthentication.class\\E"
+  }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/application/service/CategoriesService.class\\E"
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/application/service/CustomerUserDetailsService.class\\E"
@@ -146,6 +138,8 @@
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/domain/repository/ProductsRepository.class\\E"
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/domain/repository/UserRepository.class\\E"
+  }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/adapter/converters/ProductAggregationConvert.class\\E"
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/adapter/mapper/AddressMapper.class\\E"
   }, {
@@ -193,7 +187,9 @@
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/controller/UserController.class\\E"
   }, {
-    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/filters/JwtCookieFilter.class\\E"
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/exceptions/CustomAuthenticationEntrypoint.class\\E"
+  }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/filters/AuthenticationFilter.class\\E"
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/filters/UserIdMatchesTokenFilter.class\\E"
   }, {
@@ -202,6 +198,12 @@
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/HttpConfig.class\\E"
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/SecureBeans.class\\E"
+  }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/mediator/AuthenticationMediator.class\\E"
+  }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/mediator/JwtCookieAuthHandler.class\\E"
+  }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/mediator/JwtHeaderAuthHandler.class\\E"
   }, {
     "pattern":"\\Qjakarta/servlet/Filter.class\\E"
   }, {
@@ -232,8 +234,6 @@
     "pattern":"\\Qmessages.properties\\E"
   }, {
     "pattern":"\\Qmozilla/public-suffix-list.txt\\E"
-  }, {
-    "pattern":"\\Qnative/Linux/x86_64/libwebp-imageio.so\\E"
   }, {
     "pattern":"\\Qorg/apache/catalina/core/RestrictedFilters.properties\\E"
   }, {
@@ -959,7 +959,11 @@
   }, {
     "pattern":"\\Qorg/springframework/core/annotation/Order.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/core/convert/converter/Converter.class\\E"
+  }, {
     "pattern":"\\Qorg/springframework/core/env/EnvironmentCapable.class\\E"
+  }, {
+    "pattern":"\\Qorg/springframework/data/convert/ReadingConverter.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/data/mongodb/config/GeoJsonConfiguration.class\\E"
   }, {
@@ -1049,6 +1053,8 @@
   }, {
     "pattern":"\\Qorg/springframework/security/core/userdetails/UserDetailsService.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/security/web/AuthenticationEntryPoint.class\\E"
+  }, {
     "pattern":"\\Qorg/springframework/transaction/annotation/AbstractTransactionManagementConfiguration.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/transaction/annotation/EnableTransactionManagement.class\\E"
@@ -1097,29 +1103,15 @@
   }, {
     "pattern":"\\Qstatic/index.html\\E"
   }, {
-    "pattern":"\\Qwebp-imageio.properties\\E"
-  }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfc.nrm\\E"
-  }, {
-    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
-  }, {
-    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/uprops.icu\\E"
-  }, {
-    "pattern":"java.base:\\Qsun/net/idn/uidna.spp\\E"
   }, {
     "pattern":"jdk.jfr:\\Qjdk/jfr/internal/query/view.ini\\E"
   }]},
   "bundles":[{
-    "name":"jakarta.servlet.LocalStrings",
-    "locales":[""]
-  }, {
     "name":"jakarta.servlet.http.LocalStrings",
     "locales":[""]
   }, {
     "name":"org.apache.catalina.authenticator.LocalStrings",
-    "locales":[""]
-  }, {
-    "name":"org.apache.catalina.authenticator.jaspic.LocalStrings",
     "locales":[""]
   }, {
     "name":"org.apache.catalina.connector.LocalStrings",
@@ -1167,9 +1159,6 @@
     "name":"org.apache.coyote.http11.LocalStrings",
     "locales":[""]
   }, {
-    "name":"org.apache.coyote.http11.filters.LocalStrings",
-    "locales":[""]
-  }, {
     "name":"org.apache.naming.LocalStrings",
     "locales":[""]
   }, {
@@ -1208,8 +1197,5 @@
   }, {
     "name":"org.apache.tomcat.websocket.server.LocalStrings",
     "locales":[""]
-  }, {
-    "name":"sun.awt.resources.awt",
-    "classNames":["sun.awt.resources.awt"]
   }]
 }
