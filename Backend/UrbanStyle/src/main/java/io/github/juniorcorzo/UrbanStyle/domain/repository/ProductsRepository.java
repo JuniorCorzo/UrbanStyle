@@ -3,21 +3,22 @@ package io.github.juniorcorzo.UrbanStyle.domain.repository;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import org.springframework.data.mongodb.repository.Aggregation;
+import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
-import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface ProductsRepository extends ListCrudRepository<ProductEntity, String> {
+public interface ProductsRepository extends MongoRepository<ProductEntity, String> {
 
     @Aggregation(pipeline = {
+            "{ '$addFields': { 'allCategories': '$categories' } }",
             "{ '$unwind': '$categories' }",
-            "{ '$group': { _id: '$categories.name', products: { $push: '$$ROOT' } } }",
-            "{ '$project': { categories: '$_id', products: 1, _id: 0 } }"
+            "{ '$group': { '_id': '$categories.name', 'products': { '$push': '$$ROOT' } } }",
+            "{ '$project': { 'category': '$_id', 'products': { '$map': { 'input': '$products', 'as': 'p', 'in': { '$mergeObjects': [ '$$p', { 'categories': '$$p.allCategories' } ] } } }, '_id': 0 } }"
     })
-    Optional<List<ProductAggregationDomain>> groupAllByCategories();
+    List<ProductAggregationDomain> groupAllByCategories();
 
     @Query("{ '$text': { '$search': '?0'} }")
     List<ProductEntity> searchProducts(String search);

@@ -55,9 +55,7 @@ public class ProductService {
 
     public ResponseDTO<ProductAggregationDomain> groupProductsByCategories() {
         List<ProductAggregationDomain> productsGroupedByCategories = this.productsRepository
-                .groupAllByCategories()
-                .orElseThrow(() -> new DocumentNotFound(DocumentsName.CATEGORY)
-                );
+                .groupAllByCategories();
 
         return new ResponseDTO<>(
                 HttpStatus.OK,
