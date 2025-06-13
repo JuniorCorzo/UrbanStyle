@@ -15,7 +15,9 @@ const message = productSearch.length
   : `No se encontraron resultados para <strong>${searchQuery}</strong>`;
 ---
 
-<div class="relative flex flex-col h-full gap-4">
-  <h2 set:html={message} class="text-2xl text-center" />
-  <ProductContainer products={productSearch} />
-</div>
+<article class="w-full text-center">
+  <div class="relative flex flex-col h-full gap-4">
+    <h2 set:html={message} class="text-2xl text-center" />
+    <ProductContainer products={productSearch} />
+  </div>
+</article>

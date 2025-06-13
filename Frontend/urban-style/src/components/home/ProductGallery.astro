@@ -1,23 +1,30 @@
 ---
+import { initializeProductGroupeStore } from "@/state/product.store";
 import ProductContainer from "./ProductContainer.astro";
 import ProductsSearchResult from "./ProductsSearchResult.astro";
-import type { Products } from "@/interface/product.interface";
-import { ProductStore } from "@/state/product.store";
+import type {
+  Products,
+  ProductsGroupedCategory,
+} from "@/interface/product.interface";
+import { productGroupedStore, ProductStore } from "@/state/product.store";
+import ProductRowByCategory from "./ProductRowByCategory.astro";
 
 const searchQuery = Astro.url.searchParams.get("search");
 
-let products: Products[] = [];
+let products: ProductsGroupedCategory[] = [];
 if (!searchQuery) {
-  const { productStore } = await ProductStore();
-  products = productStore.get();
+  await initializeProductGroupeStore();
+  products = productGroupedStore.get();
 }
 ---
 
-<section class="flex">
-  <article class="w-full text-center">
-    {!searchQuery && <ProductContainer products={products} />}
-    {searchQuery && <ProductsSearchResult searchQuery={searchQuery.trim()} />}
-  </article>
+<section class="flex flex-col px-10 gap-5">
+  {
+    !searchQuery &&
+      products.map((group) => <ProductRowByCategory group={group} />)
+  }
+
+  {searchQuery && <ProductsSearchResult searchQuery={searchQuery.trim()} />}
 </section>
 
 <script>

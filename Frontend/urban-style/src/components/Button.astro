@@ -1,22 +1,23 @@
 ---
 import type { JSX } from "astro/jsx-runtime";
-import { custom } from "astro:schema";
-import type { JsxAttribute } from "typescript";
 
 interface Props {
   id?: string;
   size?: "sm" | "md" | "lg" | "custom";
   class?: string;
   type?: JSX.ButtonHTMLAttributes["type"];
+  title?: string;
 }
 
 const {
   id,
+  title,
   size = "md",
   class: className = "",
   type = "button",
   ...props
 } = Astro.props;
+
 const sizeClasses = {
   sm: "px-3 py-1 text-sm",
   md: "px-4 py-2 text-base",
@@ -29,6 +30,7 @@ const sizeClasses = {
   id={id}
   class={`${className} bg-accent/70 backdrop-blur-xs backdrop-brightness-80 text-text border border-border hover:custom-ring rounded cursor-pointer ${sizeClasses[size]} `}
   type={type}
+  title={title}
   {...props}
 >
   <slot />

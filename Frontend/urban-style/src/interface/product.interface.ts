@@ -19,9 +19,16 @@ export interface Products extends BaseDocument {
   };
   stock: number;
 }
+
+export interface ProductsGroupedCategory {
+  category: string;
+  products: Products[];
+}
+
 export interface ProductSummary
   extends Pick<Products, "name" | "price" | "discount"> {
   productId: Products["id"];
   quantity: number;
 }
+
 export interface CreateProduct extends Omit<Products, "id"> {}
