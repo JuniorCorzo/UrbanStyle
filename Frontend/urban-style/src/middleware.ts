@@ -17,6 +17,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
   } finally {
     const isRedirect = validateRequest(context);
     if (isRedirect) return isRedirect;
+
+    if (context.url.pathname === "/") return context.redirect("/home");
   }
 
   return next();
