@@ -13,17 +13,18 @@ import java.util.Optional;
 public interface ProductsRepository extends MongoRepository<ProductEntity, String> {
 
     @Aggregation(pipeline = {
-            "{ '$addFields': { 'allCategories': '$categories' } }",
+            "{ '$addFields': { 'originalDoc': '$$ROOT' } }",
             "{ '$unwind': '$categories' }",
-            "{ '$group': { '_id': '$categories.name', 'products': { '$push': '$$ROOT' } } }",
-            "{ '$project': { 'category': '$_id', 'products': { '$map': { 'input': '$products', 'as': 'p', 'in': { '$mergeObjects': [ '$$p', { 'categories': '$$p.allCategories' } ] } } }, '_id': 0 } }"
+            "{ '$group': { '_id': '$categories.name', 'products': { '$push': '$originalDoc' } } }",
+            "{ '$project': { 'category': '$_id', 'products': 1, '_id': 0 } }"
     })
+
     List<ProductAggregationDomain> groupAllByCategories();
 
     @Query("{ '$text': { '$search': '?0'} }")
     List<ProductEntity> searchProducts(String search);
 
-    @Query(  value = "{ '_id': ?0 }", fields = "{ name: 1, _id: 0 }")
+    @Query(value = "{ '_id': ?0 }", fields = "{ name: 1, _id: 0 }")
     String findNameById(String id);
 
     @Query("{ 'categories.name': ?0 }")

@@ -1,6 +1,5 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.config;
 
-import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.converters.ProductAggregationConvert;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
@@ -17,12 +16,4 @@ public class MongoConfig {
     MongoTransactionManager transactionManager(MongoDatabaseFactory mongoDatabaseFactory) {
         return new MongoTransactionManager(mongoDatabaseFactory);
     }
-
-    @Bean
-    MongoCustomConversions mongoCustomConversions(@Lazy ProductAggregationConvert productAggregationConvert) {
-        return new MongoCustomConversions(
-                List.of(productAggregationConvert)
-        );
-    }
-
 }
