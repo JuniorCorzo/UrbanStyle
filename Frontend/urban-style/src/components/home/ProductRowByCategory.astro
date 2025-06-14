@@ -1,0 +1,16 @@
+---
+import type { ProductsGroupedCategory } from "@/interface/product.interface";
+import ProductContainer from "./ProductContainer.astro";
+import Subtitle from "../text/Subtitle.astro";
+
+interface Props {
+  group: ProductsGroupedCategory;
+}
+
+const { group } = Astro.props;
+---
+
+<article class="flex flex-col gap-3">
+  <Subtitle Text={group.category} size="2xl" />
+  <ProductContainer products={group.products} />
+</article>

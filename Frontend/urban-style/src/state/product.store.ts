@@ -1,8 +1,21 @@
-import type { Products } from "@/interface/product.interface";
-import { getAllProducts } from "@/service/product.service";
+import type {
+  Products,
+  ProductsGroupedCategory,
+} from "@/interface/product.interface";
+import {
+  getAllProducts,
+  getProductsGroupedByCategory,
+} from "@/service/product.service";
 import { computed, map } from "nanostores";
 
 const productStore = map<Products[]>();
+
+export const productGroupedStore = map<ProductsGroupedCategory[]>();
+
+export async function initializeProductGroupeStore() {
+  const products = await getProductsGroupedByCategory();
+  productGroupedStore.set(products);
+}
 
 export async function ProductStore() {
   if (!productStore.get().length) {

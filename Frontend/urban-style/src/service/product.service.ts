@@ -1,5 +1,9 @@
 import axios from "axios";
-import type { CreateProduct, Products } from "@/interface/product.interface";
+import type {
+  CreateProduct,
+  Products,
+  ProductsGroupedCategory,
+} from "@/interface/product.interface";
 import type { Response } from "@/interface/response.interface";
 import { PUBLIC_API_URL } from "@/config/env-config";
 
@@ -12,6 +16,19 @@ export const getAllProducts = async () => {
 
   return response.data;
 };
+
+export async function getProductsGroupedByCategory(): Promise<
+  ProductsGroupedCategory[]
+> {
+  const response = await axios
+    .get<Response<ProductsGroupedCategory>>(`${PUBLIC_API_URL}/products/group`)
+    .then((response) => {
+      if (response.status !== 200) throw Error(response.statusText);
+      return response.data;
+    });
+
+  return response.data;
+}
 
 export const getProductById = async (productId: string) => {
   const response = await axios

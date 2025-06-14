@@ -5,6 +5,18 @@
   }, {
     "pattern":"\\QMETA-INF/mongo-named-queries.properties\\E"
   }, {
+    "pattern":"\\QMETA-INF/resources/error/404.html\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/error/4xx.html\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/error/500.html\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/error/5xx.html\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/favicon.ico\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/image/width=100/e47172bd-45b6-4ec6-8f4d-e3f65d82ab94\\E"
+  }, {
     "pattern":"\\QMETA-INF/resources/index.html\\E"
   }, {
     "pattern":"\\QMETA-INF/services/ch.qos.logback.classic.spi.Configurator\\E"
@@ -109,6 +121,8 @@
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/application/service/AuthService.class\\E"
   }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/application/service/BaseAuthentication.class\\E"
+  }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/application/service/CategoriesService.class\\E"
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/application/service/CustomerUserDetailsService.class\\E"
@@ -193,7 +207,9 @@
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/controller/UserController.class\\E"
   }, {
-    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/filters/JwtCookieFilter.class\\E"
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/exceptions/CustomAuthenticationEntrypoint.class\\E"
+  }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/filters/AuthenticationFilter.class\\E"
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/filters/UserIdMatchesTokenFilter.class\\E"
   }, {
@@ -202,6 +218,12 @@
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/HttpConfig.class\\E"
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/SecureBeans.class\\E"
+  }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/mediator/AuthenticationMediator.class\\E"
+  }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/mediator/JwtCookieAuthHandler.class\\E"
+  }, {
+    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/security/mediator/JwtHeaderAuthHandler.class\\E"
   }, {
     "pattern":"\\Qjakarta/servlet/Filter.class\\E"
   }, {
@@ -927,6 +949,8 @@
   }, {
     "pattern":"\\Qorg/springframework/boot/sql/init/dependency/DatabaseInitializationDependencyConfigurer.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/boot/web/server/mime-mappings.properties\\E"
+  }, {
     "pattern":"\\Qorg/springframework/context/ApplicationContextAware.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/context/ApplicationContextInitializer.class\\E"
@@ -1049,6 +1073,8 @@
   }, {
     "pattern":"\\Qorg/springframework/security/core/userdetails/UserDetailsService.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/security/web/AuthenticationEntryPoint.class\\E"
+  }, {
     "pattern":"\\Qorg/springframework/transaction/annotation/AbstractTransactionManagementConfiguration.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/transaction/annotation/EnableTransactionManagement.class\\E"
@@ -1085,7 +1111,33 @@
   }, {
     "pattern":"\\Qorg/springframework/web/servlet/config/annotation/WebMvcConfigurer.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/web/util/HtmlCharacterEntityReferences.properties\\E"
+  }, {
+    "pattern":"\\Qpublic/error/404.html\\E"
+  }, {
+    "pattern":"\\Qpublic/error/4xx.html\\E"
+  }, {
+    "pattern":"\\Qpublic/error/500.html\\E"
+  }, {
+    "pattern":"\\Qpublic/error/5xx.html\\E"
+  }, {
+    "pattern":"\\Qpublic/favicon.ico\\E"
+  }, {
+    "pattern":"\\Qpublic/image/width=100/e47172bd-45b6-4ec6-8f4d-e3f65d82ab94\\E"
+  }, {
     "pattern":"\\Qpublic/index.html\\E"
+  }, {
+    "pattern":"\\Qresources/error/404.html\\E"
+  }, {
+    "pattern":"\\Qresources/error/4xx.html\\E"
+  }, {
+    "pattern":"\\Qresources/error/500.html\\E"
+  }, {
+    "pattern":"\\Qresources/error/5xx.html\\E"
+  }, {
+    "pattern":"\\Qresources/favicon.ico\\E"
+  }, {
+    "pattern":"\\Qresources/image/width=100/e47172bd-45b6-4ec6-8f4d-e3f65d82ab94\\E"
   }, {
     "pattern":"\\Qresources/index.html\\E"
   }, {
@@ -1094,6 +1146,18 @@
     "pattern":"\\Qsoftware/amazon/awssdk/services/s3/execution.interceptors\\E"
   }, {
     "pattern":"\\Qspring.properties\\E"
+  }, {
+    "pattern":"\\Qstatic/error/404.html\\E"
+  }, {
+    "pattern":"\\Qstatic/error/4xx.html\\E"
+  }, {
+    "pattern":"\\Qstatic/error/500.html\\E"
+  }, {
+    "pattern":"\\Qstatic/error/5xx.html\\E"
+  }, {
+    "pattern":"\\Qstatic/favicon.ico\\E"
+  }, {
+    "pattern":"\\Qstatic/image/width=100/e47172bd-45b6-4ec6-8f4d-e3f65d82ab94\\E"
   }, {
     "pattern":"\\Qstatic/index.html\\E"
   }, {
