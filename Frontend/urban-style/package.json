@@ -20,6 +20,7 @@
     "astro": "5.9.1",
     "axios": "^1.8.4",
     "clsx": "^2.1.1",
+    "downshift": "^9.0.9",
     "jwt-decode": "^4.0.0",
     "lightweight-charts": "^5.0.6",
     "nanostores": "^1.0.1",
