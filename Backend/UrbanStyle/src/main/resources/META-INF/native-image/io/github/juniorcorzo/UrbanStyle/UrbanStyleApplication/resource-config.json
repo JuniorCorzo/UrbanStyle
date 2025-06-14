@@ -5,6 +5,18 @@
   }, {
     "pattern":"\\QMETA-INF/mongo-named-queries.properties\\E"
   }, {
+    "pattern":"\\QMETA-INF/resources/error/404.html\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/error/4xx.html\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/error/500.html\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/error/5xx.html\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/favicon.ico\\E"
+  }, {
+    "pattern":"\\QMETA-INF/resources/image/width=100/e47172bd-45b6-4ec6-8f4d-e3f65d82ab94\\E"
+  }, {
     "pattern":"\\QMETA-INF/resources/index.html\\E"
   }, {
     "pattern":"\\QMETA-INF/services/ch.qos.logback.classic.spi.Configurator\\E"
@@ -32,6 +44,16 @@
     "pattern":"\\QMETA-INF/services/java.time.zone.ZoneRulesProvider\\E"
   }, {
     "pattern":"\\QMETA-INF/services/java.util.spi.ResourceBundleControlProvider\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageInputStreamSpi\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageOutputStreamSpi\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageReaderSpi\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageTranscoderSpi\\E"
+  }, {
+    "pattern":"\\QMETA-INF/services/javax.imageio.spi.ImageWriterSpi\\E"
   }, {
     "pattern":"\\QMETA-INF/services/javax.xml.transform.TransformerFactory\\E"
   }, {
@@ -139,8 +161,6 @@
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/domain/repository/UserRepository.class\\E"
   }, {
-    "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/adapter/converters/ProductAggregationConvert.class\\E"
-  }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/adapter/mapper/AddressMapper.class\\E"
   }, {
     "pattern":"\\Qio/github/juniorcorzo/UrbanStyle/infrastructure/adapter/mapper/AddressMapperImpl.class\\E"
@@ -234,6 +254,8 @@
     "pattern":"\\Qmessages.properties\\E"
   }, {
     "pattern":"\\Qmozilla/public-suffix-list.txt\\E"
+  }, {
+    "pattern":"\\Qnative/Linux/x86_64/libwebp-imageio.so\\E"
   }, {
     "pattern":"\\Qorg/apache/catalina/core/RestrictedFilters.properties\\E"
   }, {
@@ -927,6 +949,8 @@
   }, {
     "pattern":"\\Qorg/springframework/boot/sql/init/dependency/DatabaseInitializationDependencyConfigurer.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/boot/web/server/mime-mappings.properties\\E"
+  }, {
     "pattern":"\\Qorg/springframework/context/ApplicationContextAware.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/context/ApplicationContextInitializer.class\\E"
@@ -959,11 +983,7 @@
   }, {
     "pattern":"\\Qorg/springframework/core/annotation/Order.class\\E"
   }, {
-    "pattern":"\\Qorg/springframework/core/convert/converter/Converter.class\\E"
-  }, {
     "pattern":"\\Qorg/springframework/core/env/EnvironmentCapable.class\\E"
-  }, {
-    "pattern":"\\Qorg/springframework/data/convert/ReadingConverter.class\\E"
   }, {
     "pattern":"\\Qorg/springframework/data/mongodb/config/GeoJsonConfiguration.class\\E"
   }, {
@@ -1091,7 +1111,33 @@
   }, {
     "pattern":"\\Qorg/springframework/web/servlet/config/annotation/WebMvcConfigurer.class\\E"
   }, {
+    "pattern":"\\Qorg/springframework/web/util/HtmlCharacterEntityReferences.properties\\E"
+  }, {
+    "pattern":"\\Qpublic/error/404.html\\E"
+  }, {
+    "pattern":"\\Qpublic/error/4xx.html\\E"
+  }, {
+    "pattern":"\\Qpublic/error/500.html\\E"
+  }, {
+    "pattern":"\\Qpublic/error/5xx.html\\E"
+  }, {
+    "pattern":"\\Qpublic/favicon.ico\\E"
+  }, {
+    "pattern":"\\Qpublic/image/width=100/e47172bd-45b6-4ec6-8f4d-e3f65d82ab94\\E"
+  }, {
     "pattern":"\\Qpublic/index.html\\E"
+  }, {
+    "pattern":"\\Qresources/error/404.html\\E"
+  }, {
+    "pattern":"\\Qresources/error/4xx.html\\E"
+  }, {
+    "pattern":"\\Qresources/error/500.html\\E"
+  }, {
+    "pattern":"\\Qresources/error/5xx.html\\E"
+  }, {
+    "pattern":"\\Qresources/favicon.ico\\E"
+  }, {
+    "pattern":"\\Qresources/image/width=100/e47172bd-45b6-4ec6-8f4d-e3f65d82ab94\\E"
   }, {
     "pattern":"\\Qresources/index.html\\E"
   }, {
@@ -1101,17 +1147,43 @@
   }, {
     "pattern":"\\Qspring.properties\\E"
   }, {
+    "pattern":"\\Qstatic/error/404.html\\E"
+  }, {
+    "pattern":"\\Qstatic/error/4xx.html\\E"
+  }, {
+    "pattern":"\\Qstatic/error/500.html\\E"
+  }, {
+    "pattern":"\\Qstatic/error/5xx.html\\E"
+  }, {
+    "pattern":"\\Qstatic/favicon.ico\\E"
+  }, {
+    "pattern":"\\Qstatic/image/width=100/e47172bd-45b6-4ec6-8f4d-e3f65d82ab94\\E"
+  }, {
     "pattern":"\\Qstatic/index.html\\E"
   }, {
+    "pattern":"\\Qwebp-imageio.properties\\E"
+  }, {
     "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfc.nrm\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/nfkc.nrm\\E"
+  }, {
+    "pattern":"java.base:\\Qjdk/internal/icu/impl/data/icudt72b/uprops.icu\\E"
+  }, {
+    "pattern":"java.base:\\Qsun/net/idn/uidna.spp\\E"
   }, {
     "pattern":"jdk.jfr:\\Qjdk/jfr/internal/query/view.ini\\E"
   }]},
   "bundles":[{
+    "name":"jakarta.servlet.LocalStrings",
+    "locales":[""]
+  }, {
     "name":"jakarta.servlet.http.LocalStrings",
     "locales":[""]
   }, {
     "name":"org.apache.catalina.authenticator.LocalStrings",
+    "locales":[""]
+  }, {
+    "name":"org.apache.catalina.authenticator.jaspic.LocalStrings",
     "locales":[""]
   }, {
     "name":"org.apache.catalina.connector.LocalStrings",
@@ -1159,6 +1231,9 @@
     "name":"org.apache.coyote.http11.LocalStrings",
     "locales":[""]
   }, {
+    "name":"org.apache.coyote.http11.filters.LocalStrings",
+    "locales":[""]
+  }, {
     "name":"org.apache.naming.LocalStrings",
     "locales":[""]
   }, {
@@ -1197,5 +1272,8 @@
   }, {
     "name":"org.apache.tomcat.websocket.server.LocalStrings",
     "locales":[""]
+  }, {
+    "name":"sun.awt.resources.awt",
+    "classNames":["sun.awt.resources.awt"]
   }]
 }
