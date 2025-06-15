@@ -31,7 +31,8 @@ const { name, description, categories, attributes, price, stock } = product;
   <div class="w-full min-h-[42px] flex flex-col sm:flex-row gap-4">
     <div class="grow">
       <SelectInput
-        label="Color"
+        label="Color:"
+        placeholder="-- Color --"
         search={false}
         options={attributes.color.map(({ name }) => ({
           text: name,
@@ -42,7 +43,8 @@ const { name, description, categories, attributes, price, stock } = product;
     </div>
     <div class="basis-1/3">
       <SelectInput
-        label="Talla"
+        label="Talla:"
+        placeholder="-- Talla --"
         search={false}
         options={attributes.size.map(({ name }) => ({
           text: name,
