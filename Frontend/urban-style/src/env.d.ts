@@ -8,6 +8,7 @@ declare namespace App {
 
 interface ImportMetaEnv {
   PUBLIC_API_URL: string;
+  PUBLIC_CLOUDFLARE_URL: string;
 }
 
 interface ImportMeta {

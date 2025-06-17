@@ -15,6 +15,17 @@ export default defineConfig({
 
   vite: {
     plugins: [tailwindcss()],
+    server: {
+      proxy: {
+        "/api/location": {
+          target:
+            "https://geoportal.dane.gov.co/laboratorio/serviciosjson/gdivipola/servicios",
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/api\/location/, ""),
+          secure: false,
+        },
+      },
+    },
   },
 
   adapter: node({
