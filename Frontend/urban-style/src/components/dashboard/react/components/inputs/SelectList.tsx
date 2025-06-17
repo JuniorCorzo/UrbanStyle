@@ -23,7 +23,7 @@ export function SelectList({
   return (
     <ul
       className={cn(
-        "w-full visible opacity-100 absolute mt-1 shadow shadow-crust max-h-80 transition-all duration-150 overflow-scroll p-0 z-10 border border-border rounded",
+        "w-full visible opacity-100 absolute mt-1 shadow shadow-crust max-h-80 transition-all duration-150 p-0 z-10 border border-border rounded overflow-auto",
         !isOpen && "invisible opacity-0"
       )}
       {...getMenuProps()}
