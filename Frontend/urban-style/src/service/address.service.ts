@@ -61,7 +61,8 @@ export class AddressService {
           { withCredentials: true }
         )
         .then((result) => {
-          if (result.status !== 204) throw Error(result.statusText);
+          if (result.status !== 200) throw Error(result.statusText);
+
           return result.data;
         })
     ).data[0];
