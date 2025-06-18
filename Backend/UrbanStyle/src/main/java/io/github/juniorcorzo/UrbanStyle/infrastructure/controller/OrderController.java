@@ -23,6 +23,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     ResponseDTO<OrdersResponseDTO> getAllOrders() {
         return this.orderService.getAllOrders();
     }
@@ -57,11 +58,6 @@ public class OrderController {
         return this.orderService.createOrder(insertOrder);
     }
 
-    @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseDTO<OrdersResponseDTO> updateOrder(@Validated(OnUpdate.class) @RequestBody OrdersSaveDTO updateOrder) {
-        return this.orderService.updateOrder(updateOrder);
-    }
 
     @PatchMapping("/change-status")
     @PreAuthorize("hasRole('USER')")
