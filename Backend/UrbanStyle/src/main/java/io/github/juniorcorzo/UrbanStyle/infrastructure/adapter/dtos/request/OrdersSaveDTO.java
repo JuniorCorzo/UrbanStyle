@@ -7,16 +7,12 @@ import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdMustExis
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderHistory;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductSummary;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
-import io.github.juniorcorzo.UrbanStyle.domain.enums.PaymentMethod;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
+import io.github.juniorcorzo.UrbanStyle.domain.enums.PaymentMethod;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.AddressDTO;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-
-import java.time.LocalDateTime;
-import java.util.List;
+import jakarta.validation.constraints.NotNull;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record OrdersSaveDTO(

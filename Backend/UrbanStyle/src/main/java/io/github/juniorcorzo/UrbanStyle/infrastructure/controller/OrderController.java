@@ -3,7 +3,6 @@ package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 import io.github.juniorcorzo.UrbanStyle.application.service.OrderService;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatConstraint;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
-import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;

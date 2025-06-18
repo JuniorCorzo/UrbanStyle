@@ -16,7 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -35,8 +34,8 @@ public class AuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-            authenticationMediator = applicationContext.getBean(JwtHeaderAuthHandler.class);
-            authenticationMediator.authenticate(request, response);
-            filterChain.doFilter(request, response);
+        authenticationMediator = applicationContext.getBean(JwtHeaderAuthHandler.class);
+        authenticationMediator.authenticate(request, response);
+        filterChain.doFilter(request, response);
     }
 }
