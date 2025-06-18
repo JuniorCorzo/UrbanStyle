@@ -6,7 +6,7 @@ import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import type { Products } from "@/interface/product.interface";
 import type { ReadableAtom } from "nanostores";
 import { Image } from "astro:assets";
-import { PUBLIC_API_URL } from "@/config/env-config";
+import { CLOUDFLARE_URL } from "@/config/env-config";
 
 interface Props {
   productId: string;
@@ -20,7 +20,7 @@ interface Props {
   <div>
     <Image
       class=""
-      src={`${PUBLIC_API_URL}/images/width=225,height=225/${getProductById(productId).get()?.images[0]}`}
+      src={`${CLOUDFLARE_URL}/${getProductById(productId).get()?.images[0]}`}
       alt={name}
       width={225}
       height={225}
@@ -40,7 +40,7 @@ interface Props {
       <div class="basis-5">
         <Button
           id="remove-product"
-          class="flex bg-transparent border-0 items-center gap-2 hover:ring-0 hover:scale-105"
+          class="flex bg-transparent backdrop-brightness-100 border-0 items-center gap-2 hover:ring-0 hover:scale-105"
           size="custom"
           data-product-id={productId}
           data-user-id={userId}

@@ -1,30 +1,56 @@
 ---
+import { MapPinIcon } from "@heroicons/react/24/outline";
 import Button from "../Button.astro";
 import InfoRow from "../InfoRow.astro";
 import Subtitle from "../text/Subtitle.astro";
+import { AddressSelect } from "./react/AddressSelect";
+import AddressDialogForm from "./AddressDialogForm.astro";
 
 interface Props {
   calculateTotal: () => number;
 }
 
+const userId = Astro.locals.user.id ?? "";
 const { calculateTotal } = Astro.props;
 const total = calculateTotal();
 ---
 
 <article
-  class="flex flex-col border-2 border-border basis-96 gap-1 py-3 px-5 mr-3 pr-7 rounded"
+  class="w-full max-w-lg flex flex-col border-2 border-border basis-96 gap-1 py-3 px-5 md:mr-3 mx-5 rounded"
 >
   <Subtitle size="xl" Text="Detalles" />
   <div class="flex flex-col border-border gap-11 pt-5">
     <div class="flex flex-col gap-1">
-      <InfoRow label="Total" value={`<strong>${total}</strong>`} />
+      <InfoRow
+        label="Total"
+        value={`<strong>${total.toLocaleString()}</strong>`}
+      />
       <InfoRow label="Envió" value="<strong>Gratis</strong>" />
       <InfoRow
         class="pt-5"
         label="Total con Iva"
-        value={`<strong id="total">${(total + total * 0.19).toFixed(2)}</strong>`}
+        value={`<strong id="total">${(total + total * 0.19).toLocaleString()}</strong>`}
       />
     </div>
-    <Button> Realizar el pedido por WhatsApp </Button>
+    <div class="flex flex-col gap-2 items-center justify-center">
+      <AddressSelect userId={userId} client:idle />
+      <Button
+        id="address_button"
+        class="bg-primary backdrop-brightness-100 w-full h-fit hover:ring-0 hover:shadow shadow-primary"
+        transition:name="address_dialog"
+        transition:animate="fade"
+      >
+        <span
+          class="flex justify-center items-center gap-2 pointer-events-none text-slate-800"
+        >
+          <MapPinIcon className="size-6" />
+          <span> Añadir nueva Dirección </span>
+        </span>
+      </Button>
+      <AddressDialogForm />
+    </div>
+    <div>
+      <Button> Realizar el pedido por WhatsApp </Button>
+    </div>
   </div>
 </article>

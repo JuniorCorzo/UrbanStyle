@@ -10,7 +10,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
       if (!user) return next();
 
       context.locals.user = user;
-      context.locals.accessToken = cookie.split("=")[1];
+      context.locals.accessToken = cookie.split("=")[1].split(";")[0];
     }
   } catch (error) {
     console.error("Error validating session");

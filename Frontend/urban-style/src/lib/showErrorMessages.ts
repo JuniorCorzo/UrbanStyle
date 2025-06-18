@@ -32,6 +32,11 @@ function createEventListener(id: string, $inputElement: HTMLInputElement) {
     id,
     $inputElement
   );
+
+  if ($inputElement.getAttribute("role") === "combobox") {
+    $inputElement.addEventListener("click", $inputElement._clearErrorHandler);
+    return;
+  }
   $inputElement?.addEventListener("input", $inputElement._clearErrorHandler);
 }
 

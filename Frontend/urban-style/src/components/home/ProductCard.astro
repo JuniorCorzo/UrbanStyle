@@ -2,9 +2,7 @@
 import type { Products } from "@/interface/product.interface";
 import { Image } from "astro:assets";
 import BorderEffect from "./BorderEffect.astro";
-import { PUBLIC_API_URL } from "@/config/env-config";
-import Button from "../Button.astro";
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
+import { CLOUDFLARE_URL } from "@/config/env-config";
 
 interface Props {
   product: Products;
@@ -24,7 +22,7 @@ const { product, borderEffect = true } = Astro.props;
     {borderEffect && <BorderEffect />}
     <Image
       class="aspect-square rounded-t-lg"
-      src={`${PUBLIC_API_URL}/images/width=400,height=400/${product.images[0]}`}
+      src={`${CLOUDFLARE_URL}/${product.images[0]}`}
       alt={product.name}
       width={240}
       height={240}
