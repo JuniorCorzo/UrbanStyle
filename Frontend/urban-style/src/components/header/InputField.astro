@@ -19,7 +19,7 @@ const { label, name, type, placeholder, errorId } = Astro.props;
   <span>{label}:</span>
   <MessageError errorId={errorId} />
   <input
-    class="h-11 px-3 border-2 border-border rounded focus:outline-0 focus:custom-ring"
+    class="w-full h-11 px-3 border-2 border-border rounded focus:outline-0 focus:custom-ring"
     type={type || "text"}
     placeholder={placeholder}
     name={name}

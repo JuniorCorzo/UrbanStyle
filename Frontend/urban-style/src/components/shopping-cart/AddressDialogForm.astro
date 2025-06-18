@@ -1,0 +1,122 @@
+---
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import InputField from "../header/InputField.astro";
+import Subtitle from "../text/Subtitle.astro";
+import Button from "../Button.astro";
+import { DepartmentSelect } from "./react/DepartmentSelect";
+import { MunicipalitySelect } from "./react/MunicipalitySelect";
+
+const userId = Astro.locals.user?.id ?? "";
+---
+
+<dialog
+  id="address_dialog"
+  class="bg-background fixed w-full sm:max-w-xl max-w-md top-1/2 -translate-1/2 left-1/2 mx-5 rounded-2xl border-2 border-border shadow-md shadow-crust z-10 overflow-visible"
+  transition:name="address_dialog"
+>
+  <div>
+    <div
+      class="bg-accent inline-flex w-full py-3 px-5 justify-between items-center rounded-t-2xl"
+    >
+      <Subtitle size="2xl" Text="Agregar dirección de envío" />
+      <XMarkIcon id="close_address" className="size-8 cursor-pointer" />
+    </div>
+  </div>
+  <div>
+    <form
+      id="address_form"
+      method="dialog"
+      class="relative flex flex-col sm:grid sm:grid-cols-[repeat(auto-fill,minmax(15rem,17rem))] sm:grid-flow-row-dense gap-y-5 justify-center items-end px-3 py-5"
+      data-user-id={userId}
+    >
+      <InputField
+        label="Dirección"
+        name="street"
+        placeholder="Ej: Calle 45 #23-10"
+        errorId="street_error"
+      />
+      <DepartmentSelect client:idle />
+      <MunicipalitySelect client:idle />
+      <InputField
+        label="Postal Code"
+        name="postalCode"
+        placeholder="Ej: 110111"
+        errorId="postalCode_error"
+      />
+      <Button class="w-full col-span-full" type="submit">
+        <span>Guardar Dirección</span>
+      </Button>
+    </form>
+  </div>
+</dialog>
+
+<script>
+  import { AddressAdapter } from "@/adapter/location.adapter";
+  import type { Address } from "@/interface/address.interface";
+  import { $ } from "@/lib/dom-selector";
+  import { showError } from "@/lib/showErrorMessages";
+  import {
+    AddressScheme,
+    type AddressValidate,
+  } from "@/lib/validations/address.validations";
+  import { AddressService } from "@/service/address.service";
+  import z from "zod";
+
+  const sendRequest = (userId: string, addressData: AddressValidate) => {
+    const address = AddressAdapter.toAddress(addressData, userId);
+    AddressService.createAddress(address);
+  };
+
+  const handleSubmit = ($addressForm: HTMLFormElement) => {
+    $addressForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const userId = $addressForm.dataset.userId;
+
+      const formData = new FormData($addressForm);
+      const { street, state, city, postalCode } = Object.fromEntries(
+        formData
+      ) as unknown as Address;
+      const [_, department] = state.split(",");
+      const [_value, municipality] = city.split(",");
+      const addressData: AddressValidate = {
+        street,
+        state: department,
+        city: municipality,
+        postalCode,
+      };
+
+      try {
+        const address = AddressScheme.parse(addressData);
+        if (!userId) return;
+        console.log("Address Data:", address);
+        sendRequest(userId, address);
+      } catch (error) {
+        if (error instanceof z.ZodError) {
+          showError(error);
+        }
+      }
+    });
+  };
+
+  const initializeListener = () => {
+    const $addressForm = $<HTMLFormElement>("#address_form") as HTMLFormElement;
+    const $addressButton: HTMLButtonElement | null =
+      $<HTMLButtonElement>("#address_button");
+    const $addressDialog: HTMLDialogElement | null =
+      $<HTMLDialogElement>("#address_dialog");
+
+    $addressButton?.addEventListener("click", () => {
+      $addressDialog?.showModal();
+    });
+
+    handleSubmit($addressForm);
+    document.addEventListener("click", (event) => {
+      const target = event.target as HTMLElement;
+      if (event.target === $addressDialog || target.id === "close_address") {
+        $addressDialog?.close();
+      }
+    });
+  };
+
+  document.addEventListener("astro:page-load", initializeListener);
+</script>
