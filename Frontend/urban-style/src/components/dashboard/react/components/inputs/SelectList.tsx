@@ -30,13 +30,14 @@ export function SelectList({
     const rect = buttonRef.current.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom;
 
+    console.log(spaceBelow);
     setShowAbove(spaceBelow < 0);
   }, [isOpen]);
 
   return (
     <ul
       className={cn(
-        "w-full visible opacity-100 absolute mt-1 max-h-80  p-0 z-20  rounded overflow-y-auto",
+        "w-full  landscape:max-h-52 max-h-80 visible opacity-100 absolute mt-1 p-0 z-20  rounded overflow-y-auto",
         isOpen
           ? "border border-border shadow shadow-crust transition-all duration-150"
           : "invisible opacity-0",
