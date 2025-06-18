@@ -64,7 +64,9 @@ const userId = Astro.locals.user?.id ?? "";
 
   const sendRequest = (userId: string, addressData: AddressValidate) => {
     const address = AddressAdapter.toAddress(addressData, userId);
-    AddressService.createAddress(address);
+    AddressService.createAddress(address).then(() => {
+      location.reload();
+    });
   };
 
   const handleSubmit = ($addressForm: HTMLFormElement) => {
