@@ -6,6 +6,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { SelectList } from "./SelectList";
 import { useEffect, useRef, useState } from "react";
 import { MessageError } from "./MessageError";
+import type { SelectOptions } from "@/interface/form-mediator.interface";
 
 export type GetItemsProps<T> = UseSelectReturnValue<T>["getItemProps"];
 export type GetMenuProps<T> = UseSelectReturnValue<T>["getMenuProps"];
@@ -18,11 +19,10 @@ export function Select({
   options,
   onChange,
   disable,
-  value,
+  value: defaultValue,
   search = true,
 }: SelectInputProps) {
   const buttonRef = useRef<HTMLDivElement>(null);
-  const [showAbove, setShowAbove] = useState(false);
 
   const {
     isOpen,
@@ -43,16 +43,6 @@ export function Select({
     if (!onChange) return;
     onChange(selectedItem?.value);
   }, [selectedItem]);
-
-  useEffect(() => {
-    if (!isOpen || !buttonRef.current) return;
-
-    const rect = buttonRef.current.getBoundingClientRect();
-    const spaceBelow = window.innerHeight - rect.bottom;
-    const estimatedMenuHeight = 320;
-
-    setShowAbove(spaceBelow < estimatedMenuHeight);
-  }, [isOpen]);
 
   return (
     <div className="relative w-full max-w-md">
@@ -79,6 +69,7 @@ export function Select({
               type="text"
               name={name}
               value={[selectedItem?.value ?? "", selectedItem?.text ?? ""]}
+              readOnly
             />
             <span
               className={cn(
@@ -100,7 +91,6 @@ export function Select({
         </label>
       </div>
       <SelectList
-        showAbove={showAbove}
         isOpen={isOpen}
         options={options ?? []}
         getMenuProps={getMenuProps}
