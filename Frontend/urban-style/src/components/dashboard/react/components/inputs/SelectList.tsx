@@ -30,7 +30,6 @@ export function SelectList({
     const rect = buttonRef.current.getBoundingClientRect();
     const spaceBelow = window.innerHeight - rect.bottom;
 
-    console.log(spaceBelow);
     setShowAbove(spaceBelow < 0);
   }, [isOpen]);
 
