@@ -33,11 +33,15 @@ const { getProductById } = await ProductStore();
               data-user-id={userId}
               data-product-id={productId}
             />
-            <Subtitle id="price_unit" size="lg" Text={`$${price}/u`} />
+            <Subtitle
+              id="price_unit"
+              size="lg"
+              Text={`$${price.toLocaleString()}/u`}
+            />
             <Subtitle
               id="product_total"
               size="lg"
-              Text={`$${(price * quantity).toFixed(2)}`}
+              Text={`$${(price * quantity).toLocaleString()}`}
             />
           </div>
         </div>
