@@ -19,6 +19,7 @@ export interface FormField {
 }
 
 export interface FieldProperties {
+  className?: string;
   label?: string;
   name?: string;
   value?: string | string[];
@@ -26,6 +27,7 @@ export interface FieldProperties {
   required?: boolean;
   options?: SelectOptions[];
   isMultiple?: boolean;
+  disable?: boolean;
 }
 
 export type SelectOptions = {

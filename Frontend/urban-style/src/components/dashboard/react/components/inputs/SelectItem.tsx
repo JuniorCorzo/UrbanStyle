@@ -4,7 +4,10 @@ import type { GetItemsProps, GetMenuProps } from "./Select";
 import type { SelectOptionsProps } from "./SelectList";
 
 interface Props
-  extends Omit<SelectOptionsProps, "isOpen" | "options" | "getMenuProps"> {
+  extends Omit<
+    SelectOptionsProps,
+    "isOpen" | "options" | "getMenuProps" | "showAbove"
+  > {
   index: number;
   item: SelectOptions;
 }

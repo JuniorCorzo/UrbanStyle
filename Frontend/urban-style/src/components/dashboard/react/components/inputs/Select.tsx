@@ -3,20 +3,27 @@ import type { SelectInputProps } from "./SelectInput";
 import { optionsToString } from "@/lib/optionsToString";
 import { cn } from "@/lib/cn";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
-import SelectItem from "./SelectItem";
 import { SelectList } from "./SelectList";
+import { useEffect, useRef, useState } from "react";
+import { MessageError } from "./MessageError";
 
 export type GetItemsProps<T> = UseSelectReturnValue<T>["getItemProps"];
 export type GetMenuProps<T> = UseSelectReturnValue<T>["getMenuProps"];
 
 export function Select({
+  className,
   name,
   label,
   placeholder,
   options,
+  onChange,
+  disable,
   value,
   search = true,
 }: SelectInputProps) {
+  const buttonRef = useRef<HTMLDivElement>(null);
+  const [showAbove, setShowAbove] = useState(false);
+
   const {
     isOpen,
     selectedItem,
@@ -30,35 +37,70 @@ export function Select({
     itemToString: optionsToString,
   });
 
+  useEffect(() => {
+    if (!selectedItem?.value) return;
+
+    if (!onChange) return;
+    onChange(selectedItem?.value);
+  }, [selectedItem]);
+
+  useEffect(() => {
+    if (!isOpen || !buttonRef.current) return;
+
+    const rect = buttonRef.current.getBoundingClientRect();
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const estimatedMenuHeight = 320;
+
+    setShowAbove(spaceBelow < estimatedMenuHeight);
+  }, [isOpen]);
+
   return (
     <div className="relative w-full max-w-md">
-      <div className="w-full flex flex-col gap-1">
+      <div
+        className={cn(
+          "w-full flex flex-col text-text",
+          disable && "cursor-not-allowed"
+        )}
+        ref={buttonRef}
+      >
         <label className="pointer-events-none" {...getLabelProps()}>
           {label}
-        </label>
-        <div
-          className="bg-background w-full flex justify-between items-center p-2 cursor-pointer border border-border rounded focus:custom-ring"
-          {...getToggleButtonProps()}
-        >
-          <span
+          <MessageError errorId={`${name}_error`} />
+          <div
             className={cn(
-              "text-base text-text/70",
-              selectedItem && "text-text"
+              "bg-background w-full flex justify-between items-center p-2 cursor-pointer border border-border rounded focus:custom-ring pointer-events-auto",
+              disable && "pointer-events-none",
+              className
             )}
+            {...getToggleButtonProps()}
           >
-            {selectedItem ? selectedItem.text : placeholder}
-          </span>
-          <span className="">
-            <ChevronDownIcon
-              className={cn(
-                "size-5 transition-transform duration-150",
-                isOpen && "rotate-180"
-              )}
+            <input
+              className="hidden"
+              type="text"
+              name={name}
+              value={[selectedItem?.value ?? "", selectedItem?.text ?? ""]}
             />
-          </span>
-        </div>
+            <span
+              className={cn(
+                "text-base text-text/70",
+                selectedItem && "text-text"
+              )}
+            >
+              {selectedItem ? selectedItem.text : placeholder}
+            </span>
+            <span className="">
+              <ChevronDownIcon
+                className={cn(
+                  "size-5 transition-transform duration-150",
+                  isOpen && "rotate-180"
+                )}
+              />
+            </span>
+          </div>
+        </label>
       </div>
       <SelectList
+        showAbove={showAbove}
         isOpen={isOpen}
         options={options ?? []}
         getMenuProps={getMenuProps}

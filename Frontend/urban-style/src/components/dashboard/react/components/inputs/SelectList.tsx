@@ -2,8 +2,10 @@ import type { SelectOptions } from "@/interface/form-mediator.interface";
 import type { GetItemsProps, GetMenuProps } from "./Select";
 import { cn } from "@/lib/cn";
 import SelectItem from "./SelectItem";
+import { useEffect, useRef, useState } from "react";
 
 export interface SelectOptionsProps {
+  showAbove: boolean;
   isOpen: boolean;
   options: SelectOptions[];
   highlightedIndex: number;
@@ -13,6 +15,7 @@ export interface SelectOptionsProps {
 }
 
 export function SelectList({
+  showAbove,
   isOpen,
   options,
   getItemProps,
@@ -23,8 +26,9 @@ export function SelectList({
   return (
     <ul
       className={cn(
-        "w-full visible opacity-100 absolute mt-1 shadow shadow-crust max-h-80 transition-all duration-150 p-0 z-10 border border-border rounded overflow-auto",
-        !isOpen && "invisible opacity-0"
+        "w-full visible opacity-100 absolute mt-1 shadow shadow-crust max-h-80 transition-all duration-150 p-0 z-20 border border-border rounded overflow-y-auto",
+        !isOpen && "invisible opacity-0",
+        showAbove && "bottom-full"
       )}
       {...getMenuProps()}
     >
