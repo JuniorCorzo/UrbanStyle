@@ -1,5 +1,4 @@
 ---
-import { cn } from "@/lib/cn";
 import type { JSX } from "astro/jsx-runtime";
 
 interface Props {
@@ -29,11 +28,7 @@ const sizeClasses = {
 
 <button
   id={id}
-  class={cn(
-    sizeClasses[size],
-    "bg-accent/70 backdrop-blur-xs backdrop-brightness-80 text-text border border-border hover:custom-ring rounded cursor-pointer",
-    className
-  )}
+  class={`${className} bg-accent/70 backdrop-blur-xs backdrop-brightness-80 text-text border border-border hover:custom-ring rounded cursor-pointer ${sizeClasses[size]} `}
   type={type}
   title={title}
   {...props}

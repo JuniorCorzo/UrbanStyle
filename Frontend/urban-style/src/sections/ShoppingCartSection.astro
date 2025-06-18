@@ -16,10 +16,7 @@ const { getCartByUserId, calculateTotal } = await CartStore(
 const items = getCartByUserId()?.items || [];
 ---
 
-<section
-  id="cart-section"
-  class="flex flex-col md:flex-row items-center justify-center md:items-start md:justify-start gap-y-5"
->
+<section id="cart-section" class="flex">
   {
     items.length !== 0 ? (
       <CartItems userId={userId} items={items} />
