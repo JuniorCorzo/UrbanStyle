@@ -6,6 +6,7 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.Shopp
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +35,11 @@ public class ShoppingCartController {
     public ResponseDTO<ShoppingCartDTO> changeQuantityProduct(
             @IdFormatConstraint @RequestParam("user-id") String userId,
             @IdFormatConstraint @RequestParam("product-id") String productId,
+            @NotBlank @RequestParam String color,
+            @NotBlank @RequestParam String size,
             @Min(0) @RequestParam int quantity
     ) {
-        return this.shoppingCardService.changeQuantityProduct(userId, productId, quantity);
+        return this.shoppingCardService.changeQuantityProduct(userId, productId, color, size, quantity);
     }
 
     @PatchMapping("/update-product")
@@ -49,9 +52,11 @@ public class ShoppingCartController {
     @PreAuthorize("hasRole('USER')")
     public ResponseDTO<ShoppingCartDTO> removeProductFromCart(
             @IdFormatConstraint @RequestParam("user-id") String userId,
-            @IdFormatConstraint @RequestParam("product-id") String productId
+            @IdFormatConstraint @RequestParam("product-id") String productId,
+            @NotBlank @RequestParam String color,
+            @NotBlank @RequestParam String size
     ) {
-        return this.shoppingCardService.removeProductCar(userId, productId);
+        return this.shoppingCardService.removeProductCar(userId, productId, color, size);
     }
 
     @DeleteMapping("/delete/{userId}")

@@ -5,7 +5,6 @@ import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdMustExis
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductSummary;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
