@@ -22,11 +22,11 @@ const { userId, productId, name, color, size, getProductById } = Astro.props;
 <div class="flex gap-5">
   <div>
     <Image
-      class=""
+      class="aspect-square rounded-lg"
       src={`${CLOUDFLARE_URL}/${getProductById(productId).get()?.images[0]}`}
       alt={name}
-      width={225}
-      height={225}
+      width={250}
+      height={250}
     />
   </div>
   <div class="w-full flex justify-between">
