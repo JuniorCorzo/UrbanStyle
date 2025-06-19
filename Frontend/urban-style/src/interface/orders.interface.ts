@@ -1,7 +1,9 @@
+import type { Address } from "./address.interface";
 import type { ProductSummary } from "./product.interface";
 
 export type OrderStatus = "PROCESSING" | "SENT" | "DELIVERED" | "CANCELED";
 export type PaymentMethod = "CARD" | "EFFECTIVE" | "PSE";
+
 export interface OrderEvent {
   status: OrderStatus;
   date: string;
@@ -13,6 +15,7 @@ export interface OrderHistory {
 }
 
 export interface Order {
+  id: string;
   userId: string;
   products: ProductSummary[];
   total: number;
@@ -22,3 +25,6 @@ export interface Order {
   orderDate: string;
   history: OrderHistory;
 }
+
+export interface CreateOrder
+  extends Pick<Order, "userId" | "address" | "paymentMethod"> {}

@@ -3,7 +3,6 @@ package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 import io.github.juniorcorzo.UrbanStyle.application.service.OrderService;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatConstraint;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
-import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
@@ -23,6 +22,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     ResponseDTO<OrdersResponseDTO> getAllOrders() {
         return this.orderService.getAllOrders();
     }
@@ -57,11 +57,6 @@ public class OrderController {
         return this.orderService.createOrder(insertOrder);
     }
 
-    @PutMapping("/update")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseDTO<OrdersResponseDTO> updateOrder(@Validated(OnUpdate.class) @RequestBody OrdersSaveDTO updateOrder) {
-        return this.orderService.updateOrder(updateOrder);
-    }
 
     @PatchMapping("/change-status")
     @PreAuthorize("hasRole('USER')")

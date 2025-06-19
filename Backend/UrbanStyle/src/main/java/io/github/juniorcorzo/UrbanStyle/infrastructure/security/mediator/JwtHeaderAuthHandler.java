@@ -17,8 +17,10 @@ public class JwtHeaderAuthHandler implements AuthenticationMediator {
 
     @Override
     public void authenticate(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        log.info("Processing Authentication by header for the endpoint {}", request.getRequestURI());
         String authorizationHeader = request.getHeader("Authorization");
+        if (authorizationHeader == null) return;
+
+        log.info("Processing Authentication by header for the endpoint {}", request.getRequestURI());
         if (!authorizationHeader.startsWith("Bearer")) {
             return;
         }

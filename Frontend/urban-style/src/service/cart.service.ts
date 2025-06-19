@@ -4,22 +4,21 @@ import type { Response } from "@/interface/response.interface";
 import axios from "axios";
 
 export function CartService() {
-  const getCartByUserId = async (userId: string, token: string) => {
-    console.log("accessToken", token);
+  const getCartByUserId = async (userId: string, token?: string) => {
+    const headers: Record<string, string> = {
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    };
 
-    const resultRequest: Cart = await axios
+    const resultRequest: Cart | void = await axios
       .get(`${PUBLIC_API_URL}/shopping-cart?user-id=${userId}`, {
         withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+        headers,
       })
       .then((response) => {
         return (response.data as Response<Cart>).data[0];
       })
       .catch((error) => {
         console.error("Error fetching cart user by ID:", error);
-        throw error;
       });
 
     return resultRequest;

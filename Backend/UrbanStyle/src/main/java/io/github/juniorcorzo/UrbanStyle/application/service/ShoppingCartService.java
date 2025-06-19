@@ -24,9 +24,9 @@ public class ShoppingCartService {
     private final HashOperations<String, String, ProductSummary> hashOperations;
 
     public ResponseDTO<ShoppingCartDTO> getShoppingCartByUserId(String userId) {
-        final String cardId = this.getCartId(userId);
-        Map<String, ProductSummary> hash = this.hashOperations.entries(cardId);
-        System.out.println(hash);
+        final String cartId = this.getCartId(userId);
+        if (this.hashOperations.size(cartId) == 0) throw new DocumentNotFound(DocumentsName.SHOPPING_CART, userId);
+        Map<String, ProductSummary> hash = this.hashOperations.entries(cartId);
         return new ResponseDTO<>(
                 HttpStatus.OK,
                 List.of(new ShoppingCartDTO(

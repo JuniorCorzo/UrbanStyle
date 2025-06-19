@@ -1,0 +1,61 @@
+---
+import Button from "../Button.astro";
+
+interface Props {
+  userId: string;
+}
+
+const { userId } = Astro.props;
+---
+
+<Button id="send_order" class="w-full" data-user-id={userId}>
+  <span>Enviar Pedido</span>
+</Button>
+
+<script>
+  import type { Address } from "@/interface/address.interface";
+  import type { CreateOrder } from "@/interface/orders.interface";
+  import { $ } from "@/lib/dom-selector";
+  import { toggleErrorMessage } from "@/lib/showErrorMessages";
+  import { OrderService } from "@/service/orders.service";
+  import { getAddressById } from "@/state/address.state";
+
+  const sendOrder = (createOrder: CreateOrder) => {
+    OrderService.createOrder(createOrder).then((response) => {
+      alert("Pedido enviado correctamente");
+    });
+  };
+
+  const initializeListeners = () => {
+    const $sendButton = $("#send_order");
+    const { userId } = $sendButton?.dataset ?? {};
+    if (!userId) return;
+
+    $sendButton?.addEventListener("click", async () => {
+      const $addressSelect = $<HTMLInputElement>("input[name='address']");
+      if (!$addressSelect) return;
+
+      const [id, _] = $addressSelect?.value.split(",");
+
+      if (!id) {
+        const $messageLabel = $<HTMLSpanElement>("#address_error");
+        if (!$messageLabel) return;
+
+        toggleErrorMessage(
+          "Selecciona una dirección para continuar con tu pedido.",
+          $messageLabel
+        );
+        return;
+      }
+
+      const address = getAddressById(id).get() as Address;
+      const createOrder: CreateOrder = {
+        userId,
+        address,
+        paymentMethod: "PSE",
+      };
+      sendOrder(createOrder);
+    });
+  };
+  document.addEventListener("astro:page-load", initializeListeners);
+</script>
