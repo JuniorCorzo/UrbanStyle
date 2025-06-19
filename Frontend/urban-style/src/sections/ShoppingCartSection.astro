@@ -2,18 +2,23 @@
 import CartDetails from "@/components/shopping-cart/CartDetails.astro";
 import CartItems from "@/components/shopping-cart/CartItems.astro";
 import EmptyCartMessage from "@/components/shopping-cart/EmptyCartMessage.astro";
-import { CartStore } from "@/state/cart.state";
+import { CartService } from "@/service/cart.service";
 
 const { user, accessToken } = Astro.locals;
 const userId = user?.id;
 if (!accessToken) return;
 
-const { getCartByUserId, calculateTotal } = await CartStore(
-  userId,
-  accessToken
-);
+// const { getCartByUserId, calculateTotal } = await CartStore(
+//   userId,
+//   accessToken
+// );
 
-const items = getCartByUserId()?.items || [];
+const items =
+  (await CartService().getCartByUserId(userId, accessToken))?.items || [];
+
+const calculateTotal = Number(
+  items.reduce((acc, { price, quantity }) => acc + price * quantity, 0)
+);
 ---
 
 <section
