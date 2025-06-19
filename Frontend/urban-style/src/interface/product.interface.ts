@@ -28,6 +28,8 @@ export interface ProductsGroupedCategory {
 export interface ProductSummary
   extends Pick<Products, "name" | "price" | "discount"> {
   productId: Products["id"];
+  color: string;
+  size: string;
   quantity: number;
 }
 

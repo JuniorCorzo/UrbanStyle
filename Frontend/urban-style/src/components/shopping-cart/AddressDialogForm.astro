@@ -70,6 +70,8 @@ const userId = Astro.locals.user?.id ?? "";
   };
 
   const handleSubmit = ($addressForm: HTMLFormElement) => {
+    if (!$addressForm) return;
+
     $addressForm.addEventListener("submit", (event) => {
       event.preventDefault();
       const userId = $addressForm.dataset.userId;

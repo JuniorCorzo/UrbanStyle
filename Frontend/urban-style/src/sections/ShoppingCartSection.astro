@@ -8,11 +8,6 @@ const { user, accessToken } = Astro.locals;
 const userId = user?.id;
 if (!accessToken) return;
 
-// const { getCartByUserId, calculateTotal } = await CartStore(
-//   userId,
-//   accessToken
-// );
-
 const items =
   (await CartService().getCartByUserId(userId, accessToken))?.items || [];
 
@@ -38,84 +33,102 @@ const calculateTotal = Number(
 <script>
   import { $, $$ } from "@/lib/dom-selector";
   import { CartService } from "@/service/cart.service";
-  import { updateCartState } from "@/state/updateCartState";
   import { navigate } from "astro:transitions/client";
-
+  /**
+   * Map to store debounce timers per product key.
+   */
   const debounceTimers: Record<string, ReturnType<typeof setTimeout>> = {};
 
-  const handleRemoveItem = ($target: HTMLElement) => {
-    const { userId, productId } = $target.dataset;
-    if (!userId || !productId) return;
+  /**
+   * Extracts dataset properties for cart item identifiers from an element.
+   * @param element - HTMLElement containing data attributes
+   * @returns Object with userId, productId, color, size or null if missing
+   */
+  function extractItemKeys(
+    element: HTMLElement
+  ): { userId: string; productId: string; color: string; size: string } | null {
+    const { userId, productId, color, size } = element.dataset;
+    if (!userId || !productId || !color || !size) return null;
+
+    return { userId, productId, color, size };
+  }
+
+  /**
+   * Removes a product variant from the cart.
+   * @param element - Button or element that triggered removal
+   */
+  export function handleRemoveItem(element: HTMLElement): void {
+    const keys = extractItemKeys(element);
+    if (!keys) return;
+    const { userId, productId, color, size } = keys;
 
     CartService()
-      .removeProductFromCart(userId, productId)
-      .then((response) => {
-        updateCartState(response)
-          .then((response) => {
-            if (response.status === 204) {
-              location.reload();
-            }
-          })
-          .catch(console.error);
+      .removeProductFromCart(userId, productId, color, size)
+      .then(() => {
+        navigate(window.location.pathname, { history: "replace" });
       });
-  };
+  }
 
-  const handleChangeQuantity = ($target: HTMLElement) => {
-    const { userId, productId } = ($target.parentElement as HTMLDivElement)
-      ?.dataset;
-
-    const $input = $target.parentElement?.querySelector(
+  /**
+   * Updates the quantity of a product variant in the cart with debounce.
+   * @param inputContainer - Parent element containing data attributes and input
+   */
+  export function handleChangeQuantity(inputContainer: HTMLElement): void {
+    const keys = extractItemKeys(inputContainer);
+    const input = inputContainer.querySelector(
       "#quantity_input"
-    ) as HTMLInputElement;
+    ) as HTMLInputElement | null;
+    if (!keys || !input) return;
 
-    if (!userId || !productId || $input.dataset.value === $input.value) return;
+    // If value hasn't changed, do nothing
+    if (input.dataset.value === input.value) return;
 
+    const { userId, productId, color, size } = keys;
+
+    // Clear existing debounce
     if (debounceTimers[productId]) {
       clearTimeout(debounceTimers[productId]);
     }
 
+    // Debounce the update call
     debounceTimers[productId] = setTimeout(() => {
+      const quantity = input.valueAsNumber;
       CartService()
-        .updateQuantityProductInCart(userId, productId, $input.valueAsNumber)
+        .updateQuantityProductInCart(userId, productId, color, size, quantity)
         .then((cart) => {
-          updateCartState(cart).then(() =>
-            navigate(location.pathname, { history: "replace" })
-          );
-          $input.setAttribute("data-value", cart.items[0].quantity.toString());
+          navigate(window.location.pathname, { history: "replace" });
+          // Sync input dataset with confirmed quantity
+          input.setAttribute("data-value", cart.items[0].quantity.toString());
         });
     }, 300);
-  };
+  }
 
-  const handleClick = (event: MouseEvent) => {
-    const $target = event.target as HTMLElement;
-    if ($target.id === "remove-product") {
-      handleRemoveItem($target);
-      return;
+  /**
+   * Delegates click events on cart section to appropriate handlers.
+   * @param event - MouseEvent from click
+   */
+  export function handleCartClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    if (target.id === "remove-product") {
+      handleRemoveItem(target);
+    } else if (target.id === "increment" || target.id === "decrement") {
+      const parent = target.parentElement as HTMLElement;
+      handleChangeQuantity(parent);
     }
+  }
 
-    if ($target.id === "increment" || $target.id === "decrement") {
-      handleChangeQuantity($target);
-      return;
-    }
-  };
-
-  const initCounterListeners = () => {
-    $$<HTMLDivElement>("#quantity_input").forEach(($input) => {
-      // Evita duplicar listeners
-      $input.onblur = null;
-      $input.addEventListener("blur", () => {
-        handleChangeQuantity($input);
-      });
+  /**
+   * Attaches listeners for quantity blur and click events on the cart section.
+   */
+  export function initCartListeners(): void {
+    const inputs = $$<HTMLDivElement>("#quantity_input");
+    inputs.forEach((div) => {
+      div.onblur = null;
+      div.addEventListener("blur", () => handleChangeQuantity(div));
     });
 
-    $("#cart-section")?.addEventListener("click", handleClick);
-  };
-
-  document.addEventListener("astro:page-load", () => {
-    initCounterListeners();
-  });
-
-  document.addEventListener("astro:after-swap", () => {
-    initCounterListeners();
-  });
+    const cartSection = $("#cart-section");
+    cartSection?.addEventListener("click", handleCartClick);
+  }
+  document.addEventListener("astro:page-load", initCartListeners);
 </script>
