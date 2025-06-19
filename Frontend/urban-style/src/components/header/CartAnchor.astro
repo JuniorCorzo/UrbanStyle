@@ -1,13 +1,13 @@
 ---
 import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { CartStore } from "@/state/cart.state";
+import { CartService } from "@/service/cart.service";
 
 const { user, accessToken } = Astro.locals;
 const id = user?.id;
 
 if (!id) return;
 const cartLength =
-  (await CartStore(id, accessToken)).getCartByUserId()?.items.length || 0;
+  (await CartService().getCartByUserId(id, accessToken))?.items.length || 0;
 ---
 
 <a
