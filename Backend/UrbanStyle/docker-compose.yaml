@@ -33,7 +33,7 @@ services:
       - urban_style_network
 
   urban_style_api:
-    image: docker.io/library/urban-style:${VERSION}
+    build: .
     restart: always
     container_name: backend
     ports:

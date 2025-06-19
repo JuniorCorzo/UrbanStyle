@@ -37,7 +37,6 @@ out/
 .vscode/
 **/.env
 **/.env.development
-Dockerfile
 
 # build output
 dist/
