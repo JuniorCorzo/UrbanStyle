@@ -1,6 +1,6 @@
 
 # 1. Builder stage
-FROM 8.14.2-jdk21-alpine AS builder
+FROM gradle:8.14.2-jdk21-alpine AS builder
 LABEL authors="JuniorCorzo"
 
 # Set working directory
