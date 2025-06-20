@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --font-primary: "Roboto", sans-serif;
@@ -13,6 +14,8 @@
   --color-crust: #292c3c;
 
   --animation-pulse: pulse 0.2s ease-in-out infinite;
+  --animate-aside-open: aside-open 300ms linear;
+  --animate-aside-close: aside-close 300ms ease-out;
 
   @keyframes pulse {
     0% {
@@ -24,6 +27,36 @@
     100% {
       opacity: 0.3;
     }
+  }
+
+  @keyframes aside-open {
+    0% {
+      opacity: 0;
+      width: 0;
+    }
+    100% {
+      width: 100%;
+      opacity: 100%;
+    }
+  }
+
+  @keyframes aside-close {
+    0% {
+      width: 100%;
+      opacity: 100%;
+      visibility: visible;
+    }
+    100% {
+      opacity: 0;
+      width: 0;
+    }
+  }
+}
+
+@layer base {
+  html,
+  body {
+    @apply min-w-screen min-h-dvh h-full;
   }
 }
 
@@ -57,8 +90,6 @@
   outline-offset: 2px;
 }
 
-html,
-body {
-  font-family: "Roboto", sans-serif;
-  color: var(--color-text);
+@utility shadow-l {
+  box-shadow: -4px 0 10px -4px var(--color-crust);
 }
