@@ -1,5 +1,4 @@
 ---
-const { productId, name, userId, getProductById } = Astro.props;
 import Subtitle from "../text/Subtitle.astro";
 import Button from "../Button.astro";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
@@ -9,21 +8,25 @@ import { Image } from "astro:assets";
 import { CLOUDFLARE_URL } from "@/config/env-config";
 
 interface Props {
+  userId: string;
   productId: string;
   name: string;
-  userId: string;
+  color: string;
+  size: string;
   getProductById: (productId: string) => ReadableAtom<Products | undefined>;
 }
+
+const { userId, productId, name, color, size, getProductById } = Astro.props;
 ---
 
 <div class="flex gap-5">
   <div>
     <Image
-      class=""
+      class="aspect-square rounded-lg"
       src={`${CLOUDFLARE_URL}/${getProductById(productId).get()?.images[0]}`}
       alt={name}
-      width={225}
-      height={225}
+      width={250}
+      height={250}
     />
   </div>
   <div class="w-full flex justify-between">
@@ -31,10 +34,10 @@ interface Props {
       <div class="flex grow flex-col gap-1">
         <Subtitle size="xl" Text={name} />
         <span>
-          Color: <strong>Rojo</strong>
+          Color: <strong>{color}</strong>
         </span>
         <span>
-          Talla: <strong>S</strong>
+          Talla: <strong>{size}</strong>
         </span>
       </div>
       <div class="basis-5">
@@ -44,6 +47,8 @@ interface Props {
           size="custom"
           data-product-id={productId}
           data-user-id={userId}
+          data-color={color}
+          data-size={size}
         >
           <TrashIcon className="size-6 stroke-maroon pointer-events-none" />
           <span class="text-maroon font-semibold pointer-events-none">

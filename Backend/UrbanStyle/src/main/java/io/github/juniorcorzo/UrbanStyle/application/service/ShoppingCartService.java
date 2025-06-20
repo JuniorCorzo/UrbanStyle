@@ -40,7 +40,7 @@ public class ShoppingCartService {
         try {
             final String cartId = this.getCartId(card.userId());
             card.items().forEach(item ->
-                    this.hashOperations.put(cartId, this.getProductId(item.productId()), item)
+                    this.hashOperations.put(cartId, this.getProductId(item.productId(), item.color(), item.size()), item)
             );
             Map<String, ProductSummary> currentProducts = this.hashOperations.entries(cartId);
 
@@ -58,16 +58,18 @@ public class ShoppingCartService {
         }
     }
 
-    public ResponseDTO<ShoppingCartDTO> changeQuantityProduct(String userId, String productId, int quantity) {
+    public ResponseDTO<ShoppingCartDTO> changeQuantityProduct(String userId, String productId, String color, String size, int quantity) {
         final String cartId = this.getCartId(userId);
-        final String productCartId = this.getProductId(productId);
+        final String productCartId = this.getProductId(productId, color, size);
 
-        ProductSummary product = this.hashOperations.get(cartId, productCartId);
+        final ProductSummary product = this.hashOperations.get(cartId, productCartId);
+
         assert product != null;
-
         ProductSummary updateProduct = ProductSummary.builder()
                 .productId(product.productId())
                 .name(product.name())
+                .color(color)
+                .size(size)
                 .quantity(quantity)
                 .price(product.price())
                 .discount(product.discount())
@@ -79,7 +81,7 @@ public class ShoppingCartService {
     public ResponseDTO<ShoppingCartDTO> updateProductCart(ShoppingCartDTO card) {
         final ProductSummary product = card.items().getFirst();
         final String cartId = this.getCartId(card.userId());
-        final String productId = this.getProductId(product.productId());
+        final String productId = this.getProductId(product.productId(), product.color(), product.size());
         // This checks if a cart exists using the cart ID and verifies if the product ID is the same
         if (card.items().size() != 1 || !this.hashOperations.hasKey(cartId, productId)) {
             throw new DocumentNotFound(DocumentsName.SHOPPING_CART, cartId);
@@ -107,26 +109,25 @@ public class ShoppingCartService {
         }
     }
 
-    public ResponseDTO<ShoppingCartDTO> removeProductCar(String userId, String productId) {
-        final String cartId = String.format("shoppingCart:%s", userId);
-        final String productCartId = String.format("productId:%s", productId);
+    public ResponseDTO<ShoppingCartDTO> removeProductCar(String userId, String productId, String color, String size) {
+        final String cartId = this.getCartId(userId);
+        final String productCartId = this.getProductId(productId, color, size);
 
         try {
+            this.hashOperations.delete(
+                    cartId,
+                    productCartId
+            );
 
-        this.hashOperations.delete(
-                cartId,
-                productCartId
-        );
-
-        Map<String, ProductSummary> currentProducts = this.hashOperations.entries(cartId);
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                List.of(new ShoppingCartDTO(
-                        userId,
-                        currentProducts.values().stream().toList()
-                )),
-                "Product delete of cart deleted successfully"
-        );
+            Map<String, ProductSummary> currentProducts = this.hashOperations.entries(cartId);
+            return new ResponseDTO<>(
+                    HttpStatus.OK,
+                    List.of(new ShoppingCartDTO(
+                            userId,
+                            currentProducts.values().stream().toList()
+                    )),
+                    "Product delete of cart deleted successfully"
+            );
         } catch (RuntimeException e) {
             log.error("Error deleting product in cart", e);
             throw new DeleteDocumentFailed(DocumentsName.SHOPPING_CART, cartId);
@@ -134,17 +135,17 @@ public class ShoppingCartService {
     }
 
     public ResponseDTO<ShoppingCartDTO> removeShoppingCart(String userId) {
-        final String cardId = String.format("shoppingCart:%s", userId);
+        final String cardId = this.getCartId(userId);
         try {
 
-        Set<String> keys = this.hashOperations.keys(cardId);
-        this.hashOperations.delete(cardId, keys.toArray());
+            Set<String> keys = this.hashOperations.keys(cardId);
+            this.hashOperations.delete(cardId, keys.toArray());
 
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                "Cart deleted successfully"
-        );
-        } catch (RuntimeException e){
+            return new ResponseDTO<>(
+                    HttpStatus.OK,
+                    "Cart deleted successfully"
+            );
+        } catch (RuntimeException e) {
             log.error("Error deleting cart", e);
             throw new DeleteDocumentFailed(DocumentsName.SHOPPING_CART, cardId);
         }
@@ -154,7 +155,7 @@ public class ShoppingCartService {
         return String.format("shoppingCart:%s", userId);
     }
 
-    private String getProductId(String productId) {
-        return String.format("productId:%s", productId);
+    private String getProductId(String productId, String color, String size) {
+        return String.format("productId|%s|%s|%s", productId, color, size);
     }
 }

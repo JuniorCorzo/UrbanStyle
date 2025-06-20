@@ -40,11 +40,13 @@ export function CartService() {
   const updateQuantityProductInCart = async (
     userId: string,
     productId: string,
+    color: string,
+    size: string,
     quantity: number
   ) => {
     const resultRequest: Cart = await axios
       .patch(
-        `${PUBLIC_API_URL}/shopping-cart/change-quantity?user-id=${userId}&product-id=${productId}&quantity=${quantity}`,
+        `${PUBLIC_API_URL}/shopping-cart/change-quantity?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}&quantity=${quantity}`,
         {},
         {
           withCredentials: true,
@@ -70,10 +72,15 @@ export function CartService() {
     return resultRequest;
   };
 
-  const removeProductFromCart = async (userId: string, productId: string) => {
+  const removeProductFromCart = async (
+    userId: string,
+    productId: string,
+    color: string,
+    size: string
+  ) => {
     const resultRequest: Cart = await axios
       .delete(
-        `${PUBLIC_API_URL}/shopping-cart/delete-product?user-id=${userId}&product-id=${productId}`,
+        `${PUBLIC_API_URL}/shopping-cart/delete-product?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}`,
         {
           withCredentials: true,
         }

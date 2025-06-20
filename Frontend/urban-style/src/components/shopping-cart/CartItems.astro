@@ -16,13 +16,15 @@ const { getProductById } = await ProductStore();
 
 <article class="flex flex-col px-7 gap-14 grow">
   {
-    items.map(({ productId, name, price, quantity }) => (
+    items.map(({ productId, name, price, quantity, color, size }) => (
       <div class="flex gap-5">
         <div class="w-full flex justify-between">
           <ProductDetailsCard
-            name={name}
             productId={productId}
             userId={userId}
+            name={name}
+            color={color}
+            size={size}
             getProductById={getProductById}
           />
           <div class="flex flex-col gap-1 items-end">
@@ -32,6 +34,8 @@ const { getProductById } = await ProductStore();
               value={quantity.toString()}
               data-user-id={userId}
               data-product-id={productId}
+              data-color={color}
+              data-size={size}
             />
             <Subtitle
               id="price_unit"

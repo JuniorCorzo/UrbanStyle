@@ -22,6 +22,8 @@ public interface OrderMapper {
             @Mapping(target = "address", source = "address"),
             @Mapping(target = "paymentMethod", source = "paymentMethod"),
             @Mapping(target = "orderDate", expression = "java(java.time.LocalDateTime.now())"),
+            @Mapping(target = "history", ignore = true),
+            @Mapping(target = "total", ignore = true)
     })
     OrdersEntity toEntity(OrdersSaveDTO ordersSaveDTO, @Context ShoppingCartService shoppingCartService);
 
