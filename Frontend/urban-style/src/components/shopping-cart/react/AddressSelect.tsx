@@ -1,4 +1,4 @@
-import SelectInput from "@/components/dashboard/react/components/inputs/SelectInput";
+import SelectInput from "@/components/react/inputs/SelectInput";
 import type { Address } from "@/interface/address.interface";
 import { AddressService } from "@/service/address.service";
 import { AddressStore } from "@/state/address.state";

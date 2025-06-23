@@ -35,6 +35,7 @@ export default function FileInput({ name }: Props) {
         name={name}
         className="h-full w-full opacity-0 cursor-pointer pointer-events-auto"
         type="file"
+        multiple
       />
     </div>
   );

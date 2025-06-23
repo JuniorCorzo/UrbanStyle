@@ -7,7 +7,7 @@ import { SelectMultiple } from "./SelectMultiple";
 import { Select } from "./Select";
 
 export interface SelectInputProps extends Omit<FieldProperties, "value"> {
-  value?: SelectOptions;
+  value?: SelectOptions | SelectInputProps[];
   search?: boolean;
   closeOnSelect?: boolean;
   onChange?: (value: string) => void;

@@ -8,9 +8,6 @@ import { useEffect, useRef, useState } from "react";
 import { MessageError } from "./MessageError";
 import type { SelectOptions } from "@/interface/form-mediator.interface";
 
-export type GetItemsProps<T> = UseSelectReturnValue<T>["getItemProps"];
-export type GetMenuProps<T> = UseSelectReturnValue<T>["getMenuProps"];
-
 export function Select({
   className,
   name,

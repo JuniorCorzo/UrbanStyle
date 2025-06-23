@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ColorType, createChart, LineSeries } from "lightweight-charts";
 import type { ReportSales } from "@/interface/report.interface";
 import { convertToIso } from "@/lib/utils/convert-date";
-import SelectInput from "./inputs/SelectInput";
+import SelectInput from "../../../react/inputs/SelectInput";
 
 interface Props {
   reportData: ReportSales;

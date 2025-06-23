@@ -1,8 +1,13 @@
 import type { SelectOptions } from "@/interface/form-mediator.interface";
-import type { GetItemsProps, GetMenuProps } from "./Select";
 import { cn } from "@/lib/cn";
 import SelectItem from "./SelectItem";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import type { UseComboboxReturnValue, UseSelectReturnValue } from "downshift";
+
+export type GetItemsProps<T> = UseSelectReturnValue<T>["getItemProps"];
+export type GetMenuProps<T> =
+  | UseSelectReturnValue<T>["getMenuProps"]
+  | UseComboboxReturnValue<T>["getMenuProps"];
 
 export interface SelectOptionsProps {
   isOpen: boolean;
