@@ -94,6 +94,8 @@ public class ProductService {
     public ResponseDTO<ProductDTO> createProduct(ProductDTO productDTO) {
         ProductEntity productEntity = this.productMapper.toEntity(productDTO);
         List<String> futureImages = this.imageStorageService.sendImagesToStorage(productDTO.images());
+        int stock = productEntity.getAttributes().stream().reduce(0, (acc, attribute) -> acc + attribute.getQuantity(), Integer::sum);
+        productEntity.setStock(stock);
         productEntity.setImages(futureImages);
 
         try {

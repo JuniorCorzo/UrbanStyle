@@ -28,7 +28,7 @@ public class ProductEntity {
     private List<String> images;
     @TextIndexed
     private List<CategorySummary> categories;
-    private Attribute attributes;
+    private List<Attribute> attributes;
     private int stock;
 }
 
