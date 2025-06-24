@@ -35,9 +35,9 @@ const { name, description, categories, attributes, price, stock } = product;
         name="color"
         placeholder="-- Color --"
         search={false}
-        options={attributes.color.map(({ name }) => ({
-          text: name,
-          value: name,
+        options={attributes.map(({ color }) => ({
+          text: color,
+          value: color,
         }))}
         client:idle
       />
@@ -48,9 +48,9 @@ const { name, description, categories, attributes, price, stock } = product;
         name="size"
         placeholder="-- Talla --"
         search={false}
-        options={attributes.size.map(({ name }) => ({
-          text: name,
-          value: name,
+        options={attributes.map(({ size }) => ({
+          text: size,
+          value: size,
         }))}
         client:idle
       />
