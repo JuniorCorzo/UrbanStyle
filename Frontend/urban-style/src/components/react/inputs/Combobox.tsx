@@ -7,6 +7,7 @@ import { cn } from "@/lib/cn";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { SelectList } from "./SelectList";
 import type { ComboboxInputProps } from "./ComboboxInput";
+import { MessageError } from "./MessageError";
 
 export function Combobox({
   name,
@@ -57,12 +58,14 @@ export function Combobox({
       <div className="flex flex-col gap-1">
         <label className="pointer-events-none" {...getLabelProps()}>
           {label}
-          <div className="w-full bg-background inline-flex p-1 flex-wrap gap-1 items-center border border-border rounded focus-within:custom-ring pointer-events-auto">
+          <div className="w-full bg-background inline-flex p-0.5 flex-wrap gap-1 items-center border border-border rounded focus-within:custom-ring pointer-events-auto">
+            <MessageError errorId={`${name}_error`} />
             <div className="w-full flex justify-between items-center px-2 py-1 cursor-pointer">
               <input
                 placeholder={placeholder}
                 name={name}
                 className="w-full focus:outline-0"
+                tabIndex={0}
                 {...getInputProps({
                   onKeyDown: handleEnter,
                 })}

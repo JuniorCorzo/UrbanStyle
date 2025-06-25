@@ -1,7 +1,7 @@
 import type { SelectOptions } from "@/interface/form-mediator.interface";
 import { cn } from "@/lib/cn";
 import SelectItem from "./SelectItem";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useLayoutEffect, useRef, useState } from "react";
 import type { UseComboboxReturnValue, UseSelectReturnValue } from "downshift";
 
 export type GetItemsProps<T> = UseSelectReturnValue<T>["getItemProps"];
@@ -41,13 +41,15 @@ export function SelectList({
   return (
     <ul
       className={cn(
-        "w-full  landscape:max-h-52 max-h-80 visible opacity-100 absolute mt-1 p-0 z-20  rounded overflow-y-auto",
+        "w-full landscape:max-h-52 max-h-80 visible opacity-100 absolute mt-1 p-0 z-50 rounded overflow-y-auto",
         isOpen
           ? "border border-border shadow shadow-crust transition-all duration-150"
           : "invisible opacity-0",
         showAbove && "bottom-full"
       )}
-      {...getMenuProps({ ref: buttonRef })}
+      {...getMenuProps({
+        ref: buttonRef,
+      })}
     >
       {isOpen &&
         options?.map(({ text, value }, index) => (

@@ -8,6 +8,10 @@ import { useEffect, useRef, useState } from "react";
 import { MessageError } from "./MessageError";
 import type { SelectOptions } from "@/interface/form-mediator.interface";
 
+export interface SelectProps extends Omit<SelectInputProps, "value"> {
+  value?: SelectOptions;
+}
+
 export function Select({
   className,
   name,
@@ -18,7 +22,7 @@ export function Select({
   disable,
   value: defaultValue,
   search = true,
-}: SelectInputProps) {
+}: SelectProps) {
   const buttonRef = useRef<HTMLDivElement>(null);
 
   const {
@@ -32,6 +36,7 @@ export function Select({
   } = useSelect({
     items: options ?? [],
     itemToString: optionsToString,
+    initialSelectedItem: defaultValue,
   });
 
   useEffect(() => {
@@ -50,7 +55,10 @@ export function Select({
         )}
         ref={buttonRef}
       >
-        <label className="pointer-events-none" {...getLabelProps()}>
+        <label
+          className="flex flex-col gap-1 pointer-events-none"
+          {...getLabelProps()}
+        >
           {label}
           <MessageError errorId={`${name}_error`} />
           <div
@@ -63,9 +71,12 @@ export function Select({
           >
             <input
               className="hidden"
-              type="text"
+              type="hidden"
               name={name}
-              value={[selectedItem?.value ?? "", selectedItem?.text ?? ""]}
+              defaultValue={[
+                selectedItem?.value ?? "",
+                selectedItem?.text ?? "",
+              ]}
               readOnly
             />
             <span

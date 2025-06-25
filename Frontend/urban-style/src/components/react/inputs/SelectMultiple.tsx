@@ -5,22 +5,32 @@ import type { SelectOptions } from "@/interface/form-mediator.interface";
 import { ChevronDownIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { cn } from "@/lib/cn";
 import { SelectList } from "./SelectList";
+import { MessageError } from "./MessageError";
+import { useEffect } from "react";
+
+export interface SelectMultipleProps extends Omit<SelectInputProps, "value"> {
+  value?: SelectOptions[];
+}
 
 export function SelectMultiple({
   name,
   label,
   placeholder,
   options,
-  value,
-  search = true,
-}: SelectInputProps) {
+  value = [],
+}: SelectMultipleProps) {
   const {
     selectedItems,
+    setSelectedItems,
     getSelectedItemProps,
     getDropdownProps,
     addSelectedItem,
     removeSelectedItem,
-  } = useMultipleSelection<SelectOptions>();
+  } = useMultipleSelection<SelectOptions>({
+    initialSelectedItems: value,
+  });
+
+  useEffect(() => setSelectedItems(value), []);
 
   const items = options?.filter(getItemsFilter(selectedItems)) ?? [];
   const {
@@ -68,15 +78,19 @@ export function SelectMultiple({
   return (
     <div className="relative w-full max-w-md">
       <div className="flex flex-col gap-1">
-        <label className="pointer-events-none" {...getLabelProps()}>
+        <label
+          className="flex flex-col gap-1 pointer-events-none"
+          {...getLabelProps()}
+        >
           {label}
+          <MessageError errorId={`${name}_error`} />
           <div className="w-full bg-background inline-flex p-1 flex-wrap gap-1 items-center border border-border rounded focus-within:custom-ring pointer-events-auto">
             <input
               className="hidden"
               name={name}
-              type="text"
+              type="hidden"
               readOnly
-              value={JSON.stringify(selectedItems)}
+              defaultValue={JSON.stringify(selectedItems)}
             />
             {selectedItems.map((item, index) => (
               <span

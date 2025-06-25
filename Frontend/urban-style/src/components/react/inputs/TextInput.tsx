@@ -1,32 +1,18 @@
-import type { FieldProperties } from "@/interface/form-mediator.interface";
 import { LabelInput } from "./LabelInput";
-import { useEffect, useState } from "react";
+import { MessageError } from "./MessageError";
 
-interface Props
-  extends Omit<FieldProperties, "options" | "isMultiple" | "value"> {
-  value?: string;
+interface Props extends React.ComponentPropsWithoutRef<"input"> {
+  label: string;
 }
 
-export const TextInput = ({
-  label,
-  name,
-  placeholder,
-  value,
-  required,
-}: Props) => {
-  const [inputValue, setInputValue] = useState(value);
-
+export const TextInput = ({ label, name, ...props }: Props) => {
   return (
     <LabelInput label={label}>
+      <MessageError errorId={`${name}_error`} />
       <input
         className="w-full h-10 border border-border rounded px-2 py-1 focus:outline-none focus:custom-ring text-text pointer-events-auto"
-        type="text"
-        id={name}
         name={name}
-        placeholder={placeholder}
-        value={inputValue}
-        onChange={() => setInputValue(inputValue)}
-        required={required}
+        {...props}
       />
     </LabelInput>
   );

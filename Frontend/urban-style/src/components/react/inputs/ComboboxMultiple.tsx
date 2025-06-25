@@ -127,7 +127,7 @@ export function ComboboxMultiple({
               name={name}
               type="text"
               readOnly
-              value={JSON.stringify(selectedItems)}
+              defaultValue={JSON.stringify(selectedItems)}
             />
             {selectedItems.map((item, index) => (
               <span
