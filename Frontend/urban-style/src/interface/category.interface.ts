@@ -6,3 +6,4 @@ export interface Category extends BaseDocument {
 }
 
 export interface CreateCategory extends Omit<Category, "id"> {}
+export type CategorySummary = Pick<Category, "id" | "name">;

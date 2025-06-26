@@ -32,3 +32,4 @@ export interface ProductSummary
 }
 
 export interface CreateProduct extends Omit<Products, "id" | "stock"> {}
+export interface UpdateProduct extends Omit<Products, "stock"> {}

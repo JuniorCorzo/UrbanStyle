@@ -8,7 +8,7 @@ import {
 } from "@/service/product.service";
 import { computed, map } from "nanostores";
 
-const productStore = map<Products[]>();
+export const productStore = map<Products[]>();
 
 export const productGroupedStore = map<ProductsGroupedCategory[]>();
 

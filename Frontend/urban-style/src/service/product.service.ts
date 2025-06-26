@@ -3,6 +3,7 @@ import type {
   CreateProduct,
   Products,
   ProductsGroupedCategory,
+  UpdateProduct,
 } from "@/interface/product.interface";
 import type { Response } from "@/interface/response.interface";
 import { PUBLIC_API_URL } from "@/config/env-config";
@@ -71,7 +72,7 @@ export const createProduct = async (product: CreateProduct) => {
   return response.data[0];
 };
 
-export const updateProduct = async (product: Products) => {
+export const updateProduct = async (product: UpdateProduct) => {
   const response = await axios
     .put(`${PUBLIC_API_URL}/products/update`, product, {
       withCredentials: true,

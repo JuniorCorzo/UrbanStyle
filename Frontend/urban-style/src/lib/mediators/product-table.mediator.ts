@@ -39,17 +39,13 @@ export async function productTable(): Promise<ITableMediator> {
     columnAccessor.accessor("discount", {
       header: "Descuento",
     }),
-    columnAccessor.accessor("attributes", {
-      header: "Atributos",
-      cell: (info) =>
-        `Color: ${info
-          .getValue()
-          ?.color.map(({ name }) => name)
-          .join(", ")} Talla: ${info
-          .getValue()
-          ?.size.map(({ name }) => name)
-          .join(", ")}`,
-    }),
+    // columnAccessor.accessor("attributes", {
+    //   header: "Atributos",
+    //   cell: (info) =>
+    //     `Color: ${info.getValue()?.map(({ color }) => color)} Talla: ${info
+    //       .getValue()
+    //       ?.map(({ size }) => size)}`,
+    // }),
   ];
 
   const requestMoreSold = await ReportService().productsMoreSold();

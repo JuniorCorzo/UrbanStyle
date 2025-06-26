@@ -1,28 +1,18 @@
-export type SendForm = (formData: FormData) => void;
+export type FormType = "product" | "category";
+export type SendForm = (formData?: FormData, id?: string) => void;
 
 export interface FormMediator {
-  formConfig: (id?: string) => Promise<FormConfig>;
-  sendData: (formData: FormData) => void;
-  sendDelete: (id: string) => void;
-}
-
-export interface FormConfig {
+  formType: FormType;
+  sendData: SendForm;
   title: string;
-  fields: FormField[];
-}
-
-export type FormFieldType = "select" | "text" | "file";
-
-export interface FormField {
-  type: FormFieldType;
-  fieldProperties: FieldProperties;
+  sendDelete: (id: string) => void;
 }
 
 export interface FieldProperties {
   className?: string;
   label?: string;
   name?: string;
-  value?: string | string[];
+  value?: string | string[] | SelectOptions;
   placeholder?: string;
   required?: boolean;
   options?: SelectOptions[];
