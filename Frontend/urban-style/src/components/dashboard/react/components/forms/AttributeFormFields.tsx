@@ -38,7 +38,7 @@ export function AttributeFormFields({
           "bg-background w-full h-full flex flex-col gap-4 transition-all overflow-hidden",
           visible
             ? "animate-slide-down overflow-visible"
-            : "max-h-0 animate-slide-up"
+            : "h-0 max-h-0 animate-slide-up"
         )}
       >
         <ComboboxInput

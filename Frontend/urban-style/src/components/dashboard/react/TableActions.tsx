@@ -13,17 +13,17 @@ const TableActions: React.FC<Props> = ({ id }) => {
   const handleUpdate = async () => {
     const dashboardMediator = await selectMediator();
     if (dashboardMediator) {
-      const { formConfig, sendData } = dashboardMediator.form;
-      openModalEvent(await formConfig(id), sendData, id);
+      const { title, formType, sendData } = dashboardMediator.form;
+      openModalEvent(title, formType, sendData, id);
     }
   };
 
   const handleDelete = async () => {
     const dashboardMediator = await selectMediator();
     if (dashboardMediator) {
-      const { sendDelete, formConfig } = dashboardMediator.form;
+      const { sendDelete, title } = dashboardMediator.form;
       openDeleteModalEvent({
-        typeModal: (await formConfig()).title,
+        typeModal: title,
         sendDelete,
         id,
       });

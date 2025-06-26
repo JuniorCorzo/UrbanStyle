@@ -25,6 +25,13 @@ export function AttributeFields({ name, defaultAttributes = [] }: Props) {
     () => defaultAttributes
   );
 
+  const handleChangeQuantity = (id: string, quantity: number) => {
+    console.log(quantity);
+    setAttributes((attribute) =>
+      attribute.map((attr) => (attr.id === id ? { ...attr, quantity } : attr))
+    );
+  };
+
   const getAttributesInputs = ($container: HTMLDivElement) => {
     const $colorCombobox = $container.querySelector<HTMLInputElement>(
       "input[name='color']"
@@ -49,6 +56,7 @@ export function AttributeFields({ name, defaultAttributes = [] }: Props) {
       size: $sizeSelect?.value.split(",")[1] ?? "",
       quantity: Number($quantityInput?.value) ?? 0,
     };
+
     const isDuplicate = attributes.some(
       ({ color, size }) =>
         size === insertAttribute.size && color === insertAttribute.color
@@ -70,6 +78,7 @@ export function AttributeFields({ name, defaultAttributes = [] }: Props) {
       <AttributeTable
         attributes={attributes}
         onRemove={handleRemoveAttribute}
+        onChangeQuantity={handleChangeQuantity}
       />
       <AttributeFormFields handleAddAttribute={handleAddAttribute} />
       <input
