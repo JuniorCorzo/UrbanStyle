@@ -1,5 +1,6 @@
 package io.github.juniorcorzo.UrbanStyle.domain.repository;
 
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.Images;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import org.springframework.data.mongodb.repository.Aggregation;
@@ -32,9 +33,16 @@ public interface ProductsRepository extends MongoRepository<ProductEntity, Strin
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$push': { 'images': { '$each': ?1} } }")
-    void saveImagesToProduct(String id, List<String> images);
+    void saveImagesToProduct(String id, List<Images> images);
+
+    @Query("{ '_id': ?#{[0].id} }")
+    @Update("{" +
+            "$set: { 'name': ?#{[0].name}, 'description': ?#{[0].description}, 'price': ?#{[0].price}, 'discount': ?#{[0].discount}, 'stock': ?#{[0].stock} }," +
+            " $push: { 'categories': { '$each': ?#{[0].categories} }, 'attributes': { '$each': ?#{[0].attributes} }" +
+            "}")
+    void updateProduct(ProductEntity product);
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$pullAll': { 'images': ?1} }")
-    void deleteImagesFromProduct(String id, List<String> images);
+    void deleteImagesFromProduct(String id, List<Images> images);
 }

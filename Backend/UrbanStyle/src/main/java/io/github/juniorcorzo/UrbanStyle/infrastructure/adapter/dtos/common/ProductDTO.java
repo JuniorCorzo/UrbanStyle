@@ -18,14 +18,14 @@ import java.util.List;
 public record ProductDTO(
         @IdFormatConstraint(groups = OnUpdate.class)
         @IdMustExists(entity = ProductEntity.class, groups = OnUpdate.class)
-        @Field("_id")
         String id,
         @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String name,
         @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String description,
-        @NotNull(groups = OnCreate.class) @Size(min = 1, message = "Images must be provided", groups = OnCreate.class)
-        List<String> images,
+        @NotNull(groups = OnCreate.class)
+        @Size(min = 1, message = "Images must be provided", groups = OnCreate.class)
+        List<ImagesDTO> images,
         @DecimalMin(value = "1000.00", message = "Price must be greater than 1000", groups = {OnCreate.class, OnUpdate.class})
         double price,
         @Min(value = 0, message = "Discount must be greater than or equal to 0", groups = {OnCreate.class, OnUpdate.class})
