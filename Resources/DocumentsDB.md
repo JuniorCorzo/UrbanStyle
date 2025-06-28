@@ -9,13 +9,6 @@
   "email": "correo@dominio.com",
   "password": "hash",
   "role": "cliente | administrador",
-  "address": {
-    "street": "Calle 123",
-    "city": "Ciudad",
-    "state": "Estado",
-    "country": "Colombia",
-    "postal_code": "000000"
-  },
   "phone": "Número de contacto",
   "created_at": "ISODate()",
   "updated_at": "ISODate()"
@@ -47,12 +40,16 @@
   "description": "Descripción detallada del producto",
   "price": 100.0,
   "discount": 10,
-  "images": ["url_imagen1", "url_imagen2"],
+  "images": [{
+    "color": string,
+    "imageId": string,
+  }],
   "categories": ["Electrónica", "Accesorios"],
   "attributes": {
     "color": "rojo",
-    "size": "M"
-  },
+    "size": "M",
+    "quantity": 10
+},
   "stock": 50,
   "created_at": "ISODate()",
   "updated_at": "ISODate()"

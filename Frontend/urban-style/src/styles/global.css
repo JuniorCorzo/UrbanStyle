@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 @theme {
   --font-primary: "Roboto", sans-serif;
@@ -11,8 +12,13 @@
   --color-border: #7c7f93;
   --color-maroon: #e64553;
   --color-crust: #292c3c;
+  --color-button: #89b4fa;
 
   --animation-pulse: pulse 0.2s ease-in-out infinite;
+  --animate-aside-open: aside-open 300ms linear;
+  --animate-aside-close: aside-close 300ms ease-out;
+  --animate-slide-down: slide-down 200ms linear;
+  --animate-slide-up: slide-up 200ms linear;
 
   @keyframes pulse {
     0% {
@@ -23,6 +29,47 @@
     }
     100% {
       opacity: 0.3;
+    }
+  }
+
+  @keyframes slide-down {
+    from {
+      max-height: 0;
+      overflow: hidden;
+    }
+
+    to {
+      max-height: 22rem;
+    }
+  }
+
+  @keyframes slide-up {
+    from {
+      max-height: 24rem;
+      overflow: hidden;
+    }
+
+    to {
+      max-height: 0;
+    }
+  }
+
+  @keyframes aside-open {
+    0% {
+      width: 0;
+    }
+    100% {
+      width: 100%;
+    }
+  }
+
+  @keyframes aside-close {
+    0% {
+      width: 100%;
+      visibility: visible;
+    }
+    100% {
+      width: 0;
     }
   }
 }
@@ -57,8 +104,13 @@
   outline-offset: 2px;
 }
 
+@utility shadow-l {
+  box-shadow: -4px 0 10px -4px var(--color-crust);
+}
+
 html,
 body {
-  font-family: "Roboto", sans-serif;
+  min-height: 100vh;
+  max-width: 100vw;
   color: var(--color-text);
 }

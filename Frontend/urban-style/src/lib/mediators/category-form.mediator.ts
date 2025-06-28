@@ -1,8 +1,5 @@
 import type { Category } from "@/interface/category.interface";
-import type {
-  FormConfig,
-  FormMediator,
-} from "@/interface/form-mediator.interface";
+import type { FormMediator } from "@/interface/form-mediator.interface";
 import {
   createCategory,
   deleteCategory,
@@ -11,7 +8,9 @@ import {
 import { CategoriesStore } from "@/state/categories.store";
 
 export async function categoriesForm(id?: string): Promise<FormMediator> {
-  const sendData = async (formData: FormData) => {
+  const sendData = async (formData?: FormData) => {
+    if (!formData) return;
+
     const categoryData = Object.fromEntries(
       formData.entries()
     ) as unknown as Category;
@@ -30,42 +29,9 @@ export async function categoriesForm(id?: string): Promise<FormMediator> {
     deleteCategory(id);
   };
 
-  const formConfig = async (categoryId?: string): Promise<FormConfig> => {
-    const category = (await CategoriesStore()).categoriesStore
-      .get()
-      .filter(({ id }) => id === categoryId)[0];
-
-    const form: FormConfig = {
-      title: "Categoría",
-      fields: [
-        {
-          type: "text",
-          fieldProperties: {
-            label: "Nombre",
-            name: "name",
-            placeholder: "Nombre de la categoría",
-            required: true,
-            value: category?.name ?? "",
-          },
-        },
-        {
-          type: "text",
-          fieldProperties: {
-            label: "Descripción",
-            name: "description",
-            placeholder: "Descripción de la categoría",
-            required: true,
-            value: category?.description ?? "",
-          },
-        },
-      ],
-    };
-
-    return form;
-  };
-
   return {
-    formConfig,
+    title: "Nueva categoría",
+    formType: "category",
     sendData,
     sendDelete,
   };

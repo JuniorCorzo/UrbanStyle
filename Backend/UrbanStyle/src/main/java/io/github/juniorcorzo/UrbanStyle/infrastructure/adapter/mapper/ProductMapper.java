@@ -17,7 +17,7 @@ public interface ProductMapper {
             @Mapping(target = "discount", source = "discount"),
             @Mapping(target = "categories", source = "categories"),
             @Mapping(target = "attributes", source = "attributes"),
-            @Mapping(target = "stock", source = "stock")
+            @Mapping(target = "stock", ignore = true)
     })
     ProductEntity toEntity(ProductDTO productDTO);
 

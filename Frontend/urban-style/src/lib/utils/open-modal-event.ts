@@ -1,8 +1,10 @@
-import type { FormConfig, SendForm } from "@/interface/form-mediator.interface";
+import type {
+  FormMediator,
+  FormType,
+  SendForm,
+} from "@/interface/form-mediator.interface";
 
-export interface OpenModalEvent {
-  formData: FormConfig;
-  sendForm: SendForm;
+export interface OpenModalEvent extends Omit<FormMediator, "sendDelete"> {
   id?: string;
 }
 
@@ -13,15 +15,17 @@ export interface OpenDeleteModal {
 }
 
 export function openModalEvent(
-  formData: FormConfig,
-  sendForm: SendForm,
+  title: string,
+  formType: FormType,
+  sendData: SendForm,
   id?: string
 ) {
   window.dispatchEvent(
     new CustomEvent<OpenModalEvent>("open-modal", {
       detail: {
-        formData,
-        sendForm,
+        title,
+        formType,
+        sendData,
         id,
       },
     })

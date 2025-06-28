@@ -1,9 +1,15 @@
 import type { BaseDocument } from "./base.interface";
-import type { Category } from "./category.interface";
+import type { CategorySummary } from "./category.interface";
 
-type AttributesItem = {
-  name: string;
+export type Attributes = {
+  color: string;
+  size: string;
   quantity: number;
+};
+
+export type Images = {
+  color: string;
+  image: string;
 };
 
 export interface Products extends BaseDocument {
@@ -11,12 +17,9 @@ export interface Products extends BaseDocument {
   description: string;
   price: number;
   discount: number;
-  images: string[];
-  categories: Pick<Category, "id" | "name">[];
-  attributes: {
-    color: AttributesItem[];
-    size: AttributesItem[];
-  };
+  images: Images[];
+  categories: CategorySummary[];
+  attributes: Attributes[];
   stock: number;
 }
 
@@ -33,4 +36,15 @@ export interface ProductSummary
   quantity: number;
 }
 
-export interface CreateProduct extends Omit<Products, "id"> {}
+export interface DeleteImageProduct {
+  productId: string;
+  images: string[];
+}
+
+export interface AddImageProduct {
+  productId: string;
+  images: Images[];
+}
+
+export interface CreateProduct extends Omit<Products, "id" | "stock"> {}
+export interface UpdateProduct extends Omit<Products, "stock" | "images"> {}

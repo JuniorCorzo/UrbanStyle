@@ -3,6 +3,8 @@ package io.github.juniorcorzo.UrbanStyle.application.service;
 import io.github.juniorcorzo.UrbanStyle.application.exceptions.FailedDeletingImagesToR2;
 import io.github.juniorcorzo.UrbanStyle.application.exceptions.FailedSendImagesToR2;
 import io.github.juniorcorzo.UrbanStyle.domain.clients.StorageFileClient;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.Images;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.ImagesDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -28,19 +30,23 @@ public class ImageStorageService {
         this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
-    public List<String> sendImagesToStorage(List<String> images) {
+    public List<Images> sendImagesToStorage(List<ImagesDTO> images) {
         final long startTime = Instant.now().toEpochMilli();
         log.info("Sending {} images to Cloudflare R2", images.size());
 
         try {
-            List<CompletableFuture<String>> prevSendImage = images.stream()
+            List<CompletableFuture<Images>> prevSendImage = images.stream()
                     .map(image -> CompletableFuture.supplyAsync(() -> {
-                                ByteBuffer imageWebp = this.imageProcessingService.convertToWebp(image);
-                                return this.storageFileClient.uploadImage(imageWebp);
+                                ByteBuffer imageWebp = this.imageProcessingService.convertToWebp(image.image());
+                                String imagenUpload = this.storageFileClient.uploadImage(imageWebp);
+                                return Images.builder()
+                                        .color(image.color())
+                                        .image(imagenUpload)
+                                        .build();
                             }, executorService)
                     ).toList();
 
-            List<String> sendImage = CompletableFuture.allOf(prevSendImage.toArray(new CompletableFuture[0]))
+            List<Images> sendImage = CompletableFuture.allOf(prevSendImage.toArray(new CompletableFuture[0]))
                     .thenApply(i -> prevSendImage.stream()
                             .map(CompletableFuture::join)
                             .toList()).get();

@@ -1,13 +1,16 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.application.service.bulks.BulkProductService;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.Images;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
+import io.github.juniorcorzo.UrbanStyle.domain.entities.Attribute;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.DocumentsName;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DeleteDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DocumentNotFound;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.SaveDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.ProductsRepository;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.ImagesDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.ProductDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.ProductImagesDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
@@ -28,81 +31,51 @@ public class ProductService {
     private final ImageStorageService imageStorageService;
     private final BulkProductService bulkProductService;
 
+    public static int getTotalStock(List<Attribute> attributes) {
+        return attributes.stream().reduce(0, (acc, attribute) -> acc + attribute.getQuantity(), Integer::sum);
+    }
 
     public ResponseDTO<ProductDTO> getAllProducts() {
-        List<ProductDTO> products = this.productsRepository.findAll()
-                .stream()
-                .map(this.productMapper::toDTO)
-                .toList();
+        List<ProductDTO> products = this.productsRepository.findAll().stream().map(this.productMapper::toDTO).toList();
 
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                products,
-                "Products retrieved successfully"
-        );
+        return new ResponseDTO<>(HttpStatus.OK, products, "Products retrieved successfully");
     }
 
     public ResponseDTO<ProductDTO> getProductById(String id) {
-        ProductEntity productResponse = this.productsRepository.findById(id)
-                .orElseThrow(() -> new DocumentNotFound(DocumentsName.PRODUCT, id));
+        ProductEntity productResponse = this.productsRepository.findById(id).orElseThrow(() -> new DocumentNotFound(DocumentsName.PRODUCT, id));
 
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                List.of(this.productMapper.toDTO(productResponse)),
-                "Product retrieved successfully"
-        );
+        return new ResponseDTO<>(HttpStatus.OK, List.of(this.productMapper.toDTO(productResponse)), "Product retrieved successfully");
     }
 
     public ResponseDTO<ProductAggregationDomain> groupProductsByCategories() {
-        List<ProductAggregationDomain> productsGroupedByCategories = this.productsRepository
-                .groupAllByCategories();
+        List<ProductAggregationDomain> productsGroupedByCategories = this.productsRepository.groupAllByCategories();
 
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                productsGroupedByCategories,
-                "Product retrieved successfully"
-        );
+        return new ResponseDTO<>(HttpStatus.OK, productsGroupedByCategories, "Product retrieved successfully");
     }
 
     public ResponseDTO<ProductDTO> getProductsByCategory(String categoryName) {
-        List<ProductDTO> products = this.productsRepository.findByCategory(categoryName)
-                .orElseThrow(() -> new DocumentNotFound(DocumentsName.CATEGORY, categoryName))
-                .stream()
-                .map(this.productMapper::toDTO)
-                .toList();
+        List<ProductDTO> products = this.productsRepository.findByCategory(categoryName).orElseThrow(() -> new DocumentNotFound(DocumentsName.CATEGORY, categoryName)).stream().map(this.productMapper::toDTO).toList();
 
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                products,
-                "Products retrieved successfully"
-        );
+        return new ResponseDTO<>(HttpStatus.OK, products, "Products retrieved successfully");
     }
 
     public ResponseDTO<ProductDTO> searchProducts(String search) {
-        List<ProductDTO> products = this.productsRepository.searchProducts(search)
-                .stream()
-                .map(this.productMapper::toDTO)
-                .toList();
+        List<ProductDTO> products = this.productsRepository.searchProducts(search).stream().map(this.productMapper::toDTO).toList();
 
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                products,
-                "Products retrieved successfully"
-        );
+        return new ResponseDTO<>(HttpStatus.OK, products, "Products retrieved successfully");
     }
 
     public ResponseDTO<ProductDTO> createProduct(ProductDTO productDTO) {
         ProductEntity productEntity = this.productMapper.toEntity(productDTO);
-        List<String> futureImages = this.imageStorageService.sendImagesToStorage(productDTO.images());
+        List<Images> futureImages = this.imageStorageService.sendImagesToStorage(productDTO.images());
+
+        int stock = getTotalStock(productEntity.getAttributes());
+        productEntity.setStock(stock);
         productEntity.setImages(futureImages);
 
         try {
             ProductEntity savedProduct = this.productsRepository.save(productEntity);
-            return new ResponseDTO<>(
-                    HttpStatus.CREATED,
-                    List.of(this.productMapper.toDTO(savedProduct)),
-                    "Product created successfully"
-            );
+            return new ResponseDTO<>(HttpStatus.CREATED, List.of(this.productMapper.toDTO(savedProduct)), "Product created successfully");
         } catch (Exception e) {
             log.error("Error creating product", e);
             throw new SaveDocumentFailed(DocumentsName.PRODUCT);
@@ -111,7 +84,7 @@ public class ProductService {
 
     public ResponseDTO<ProductDTO> addImages(ProductImagesDTO productImagesDTO) {
         try {
-            List<String> keyImages = this.imageStorageService.sendImagesToStorage(productImagesDTO.images());
+            List<Images> keyImages = this.imageStorageService.sendImagesToStorage(productImagesDTO.images());
             this.productsRepository.saveImagesToProduct(productImagesDTO.productId(), keyImages);
 
             return new ResponseDTO<>(HttpStatus.OK, "Images added successfully");
@@ -123,15 +96,24 @@ public class ProductService {
 
     public ResponseDTO<ProductDTO> updateProduct(ProductDTO productDTO) {
         ProductEntity productEntity = this.productMapper.toEntity(productDTO);
+        productEntity.setStock(getTotalStock(productEntity.getAttributes()));
         try {
             if (this.productsRepository.findNameById(productDTO.id()).equals(productDTO.name())) {
-                ProductEntity updatedProduct = this.productsRepository.save(productEntity);
-                return new ResponseDTO<>(HttpStatus.OK, List.of(this.productMapper.toDTO(updatedProduct)), "Product updated successfully");
+
+                this.productsRepository.updateProduct(productEntity);
+                ProductEntity updatedProduct = productsRepository.findById(productEntity.getId()).orElseThrow();
+                return new ResponseDTO<>(
+                        HttpStatus.OK,
+                        List.of(this.productMapper.toDTO(updatedProduct)),
+                        "Product updated successfully"
+                );
             }
-
-
             ProductDTO updatedProduct = this.bulkProductService.updateProduct(productEntity);
-            return new ResponseDTO<>(HttpStatus.OK, List.of(updatedProduct), "Product` updated successfully");
+            return new ResponseDTO<>(
+                    HttpStatus.OK,
+                    List.of(updatedProduct),
+                    "Product` updated successfully"
+            );
         } catch (Exception e) {
             log.error("Error updating product", e);
             throw new SaveDocumentFailed(DocumentsName.PRODUCT);
@@ -143,7 +125,10 @@ public class ProductService {
 
             List<String> images = this.productsRepository.findById(id)
                     .orElseThrow(() -> new DocumentNotFound(DocumentsName.PRODUCT, id))
-                    .getImages();
+                    .getImages()
+                    .stream()
+                    .map(Images::getImage)
+                    .toList();
 
             this.productsRepository.deleteById(id);
             this.imageStorageService.deleteImagesFromStorage(images);
@@ -157,8 +142,23 @@ public class ProductService {
     public ResponseDTO<ProductDTO> deleteImagesFromProduct(ProductImagesDTO productImagesDTO) {
         try {
 
-            this.imageStorageService.deleteImagesFromStorage(productImagesDTO.images());
-            this.productsRepository.deleteImagesFromProduct(productImagesDTO.productId(), productImagesDTO.images());
+            this.imageStorageService.deleteImagesFromStorage(
+                    productImagesDTO.images()
+                            .stream()
+                            .map(ImagesDTO::image)
+                            .toList());
+
+            this.productsRepository.deleteImagesFromProduct(
+                    productImagesDTO.productId(),
+                    productImagesDTO.images()
+                            .stream()
+                            .map(images -> Images
+                                    .builder()
+                                    .color(images.color())
+                                    .image(images.image())
+                                    .build()
+                            ).toList());
+
             return new ResponseDTO<>(HttpStatus.OK, "Images deleted successfully");
         } catch (RuntimeException e) {
             log.error("Error deleting images from product", e);

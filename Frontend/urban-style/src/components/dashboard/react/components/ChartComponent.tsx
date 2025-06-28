@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ColorType, createChart, LineSeries } from "lightweight-charts";
 import type { ReportSales } from "@/interface/report.interface";
 import { convertToIso } from "@/lib/utils/convert-date";
-import SelectInput from "./inputs/SelectInput";
+import SelectInput from "../../../react/inputs/SelectInput";
 
 interface Props {
   reportData: ReportSales;
@@ -82,7 +82,7 @@ export default function ChartComponent({ reportData }: Props) {
     <div className="flex flex-col gap-5">
       <div className="w-40 text-left">
         <SelectInput
-          value={timeType}
+          value={{ text: "Dia", value: "day" }}
           label="Agrupar por"
           search={false}
           closeOnSelect={true}

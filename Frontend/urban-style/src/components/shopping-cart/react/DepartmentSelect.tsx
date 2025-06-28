@@ -1,4 +1,4 @@
-import SelectInput from "@/components/dashboard/react/components/inputs/SelectInput";
+import SelectInput from "@/components/react/inputs/SelectInput";
 import { useLocationApi } from "./hook/useLocationApi";
 import { transformToTitleCase } from "@/lib/transform-to-title-case";
 
