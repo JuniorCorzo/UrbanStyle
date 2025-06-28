@@ -1,5 +1,6 @@
 import axios from "axios";
 import type {
+  AddImageProduct,
   CreateProduct,
   Products,
   ProductsGroupedCategory,
@@ -70,6 +71,27 @@ export const createProduct = async (product: CreateProduct) => {
     });
 
   return response.data[0];
+};
+
+export const addImageToProduct = async (addImage: AddImageProduct) => {
+  const response = await axios
+    .post(`${PUBLIC_API_URL}/products/add-images`, addImage, {
+      withCredentials: true,
+    })
+    .then((response) => {
+      if (response.status !== 200) throw Error("Error sending image");
+    });
+};
+
+export const deleteImageToProduct = async (deleteImage: AddImageProduct) => {
+  const response = await axios
+    .delete(`${PUBLIC_API_URL}/products/delete-images`, {
+      withCredentials: true,
+      data: deleteImage,
+    })
+    .then((response) => {
+      if (response.status !== 200) throw Error("Error sending image");
+    });
 };
 
 export const updateProduct = async (product: UpdateProduct) => {

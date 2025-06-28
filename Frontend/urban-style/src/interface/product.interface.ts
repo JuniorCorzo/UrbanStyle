@@ -7,12 +7,17 @@ export type Attributes = {
   quantity: number;
 };
 
+export type Images = {
+  color: string;
+  image: string;
+};
+
 export interface Products extends BaseDocument {
   name: string;
   description: string;
   price: number;
   discount: number;
-  images: string[];
+  images: Images[];
   categories: CategorySummary[];
   attributes: Attributes[];
   stock: number;
@@ -31,5 +36,15 @@ export interface ProductSummary
   quantity: number;
 }
 
+export interface DeleteImageProduct {
+  productId: string;
+  images: string[];
+}
+
+export interface AddImageProduct {
+  productId: string;
+  images: Images[];
+}
+
 export interface CreateProduct extends Omit<Products, "id" | "stock"> {}
-export interface UpdateProduct extends Omit<Products, "stock"> {}
+export interface UpdateProduct extends Omit<Products, "stock" | "images"> {}

@@ -3,10 +3,12 @@ import type { SelectOptions } from "@/interface/form-mediator.interface";
 import type {
   Attributes,
   CreateProduct,
+  Images,
   Products,
   UpdateProduct,
 } from "@/interface/product.interface";
 import { imageToBase64 } from "@/lib/utils/image-to-base64";
+import { imagesStore } from "@/state/attributes.state";
 
 export class ProductAdapter {
   private static async formDataToProduct(
@@ -30,13 +32,21 @@ export class ProductAdapter {
 
     const getAttributes = (): Attributes[] => JSON.parse(attributes);
 
-    const getImages = () => imageToBase64(images) ?? "";
+    const getImages = async () => {
+      const imageState = imagesStore.get();
+      const images = imageState.map(async ({ file, color }) => ({
+        image: await imageToBase64(file),
+        color,
+      }));
+
+      return Promise.all(images).then((image) => image);
+    };
     return {
       id: id,
       name: name,
       description: description,
       categories: getCategories(),
-      images: [await getImages()],
+      images: await getImages(),
       price: Number.parseInt(price),
       discount: Number.parseInt(discount),
       stock: 0,
@@ -60,7 +70,9 @@ export class ProductAdapter {
     formData: FormData,
     id: string
   ): Promise<UpdateProduct> {
-    const { stock, ...updateProduct } = await this.formDataToProduct(formData);
+    const { stock, images, ...updateProduct } = await this.formDataToProduct(
+      formData
+    );
 
     return {
       ...updateProduct,
