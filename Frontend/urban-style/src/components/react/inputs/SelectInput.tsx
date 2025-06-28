@@ -10,7 +10,7 @@ export interface SelectInputProps extends Omit<FieldProperties, "value"> {
   value?: SelectOptions | SelectOptions[];
   search?: boolean;
   closeOnSelect?: boolean;
-  onChange?: (value: string) => void;
+  onChange?: (value: string, label: string) => void;
 }
 
 export default function SelectInput(Props: SelectInputProps) {

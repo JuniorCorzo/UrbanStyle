@@ -43,7 +43,7 @@ export function Select({
     if (!selectedItem?.value) return;
 
     if (!onChange) return;
-    onChange(selectedItem?.value);
+    onChange(selectedItem?.value, selectedItem.text);
   }, [selectedItem]);
 
   return (
