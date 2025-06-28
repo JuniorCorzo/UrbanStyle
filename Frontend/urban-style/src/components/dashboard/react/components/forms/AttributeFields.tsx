@@ -9,8 +9,9 @@ import { useRef, useState } from "react";
 import { cn } from "@/lib/cn";
 import { AttributeTable } from "./AttributeTable";
 import { AttributeFormFields } from "./AttributeFormFields";
+import { useAttributes } from "../../hooks/useAttributes";
 
-interface AttributesWithId extends Attributes {
+export interface AttributesWithId extends Attributes {
   id: string;
 }
 
@@ -20,56 +21,13 @@ interface Props {
 }
 
 export function AttributeFields({ name, defaultAttributes = [] }: Props) {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [attributes, setAttributes] = useState<AttributesWithId[]>(
-    () => defaultAttributes
-  );
-
-  const handleChangeQuantity = (id: string, quantity: number) => {
-    console.log(quantity);
-    setAttributes((attribute) =>
-      attribute.map((attr) => (attr.id === id ? { ...attr, quantity } : attr))
-    );
-  };
-
-  const getAttributesInputs = ($container: HTMLDivElement) => {
-    const $colorCombobox = $container.querySelector<HTMLInputElement>(
-      "input[name='color']"
-    );
-    const $sizeSelect =
-      $container.querySelector<HTMLInputElement>("input[name='size']");
-    const $quantityInput = $container.querySelector<HTMLInputElement>(
-      "input[name='quantity']"
-    );
-    return { $colorCombobox, $sizeSelect, $quantityInput };
-  };
-
-  const handleAddAttribute = () => {
-    if (!containerRef.current) return;
-    const $container = containerRef.current;
-    const { $colorCombobox, $quantityInput, $sizeSelect } =
-      getAttributesInputs($container);
-
-    const insertAttribute: AttributesWithId = {
-      id: crypto.randomUUID(),
-      color: $colorCombobox?.value ?? "",
-      size: $sizeSelect?.value.split(",")[1] ?? "",
-      quantity: Number($quantityInput?.value) ?? 0,
-    };
-
-    const isDuplicate = attributes.some(
-      ({ color, size }) =>
-        size === insertAttribute.size && color === insertAttribute.color
-    );
-    if (isDuplicate) return;
-
-    setAttributes([...attributes, insertAttribute]);
-  };
-
-  const handleRemoveAttribute = (removeId: string) => {
-    setAttributes(attributes.filter(({ id }) => id !== removeId));
-  };
-
+  const {
+    attributes,
+    containerRef,
+    handleAddAttribute,
+    handleChangeQuantity,
+    handleRemoveAttribute,
+  } = useAttributes(defaultAttributes);
   return (
     <div ref={containerRef} className="w-full flex flex-col gap-4">
       <span className="">
