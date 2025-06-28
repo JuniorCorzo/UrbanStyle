@@ -24,7 +24,7 @@ export function Sidebar() {
   return (
     <aside
       className={cn(
-        "bg-background fixed right-0 invisible w-full max-w-xl min-h-dvh h-full ml-5 pb-14 overflow-auto border-l-2  border-border z-50",
+        "bg-background fixed right-0 invisible w-full max-w-xl min-h-dvh h-full ml-5 pb-10 overflow-auto border-l-2  border-border z-50",
         visible && "visible animate-aside-open",
         formType && "animate-aside-close"
       )}
@@ -39,7 +39,7 @@ export function Sidebar() {
       <div>
         <form
           method="dialog"
-          className="w-full flex flex-col justify-center items-center gap-4 pt-4 overflow-y-auto"
+          className="w-full flex flex-col justify-center items-center gap-4 pt-4 overflow-y-visible"
           data-astro-reload
           onSubmit={handleSubmit}
         >

@@ -86,7 +86,11 @@ export function ProductFormFields({
           ...attribute,
         }))}
       />
-      <ImagesFileInput label="Imagen" name="images" defaultImages={images} />
+      <ImagesFileInput
+        label="Imágenes del producto"
+        name="images"
+        defaultImages={images}
+      />
     </>
   );
 }
