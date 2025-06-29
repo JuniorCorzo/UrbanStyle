@@ -23,7 +23,7 @@ const { userId, productId, name, color, size, getProductById } = Astro.props;
   <div>
     <Image
       class="aspect-square rounded-lg"
-      src={`${CLOUDFLARE_URL}/${getProductById(productId).get()?.images[0]}`}
+      src={`${CLOUDFLARE_URL}/${getProductById(productId).get()?.images[0].image}`}
       alt={name}
       width={250}
       height={250}
