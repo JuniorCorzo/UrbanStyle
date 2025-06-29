@@ -6,6 +6,9 @@ import {
   updateCategory,
 } from "@/service/categories.service";
 import { CategoriesStore } from "@/state/categories.store";
+import { CategoryScheme } from "../validations/category.validations";
+import { ZodError } from "zod";
+import { showError } from "../showErrorMessages";
 
 export async function categoriesForm(id?: string): Promise<FormMediator> {
   const sendData = async (formData?: FormData) => {
@@ -15,14 +18,22 @@ export async function categoriesForm(id?: string): Promise<FormMediator> {
       formData.entries()
     ) as unknown as Category;
 
-    if (categoryData.id) {
-      await updateCategory(categoryData);
-      (await CategoriesStore()).categoriesStoreUpdate();
-      return;
-    }
+    try {
+      CategoryScheme.parse(categoryData);
 
-    createCategory(categoryData);
-    (await CategoriesStore()).categoriesStoreUpdate();
+      if (categoryData.id) {
+        await updateCategory(categoryData);
+        (await CategoriesStore()).categoriesStoreUpdate();
+        return;
+      }
+
+      createCategory(categoryData);
+      (await CategoriesStore()).categoriesStoreUpdate();
+    } catch (err) {
+      if (err instanceof ZodError) {
+        showError(err);
+      }
+    }
   };
 
   const sendDelete = (id: string) => {
