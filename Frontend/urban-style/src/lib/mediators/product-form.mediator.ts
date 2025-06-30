@@ -9,30 +9,41 @@ import {
 } from "@/service/product.service";
 import { ProductAdapter } from "@/adapter/product.adapters";
 import { imagesStore } from "@/state/attributes.state";
-import type {
-  AddImageProduct,
-  Products,
-  UpdateProduct,
-} from "@/interface/product.interface";
+import type { AddImageProduct, Products } from "@/interface/product.interface";
 import { imageToBase64 } from "../utils/image-to-base64";
+import { ZodError } from "zod";
+import { showError } from "../showErrorMessages";
+import {
+  AddImageScheme,
+  CreateProductScheme,
+  UpdateProductScheme,
+} from "../validations/product.validations";
 
 export async function productForm(): Promise<FormMediator> {
   const sendProduct = async (data?: FormData, id?: string) => {
     if (!data) return;
 
-    if (id) {
-      const product = await ProductAdapter.formDataToUpdateProduct(data, id);
+    try {
+      if (id) {
+        const product = await ProductAdapter.formDataToUpdateProduct(data, id);
 
-      await checkImages(product.id);
-      await updateProduct(product);
+        await checkImages(product.id);
+
+        UpdateProductScheme.parse(product);
+        await updateProduct(product);
+        (await ProductStore()).productStoreUpdate();
+        return;
+      }
+
+      const product = await ProductAdapter.formDataToCreateProduct(data);
+      CreateProductScheme.parse(product);
+
+      createProduct(product);
       (await ProductStore()).productStoreUpdate();
-      return;
+    } catch (err) {
+      if (err instanceof ZodError) showError(err);
+      console.error(err);
     }
-
-    const product = await ProductAdapter.formDataToCreateProduct(data);
-
-    createProduct(product);
-    (await ProductStore()).productStoreUpdate();
   };
 
   const sendDelete = (id: string) => {
@@ -71,5 +82,13 @@ async function checkImages(productId: string) {
   };
 
   if (imagesDelete.images.length > 0) deleteImageToProduct(imagesDelete);
-  if (imagesAdd.images.length > 0) addImageToProduct(imagesAdd);
+  if (imagesAdd.images.length > 0) {
+    try {
+      AddImageScheme.parse(imagesAdd);
+      addImageToProduct(imagesAdd);
+    } catch (err) {
+      if (err instanceof ZodError) showError(err);
+      throw Error();
+    }
+  }
 }
