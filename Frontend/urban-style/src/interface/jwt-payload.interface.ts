@@ -1,5 +1,5 @@
-import type { JwtPayload } from "jwt-decode";
+import type { JwtPayload } from 'jwt-decode'
 
 export interface JwtClaims extends JwtPayload {
-  userId: string;
+	userId: string
 }

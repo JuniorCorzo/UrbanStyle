@@ -1,53 +1,53 @@
-import { ComboboxInput } from "@/components/react/inputs/ComboboxInput";
-import SelectInput from "@/components/react/inputs/SelectInput";
-import TextInput from "@/components/react/inputs/TextInput";
-import { CLOTHING_COLORS, CLOTHING_SIZE } from "@/const/product.const";
-import { Button } from "@/components/react/Button";
-import { TrashIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import type { Attributes } from "@/interface/product.interface";
-import { useRef, useState } from "react";
-import { cn } from "@/lib/cn";
-import { AttributeTable } from "./AttributeTable";
-import { AttributeFormFields } from "./AttributeFormFields";
-import { useAttributes } from "../../hooks/useAttributes";
-import { MessageError } from "@/components/react/inputs/MessageError";
+import { ComboboxInput } from '@/components/react/inputs/ComboboxInput'
+import SelectInput from '@/components/react/inputs/SelectInput'
+import TextInput from '@/components/react/inputs/TextInput'
+import { CLOTHING_COLORS, CLOTHING_SIZE } from '@/const/product.const'
+import { Button } from '@/components/react/Button'
+import { TrashIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import type { Attributes } from '@/interface/product.interface'
+import { useRef, useState } from 'react'
+import { cn } from '@/lib/cn'
+import { AttributeTable } from './AttributeTable'
+import { AttributeFormFields } from './AttributeFormFields'
+import { useAttributes } from '../../hooks/useAttributes'
+import { MessageError } from '@/components/react/inputs/MessageError'
 
 export interface AttributesWithId extends Attributes {
-  id: string;
+	id: string
 }
 
 interface Props {
-  name: string;
-  defaultAttributes?: AttributesWithId[];
+	name: string
+	defaultAttributes?: AttributesWithId[]
 }
 
 export function AttributeFields({ name, defaultAttributes = [] }: Props) {
-  const {
-    attributes,
-    containerRef,
-    handleAddAttribute,
-    handleChangeQuantity,
-    handleRemoveAttribute,
-  } = useAttributes(defaultAttributes);
-  return (
-    <div ref={containerRef} className="w-full flex flex-col gap-1">
-      <span className="">
-        <h2>Atributos de producto</h2>
-      </span>
-      <MessageError errorId={`${name}_error`} />
-      <AttributeTable
-        attributes={attributes}
-        onRemove={handleRemoveAttribute}
-        onChangeQuantity={handleChangeQuantity}
-      />
-      <AttributeFormFields handleAddAttribute={handleAddAttribute} />
-      <input
-        name={name}
-        className="hidden"
-        type="hidden"
-        defaultValue={JSON.stringify(attributes)}
-        readOnly
-      />
-    </div>
-  );
+	const {
+		attributes,
+		containerRef,
+		handleAddAttribute,
+		handleChangeQuantity,
+		handleRemoveAttribute,
+	} = useAttributes(defaultAttributes)
+	return (
+		<div ref={containerRef} className="flex w-full flex-col gap-1">
+			<span className="">
+				<h2>Atributos de producto</h2>
+			</span>
+			<MessageError errorId={`${name}_error`} />
+			<AttributeTable
+				attributes={attributes}
+				onRemove={handleRemoveAttribute}
+				onChangeQuantity={handleChangeQuantity}
+			/>
+			<AttributeFormFields handleAddAttribute={handleAddAttribute} />
+			<input
+				name={name}
+				className="hidden"
+				type="hidden"
+				defaultValue={JSON.stringify(attributes)}
+				readOnly
+			/>
+		</div>
+	)
 }

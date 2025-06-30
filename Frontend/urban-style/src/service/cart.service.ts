@@ -1,103 +1,103 @@
-import { PUBLIC_API_URL } from "@/config/env-config";
-import type { Cart } from "@/interface/cart.interface";
-import type { Response } from "@/interface/response.interface";
-import axios from "axios";
+import { PUBLIC_API_URL } from '@/config/env-config'
+import type { Cart } from '@/interface/cart.interface'
+import type { Response } from '@/interface/response.interface'
+import axios from 'axios'
 
 export function CartService() {
-  const getCartByUserId = async (userId: string, token?: string) => {
-    const headers: Record<string, string> = {
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-    };
+	const getCartByUserId = async (userId: string, token?: string) => {
+		const headers: Record<string, string> = {
+			...(token ? { Authorization: `Bearer ${token}` } : {}),
+		}
 
-    const resultRequest: Cart | void = await axios
-      .get(`${PUBLIC_API_URL}/shopping-cart?user-id=${userId}`, {
-        withCredentials: true,
-        headers,
-      })
-      .then((response) => {
-        return (response.data as Response<Cart>).data[0];
-      })
-      .catch((error) => {
-        console.error("Error fetching cart user by ID:", error);
-      });
+		const resultRequest: Cart | void = await axios
+			.get(`${PUBLIC_API_URL}/shopping-cart?user-id=${userId}`, {
+				withCredentials: true,
+				headers,
+			})
+			.then((response) => {
+				return (response.data as Response<Cart>).data[0]
+			})
+			.catch((error) => {
+				console.error('Error fetching cart user by ID:', error)
+			})
 
-    return resultRequest;
-  };
+		return resultRequest
+	}
 
-  const addProductToCart = async (cart: Cart) => {
-    const resultRequest: Cart = await axios
-      .post(`${PUBLIC_API_URL}/shopping-cart/add-product`, cart, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        const data = (response.data as Response<Cart>).data[0];
-        return data;
-      });
+	const addProductToCart = async (cart: Cart) => {
+		const resultRequest: Cart = await axios
+			.post(`${PUBLIC_API_URL}/shopping-cart/add-product`, cart, {
+				withCredentials: true,
+			})
+			.then((response) => {
+				const data = (response.data as Response<Cart>).data[0]
+				return data
+			})
 
-    return resultRequest;
-  };
+		return resultRequest
+	}
 
-  const updateQuantityProductInCart = async (
-    userId: string,
-    productId: string,
-    color: string,
-    size: string,
-    quantity: number
-  ) => {
-    const resultRequest: Cart = await axios
-      .patch(
-        `${PUBLIC_API_URL}/shopping-cart/change-quantity?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}&quantity=${quantity}`,
-        {},
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        const data = (response.data as Response<Cart>).data[0];
-        return data;
-      });
+	const updateQuantityProductInCart = async (
+		userId: string,
+		productId: string,
+		color: string,
+		size: string,
+		quantity: number,
+	) => {
+		const resultRequest: Cart = await axios
+			.patch(
+				`${PUBLIC_API_URL}/shopping-cart/change-quantity?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}&quantity=${quantity}`,
+				{},
+				{
+					withCredentials: true,
+				},
+			)
+			.then((response) => {
+				const data = (response.data as Response<Cart>).data[0]
+				return data
+			})
 
-    return resultRequest;
-  };
+		return resultRequest
+	}
 
-  const updateProductInCart = async (cart: Cart) => {
-    const resultRequest: Cart = await axios
-      .post(`${PUBLIC_API_URL}/shopping-cart/update-product`, cart, {
-        withCredentials: true,
-      })
-      .then((response) => {
-        return (response.data as Response<Cart>).data[0];
-      });
+	const updateProductInCart = async (cart: Cart) => {
+		const resultRequest: Cart = await axios
+			.post(`${PUBLIC_API_URL}/shopping-cart/update-product`, cart, {
+				withCredentials: true,
+			})
+			.then((response) => {
+				return (response.data as Response<Cart>).data[0]
+			})
 
-    return resultRequest;
-  };
+		return resultRequest
+	}
 
-  const removeProductFromCart = async (
-    userId: string,
-    productId: string,
-    color: string,
-    size: string
-  ) => {
-    const resultRequest: Cart = await axios
-      .delete(
-        `${PUBLIC_API_URL}/shopping-cart/delete-product?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}`,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((response) => {
-        const data = (response.data as Response<Cart>).data[0];
-        return data;
-      });
+	const removeProductFromCart = async (
+		userId: string,
+		productId: string,
+		color: string,
+		size: string,
+	) => {
+		const resultRequest: Cart = await axios
+			.delete(
+				`${PUBLIC_API_URL}/shopping-cart/delete-product?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}`,
+				{
+					withCredentials: true,
+				},
+			)
+			.then((response) => {
+				const data = (response.data as Response<Cart>).data[0]
+				return data
+			})
 
-    return resultRequest;
-  };
+		return resultRequest
+	}
 
-  return {
-    getCartByUserId,
-    addProductToCart,
-    updateQuantityProductInCart,
-    updateProductInCart,
-    removeProductFromCart,
-  };
+	return {
+		getCartByUserId,
+		addProductToCart,
+		updateQuantityProductInCart,
+		updateProductInCart,
+		removeProductFromCart,
+	}
 }

@@ -1,42 +1,35 @@
 ---
-import { cn } from "@/lib/cn";
-import type { JSX } from "astro/jsx-runtime";
+import { cn } from '@/lib/cn'
+import type { JSX } from 'astro/jsx-runtime'
 
 interface Props {
-  id?: string;
-  size?: "sm" | "md" | "lg" | "custom";
-  class?: string;
-  type?: JSX.ButtonHTMLAttributes["type"];
-  title?: string;
+	id?: string
+	size?: 'sm' | 'md' | 'lg' | 'custom'
+	class?: string
+	type?: JSX.ButtonHTMLAttributes['type']
+	title?: string
 }
 
-const {
-  id,
-  title,
-  size = "md",
-  class: className = "",
-  type = "button",
-  ...props
-} = Astro.props;
+const { id, title, size = 'md', class: className = '', type = 'button', ...props } = Astro.props
 
 export const sizeClasses = {
-  sm: "px-3 py-1 text-sm",
-  md: "px-4 py-2 text-base",
-  lg: "px-6 py-3 text-lg",
-  custom: "",
-};
+	sm: 'px-3 py-1 text-sm',
+	md: 'px-4 py-2 text-base',
+	lg: 'px-6 py-3 text-lg',
+	custom: '',
+}
 ---
 
 <button
-  id={id}
-  class={cn(
-    sizeClasses[size],
-    "bg-accent/70 backdrop-blur-xs backdrop-brightness-80 text-text border border-border hover:custom-ring rounded cursor-pointer",
-    className
-  )}
-  type={type}
-  title={title}
-  {...props}
+	id={id}
+	class={cn(
+		sizeClasses[size],
+		'bg-accent/70 backdrop-blur-xs backdrop-brightness-80 text-text border border-border hover:custom-ring rounded cursor-pointer',
+		className,
+	)}
+	type={type}
+	title={title}
+	{...props}
 >
-  <slot />
+	<slot />
 </button>

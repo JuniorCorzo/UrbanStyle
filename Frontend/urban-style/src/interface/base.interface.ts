@@ -1,3 +1,3 @@
 export interface BaseDocument {
-  id: string;
+	id: string
 }

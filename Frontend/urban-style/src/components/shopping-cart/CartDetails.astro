@@ -1,59 +1,54 @@
 ---
-import { MapPinIcon } from "@heroicons/react/24/outline";
-import Button from "../Button.astro";
-import InfoRow from "../InfoRow.astro";
-import Subtitle from "../text/Subtitle.astro";
-import { AddressSelect } from "./react/AddressSelect";
-import AddressDialogForm from "./AddressDialogForm.astro";
-import SendOrderButton from "./SendOrderButton.astro";
+import { MapPinIcon } from '@heroicons/react/24/outline'
+import Button from '../Button.astro'
+import InfoRow from '../InfoRow.astro'
+import Subtitle from '../text/Subtitle.astro'
+import { AddressSelect } from './react/AddressSelect'
+import AddressDialogForm from './AddressDialogForm.astro'
+import SendOrderButton from './SendOrderButton.astro'
 
 interface Props {
-  calculateTotal: number;
+	calculateTotal: number
 }
 
-const { user } = Astro.locals;
-const userId = user.id ?? "";
+const { user } = Astro.locals
+const userId = user.id ?? ''
 
-const { calculateTotal } = Astro.props;
-const total = calculateTotal;
+const { calculateTotal } = Astro.props
+const total = calculateTotal
 ---
 
 <article
-  class="w-full max-w-lg flex flex-col border-2 border-border basis-96 gap-1 py-3 px-5 md:mr-3 mx-5 rounded"
+	class="border-border mx-5 flex w-full max-w-lg basis-96 flex-col gap-1 rounded border-2 px-5 py-3 md:mr-3"
 >
-  <Subtitle size="xl" Text="Detalles" />
-  <div class="flex flex-col border-border gap-11 pt-5">
-    <div class="flex flex-col gap-1">
-      <InfoRow
-        label="Total"
-        value={`<strong>${total.toLocaleString()}</strong>`}
-      />
-      <InfoRow label="Envió" value="<strong>Gratis</strong>" />
-      <InfoRow
-        class="pt-5"
-        label="Total con Iva"
-        value={`<strong id="total">${(total + total * 0.19).toLocaleString()}</strong>`}
-      />
-    </div>
-    <div class="flex flex-col gap-2 items-center justify-center">
-      <AddressSelect userId={userId} client:idle />
-      <Button
-        id="address_button"
-        class="bg-primary backdrop-brightness-100 w-full h-fit hover:ring-0 hover:shadow shadow-primary"
-        transition:name="address_dialog"
-        transition:animate="fade"
-      >
-        <span
-          class="flex justify-center items-center gap-2 pointer-events-none text-slate-800"
-        >
-          <MapPinIcon className="size-6" />
-          <span> Añadir nueva Dirección </span>
-        </span>
-      </Button>
-      <AddressDialogForm />
-    </div>
-    <div>
-      <SendOrderButton userId={userId} />
-    </div>
-  </div>
+	<Subtitle size="xl" Text="Detalles" />
+	<div class="border-border flex flex-col gap-11 pt-5">
+		<div class="flex flex-col gap-1">
+			<InfoRow label="Total" value={`<strong>${total.toLocaleString()}</strong>`} />
+			<InfoRow label="Envió" value="<strong>Gratis</strong>" />
+			<InfoRow
+				class="pt-5"
+				label="Total con Iva"
+				value={`<strong id="total">${(total + total * 0.19).toLocaleString()}</strong>`}
+			/>
+		</div>
+		<div class="flex flex-col items-center justify-center gap-2">
+			<AddressSelect userId={userId} client:idle />
+			<Button
+				id="address_button"
+				class="bg-primary shadow-primary h-fit w-full backdrop-brightness-100 hover:shadow hover:ring-0"
+				transition:name="address_dialog"
+				transition:animate="fade"
+			>
+				<span class="pointer-events-none flex items-center justify-center gap-2 text-slate-800">
+					<MapPinIcon className="size-6" />
+					<span> Añadir nueva Dirección </span>
+				</span>
+			</Button>
+			<AddressDialogForm />
+		</div>
+		<div>
+			<SendOrderButton userId={userId} />
+		</div>
+	</div>
 </article>

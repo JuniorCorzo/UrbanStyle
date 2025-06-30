@@ -1,158 +1,149 @@
 ---
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
-import Button from "@/components/Button.astro";
-import Subtitle from "@/components/text/Subtitle.astro";
-import InputField from "./InputField.astro";
-import MessageError from "./MessageError.astro";
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
+import Button from '@/components/Button.astro'
+import Subtitle from '@/components/text/Subtitle.astro'
+import InputField from './InputField.astro'
+import MessageError from './MessageError.astro'
 ---
 
 <dialog
-  id="login_modal"
-  class="w-[26rem] bg-transparent border-2 border-border rounded inset-0 mx-auto top-10 box-border"
+	id="login_modal"
+	class="border-border inset-0 top-10 mx-auto box-border w-[26rem] rounded border-2 bg-transparent"
 >
-  <div
-    class="bg-background/80 backdrop-blur-sm backdrop-brightness-90 py-5 px-8"
-  >
-    <div class="w-full text-center">
-      <Subtitle size="3xl" Text="Iniciar Sesión" />
-      <span class="hidden px-2 py-1 mx-auto justify-center">
-        <MessageError errorId="login_error" />
-      </span>
-    </div>
-    <form
-      id="login_form"
-      class="flex flex-col gap-3 items-center"
-      method="dialog"
-    >
-      <div class="flex flex-col gap-3 w-full">
-        <InputField
-          label="Email"
-          name="email"
-          type="text"
-          placeholder="Email"
-          errorId="email_error"
-        />
+	<div class="bg-background/80 px-8 py-5 backdrop-blur-sm backdrop-brightness-90">
+		<div class="w-full text-center">
+			<Subtitle size="3xl" Text="Iniciar Sesión" />
+			<span class="mx-auto hidden justify-center px-2 py-1">
+				<MessageError errorId="login_error" />
+			</span>
+		</div>
+		<form id="login_form" class="flex flex-col items-center gap-3" method="dialog">
+			<div class="flex w-full flex-col gap-3">
+				<InputField
+					label="Email"
+					name="email"
+					type="text"
+					placeholder="Email"
+					errorId="email_error"
+				/>
 
-        <InputField
-          errorId="password_error"
-          type="password"
-          label="Contraseña"
-          placeholder="Password"
-          name="password"
-        />
-      </div>
+				<InputField
+					errorId="password_error"
+					type="password"
+					label="Contraseña"
+					placeholder="Password"
+					name="password"
+				/>
+			</div>
 
-      <div class="w-full">
-        <Button class="w-full" size="sm" type="submit">
-          <span class="font-bold text-base"> Iniciar Sesión </span>
-        </Button>
-      </div>
+			<div class="w-full">
+				<Button class="w-full" size="sm" type="submit">
+					<span class="text-base font-bold"> Iniciar Sesión </span>
+				</Button>
+			</div>
 
-      <div class="flex justify-between w-full">
-        <a
-          id="to_sign-up"
-          href="/sign-up"
-          class="text-sm text-text border-b border-transparent hover:border-border transition-all"
-        >
-          Crear cuenta
-        </a>
-        <a
-          href="/forgot-password"
-          class="text-sm text-text border-b border-transparent hover:border-border transition-all"
-        >
-          Olvidé mi contraseña
-        </a>
-      </div>
-    </form>
-  </div>
+			<div class="flex w-full justify-between">
+				<a
+					id="to_sign-up"
+					href="/sign-up"
+					class="text-text hover:border-border border-b border-transparent text-sm transition-all"
+				>
+					Crear cuenta
+				</a>
+				<a
+					href="/forgot-password"
+					class="text-text hover:border-border border-b border-transparent text-sm transition-all"
+				>
+					Olvidé mi contraseña
+				</a>
+			</div>
+		</form>
+	</div>
 </dialog>
 
 <script>
-  import type { UserCredentials } from "@/interface/user.interface";
-  import { $ } from "@/lib/dom-selector";
-  import { showError, toggleErrorMessage } from "@/lib/showErrorMessages";
-  import { userCredentialsSchema } from "@/lib/validations/user.validations";
-  import { AuthRequest } from "@/service/auth.service";
-  import { navigate } from "astro:transitions/client";
-  import z from "zod";
+	import type { UserCredentials } from '@/interface/user.interface'
+	import { $ } from '@/lib/dom-selector'
+	import { showError, toggleErrorMessage } from '@/lib/showErrorMessages'
+	import { userCredentialsSchema } from '@/lib/validations/user.validations'
+	import { AuthRequest } from '@/service/auth.service'
+	import { navigate } from 'astro:transitions/client'
+	import z from 'zod'
 
-  const sendLoginRequest = (
-    { email, password }: UserCredentials,
-    $spanError: HTMLElement
-  ) => {
-    AuthRequest({ email, password })
-      .then((response) => {
-        if (response.status === 200) {
-          window.location.reload();
-        }
-      })
-      .catch((error) => {
-        const $parent = $spanError.parentElement?.parentElement;
-        if (!$spanError) return;
+	const sendLoginRequest = ({ email, password }: UserCredentials, $spanError: HTMLElement) => {
+		AuthRequest({ email, password })
+			.then((response) => {
+				if (response.status === 200) {
+					window.location.reload()
+				}
+			})
+			.catch((error) => {
+				const $parent = $spanError.parentElement?.parentElement
+				if (!$spanError) return
 
-        if (error.status === 401) {
-          toggleErrorMessage("Email o contraseña incorrectos", $spanError);
-          $parent?.classList.toggle("hidden");
-          $parent?.classList.toggle("flex");
-          return;
-        }
-        if (error.status === 403) {
-          toggleErrorMessage("Usuario no verificado", $spanError);
-          $parent?.classList.toggle("hidden");
-          $parent?.classList.toggle("flex");
-          return;
-        }
+				if (error.status === 401) {
+					toggleErrorMessage('Email o contraseña incorrectos', $spanError)
+					$parent?.classList.toggle('hidden')
+					$parent?.classList.toggle('flex')
+					return
+				}
+				if (error.status === 403) {
+					toggleErrorMessage('Usuario no verificado', $spanError)
+					$parent?.classList.toggle('hidden')
+					$parent?.classList.toggle('flex')
+					return
+				}
 
-        toggleErrorMessage("Error interno del servidor", $spanError);
-        $parent?.classList.toggle("hidden");
-        $parent?.classList.toggle("flex");
-      });
-  };
+				toggleErrorMessage('Error interno del servidor', $spanError)
+				$parent?.classList.toggle('hidden')
+				$parent?.classList.toggle('flex')
+			})
+	}
 
-  const initializeListeners = () => {
-    const $loginModal = $<HTMLDialogElement>("#login_modal");
-    const $loginForm = $<HTMLFormElement>("#login_form");
-    const $spanError = $("#login_error");
-    const $emailError = $("#email_error");
-    const $passwordError = $("#password_error");
+	const initializeListeners = () => {
+		const $loginModal = $<HTMLDialogElement>('#login_modal')
+		const $loginForm = $<HTMLFormElement>('#login_form')
+		const $spanError = $('#login_error')
+		const $emailError = $('#email_error')
+		const $passwordError = $('#password_error')
 
-    $loginForm?.addEventListener("submit", (event) => {
-      event.preventDefault();
+		$loginForm?.addEventListener('submit', (event) => {
+			event.preventDefault()
 
-      const userCredentials = Object.fromEntries(
-        new window.FormData(event.currentTarget as HTMLFormElement)
-      ) as unknown as UserCredentials;
+			const userCredentials = Object.fromEntries(
+				new window.FormData(event.currentTarget as HTMLFormElement),
+			) as unknown as UserCredentials
 
-      try {
-        const result = userCredentialsSchema.parse(userCredentials);
-        if (!$spanError) return;
-        sendLoginRequest(result, $spanError);
-      } catch (error) {
-        if (error instanceof z.ZodError && $emailError && $passwordError) {
-          showError(error);
-        }
-      }
-    });
+			try {
+				const result = userCredentialsSchema.parse(userCredentials)
+				if (!$spanError) return
+				sendLoginRequest(result, $spanError)
+			} catch (error) {
+				if (error instanceof z.ZodError && $emailError && $passwordError) {
+					showError(error)
+				}
+			}
+		})
 
-    $loginModal?.addEventListener("click", (event) => {
-      const $dialog = $loginModal as HTMLDialogElement;
-      const $target = event.target as HTMLElement;
+		$loginModal?.addEventListener('click', (event) => {
+			const $dialog = $loginModal as HTMLDialogElement
+			const $target = event.target as HTMLElement
 
-      if ($target === $dialog) {
-        $dialog.close();
-      }
-    });
+			if ($target === $dialog) {
+				$dialog.close()
+			}
+		})
 
-    $<HTMLAnchorElement>("to_sign-up")?.addEventListener("click", (event) => {
-      event.preventDefault();
-      const $anchorElement = event.currentTarget as HTMLAnchorElement;
-      navigate($anchorElement.href);
-    });
+		$<HTMLAnchorElement>('to_sign-up')?.addEventListener('click', (event) => {
+			event.preventDefault()
+			const $anchorElement = event.currentTarget as HTMLAnchorElement
+			navigate($anchorElement.href)
+		})
 
-    $("#login_button")?.addEventListener("click", () => {
-      $loginModal?.showModal();
-    });
-  };
+		$('#login_button')?.addEventListener('click', () => {
+			$loginModal?.showModal()
+		})
+	}
 
-  document.addEventListener("astro:page-load", initializeListeners);
+	document.addEventListener('astro:page-load', initializeListeners)
 </script>

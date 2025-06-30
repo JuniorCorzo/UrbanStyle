@@ -1,33 +1,33 @@
 ---
-import ProductDetailsPanel from "@/components/home/ProductDetailsPanel.astro";
-import ProductImage from "@/components/home/ProductImage.astro";
-import type { Products } from "@/interface/product.interface";
+import ProductDetailsPanel from '@/components/home/ProductDetailsPanel.astro'
+import ProductImage from '@/components/home/ProductImage.astro'
+import type { Products } from '@/interface/product.interface'
 
-import { fade } from "astro:transitions";
+import { fade } from 'astro:transitions'
 
 interface Props {
-  product: Products;
+	product: Products
 }
 
-const { product } = Astro.props;
+const { product } = Astro.props
 
-const userId = Astro.locals.user?.id;
-const { description, images } = product || [];
+const userId = Astro.locals.user?.id
+const { description, images } = product || []
 if (description === undefined) {
-  return;
+	return
 }
 ---
 
 <div class="px-6">
-  <section
-    class="bg-crust/10 backdrop-blur-2xl backdrop-brightness-105 flex flex-wrap min-h-[450] rounded-2xl px-16 py-10 justify-center items-center gap-x-20 gap-y-10 shadow shadow-crust/70"
-    transition:animate={fade({ duration: 150 })}
-  >
-    <article class="basis-[25rem]">
-      <ProductImage alt={description} images={images} />
-    </article>
-    <article class="flex grow-[999] min-w-[26rem] max-w-lg">
-      <ProductDetailsPanel product={product} userId={userId} />
-    </article>
-  </section>
+	<section
+		class="bg-crust/10 shadow-crust/70 flex min-h-[450] flex-wrap items-center justify-center gap-x-20 gap-y-10 rounded-2xl px-16 py-10 shadow backdrop-blur-2xl backdrop-brightness-105"
+		transition:animate={fade({ duration: 150 })}
+	>
+		<article class="basis-[25rem]">
+			<ProductImage alt={description} images={images} />
+		</article>
+		<article class="flex min-w-[26rem] max-w-lg grow-[999]">
+			<ProductDetailsPanel product={product} userId={userId} />
+		</article>
+	</section>
 </div>

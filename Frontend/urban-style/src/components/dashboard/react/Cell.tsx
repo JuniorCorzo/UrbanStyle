@@ -1,13 +1,11 @@
-import { Children, type ReactNode } from "react";
+import { Children, type ReactNode } from 'react'
 
 interface Props {
-  children: ReactNode;
+	children: ReactNode
 }
 
 export default function Cell({ children }: Props) {
-  return (
-    <td className="max-w-72 min-h-11 px-4 py-2 border border-border text-center">
-      {children}
-    </td>
-  );
+	return (
+		<td className="border-border min-h-11 max-w-72 border px-4 py-2 text-center">{children}</td>
+	)
 }

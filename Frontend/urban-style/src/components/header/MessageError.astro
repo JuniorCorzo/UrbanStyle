@@ -1,17 +1,15 @@
 ---
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import { ExclamationCircleIcon } from '@heroicons/react/24/outline'
 
 interface Props {
-  errorId: string;
+	errorId: string
 }
-const { errorId } = Astro.props;
+const { errorId } = Astro.props
 ---
 
-<span
-  class="flex gap-1 items-center text-maroon opacity-0 transition-opacity duration-300"
->
-  <span class="hidden invisible min-w-6 min-h-6">
-    <ExclamationCircleIcon className="size-6" />
-  </span>
-  <span id={errorId} class="transition-all text-pretty font-bold"></span>
+<span class="text-maroon flex items-center gap-1 opacity-0 transition-opacity duration-300">
+	<span class="invisible hidden min-h-6 min-w-6">
+		<ExclamationCircleIcon className="size-6" />
+	</span>
+	<span id={errorId} class="text-pretty font-bold transition-all"></span>
 </span>

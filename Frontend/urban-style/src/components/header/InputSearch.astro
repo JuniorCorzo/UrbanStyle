@@ -1,58 +1,55 @@
 <input
-  class="w-full h-7 hidden border border-border rounded focus:outline-none focus:ring-1 focus:ring-border px-2 py-1 animate-left"
-  type="text"
-  name="search-query"
-  placeholder="Buscar productos..."
-  transition:persist
+	class="border-border focus:ring-border animate-left hidden h-7 w-full rounded border px-2 py-1 focus:outline-none focus:ring-1"
+	type="text"
+	name="search-query"
+	placeholder="Buscar productos..."
+	transition:persist
 />
 
 <script>
-  import { $ } from "@/lib/dom-selector";
+	import { $ } from '@/lib/dom-selector'
 
-  document.addEventListener("astro:page-load", () => {
-    const $searchContainer = $("#search_container");
-    const $searchInputContainer = $("input[name='search-query']");
+	document.addEventListener('astro:page-load', () => {
+		const $searchContainer = $('#search_container')
+		const $searchInputContainer = $("input[name='search-query']")
 
-    $searchContainer?.addEventListener("click", (event) => {
-      const target = event.target;
-      if (
-        target instanceof HTMLDivElement ||
-        target instanceof HTMLInputElement
-      ) {
-        return;
-      }
+		$searchContainer?.addEventListener('click', (event) => {
+			const target = event.target
+			if (target instanceof HTMLDivElement || target instanceof HTMLInputElement) {
+				return
+			}
 
-      $searchInputContainer?.classList.toggle("hidden");
-      $searchInputContainer?.classList.toggle("flex");
-    });
+			$searchInputContainer?.classList.toggle('hidden')
+			$searchInputContainer?.classList.toggle('flex')
+		})
 
-    $searchInputContainer?.addEventListener("keyup", (event) => {
-      const input = event.target as HTMLInputElement;
-      if (event.key === "Enter") {
-        if (input.value.trim() !== "") {
-          const searchParam = new URLSearchParams(location.search);
-          searchParam.set("search", input.value);
-          location.search = searchParam.toString();
-        }
-      }
-    });
-  });
+		$searchInputContainer?.addEventListener('keyup', (event) => {
+			const input = event.target as HTMLInputElement
+			if (event.key === 'Enter') {
+				if (input.value.trim() !== '') {
+					const searchParam = new URLSearchParams(location.search)
+					searchParam.set('search', input.value)
+					location.search = searchParam.toString()
+				}
+			}
+		})
+	})
 </script>
 
 <style>
-  .animate-left {
-    animation: left 0.1s ease-in;
-  }
+	.animate-left {
+		animation: left 0.1s ease-in;
+	}
 
-  @keyframes left {
-    0% {
-      opacity: 0;
-      width: 0;
-    }
+	@keyframes left {
+		0% {
+			opacity: 0;
+			width: 0;
+		}
 
-    100% {
-      opacity: 1;
-      width: 100%;
-    }
-  }
+		100% {
+			opacity: 1;
+			width: 100%;
+		}
+	}
 </style>

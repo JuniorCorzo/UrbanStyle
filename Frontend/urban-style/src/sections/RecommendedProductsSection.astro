@@ -1,31 +1,31 @@
 ---
-import ProductCard from "@/components/home/ProductCard.astro";
-import Subtitle from "@/components/text/Subtitle.astro";
-import { getProductByCategory } from "@/service/product.service";
+import ProductCard from '@/components/home/ProductCard.astro'
+import Subtitle from '@/components/text/Subtitle.astro'
+import { getProductByCategory } from '@/service/product.service'
 
 interface Props {
-  categoryName: string;
+	categoryName: string
 }
-const { categoryName } = Astro.props;
+const { categoryName } = Astro.props
 
-const productsRecommended = await getProductByCategory(categoryName);
+const productsRecommended = await getProductByCategory(categoryName)
 ---
 
 <div class="px-6">
-  <section class="w-full flex gap-10">
-    <article class="w-full flex flex-col gap-2">
-      <Subtitle Text="Productos Relacionados" size="2xl" />
-      <div
-        class="w-full flex gap-2 flex-wrap justify-center sm:justify-start items-center sm:items-start"
-      >
-        {
-          productsRecommended.map((product) => (
-            <div>
-              <ProductCard product={product} borderEffect={false} />
-            </div>
-          ))
-        }
-      </div>
-    </article>
-  </section>
+	<section class="flex w-full gap-10">
+		<article class="flex w-full flex-col gap-2">
+			<Subtitle Text="Productos Relacionados" size="2xl" />
+			<div
+				class="flex w-full flex-wrap items-center justify-center gap-2 sm:items-start sm:justify-start"
+			>
+				{
+					productsRecommended.map((product) => (
+						<div>
+							<ProductCard product={product} borderEffect={false} />
+						</div>
+					))
+				}
+			</div>
+		</article>
+	</section>
 </div>

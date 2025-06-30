@@ -1,55 +1,51 @@
 ---
-import type { ProductSummary } from "@/interface/product.interface";
-import Subtitle from "../text/Subtitle.astro";
-import { ProductStore } from "@/state/product.store";
-import Counter from "../home/Counter.astro";
-import ProductDetailsCard from "./ProductDetailsCard.astro";
+import type { ProductSummary } from '@/interface/product.interface'
+import Subtitle from '../text/Subtitle.astro'
+import { ProductStore } from '@/state/product.store'
+import Counter from '../home/Counter.astro'
+import ProductDetailsCard from './ProductDetailsCard.astro'
 
 interface Props {
-  userId: string;
-  items: ProductSummary[];
+	userId: string
+	items: ProductSummary[]
 }
 
-const { items, userId } = Astro.props;
-const { getProductById } = await ProductStore();
+const { items, userId } = Astro.props
+const { getProductById } = await ProductStore()
 ---
 
-<article class="flex flex-col px-7 gap-14 grow">
-  {
-    items.map(({ productId, name, price, quantity, color, size }) => (
-      <div class="flex gap-5">
-        <div class="w-full flex justify-between">
-          <ProductDetailsCard
-            productId={productId}
-            userId={userId}
-            name={name}
-            color={color}
-            size={size}
-            getProductById={getProductById}
-          />
-          <div class="flex flex-col gap-1 items-end">
-            <Counter
-              id="quantity_input"
-              maxNumber={getProductById(productId).get()?.stock || 0}
-              value={quantity.toString()}
-              data-user-id={userId}
-              data-product-id={productId}
-              data-color={color}
-              data-size={size}
-            />
-            <Subtitle
-              id="price_unit"
-              size="lg"
-              Text={`$${price.toLocaleString()}/u`}
-            />
-            <Subtitle
-              id="product_total"
-              size="lg"
-              Text={`$${(price * quantity).toLocaleString()}`}
-            />
-          </div>
-        </div>
-      </div>
-    ))
-  }
+<article class="flex grow flex-col gap-14 px-7">
+	{
+		items.map(({ productId, name, price, quantity, color, size }) => (
+			<div class="flex gap-5">
+				<div class="flex w-full justify-between">
+					<ProductDetailsCard
+						productId={productId}
+						userId={userId}
+						name={name}
+						color={color}
+						size={size}
+						getProductById={getProductById}
+					/>
+					<div class="flex flex-col items-end gap-1">
+						<Counter
+							id="quantity_input"
+							maxNumber={getProductById(productId).get()?.stock || 0}
+							value={quantity.toString()}
+							data-user-id={userId}
+							data-product-id={productId}
+							data-color={color}
+							data-size={size}
+						/>
+						<Subtitle id="price_unit" size="lg" Text={`$${price.toLocaleString()}/u`} />
+						<Subtitle
+							id="product_total"
+							size="lg"
+							Text={`$${(price * quantity).toLocaleString()}`}
+						/>
+					</div>
+				</div>
+			</div>
+		))
+	}
 </article>

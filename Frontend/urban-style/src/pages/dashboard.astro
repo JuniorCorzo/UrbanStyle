@@ -1,91 +1,77 @@
 ---
-import Dock from "@/components/dashboard/Dock.astro";
-import Layout from "@/layouts/Layout.astro";
-import FormDeleteModal from "@/components/dashboard/react/components/modals/FormDeleteModal";
-import { TableItems } from "@/components/dashboard/react/TableItems";
-import TableMostSold from "@/components/dashboard/react/components/TableMostSold";
-import ChartComponent from "@/components/dashboard/react/components/ChartComponent";
-import { ReportStore } from "@/state/report.store";
-import { Sidebar } from "@/components/dashboard/react/components/Sidebar";
+import Dock from '@/components/dashboard/Dock.astro'
+import Layout from '@/layouts/Layout.astro'
+import FormDeleteModal from '@/components/dashboard/react/components/modals/FormDeleteModal'
+import { TableItems } from '@/components/dashboard/react/TableItems'
+import TableMostSold from '@/components/dashboard/react/components/TableMostSold'
+import ChartComponent from '@/components/dashboard/react/components/ChartComponent'
+import { ReportStore } from '@/state/report.store'
+import { Sidebar } from '@/components/dashboard/react/components/Sidebar'
 
-const { accessToken } = Astro.locals;
+const { accessToken } = Astro.locals
 
-const reportData = await ReportStore(accessToken).getReportSales();
-const salesLastMonth = reportData?.month[reportData.month.length - 2];
+const reportData = await ReportStore(accessToken).getReportSales()
+const salesLastMonth = reportData?.month[reportData.month.length - 2]
 ---
 
 <Layout>
-  <Sidebar slot="sidebar" client:idle />
-  <section class="flex flex-col items-center">
-    <h1>Dashboard</h1>
-    <article class="w-full max-w-10/12 grid grid-cols-3 gap-5">
-      <div class="grid grid-cols-3 gap-5 col-span-3">
-        <div
-          class="flex flex-col gap-1 px-5 py-2.5 border border-border rounded"
-        >
-          <span class="text-text text-1xl text-left"
-            >Ingresos del último mes:
-          </span>
-          <span class="text-text text-center font-bold text-6xl"
-            >{salesLastMonth?.total}
-          </span>
-        </div>
-        <div
-          class="flex flex-col gap-1 px-5 py-2.5 border border-border rounded"
-        >
-          <span class="text-text text-1xl text-left"
-            >Ventas del último mes:
-          </span>
-          <span class="text-text text-center font-bold text-6xl"
-            >{salesLastMonth?.sales}
-          </span>
-        </div>
-      </div>
-      <div
-        class="flex flex-col justify-center border col-span-2 border-border text-center py-2.5 px-5 rounded"
-      >
-        <span class="text-lg">Historial de Ventas</span>
-        <ChartComponent client:load reportData={reportData} />
-      </div>
-      <div
-        class="flex flex-col border border-border text-center items-center justify-center py-3 px-5 rounded"
-      >
-        <span class="text-lg">Productos Mas Vendidos</span>
-        <TableMostSold client:load />
-      </div>
-    </article>
-    <article
-      class="w-full max-w-10/12 h-full flex flex-col items-center gap-2 overflow-auto"
-    >
-      <div class="w-full flex justify-end">
-        <button
-          id="button_modal"
-          class="bg-accent px-3 py-0.5 rounded cursor-pointer"
-          type="button"
-        >
-          Añadir
-        </button>
-        <FormDeleteModal client:only />
-      </div>
-      <TableItems client:only />
-    </article>
-    <Dock />
-  </section>
+	<Sidebar slot="sidebar" client:idle />
+	<section class="flex flex-col items-center">
+		<h1>Dashboard</h1>
+		<article class="max-w-10/12 grid w-full grid-cols-3 gap-5">
+			<div class="col-span-3 grid grid-cols-3 gap-5">
+				<div class="border-border flex flex-col gap-1 rounded border px-5 py-2.5">
+					<span class="text-text text-1xl text-left">Ingresos del último mes: </span>
+					<span class="text-text text-center text-6xl font-bold">{salesLastMonth?.total} </span>
+				</div>
+				<div class="border-border flex flex-col gap-1 rounded border px-5 py-2.5">
+					<span class="text-text text-1xl text-left">Ventas del último mes: </span>
+					<span class="text-text text-center text-6xl font-bold">{salesLastMonth?.sales} </span>
+				</div>
+			</div>
+			<div
+				class="border-border col-span-2 flex flex-col justify-center rounded border px-5 py-2.5 text-center"
+			>
+				<span class="text-lg">Historial de Ventas</span>
+				<ChartComponent client:load reportData={reportData} />
+			</div>
+			<div
+				class="border-border flex flex-col items-center justify-center rounded border px-5 py-3 text-center"
+			>
+				<span class="text-lg">Productos Mas Vendidos</span>
+				<TableMostSold client:load />
+			</div>
+		</article>
+		<article class="max-w-10/12 flex h-full w-full flex-col items-center gap-2 overflow-auto">
+			<div class="flex w-full justify-end">
+				<button
+					id="button_modal"
+					class="bg-accent cursor-pointer rounded px-3 py-0.5"
+					type="button"
+				>
+					Añadir
+				</button>
+				<FormDeleteModal client:only="react" />
+			</div>
+			<TableItems client:only="react" />
+		</article>
+		<Dock />
+	</section>
 </Layout>
 
 <script>
-  import { $ } from "@/lib/dom-selector";
-  import { openModalEvent } from "@/lib/utils/open-modal-event";
-  import { selectMediator } from "@/lib/utils/select-mediator";
+	import { $ } from '@/lib/dom-selector'
+	import { openModalEvent } from '@/lib/utils/open-modal-event'
+	import { selectMediator } from '@/lib/utils/select-mediator'
 
-  const handleMediator = async () => {
-    const dashboardMediator = await selectMediator();
-    if (dashboardMediator) {
-      const { formType, sendData, title } = dashboardMediator.form;
-      openModalEvent(title, formType, sendData);
-    }
-  };
+	const handleMediator = async () => {
+		const dashboardMediator = await selectMediator()
+		if (dashboardMediator) {
+			const { formType, sendData, title } = dashboardMediator.form
+			openModalEvent(title, formType, sendData)
+		}
+	}
 
-  $("#button_modal")?.addEventListener("click", handleMediator);
-  document.addEventListener("astro:page-load", () => {});
+	$('#button_modal')?.addEventListener('click', handleMediator)
+	document.addEventListener('astro:page-load', () => {})
 </script>

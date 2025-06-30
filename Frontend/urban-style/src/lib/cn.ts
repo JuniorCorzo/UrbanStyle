@@ -1,5 +1,5 @@
-import { twMerge } from "tailwind-merge";
-import { clsx } from "clsx";
+import { twMerge } from 'tailwind-merge'
+import { clsx } from 'clsx'
 
 /**
  * `cn` (Class Name) is a composition utility that intelligently combines
@@ -39,5 +39,5 @@ import { clsx } from "clsx";
  * // -> "flex items-center justify-between gap-2"
  */
 export function cn(...input: any[]): string {
-  return twMerge(clsx(input));
+	return twMerge(clsx(input))
 }

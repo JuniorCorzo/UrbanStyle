@@ -1,17 +1,15 @@
 ---
-import type { Category } from "@/interface/category.interface";
+import type { Category } from '@/interface/category.interface'
 
 const { categories } = Astro.props as {
-  categories: Pick<Category, "id" | "name">[];
-};
+	categories: Pick<Category, 'id' | 'name'>[]
+}
 ---
 
 <div class="flex gap-2">
-  {
-    categories.map(({ name }) => (
-      <span class="text-base bg-accent text-text px-1.5 py-1 rounded-lg">
-        {name}
-      </span>
-    ))
-  }
+	{
+		categories.map(({ name }) => (
+			<span class="bg-accent text-text rounded-lg px-1.5 py-1 text-base">{name}</span>
+		))
+	}
 </div>
