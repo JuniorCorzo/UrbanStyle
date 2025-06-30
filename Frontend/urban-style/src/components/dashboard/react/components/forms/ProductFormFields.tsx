@@ -42,7 +42,6 @@ export function ProductFormFields({
         label="Nombre del producto"
         name="name"
         placeholder="Ej: Camiseta básica unisex"
-        required={true}
         defaultValue={name ?? ""}
       />
       <TextAreaInput
@@ -50,14 +49,12 @@ export function ProductFormFields({
         name="description"
         placeholder="Describe el producto, materiales, uso…"
         value={description ?? ""}
-        required={true}
       />
       <TextInput
         label="Precio"
         name="price"
         placeholder="Ej: 59.900"
         defaultValue={price ?? ""}
-        required={true}
       />
       <TextInput
         label="Descuento (%)"
@@ -65,18 +62,16 @@ export function ProductFormFields({
         placeholder="Ej: 15"
         type="number"
         defaultValue={discount?.toLocaleString() ?? ""}
-        required={true}
       />
       <SelectInput
         label="Categoría"
         name="categories"
         placeholder="Selecciona una o más categorías"
         isMultiple={true}
-        value={defaultCategory?.map(({ id, name }) => ({
+        value={defaultCategory?.map(({ categoryId, name }) => ({
           text: name,
-          value: id,
+          value: categoryId,
         }))}
-        required={true}
         options={categories}
       />
       <AttributeFields

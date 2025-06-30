@@ -27,7 +27,7 @@ export class ProductAdapter {
 
     const getCategories = (): CategorySummary[] =>
       (JSON.parse(categories) as SelectOptions[]).map(({ text, value }) => {
-        return { id: value, name: text };
+        return { categoryId: value, name: text };
       });
 
     const getAttributes = (): Attributes[] => JSON.parse(attributes);

@@ -16,11 +16,11 @@ export interface Products extends BaseDocument {
   name: string;
   description: string;
   price: number;
-  discount: number;
   images: Images[];
   categories: CategorySummary[];
   attributes: Attributes[];
   stock: number;
+  discount?: number;
 }
 
 export interface ProductsGroupedCategory {

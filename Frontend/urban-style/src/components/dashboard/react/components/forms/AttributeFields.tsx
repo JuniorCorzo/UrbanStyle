@@ -10,6 +10,7 @@ import { cn } from "@/lib/cn";
 import { AttributeTable } from "./AttributeTable";
 import { AttributeFormFields } from "./AttributeFormFields";
 import { useAttributes } from "../../hooks/useAttributes";
+import { MessageError } from "@/components/react/inputs/MessageError";
 
 export interface AttributesWithId extends Attributes {
   id: string;
@@ -29,10 +30,11 @@ export function AttributeFields({ name, defaultAttributes = [] }: Props) {
     handleRemoveAttribute,
   } = useAttributes(defaultAttributes);
   return (
-    <div ref={containerRef} className="w-full flex flex-col gap-4">
+    <div ref={containerRef} className="w-full flex flex-col gap-1">
       <span className="">
         <h2>Atributos de producto</h2>
       </span>
+      <MessageError errorId={`${name}_error`} />
       <AttributeTable
         attributes={attributes}
         onRemove={handleRemoveAttribute}

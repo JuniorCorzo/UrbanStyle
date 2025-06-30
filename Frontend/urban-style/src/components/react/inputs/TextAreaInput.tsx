@@ -20,14 +20,14 @@ export function TextAreaInput({
   return (
     <LabelInput label={label}>
       <MessageError errorId={`${name}_error`} />
-      <div>
+      <span>
         <textarea
           className="w-full min-h-16 max-h-32 border border-border focus:custom-ring p-2 field-sizing-content"
           name={name}
           placeholder={placeholder}
           defaultValue={value}
         />
-      </div>
+      </span>
     </LabelInput>
   );
 }
