@@ -1,28 +1,28 @@
 ---
-import { ClientRouter } from "astro:transitions";
-import Header from "../components/header/Header.astro";
-import "@/styles/global.css";
+import { ClientRouter } from 'astro:transitions'
+import Header from '../components/header/Header.astro'
+import '@/styles/global.css'
 ---
 
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <title>Astro Basics</title>
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<title>Astro Basics</title>
 
-    <ClientRouter />
-  </head>
-  <body class="flex flex-col bg-background overflow-auto gap-5">
-    <Header />
-    <main>
-      <slot />
-    </main>
-    <slot name="sidebar" />
-  </body>
+		<ClientRouter />
+	</head>
+	<body class="bg-background flex flex-col gap-5 overflow-auto">
+		<Header />
+		<main>
+			<slot />
+		</main>
+		<slot name="sidebar" />
+	</body>
 </html>
 
 <style is:global>
-  @import "../styles/global.css";
+	@import '../styles/global.css';
 </style>

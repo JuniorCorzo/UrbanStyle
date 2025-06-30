@@ -1,41 +1,35 @@
 ---
-import { initializeProductGroupeStore } from "@/state/product.store";
-import ProductContainer from "./ProductContainer.astro";
-import ProductsSearchResult from "./ProductsSearchResult.astro";
-import type {
-  Products,
-  ProductsGroupedCategory,
-} from "@/interface/product.interface";
-import { productGroupedStore, ProductStore } from "@/state/product.store";
-import ProductRowByCategory from "./ProductRowByCategory.astro";
+import { initializeProductGroupeStore } from '@/state/product.store'
+import ProductContainer from './ProductContainer.astro'
+import ProductsSearchResult from './ProductsSearchResult.astro'
+import type { Products, ProductsGroupedCategory } from '@/interface/product.interface'
+import { productGroupedStore, ProductStore } from '@/state/product.store'
+import ProductRowByCategory from './ProductRowByCategory.astro'
 
-const searchQuery = Astro.url.searchParams.get("search");
+const searchQuery = Astro.url.searchParams.get('search')
 
-let products: ProductsGroupedCategory[] = [];
+let products: ProductsGroupedCategory[] = []
 if (!searchQuery) {
-  await initializeProductGroupeStore();
-  products = productGroupedStore.get();
+	await initializeProductGroupeStore()
+	products = productGroupedStore.get()
 }
 ---
 
-<section class="flex flex-col px-10 gap-5">
-  {
-    !searchQuery &&
-      products.map((group) => <ProductRowByCategory group={group} />)
-  }
+<section class="flex flex-col gap-5 px-10">
+	{!searchQuery && products.map((group) => <ProductRowByCategory group={group} />)}
 
-  {searchQuery && <ProductsSearchResult searchQuery={searchQuery.trim()} />}
+	{searchQuery && <ProductsSearchResult searchQuery={searchQuery.trim()} />}
 </section>
 
 <script>
-  import { $ } from "@/lib/dom-selector";
-  import { navigate } from "astro:transitions/client";
+	import { $ } from '@/lib/dom-selector'
+	import { navigate } from 'astro:transitions/client'
 
-  $("a")?.addEventListener("click", (event) => {
-    event.preventDefault();
-    const href = (event.currentTarget as HTMLAnchorElement).href;
-    navigate(href, {
-      history: "push",
-    });
-  });
+	$('a')?.addEventListener('click', (event) => {
+		event.preventDefault()
+		const href = (event.currentTarget as HTMLAnchorElement).href
+		navigate(href, {
+			history: 'push',
+		})
+	})
 </script>

@@ -1,4 +1,4 @@
-import type { Municipality } from "@/interface/address.interface";
-import { map } from "nanostores";
+import type { Municipality } from '@/interface/address.interface'
+import { map } from 'nanostores'
 
-export const MunicipalityStore = map<Municipality[]>([]);
+export const MunicipalityStore = map<Municipality[]>([])

@@ -1,42 +1,38 @@
 ---
 interface Props {
-  title: string;
-  svgName: string;
-  mediator: string;
+	title: string
+	svgName: string
+	mediator: string
 }
 
-const { mediator, svgName, title } = Astro.props;
+const { mediator, svgName, title } = Astro.props
 ---
 
 <li
-  class="relative flex w-14 bg-background text-center aspect-square border border-border rounded justify-center items-center cursor-pointer scale-90 hover:scale-105 transition-transform duration-300 group"
-  data-mediator={mediator}
+	class="bg-background border-border group relative flex aspect-square w-14 scale-90 cursor-pointer items-center justify-center rounded border text-center transition-transform duration-300 hover:scale-105"
+	data-mediator={mediator}
 >
-  <img
-    src={`/icons/${svgName}.svg`}
-    class="w-6 h-6 aspect-square"
-    data-mediator={mediator}
-  />
-  <span class="absolute hidden group-hover:block top-0 animate-up">
-    {title}
-  </span>
+	<img src={`/icons/${svgName}.svg`} class="aspect-square h-6 w-6" data-mediator={mediator} />
+	<span class="animate-up absolute top-0 hidden group-hover:block">
+		{title}
+	</span>
 </li>
 
 <style>
-  .animate-up {
-    animation: up 0.3s ease-out forwards;
-  }
+	.animate-up {
+		animation: up 0.3s ease-out forwards;
+	}
 
-  @keyframes up {
-    0% {
-      opacity: 0;
-      scale: 0.5;
-      transform: translateY(-5px);
-    }
-    100% {
-      opacity: 1;
-      scale: 1;
-      transform: translateY(-25px);
-    }
-  }
+	@keyframes up {
+		0% {
+			opacity: 0;
+			scale: 0.5;
+			transform: translateY(-5px);
+		}
+		100% {
+			opacity: 1;
+			scale: 1;
+			transform: translateY(-25px);
+		}
+	}
 </style>

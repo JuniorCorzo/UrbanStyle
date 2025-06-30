@@ -1,8 +1,8 @@
-import { useTableMostSold } from "../hooks/useTableMostSold";
-import Table from "../Table";
+import { useTableMostSold } from '../hooks/useTableMostSold'
+import Table from '../Table'
 
 export default function TableMostSold() {
-  const { tableConfig } = useTableMostSold();
+	const { tableConfig } = useTableMostSold()
 
-  return <Table tableConfig={tableConfig} />;
+	return <Table tableConfig={tableConfig} />
 }

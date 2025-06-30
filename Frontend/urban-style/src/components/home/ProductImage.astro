@@ -1,23 +1,23 @@
 ---
-import { Image } from "astro:assets";
-import { CLOUDFLARE_URL } from "@/config/env-config";
-import type { Images } from "@/interface/product.interface";
+import { Image } from 'astro:assets'
+import { CLOUDFLARE_URL } from '@/config/env-config'
+import type { Images } from '@/interface/product.interface'
 
 interface Props {
-  alt: string;
-  images: Images[];
+	alt: string
+	images: Images[]
 }
 
-const { alt, images } = Astro.props;
+const { alt, images } = Astro.props
 ---
 
-<div class="w-fit mx-auto">
-  <Image
-    class="aspect-square rounded-xl"
-    src={`${CLOUDFLARE_URL}/${images[0].image}`}
-    alt={alt}
-    width={450}
-    height={450}
-    loading="lazy"
-  />
+<div class="mx-auto w-fit">
+	<Image
+		class="aspect-square rounded-xl"
+		src={`${CLOUDFLARE_URL}/${images[0].image}`}
+		alt={alt}
+		width={450}
+		height={450}
+		loading="lazy"
+	/>
 </div>

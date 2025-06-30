@@ -1,65 +1,65 @@
 ---
-import type { User } from "@/interface/user.interface";
+import type { User } from '@/interface/user.interface'
 
 interface Props {
-  user: User;
+	user: User
 }
 
-const { user } = Astro.props;
-const { name: userName, role } = user;
+const { user } = Astro.props
+const { name: userName, role } = user
 ---
 
 <div class="text-right">
-  <span id="user_name" class="cursor-pointer">{userName}</span>
-  <div
-    id="user_menu"
-    class="absolute invisible opacity-0 w-52 max-h-0 px-3 py-4 bg-accent/85 rounded-bl rounded-br backdrop-blur-xs -right-5 top-full text-left gap-4 group-hover:opacity-100 group-hover:visible group-hover:max-h-96 transition-[max-height,opacity] duration-[400ms]"
-  >
-    <ul class="w-full flex flex-col gap-6">
-      <li>
-        <a href="#">Perfil</a>
-      </li>
-      <li>
-        <a href="#">Mis pedidos</a>
-      </li>
-      {
-        role === "ROLE_ADMIN" && (
-          <li>
-            <a href="/dashboard?mediator=products">Dashboard</a>
-          </li>
-        )
-      }
-      <li>
-        <button id="logout" class="cursor-pointer">Cerrar sesión</button>
-      </li>
-    </ul>
-  </div>
+	<span id="user_name" class="cursor-pointer">{userName}</span>
+	<div
+		id="user_menu"
+		class="bg-accent/85 backdrop-blur-xs invisible absolute -right-5 top-full max-h-0 w-52 gap-4 rounded-bl rounded-br px-3 py-4 text-left opacity-0 transition-[max-height,opacity] duration-[400ms] group-hover:visible group-hover:max-h-96 group-hover:opacity-100"
+	>
+		<ul class="flex w-full flex-col gap-6">
+			<li>
+				<a href="#">Perfil</a>
+			</li>
+			<li>
+				<a href="#">Mis pedidos</a>
+			</li>
+			{
+				role === 'ROLE_ADMIN' && (
+					<li>
+						<a href="/dashboard?mediator=products">Dashboard</a>
+					</li>
+				)
+			}
+			<li>
+				<button id="logout" class="cursor-pointer">Cerrar sesión</button>
+			</li>
+		</ul>
+	</div>
 </div>
 
 <style>
-  li {
-    @apply w-full px-[12px] py-[7px] border-b-2 border-transparent cursor-pointer;
-    &:hover {
-      border-color: var(--color-border);
-      transition: border-color 300ms;
-    }
-  }
+	li {
+		@apply w-full cursor-pointer border-b-2 border-transparent px-[12px] py-[7px];
+		&:hover {
+			border-color: var(--color-border);
+			transition: border-color 300ms;
+		}
+	}
 </style>
 
 <script>
-  import { $, $$ } from "@/lib/dom-selector";
-  import { logout } from "@/service/auth.service";
-  import { navigate } from "astro:transitions/client";
+	import { $, $$ } from '@/lib/dom-selector'
+	import { logout } from '@/service/auth.service'
+	import { navigate } from 'astro:transitions/client'
 
-  document.addEventListener("astro:page-load", () => {
-    $$("nav ul li a").forEach(($aElement) => {
-      $aElement?.parentElement?.addEventListener("click", () => {
-        navigate(($aElement as HTMLAnchorElement).href);
-      });
-    });
+	document.addEventListener('astro:page-load', () => {
+		$$('nav ul li a').forEach(($aElement) => {
+			$aElement?.parentElement?.addEventListener('click', () => {
+				navigate(($aElement as HTMLAnchorElement).href)
+			})
+		})
 
-    $("#logout")?.parentElement?.addEventListener("click", () => {
-      logout().then(() => location.replace("/home"));
-    });
-  });
+		$('#logout')?.parentElement?.addEventListener('click', () => {
+			logout().then(() => location.replace('/home'))
+		})
+	})
 </script>

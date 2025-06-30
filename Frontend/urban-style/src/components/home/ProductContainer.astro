@@ -1,16 +1,16 @@
 ---
-import ProductCard from "./ProductCard.astro";
-import type { Products } from "@/interface/product.interface";
+import ProductCard from './ProductCard.astro'
+import type { Products } from '@/interface/product.interface'
 
 interface Props {
-  products: Products[];
+	products: Products[]
 }
 
-const { products } = Astro.props;
+const { products } = Astro.props
 ---
 
 <div
-  class="w-full grid auto-rows-auto grid-cols-[repeat(auto-fill,max(15rem))] px-3 gap-x-10 gap-y-32"
+	class="grid w-full auto-rows-auto grid-cols-[repeat(auto-fill,max(15rem))] gap-x-10 gap-y-32 px-3"
 >
-  {products?.map((product) => <ProductCard product={product} />)}
+	{products?.map((product) => <ProductCard product={product} />)}
 </div>

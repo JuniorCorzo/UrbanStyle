@@ -1,134 +1,123 @@
 ---
-import CartDetails from "@/components/shopping-cart/CartDetails.astro";
-import CartItems from "@/components/shopping-cart/CartItems.astro";
-import EmptyCartMessage from "@/components/shopping-cart/EmptyCartMessage.astro";
-import { CartService } from "@/service/cart.service";
+import CartDetails from '@/components/shopping-cart/CartDetails.astro'
+import CartItems from '@/components/shopping-cart/CartItems.astro'
+import EmptyCartMessage from '@/components/shopping-cart/EmptyCartMessage.astro'
+import { CartService } from '@/service/cart.service'
 
-const { user, accessToken } = Astro.locals;
-const userId = user?.id;
-if (!accessToken) return;
+const { user, accessToken } = Astro.locals
+const userId = user?.id
+if (!accessToken) return
 
-const items =
-  (await CartService().getCartByUserId(userId, accessToken))?.items || [];
+const items = (await CartService().getCartByUserId(userId, accessToken))?.items || []
 
-const calculateTotal = Number(
-  items.reduce((acc, { price, quantity }) => acc + price * quantity, 0)
-);
+const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + price * quantity, 0))
 ---
 
 <section
-  id="cart-section"
-  class="flex flex-col md:flex-row items-center justify-center md:items-start md:justify-start gap-y-5"
+	id="cart-section"
+	class="flex flex-col items-center justify-center gap-y-5 md:flex-row md:items-start md:justify-start"
 >
-  {
-    items.length !== 0 ? (
-      <CartItems userId={userId} items={items} />
-    ) : (
-      <EmptyCartMessage />
-    )
-  }
-  <CartDetails calculateTotal={calculateTotal} />
+	{items.length !== 0 ? <CartItems userId={userId} items={items} /> : <EmptyCartMessage />}
+	<CartDetails calculateTotal={calculateTotal} />
 </section>
 
 <script>
-  import { $, $$ } from "@/lib/dom-selector";
-  import { CartService } from "@/service/cart.service";
-  import { navigate } from "astro:transitions/client";
-  /**
-   * Map to store debounce timers per product key.
-   */
-  const debounceTimers: Record<string, ReturnType<typeof setTimeout>> = {};
+	import { $, $$ } from '@/lib/dom-selector'
+	import { CartService } from '@/service/cart.service'
+	import { navigate } from 'astro:transitions/client'
+	/**
+	 * Map to store debounce timers per product key.
+	 */
+	const debounceTimers: Record<string, ReturnType<typeof setTimeout>> = {}
 
-  /**
-   * Extracts dataset properties for cart item identifiers from an element.
-   * @param element - HTMLElement containing data attributes
-   * @returns Object with userId, productId, color, size or null if missing
-   */
-  function extractItemKeys(
-    element: HTMLElement
-  ): { userId: string; productId: string; color: string; size: string } | null {
-    const { userId, productId, color, size } = element.dataset;
-    if (!userId || !productId || !color || !size) return null;
+	/**
+	 * Extracts dataset properties for cart item identifiers from an element.
+	 * @param element - HTMLElement containing data attributes
+	 * @returns Object with userId, productId, color, size or null if missing
+	 */
+	function extractItemKeys(
+		element: HTMLElement,
+	): { userId: string; productId: string; color: string; size: string } | null {
+		const { userId, productId, color, size } = element.dataset
+		if (!userId || !productId || !color || !size) return null
 
-    return { userId, productId, color, size };
-  }
+		return { userId, productId, color, size }
+	}
 
-  /**
-   * Removes a product variant from the cart.
-   * @param element - Button or element that triggered removal
-   */
-  export function handleRemoveItem(element: HTMLElement): void {
-    const keys = extractItemKeys(element);
-    if (!keys) return;
-    const { userId, productId, color, size } = keys;
+	/**
+	 * Removes a product variant from the cart.
+	 * @param element - Button or element that triggered removal
+	 */
+	export function handleRemoveItem(element: HTMLElement): void {
+		const keys = extractItemKeys(element)
+		if (!keys) return
+		const { userId, productId, color, size } = keys
 
-    CartService()
-      .removeProductFromCart(userId, productId, color, size)
-      .then(() => {
-        navigate(window.location.pathname, { history: "replace" });
-      });
-  }
+		CartService()
+			.removeProductFromCart(userId, productId, color, size)
+			.then(() => {
+				navigate(window.location.pathname, { history: 'replace' })
+			})
+	}
 
-  /**
-   * Updates the quantity of a product variant in the cart with debounce.
-   * @param inputContainer - Parent element containing data attributes and input
-   */
-  export function handleChangeQuantity(inputContainer: HTMLElement): void {
-    const keys = extractItemKeys(inputContainer);
-    const input = inputContainer.querySelector(
-      "#quantity_input"
-    ) as HTMLInputElement | null;
-    if (!keys || !input) return;
+	/**
+	 * Updates the quantity of a product variant in the cart with debounce.
+	 * @param inputContainer - Parent element containing data attributes and input
+	 */
+	export function handleChangeQuantity(inputContainer: HTMLElement): void {
+		const keys = extractItemKeys(inputContainer)
+		const input = inputContainer.querySelector('#quantity_input') as HTMLInputElement | null
+		if (!keys || !input) return
 
-    // If value hasn't changed, do nothing
-    if (input.dataset.value === input.value) return;
+		// If value hasn't changed, do nothing
+		if (input.dataset.value === input.value) return
 
-    const { userId, productId, color, size } = keys;
+		const { userId, productId, color, size } = keys
 
-    // Clear existing debounce
-    if (debounceTimers[productId]) {
-      clearTimeout(debounceTimers[productId]);
-    }
+		// Clear existing debounce
+		if (debounceTimers[productId]) {
+			clearTimeout(debounceTimers[productId])
+		}
 
-    // Debounce the update call
-    debounceTimers[productId] = setTimeout(() => {
-      const quantity = input.valueAsNumber;
-      CartService()
-        .updateQuantityProductInCart(userId, productId, color, size, quantity)
-        .then((cart) => {
-          navigate(window.location.pathname, { history: "replace" });
-          // Sync input dataset with confirmed quantity
-          input.setAttribute("data-value", cart.items[0].quantity.toString());
-        });
-    }, 300);
-  }
+		// Debounce the update call
+		debounceTimers[productId] = setTimeout(() => {
+			const quantity = input.valueAsNumber
+			CartService()
+				.updateQuantityProductInCart(userId, productId, color, size, quantity)
+				.then((cart) => {
+					navigate(window.location.pathname, { history: 'replace' })
+					// Sync input dataset with confirmed quantity
+					input.setAttribute('data-value', cart.items[0].quantity.toString())
+				})
+		}, 300)
+	}
 
-  /**
-   * Delegates click events on cart section to appropriate handlers.
-   * @param event - MouseEvent from click
-   */
-  export function handleCartClick(event: MouseEvent): void {
-    const target = event.target as HTMLElement;
-    if (target.id === "remove-product") {
-      handleRemoveItem(target);
-    } else if (target.id === "increment" || target.id === "decrement") {
-      const parent = target.parentElement as HTMLElement;
-      handleChangeQuantity(parent);
-    }
-  }
+	/**
+	 * Delegates click events on cart section to appropriate handlers.
+	 * @param event - MouseEvent from click
+	 */
+	export function handleCartClick(event: MouseEvent): void {
+		const target = event.target as HTMLElement
+		if (target.id === 'remove-product') {
+			handleRemoveItem(target)
+		} else if (target.id === 'increment' || target.id === 'decrement') {
+			const parent = target.parentElement as HTMLElement
+			handleChangeQuantity(parent)
+		}
+	}
 
-  /**
-   * Attaches listeners for quantity blur and click events on the cart section.
-   */
-  export function initCartListeners(): void {
-    const inputs = $$<HTMLDivElement>("#quantity_input");
-    inputs.forEach((div) => {
-      div.onblur = null;
-      div.addEventListener("blur", () => handleChangeQuantity(div));
-    });
+	/**
+	 * Attaches listeners for quantity blur and click events on the cart section.
+	 */
+	export function initCartListeners(): void {
+		const inputs = $$<HTMLDivElement>('#quantity_input')
+		inputs.forEach((div) => {
+			div.onblur = null
+			div.addEventListener('blur', () => handleChangeQuantity(div))
+		})
 
-    const cartSection = $("#cart-section");
-    cartSection?.addEventListener("click", handleCartClick);
-  }
-  document.addEventListener("astro:page-load", initCartListeners);
+		const cartSection = $('#cart-section')
+		cartSection?.addEventListener('click', handleCartClick)
+	}
+	document.addEventListener('astro:page-load', initCartListeners)
 </script>

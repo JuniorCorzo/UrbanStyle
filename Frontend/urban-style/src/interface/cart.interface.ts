@@ -1,6 +1,6 @@
-import type { ProductSummary } from "./product.interface";
+import type { ProductSummary } from './product.interface'
 
 export interface Cart {
-  userId: string;
-  items: ProductSummary[];
+	userId: string
+	items: ProductSummary[]
 }

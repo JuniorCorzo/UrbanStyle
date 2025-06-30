@@ -1,9 +1,9 @@
-import type { Table } from "@tanstack/table-core";
+import type { Table } from '@tanstack/table-core'
 
-export type ITable = Table<unknown>;
-export type TableConfig = () => { tableConfig: ITable };
+export type ITable = Table<unknown>
+export type TableConfig = () => { tableConfig: ITable }
 
 export interface ITableMediator {
-  tableConfig: TableConfig;
-  mostSoldTable: TableConfig;
+	tableConfig: TableConfig
+	mostSoldTable: TableConfig
 }

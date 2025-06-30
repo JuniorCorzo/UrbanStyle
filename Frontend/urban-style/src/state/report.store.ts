@@ -1,42 +1,42 @@
-import type { BestSeller, ReportSales } from "@/interface/report.interface";
-import { ReportService } from "@/service/report.service";
-import { map } from "nanostores";
+import type { BestSeller, ReportSales } from '@/interface/report.interface'
+import { ReportService } from '@/service/report.service'
+import { map } from 'nanostores'
 
-const productMoreSoldStore = map<BestSeller[]>();
-const categoriesMoreSoldStore = map<BestSeller[]>();
-export const reportSalesStore = map<ReportSales>();
+const productMoreSoldStore = map<BestSeller[]>()
+const categoriesMoreSoldStore = map<BestSeller[]>()
+export const reportSalesStore = map<ReportSales>()
 
 export function ReportStore(token: string) {
-  const getProductsMoreSold = async () => {
-    if (!productMoreSoldStore.get().length) {
-      const report = await ReportService().productsMoreSold();
-      productMoreSoldStore.set(report);
-    }
+	const getProductsMoreSold = async () => {
+		if (!productMoreSoldStore.get().length) {
+			const report = await ReportService().productsMoreSold()
+			productMoreSoldStore.set(report)
+		}
 
-    return productMoreSoldStore.get();
-  };
+		return productMoreSoldStore.get()
+	}
 
-  const getCategoriesMoreSold = async () => {
-    if (!categoriesMoreSoldStore.get().length) {
-      const report = await ReportService().categoriesMoreSold();
-      categoriesMoreSoldStore.set(report);
-    }
+	const getCategoriesMoreSold = async () => {
+		if (!categoriesMoreSoldStore.get().length) {
+			const report = await ReportService().categoriesMoreSold()
+			categoriesMoreSoldStore.set(report)
+		}
 
-    return categoriesMoreSoldStore.get();
-  };
+		return categoriesMoreSoldStore.get()
+	}
 
-  const getReportSales = async () => {
-    if (reportSalesStore.get()?.day == undefined) {
-      const report = await ReportService().reportSales(token);
-      reportSalesStore.set(report);
-    }
+	const getReportSales = async () => {
+		if (reportSalesStore.get()?.day == undefined) {
+			const report = await ReportService().reportSales(token)
+			reportSalesStore.set(report)
+		}
 
-    return reportSalesStore.get();
-  };
+		return reportSalesStore.get()
+	}
 
-  return {
-    getProductsMoreSold,
-    getCategoriesMoreSold,
-    getReportSales,
-  };
+	return {
+		getProductsMoreSold,
+		getCategoriesMoreSold,
+		getReportSales,
+	}
 }

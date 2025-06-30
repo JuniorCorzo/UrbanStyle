@@ -1,51 +1,40 @@
 ---
-import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
-import CardDock from "./CardDock.astro";
+import { TABLE_MEDIATOR_METADATA } from '@/const/table-mediator.const'
+import CardDock from './CardDock.astro'
 
-const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA;
+const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA
 ---
 
 <nav
-  class="relative w-fit mx-auto px-7 bottom-0 before:absolute before:w-full before:h-7 before:border before:border-border before:rounded before:left-0 before:bg-accent before:bottom-1 before:-z-10"
-  transition:persist
+	class="before:border-border before:bg-accent relative bottom-0 mx-auto w-fit px-7 before:absolute before:bottom-1 before:left-0 before:-z-10 before:h-7 before:w-full before:rounded before:border"
+	transition:persist
 >
-  <ul id="container_links" class="flex mb-2.5 justify-around gap-5">
-    <CardDock
-      title="Productos"
-      mediator={productsSearchParam}
-      svgName="shopping"
-    />
-    <CardDock
-      title="Categorías"
-      mediator={categoriesSearchParam}
-      svgName="categories"
-    />
-  </ul>
+	<ul id="container_links" class="mb-2.5 flex justify-around gap-5">
+		<CardDock title="Productos" mediator={productsSearchParam} svgName="shopping" />
+		<CardDock title="Categorías" mediator={categoriesSearchParam} svgName="categories" />
+	</ul>
 </nav>
 
 <script>
-  import { $ } from "@/lib/dom-selector";
-  import { TABLE_MEDIATOR_METADATA } from "@/const/table-mediator.const";
-  import { dispatchMediatorEvent } from "@/lib/utils/change-mediator-event";
+	import { $ } from '@/lib/dom-selector'
+	import { TABLE_MEDIATOR_METADATA } from '@/const/table-mediator.const'
+	import { dispatchMediatorEvent } from '@/lib/utils/change-mediator-event'
 
-  const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA;
+	const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA
 
-  $("#container_links")?.addEventListener("click", (event) => {
-    const target = event.target as HTMLElement;
+	$('#container_links')?.addEventListener('click', (event) => {
+		const target = event.target as HTMLElement
 
-    if (
-      !(target instanceof HTMLLIElement) &&
-      !(target instanceof HTMLImageElement)
-    ) {
-      return;
-    }
-    const mediator = target.dataset.mediator;
+		if (!(target instanceof HTMLLIElement) && !(target instanceof HTMLImageElement)) {
+			return
+		}
+		const mediator = target.dataset.mediator
 
-    if (mediator) {
-      const url = new URL(window.location.href);
-      url.searchParams.set(mediatorSearchParam, mediator);
-      window.history.replaceState({}, "", url);
-      dispatchMediatorEvent({ mediator });
-    }
-  });
+		if (mediator) {
+			const url = new URL(window.location.href)
+			url.searchParams.set(mediatorSearchParam, mediator)
+			window.history.replaceState({}, '', url)
+			dispatchMediatorEvent({ mediator })
+		}
+	})
 </script>

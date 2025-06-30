@@ -1,16 +1,16 @@
 ---
-import Layout from "@/layouts/Layout.astro";
-import ProductSection from "@/sections/ProductSection.astro";
-import RecommendedProductsSection from "@/sections/RecommendedProductsSection.astro";
-import { ProductStore } from "@/state/product.store";
+import Layout from '@/layouts/Layout.astro'
+import ProductSection from '@/sections/ProductSection.astro'
+import RecommendedProductsSection from '@/sections/RecommendedProductsSection.astro'
+import { ProductStore } from '@/state/product.store'
 
-const productId = Astro.url.searchParams.get("id");
+const productId = Astro.url.searchParams.get('id')
 
-const { productStore } = await ProductStore();
-const productById = productStore.get().filter(({ id }) => id === productId)[0];
+const { productStore } = await ProductStore()
+const productById = productStore.get().filter(({ id }) => id === productId)[0]
 ---
 
 <Layout>
-  <ProductSection product={productById} />
-  <RecommendedProductsSection categoryName={productById?.categories[0].name} />
+	<ProductSection product={productById} />
+	<RecommendedProductsSection categoryName={productById?.categories[0].name} />
 </Layout>

@@ -1,52 +1,51 @@
 ---
-import { ShoppingCartIcon } from "@heroicons/react/24/outline";
-import { CartService } from "@/service/cart.service";
+import { ShoppingCartIcon } from '@heroicons/react/24/outline'
+import { CartService } from '@/service/cart.service'
 
-const { user, accessToken } = Astro.locals;
-const id = user?.id;
+const { user, accessToken } = Astro.locals
+const id = user?.id
 
-if (!id) return;
-const cartLength =
-  (await CartService().getCartByUserId(id, accessToken))?.items.length || 0;
+if (!id) return
+const cartLength = (await CartService().getCartByUserId(id, accessToken))?.items.length || 0
 ---
 
 <a
-  id="to_cart"
-  class="flex backdrop-blur-xs gap-1 border rounded px-3 py-1 justify-center items-center hover:scale-110 transition-all"
-  title="Carrito de Compras"
-  href="/shopping-cart"
-  type="button"
+	id="to_cart"
+	class="backdrop-blur-xs flex items-center justify-center gap-1 rounded border px-3 py-1 transition-all hover:scale-110"
+	title="Carrito de Compras"
+	href="/shopping-cart"
+	type="button"
 >
-  <ShoppingCartIcon className="size-5 pointer-events-none" />
-  <span class="text-sm pointer-events-none">
-    Carrito
-    <span id="cart_count">{cartLength === 0 ? "" : `(${cartLength})`}</span>
-  </span>
+	<ShoppingCartIcon className="pointer-events-none size-5" />
+	<span class="pointer-events-none text-sm">
+		Carrito
+		<span id="cart_count">{cartLength === 0 ? '' : `(${cartLength})`}</span>
+	</span>
 </a>
 
 <script>
-  import { $ } from "@/lib/dom-selector";
-  import type { CartCountEvent } from "@/lib/utils/cart-count-event";
-  import { navigate } from "astro:transitions/client";
+	import { $ } from '@/lib/dom-selector'
+	import type { CartCountEvent } from '@/lib/utils/cart-count-event'
+	import { navigate } from 'astro:transitions/client'
 
-  const initializedListener = () => {
-    const $cartCount = $<HTMLSpanElement>("#cart_count");
+	const initializedListener = () => {
+		const $cartCount = $<HTMLSpanElement>('#cart_count')
 
-    document.addEventListener("cart-count", (event) => {
-      if (!$cartCount) return;
-      const customEvent = event as CustomEvent<CartCountEvent>;
-      const { cartLength } = customEvent.detail;
-      $cartCount.textContent = cartLength === 0 ? "" : `(${cartLength})`;
-    });
+		document.addEventListener('cart-count', (event) => {
+			if (!$cartCount) return
+			const customEvent = event as CustomEvent<CartCountEvent>
+			const { cartLength } = customEvent.detail
+			$cartCount.textContent = cartLength === 0 ? '' : `(${cartLength})`
+		})
 
-    $<HTMLAnchorElement>("#to_cart")?.addEventListener("click", (event) => {
-      event.preventDefault();
-      const href = (event.currentTarget as HTMLAnchorElement).href;
-      navigate(href, {
-        history: "push",
-      });
-    });
-  };
+		$<HTMLAnchorElement>('#to_cart')?.addEventListener('click', (event) => {
+			event.preventDefault()
+			const href = (event.currentTarget as HTMLAnchorElement).href
+			navigate(href, {
+				history: 'push',
+			})
+		})
+	}
 
-  document.addEventListener("astro:page-load", initializedListener);
+	document.addEventListener('astro:page-load', initializedListener)
 </script>
