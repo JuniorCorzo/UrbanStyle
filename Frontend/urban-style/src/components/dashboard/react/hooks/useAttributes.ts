@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import type { AttributesWithId } from "../components/forms/AttributeFields";
 import { useStore } from "@nanostores/react";
 import { attributeStore } from "@/state/attributes.state";
+import { ZodError } from "zod";
+import { showError } from "@/lib/showErrorMessages";
+import { AttributesScheme } from "@/lib/validations/product.validations";
 
 export function useAttributes(defaultAttributes: AttributesWithId[]) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -47,7 +50,12 @@ export function useAttributes(defaultAttributes: AttributesWithId[]) {
     );
     if (isDuplicate) return;
 
-    attributeStore.set([...attributes, insertAttribute]);
+    try {
+      AttributesScheme.parse(insertAttribute);
+      attributeStore.set([...attributes, insertAttribute]);
+    } catch (err) {
+      if (err instanceof ZodError) showError(err);
+    }
   };
 
   const handleRemoveAttribute = (removeId: string) => {
@@ -59,6 +67,6 @@ export function useAttributes(defaultAttributes: AttributesWithId[]) {
     containerRef,
     handleAddAttribute,
     handleChangeQuantity,
-    handleRemoveAttribute
+    handleRemoveAttribute,
   };
 }
