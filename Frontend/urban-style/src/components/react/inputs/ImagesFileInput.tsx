@@ -6,6 +6,7 @@ import LabelInput from "./LabelInput";
 import SelectInput from "./SelectInput";
 import { useImages } from "../hooks/useImages";
 import { cn } from "@/lib/cn";
+import { MessageError } from "./MessageError";
 
 interface Props {
   label: string;
@@ -26,6 +27,7 @@ export function ImagesFileInput({ name, label, defaultImages = [] }: Props) {
   return (
     <>
       <LabelInput label={label}>
+        <MessageError errorId={`${name}_error`} />
         <FileInput
           ref={inputFileRef}
           onChange={handleFiles}

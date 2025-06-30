@@ -56,32 +56,37 @@ export function Combobox({
   return (
     <div className="relative w-full max-w-md">
       <div className="flex flex-col gap-1">
-        <label className="pointer-events-none" {...getLabelProps()}>
+        <label
+          className="flex flex-col gap-1 pointer-events-none"
+          {...getLabelProps()}
+        >
           {label}
-          <div className="w-full bg-background inline-flex p-0.5 flex-wrap gap-1 items-center border border-border rounded focus-within:custom-ring pointer-events-auto">
-            <MessageError errorId={`${name}_error`} />
-            <div className="w-full flex justify-between items-center px-2 py-1 cursor-pointer">
-              <input
-                placeholder={placeholder}
-                name={name}
-                className="w-full focus:outline-0"
-                tabIndex={0}
-                {...getInputProps({
-                  onKeyDown: handleEnter,
-                })}
-              />
-              <button
-                aria-label="toggle menu"
-                type="button"
-                {...getToggleButtonProps()}
-              >
-                <ChevronDownIcon
-                  className={cn(
-                    "size-5 transition-transform duration-150",
-                    isOpen && "rotate-180"
-                  )}
+          <MessageError errorId={`${name}_error`} />
+          <div>
+            <div className="w-full bg-background inline-flex p-0.5 flex-wrap gap-1 items-center border border-border rounded focus-within:custom-ring pointer-events-auto">
+              <div className="w-full flex justify-between items-center px-2 py-1 cursor-pointer">
+                <input
+                  placeholder={placeholder}
+                  name={name}
+                  className="w-full focus:outline-0"
+                  tabIndex={0}
+                  {...getInputProps({
+                    onKeyDown: handleEnter,
+                  })}
                 />
-              </button>
+                <button
+                  aria-label="toggle menu"
+                  type="button"
+                  {...getToggleButtonProps()}
+                >
+                  <ChevronDownIcon
+                    className={cn(
+                      "size-5 transition-transform duration-150",
+                      isOpen && "rotate-180"
+                    )}
+                  />
+                </button>
+              </div>
             </div>
           </div>
         </label>

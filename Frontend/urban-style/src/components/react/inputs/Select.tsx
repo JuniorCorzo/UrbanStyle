@@ -56,14 +56,14 @@ export function Select({
         ref={buttonRef}
       >
         <label
-          className="flex flex-col gap-1 pointer-events-none"
+          className="flex flex-col gap-1 transition-all pointer-events-none"
           {...getLabelProps()}
         >
           {label}
           <MessageError errorId={`${name}_error`} />
           <div
             className={cn(
-              "bg-background w-full flex justify-between items-center p-2 cursor-pointer border border-border rounded focus:custom-ring pointer-events-auto",
+              "bg-background w-full flex justify-between transition-all items-center p-2 cursor-pointer border border-border rounded focus:custom-ring pointer-events-auto",
               disable && "pointer-events-none",
               className
             )}

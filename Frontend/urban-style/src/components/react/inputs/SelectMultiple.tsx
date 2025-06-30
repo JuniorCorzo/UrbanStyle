@@ -79,7 +79,7 @@ export function SelectMultiple({
     <div className="relative w-full max-w-md">
       <div className="flex flex-col gap-1">
         <label
-          className="flex flex-col gap-1 pointer-events-none"
+          className="flex flex-col gap-1 transition-all pointer-events-none"
           {...getLabelProps()}
         >
           {label}
