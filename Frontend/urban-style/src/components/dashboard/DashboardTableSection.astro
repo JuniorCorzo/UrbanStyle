@@ -1,0 +1,16 @@
+---
+import FormDeleteModal from '@/components/dashboard/react/components/modals/FormDeleteModal'
+import { TableItems } from '@/components/dashboard/react/TableItems'
+---
+
+<article class="max-w-10/12 flex h-full w-full flex-col items-center gap-2">
+	<div class="flex w-full justify-end">
+		<button id="button_modal" class="bg-accent cursor-pointer rounded px-3 py-0.5" type="button">
+			Añadir
+		</button>
+		<FormDeleteModal client:only="react" />
+	</div>
+	<div class="border-border w-full overflow-x-auto rounded border">
+		<TableItems client:idle />
+	</div>
+</article>
