@@ -4,8 +4,8 @@ import { categoriesStore, CategoriesStore } from '@/state/categories.store'
 import type { BestSeller } from '@/interface/report.interface'
 import { tableMostSoldStore, tableStore } from '@/state/table.state'
 import { ReportService } from '@/service/report.service'
-import TableActions from '@/components/dashboard/react/TableActions'
-import { Cell } from '@/components/dashboard/react/Cell'
+import TableActions from '@/components/dashboard/react/components/table/TableActions'
+import { Cell } from '@/components/dashboard/react/components/table/Cell'
 
 export async function categoriesTable(): Promise<void> {
 	await CategoriesStore()
@@ -19,7 +19,7 @@ export async function categoriesTable(): Promise<void> {
 		}),
 		columnAccessor.accessor('description', {
 			header: 'Descripción',
-			cell: (info) => <Cell.Description>{info.getValue()}</Cell.Description>,
+			cell: (info) => <Cell.Paragraph>{info.getValue()}</Cell.Paragraph>,
 		}),
 		columnAccessor.display({
 			header: 'Acciones',
