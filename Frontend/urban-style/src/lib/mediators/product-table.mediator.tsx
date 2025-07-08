@@ -108,9 +108,11 @@ async function mostSoldTable() {
 	const columns = [
 		columnAccessor.accessor('name', {
 			header: 'Producto',
+			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
 		}),
 		columnAccessor.accessor('sold', {
 			header: 'Vendido',
+			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
 		}),
 	] as ColumnDef<unknown, any>[]
 
