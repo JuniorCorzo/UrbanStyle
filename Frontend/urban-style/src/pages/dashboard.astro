@@ -1,7 +1,6 @@
 ---
 import Dock from '@/components/dashboard/Dock.astro'
 import Layout from '@/layouts/Layout.astro'
-import { ReportStore } from '@/state/report.store'
 import { Sidebar } from '@/components/dashboard/react/components/Sidebar'
 import DashboardTableSection from '@/components/dashboard/DashboardTableSection.astro'
 import DashboardSummarySection from '@/components/dashboard/DashboardSummarySection.astro'
@@ -20,6 +19,7 @@ import DashboardSummarySection from '@/components/dashboard/DashboardSummarySect
 	import { $ } from '@/lib/dom-selector'
 	import { openModalEvent } from '@/lib/utils/open-modal-event'
 	import { selectMediator } from '@/lib/utils/select-mediator'
+	import { CategoriesStore } from '@/state/categories.store'
 
 	const handleMediator = async () => {
 		const dashboardMediator = await selectMediator()
@@ -35,5 +35,7 @@ import DashboardSummarySection from '@/components/dashboard/DashboardSummarySect
 		const table = (await selectMediator())?.table
 		console.log('Dock table:', table)
 		if (typeof table === 'function') table()
+
+		CategoriesStore()
 	})
 </script>
