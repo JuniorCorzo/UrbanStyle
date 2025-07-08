@@ -1,6 +1,5 @@
 import type { SelectOptions } from '@/interface/form-mediator.interface'
 import { cn } from '@/lib/cn'
-import type { GetItemsProps, GetMenuProps } from './Select'
 import type { SelectOptionsProps } from './SelectList'
 
 interface Props

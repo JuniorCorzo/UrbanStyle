@@ -1,11 +1,11 @@
 import { cn } from '@/lib/cn'
-import type { ButtonHTMLAttributes, DOMAttributes, ReactNode } from 'react'
+import type { ReactNode } from 'react'
 import { sizeClasses } from '../Button.astro'
+import type React from 'react'
 
-interface Props extends DOMAttributes<HTMLButtonElement> {
+interface Props extends React.ComponentPropsWithoutRef<'button'> {
 	id?: string
 	size?: 'sm' | 'md' | 'lg' | 'custom'
-	type?: ButtonHTMLAttributes<HTMLButtonElement>['type']
 	className?: string
 	children: ReactNode | undefined
 }

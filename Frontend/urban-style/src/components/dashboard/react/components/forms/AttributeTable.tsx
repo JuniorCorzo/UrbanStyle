@@ -9,6 +9,7 @@ import {
 	type InputEvent,
 	type KeyboardEvent,
 } from 'react'
+import type { BooleanField } from 'node_modules/astro/dist/env/schema'
 
 interface AttributesWithId extends Attributes {
 	id: string
@@ -16,11 +17,17 @@ interface AttributesWithId extends Attributes {
 
 interface AttributeTableProps {
 	attributes: AttributesWithId[]
-	onRemove: (id: string) => void
-	onChangeQuantity: (id: string, quantity: number) => void
+	canActions?: boolean
+	onRemove?: (id: string) => void
+	onChangeQuantity?: (id: string, quantity: number) => void
 }
 
-export function AttributeTable({ attributes, onRemove, onChangeQuantity }: AttributeTableProps) {
+export function AttributeTable({
+	attributes,
+	canActions = true,
+	onRemove,
+	onChangeQuantity,
+}: AttributeTableProps) {
 	const [isEditStock, setIsEditStock] = useState(false)
 	const inputRef = useRef<HTMLInputElement>(null)
 	const idEditable = useRef<string>(null)
@@ -46,7 +53,7 @@ export function AttributeTable({ attributes, onRemove, onChangeQuantity }: Attri
 	}
 
 	const handleDone = () => {
-		if (!idEditable.current || !inputRef.current) return
+		if (!onChangeQuantity || !idEditable.current || !inputRef.current) return
 		onChangeQuantity(idEditable.current, Number(inputRef.current.value))
 		setIsEditStock(false)
 	}
@@ -69,7 +76,7 @@ export function AttributeTable({ attributes, onRemove, onChangeQuantity }: Attri
 						<th>Color</th>
 						<th>Tallas</th>
 						<th className="w-32">Stock</th>
-						<th className="w-5"></th>
+						{canActions && <th className="w-5"></th>}
 					</tr>
 				</thead>
 				<tbody className="">
@@ -81,7 +88,7 @@ export function AttributeTable({ attributes, onRemove, onChangeQuantity }: Attri
 						</tr>
 					)}
 					{attributes.map(({ id, color, size, quantity }) => (
-						<tr className="border-border even:bg-accent/50 backdrop-blur-xs h-10" key={id}>
+						<tr className="border-border backdrop-blur-xs hover:bg-foreground h-10" key={id}>
 							<td className="">{color}</td>
 							<td>{size}</td>
 							<td>
@@ -98,33 +105,35 @@ export function AttributeTable({ attributes, onRemove, onChangeQuantity }: Attri
 									<span>{quantity}</span>
 								)}
 							</td>
-							<td className="flex h-10 items-center gap-3 px-4">
-								<span className="group cursor-pointer">
-									{isEditable(id) ? (
-										<CheckIcon
-											className="group-hover:scale-120 size-5"
-											title="Hecho"
-											onClick={handleDone}
-										/>
-									) : (
-										<PencilIcon
-											className={cn(
-												'group-hover:scale-120 size-5',
-												isEditStock && 'cursor-no-drop group-hover:scale-100',
-											)}
-											title="Modificar el stock"
-											onClick={() => handleEdit(id)}
-										/>
-									)}
-								</span>
-								<span
-									className="group cursor-pointer"
-									title="Eliminar atributo"
-									onClick={() => onRemove(id)}
-								>
-									<TrashIcon className="group-hover:scale-120 size-5" />
-								</span>
-							</td>
+							{canActions && (
+								<td className={cn('flex h-10 items-center gap-3 px-4')}>
+									<span className="group cursor-pointer">
+										{isEditable(id) ? (
+											<CheckIcon
+												className="group-hover:scale-120 size-5"
+												title="Hecho"
+												onClick={handleDone}
+											/>
+										) : (
+											<PencilIcon
+												className={cn(
+													'group-hover:scale-120 size-5',
+													isEditStock && 'cursor-no-drop group-hover:scale-100',
+												)}
+												title="Modificar el stock"
+												onClick={() => handleEdit(id)}
+											/>
+										)}
+									</span>
+									<span
+										className="group cursor-pointer"
+										title="Eliminar atributo"
+										onClick={() => onRemove && onRemove(id)}
+									>
+										<TrashIcon className="group-hover:scale-120 size-5" />
+									</span>
+								</td>
+							)}
 						</tr>
 					))}
 				</tbody>

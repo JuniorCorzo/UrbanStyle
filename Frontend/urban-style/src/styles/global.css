@@ -7,7 +7,9 @@
 	--color-primary: #cba6f7;
 	--color-secondary: #ccd0da;
 	--color-accent: #dce0e8;
+	--color-accent-2: #c7d9dd;
 	--color-background: #eff1f5;
+	--color-foreground: #e6e9ef;
 	--color-text: #38394d;
 	--color-border: #7c7f93;
 	--color-maroon: #e64553;
@@ -19,6 +21,8 @@
 	--animate-aside-close: aside-close 300ms ease-out;
 	--animate-slide-down: slide-down 200ms linear;
 	--animate-slide-up: slide-up 200ms linear;
+	--animate-expand: expand 250ms ease-in;
+	--animate-contract: contract 250ms linear forwards;
 
 	@keyframes pulse {
 		0% {
@@ -70,6 +74,31 @@
 		}
 		100% {
 			width: 0;
+		}
+	}
+
+	@keyframes expand {
+		from {
+			max-height: 0;
+			overflow: hidden;
+		}
+
+		to {
+			height: contain;
+		}
+	}
+
+	@keyframes contract {
+		from {
+			display: flex;
+			height: contain;
+		}
+
+		to {
+			display: hidden;
+			max-height: 0;
+			box-shadow: none;
+			overflow: hidden;
 		}
 	}
 }

@@ -2,9 +2,9 @@ import type { Products, ProductsGroupedCategory } from '@/interface/product.inte
 import { getAllProducts, getProductsGroupedByCategory } from '@/service/product.service'
 import { computed, map } from 'nanostores'
 
-export const productStore = map<Products[]>()
+export const productStore = map<Products[]>([])
 
-export const productGroupedStore = map<ProductsGroupedCategory[]>()
+export const productGroupedStore = map<ProductsGroupedCategory[]>([])
 
 export async function initializeProductGroupeStore() {
 	const products = await getProductsGroupedByCategory()

@@ -1,21 +1,14 @@
-import type { ITable } from '@/interface/table-mediator.interface'
-import { selectMediator } from '@/lib/utils/select-mediator'
-import { useEffect, useState } from 'react'
+import { tableMostSoldStore } from '@/state/table.state'
+import { useStore } from '@nanostores/react'
+import { useReactTable, getCoreRowModel } from '@tanstack/react-table'
 
 export function useTableMostSold() {
-	const [tableConfig, setTableConfig] = useState<ITable>()
-
-	const getTableConfig = async () => {
-		const table = (await selectMediator())?.table.mostSoldTable()
-		if (!table) return
-		setTableConfig(table.tableConfig)
-	}
-
-	useEffect(() => {
-		window.addEventListener('change-mediator', getTableConfig)
-		getTableConfig()
-		return () => window.removeEventListener('change-mediator', getTableConfig)
-	}, [])
+	const { columns, data } = useStore(tableMostSoldStore)
+	const tableConfig = useReactTable({
+		columns,
+		data,
+		getCoreRowModel: getCoreRowModel(),
+	})
 
 	return {
 		tableConfig,

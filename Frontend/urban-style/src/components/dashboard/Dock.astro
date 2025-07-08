@@ -6,7 +6,7 @@ const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA
 ---
 
 <nav
-	class="before:border-border before:bg-accent relative bottom-0 mx-auto w-fit px-7 before:absolute before:bottom-1 before:left-0 before:-z-10 before:h-7 before:w-full before:rounded before:border"
+	class="before:border-border before:bg-accent sticky bottom-0 mx-auto w-fit px-7 before:absolute before:bottom-1 before:left-0 before:-z-10 before:h-7 before:w-full before:rounded before:border"
 	transition:persist
 >
 	<ul id="container_links" class="mb-2.5 flex justify-around gap-5">
@@ -19,22 +19,38 @@ const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA
 	import { $ } from '@/lib/dom-selector'
 	import { TABLE_MEDIATOR_METADATA } from '@/const/table-mediator.const'
 	import { dispatchMediatorEvent } from '@/lib/utils/change-mediator-event'
+	import { DashboardMediator } from '@/lib/dashboard-mediator'
 
 	const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA
 
-	$('#container_links')?.addEventListener('click', (event) => {
-		const target = event.target as HTMLElement
-
+	function getMediatorFromTarget(target: HTMLElement) {
 		if (!(target instanceof HTMLLIElement) && !(target instanceof HTMLImageElement)) {
-			return
+			return null
 		}
-		const mediator = target.dataset.mediator
+		return target.dataset.mediator || null
+	}
 
-		if (mediator) {
-			const url = new URL(window.location.href)
-			url.searchParams.set(mediatorSearchParam, mediator)
-			window.history.replaceState({}, '', url)
-			dispatchMediatorEvent({ mediator })
-		}
-	})
+	function updateTableData(mediator: string) {
+		DashboardMediator(mediator).then((mediator) => {
+			mediator?.table()
+		})
+	}
+
+	function updateUrlWithMediator(mediator: string) {
+		const url = new URL(window.location.href)
+		url.searchParams.set(mediatorSearchParam, mediator)
+		window.history.replaceState({}, '', url)
+		updateTableData(mediator)
+	}
+
+	function handleDockClick(event: Event) {
+		const target = event.target as HTMLElement
+		const mediator = getMediatorFromTarget(target)
+
+		if (!mediator) return
+		updateUrlWithMediator(mediator)
+		dispatchMediatorEvent({ mediator })
+	}
+
+	$('#container_links')?.addEventListener('click', handleDockClick)
 </script>
