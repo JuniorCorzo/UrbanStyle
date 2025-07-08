@@ -34,7 +34,7 @@ public interface OrderRepository extends ListCrudRepository<OrdersEntity, String
                     "{ $lookup: { from: 'products', localField: 'products.productId', foreignField: '_id', as: 'product_info' } }",
                     "{ $unwind: { path: '$product_info' } }",
                     "{ $unwind: { path: '$product_info.categories' } }",
-                    "{ $group: { _id:  '$product_info.categories', sold: { $sum: 1 } } }",
+                    "{ $group: { _id:  '$product_info.categories.name', sold: { $sum: 1 } } }",
                     "{ $project: { _id: 0, name: '$_id', sold: 1 } }",
                     "{ $sort: { sold: -1 } }",
                     "{ $limit: 10 }"
