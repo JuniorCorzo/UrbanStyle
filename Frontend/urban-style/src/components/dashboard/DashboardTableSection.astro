@@ -5,7 +5,7 @@ import Button from '../Button.astro'
 import { TableFilters } from './react/components/table/TableFilters'
 ---
 
-<article class="max-w-10/12 flex h-full w-full flex-col items-center gap-2">
+<article class="flex h-full w-full flex-col items-center gap-2">
 	<div class="flex w-full items-center justify-end gap-2">
 		<TableFilters client:idle />
 		<div>
@@ -20,8 +20,6 @@ import { TableFilters } from './react/components/table/TableFilters'
 			</Button>
 		</div>
 	</div>
-	<div class="border-border w-full overflow-x-auto rounded border">
-		<TableItems client:idle />
-		<FormDeleteModal client:only="react" />
-	</div>
+	<TableItems client:only="react" />
+	<FormDeleteModal client:only="react" />
 </article>
