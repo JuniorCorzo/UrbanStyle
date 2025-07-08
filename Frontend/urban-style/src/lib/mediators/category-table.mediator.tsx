@@ -43,9 +43,11 @@ async function categoriesMoreSold() {
 	const columns = [
 		columnAccessor.accessor('name', {
 			header: 'Categoría',
+			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
 		}),
 		columnAccessor.accessor('sold', {
 			header: 'Vendido',
+			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
 		}),
 	] as ColumnDef<unknown, any>[]
 
