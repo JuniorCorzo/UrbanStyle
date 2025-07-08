@@ -124,6 +124,7 @@ export const FiltersDropdown = forwardRef<FilterDropdownRefProps, Props>(({ ...p
 								name={name}
 								handleDispatchChecked={handleDispatchChecked}
 								columnId="categories"
+								key={crypto.randomUUID()}
 							/>
 						))}
 					</Dropdown.Menu>
@@ -136,6 +137,7 @@ export const FiltersDropdown = forwardRef<FilterDropdownRefProps, Props>(({ ...p
 								name={color}
 								handleDispatchChecked={handleDispatchChecked}
 								columnId="attributes.color"
+								key={crypto.randomUUID()}
 							/>
 						))}
 					</Dropdown.Menu>
