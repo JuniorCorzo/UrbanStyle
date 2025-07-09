@@ -6,7 +6,7 @@ interface Props {
 
 export function MessageError({ errorId }: Props) {
 	return (
-		<span className="text-maroon flex items-center gap-1 opacity-0 transition-opacity duration-300">
+		<span className="text-red flex items-center gap-1 opacity-0 transition-opacity duration-300">
 			<span className="invisible hidden min-h-6 min-w-6">
 				<ExclamationCircleIcon className="size-6" />
 			</span>

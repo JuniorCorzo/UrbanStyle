@@ -46,7 +46,7 @@ export function ImagesFileInput({ name, label, defaultImages = [] }: Props) {
 								<span>{bytes(file.size, { unitSeparator: ' ' })}</span>
 							</span>
 							<span onClick={() => handleDeleteImage(imageUrl, isUpload)} title="Eliminar imagen">
-								<TrashIcon className="stroke-maroon size-7 cursor-pointer hover:scale-105" />
+								<TrashIcon className="stroke-red size-7 cursor-pointer hover:scale-105" />
 							</span>
 						</div>
 						<div>

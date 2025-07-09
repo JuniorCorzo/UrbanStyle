@@ -62,7 +62,7 @@ export function toggleErrorMessagesWithLabel(message: string, $spanElement: HTML
 	toggleErrorMessage(message, $spanElement)
 
 	if (message.length > 0) {
-		$labelElement?.style.setProperty('border-color', 'var(--color-maroon)')
+		$labelElement?.style.setProperty('border-color', 'var(--color-red)')
 		return
 	}
 }
