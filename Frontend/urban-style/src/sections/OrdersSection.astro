@@ -1,0 +1,53 @@
+---
+import OrderItem from '@/components/orders/OrderItem.astro'
+import { OrderService } from '@/service/orders.service'
+
+const { user, accessToken } = Astro.locals
+const orders = await OrderService.getOrderByUserId(user.id, accessToken)
+---
+
+<section id="order_section" class="@container flex h-full flex-col gap-10 px-6">
+	{orders.map((order) => <OrderItem order={order} />)}
+</section>
+
+<script>
+	import { $ } from '@/lib/dom-selector'
+	import { OrderService } from '@/service/orders.service'
+
+	const cancelOrder = (target: HTMLButtonElement) => {
+		const orderId = target.dataset.orderId
+		if (!orderId) return
+		OrderService.cancelOrder(orderId)
+			.then(() => {
+				window.location.reload()
+			})
+			.catch((error) => {
+				console.error('Error canceling order:', error)
+				alert('No se pudo cancelar el pedido. Inténtalo de nuevo más tarde.')
+			})
+	}
+
+	const toggleDetails = (target: HTMLButtonElement) => {
+		if (target.classList.contains('details-button')) {
+			const { orderId } = target.dataset
+			if (!orderId) return
+			const $orderHistoryDiv = $<HTMLDivElement>(`#order-details-${orderId}`)
+			$orderHistoryDiv?.classList.toggle('hidden')
+			$orderHistoryDiv?.classList.toggle('flex')
+		}
+	}
+
+	const initializeListeners = () => {
+		const $orderSection = $<HTMLElement>('#order_section')
+		if (!$orderSection) return
+
+		$orderSection.addEventListener('click', (event) => {
+			const target = event.target
+			if (target instanceof HTMLButtonElement) {
+				// cancelOrder(target)
+				toggleDetails(target)
+			}
+		})
+	}
+	document.addEventListener('astro:page-load', initializeListeners)
+</script>

@@ -1,0 +1,24 @@
+---
+import type { Address } from '@/interface/address.interface'
+import type { OrderHistory } from '@/interface/orders.interface'
+import OrderHistoryItem from './OrderHistoryItem.astro'
+import OrderAddressDetails from './OrderAddressDetails.astro'
+import OrderPaymentMethod from './OrderPaymentMethod.astro'
+
+interface Props {
+	orderId: string
+	history: OrderHistory
+	address: Address
+	paymentMethod: string
+}
+const { orderId, history, address, paymentMethod } = Astro.props
+---
+
+<div
+	id={`order-details-${orderId}`}
+	class="mx-auto hidden w-full flex-col justify-between gap-y-4 sm:flex-row"
+>
+	<OrderHistoryItem history={history} />
+	<OrderAddressDetails address={address} />
+	<OrderPaymentMethod paymentMethod={paymentMethod} />
+</div>

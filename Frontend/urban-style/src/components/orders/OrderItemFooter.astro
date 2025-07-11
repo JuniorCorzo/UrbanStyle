@@ -1,0 +1,33 @@
+---
+import { cn } from '@/lib/cn'
+import Button from '../Button.astro'
+import CancelOrderButton from './CancelOrderButton.astro'
+import type { OrderStatus } from '@/interface/orders.interface'
+
+interface Props {
+	total: number
+	orderId: string
+	status: OrderStatus
+}
+const { total, orderId, status } = Astro.props
+---
+
+<div class="flex flex-col items-center justify-between gap-y-2 px-2 pb-4 sm:flex-row sm:px-3">
+	<span>
+		<h3 class="font-medium">Total: {total.toLocaleString()} Pesos</h3>
+	</span>
+	<div class="inline-flex gap-3">
+		<CancelOrderButton orderId={orderId} status={status} />
+		<div class={cn()}>
+			<Button
+				class="details-button bg-accent-2 text-base font-medium"
+				size="sm"
+				type="button"
+				data-order-id={orderId}
+				title="Ver mas detalles del pedido"
+			>
+				Mostrar más
+			</Button>
+		</div>
+	</div>
+</div>

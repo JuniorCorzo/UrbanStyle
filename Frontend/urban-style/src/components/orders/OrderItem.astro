@@ -1,0 +1,31 @@
+---
+import type { Order } from '@/interface/orders.interface'
+import OrderItemHeader from './OrderItemHeader.astro'
+import OrderItemBody from './OrderItemBody.astro'
+import OrderItemFooter from './OrderItemFooter.astro'
+
+interface Props {
+	order: Order
+}
+
+const { order } = Astro.props
+---
+
+<article
+	class="border-border bg-background shadow-border flex h-full w-full flex-col gap-4 rounded-md border-2 shadow-md"
+>
+	<OrderItemHeader
+		id={order.id}
+		orderDate={order.orderDate}
+		address={order.address}
+		status={order.status}
+	/>
+	<OrderItemBody
+		products={order.products}
+		orderId={order.id}
+		history={order.history}
+		address={order.address}
+		paymentMethod={order.paymentMethod}
+	/>
+	<OrderItemFooter total={order.total} orderId={order.id} status={order.status} />
+</article>

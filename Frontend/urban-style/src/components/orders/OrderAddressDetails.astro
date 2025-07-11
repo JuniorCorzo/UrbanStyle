@@ -1,0 +1,46 @@
+---
+import type { Address } from '@/interface/address.interface'
+import DetailItem from './DetailItem.astro'
+import Subtitle from '../text/Subtitle.astro'
+
+interface Props {
+	address: Address
+}
+const { address } = Astro.props
+---
+
+<div>
+	<span>
+		<Subtitle
+			class="text-lg font-medium uppercase tracking-wide sm:text-base"
+			size="base"
+			Text="Dirección de envió"
+		/>
+	</span>
+	<div class="mt-2 flex max-w-sm flex-col gap-2 text-wrap">
+		<DetailItem
+			class="flex-col gap-1 text-lg font-medium sm:flex-row sm:items-center sm:text-base"
+			classValue="text-base sm:text-sm  font-normal"
+			label="Dirección"
+			value={address.street}
+		/>
+		<DetailItem
+			class="flex-col gap-1 text-lg font-medium sm:flex-row sm:items-center sm:text-base"
+			classValue="text-base sm:text-sm  font-normal"
+			label="Ciudad"
+			value={address.city}
+		/>
+		<DetailItem
+			class="flex-col gap-1 text-lg font-medium sm:flex-row sm:items-center sm:text-base"
+			classValue="text-base sm:text-sm  font-normal"
+			label="Departamento"
+			value={address.state}
+		/>
+		<DetailItem
+			class="flex-col gap-1 text-lg font-medium sm:flex-row sm:items-center sm:text-base"
+			classValue="text-base sm:text-sm  font-normal"
+			label="Codigo Postal"
+			value={address.postalCode}
+		/>
+	</div>
+</div>
