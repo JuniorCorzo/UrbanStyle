@@ -7,7 +7,7 @@ export class OrderService {
 	static async getOrderByUserId(userId: string, token: string): Promise<Order[]> {
 		return (
 			await axios
-				.get<Response<Order>>(`${PUBLIC_API_URL}/orders/by?userId=${userId}`, {
+				.get<Response<Order>>(`${PUBLIC_API_URL}/orders/by?user-id=${userId}`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -25,6 +25,23 @@ export class OrderService {
 				.post<Response<Order>>(`${PUBLIC_API_URL}/orders/create`, createOrder, {
 					withCredentials: true,
 				})
+				.then((response) => {
+					if (response.status !== 200) throw Error('Response error')
+					return response.data
+				})
+		).data
+	}
+
+	static async cancelOrder(orderId: string): Promise<Order[]> {
+		return (
+			await axios
+				.patch<Response<Order>>(
+					`${PUBLIC_API_URL}/orders/cancel-order?id=${orderId}`,
+					{},
+					{
+						withCredentials: true,
+					},
+				)
 				.then((response) => {
 					if (response.status !== 200) throw Error('Response error')
 					return response.data
