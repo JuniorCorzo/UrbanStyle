@@ -1,18 +1,28 @@
 import type { Address } from './address.interface'
 import type { ProductSummary } from './product.interface'
 
-export type OrderStatus = 'PROCESSING' | 'SENT' | 'DELIVERED' | 'CANCELED'
-export type PaymentMethod = 'CARD' | 'EFFECTIVE' | 'PSE'
+export enum ORDER_STATUS {
+	PROCESSING = 'PROCESSING',
+	SENT = 'SENT',
+	DELIVERED = 'DELIVERED',
+	CANCELED = 'CANCELED',
+}
+
+export enum PAYMENT_METHOD {
+	CARD = 'CARD',
+	EFFECTIVE = 'EFFECTIVE',
+	PSE = 'PSE',
+}
+
+export type OrderStatus = keyof typeof ORDER_STATUS
+export type PaymentMethod = keyof typeof PAYMENT_METHOD
 
 export interface OrderEvent {
 	status: OrderStatus
 	date: string
-	description: string
 }
 
-export interface OrderHistory {
-	events: OrderEvent[]
-}
+export type OrderHistory = OrderEvent[]
 
 export interface Order {
 	id: string
