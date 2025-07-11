@@ -1,9 +1,9 @@
-
 # 1. Builder stage
 FROM gradle:8.14.2-jdk21-alpine AS builder
 LABEL authors="JuniorCorzo"
 
 # Set working directory
+RUN apk add --no-cache bash
 WORKDIR /app
 
 # Copy only Gradle wrapper and config to cache dependencies
@@ -23,7 +23,7 @@ RUN ./gradlew dependencies --no-daemon
 COPY src ./src
 
 # Build the application (skip tests if preferred)
-RUN ./gradlew bootJar --no-daemon -x test
+RUN sh ./gradlew bootJar --no-daemon -x test
 
 
 # 2. Runtime stage
