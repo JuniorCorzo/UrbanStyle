@@ -12,7 +12,14 @@
 	--color-foreground: #e6e9ef;
 	--color-text: #38394d;
 	--color-border: #7c7f93;
-	--color-red: #e64553;
+	--color-red: #ca3b49;
+	--color-red-2: #371014;
+	--color-yellow: rgb(249, 226, 175);
+	--color-yellow-2: #643f0c;
+	--color-blue-1: #89b4fa;
+	--color-blue-2: #29364b;
+	--color-green-1: #a6e3a1;
+	--color-green-2: #273426;
 	--color-crust: #292c3c;
 	--color-button: #89b4fa;
 
