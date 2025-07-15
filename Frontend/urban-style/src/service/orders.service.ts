@@ -4,6 +4,19 @@ import type { Response } from '@/interface/response.interface'
 import axios from 'axios'
 
 export class OrderService {
+	static async getAllOrders(): Promise<Order[]> {
+		return (
+			await axios
+				.get<Response<Order>>(`${PUBLIC_API_URL}/orders/all`, {
+					withCredentials: true,
+				})
+				.then((response) => {
+					if (response.status !== 200) throw Error('unexpected error')
+					return response.data
+				})
+		).data
+	}
+
 	static async getOrderByUserId(userId: string, token: string): Promise<Order[]> {
 		return (
 			await axios

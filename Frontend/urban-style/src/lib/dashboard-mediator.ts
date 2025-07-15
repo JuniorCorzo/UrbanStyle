@@ -5,24 +5,24 @@ import type { FormMediator } from '@/interface/form-mediator.interface'
 import { productForm } from './mediators/product-form.mediator'
 import { categoriesForm } from './mediators/category-form.mediator'
 import type { TableConfig } from '@/interface/table-mediator.interface'
+import { orderTable } from './mediators/order-table.mediator'
 
 export async function DashboardMediator(
 	mediator: string | null,
 	id?: string,
-): Promise<{ table: TableConfig; form: FormMediator } | undefined> {
-	const {
-		categoriesSearchParam: categories_search_param,
-		productsSearchParam: products_search_param,
-	} = TABLE_MEDIATOR_METADATA
+): Promise<{ table: TableConfig; form: FormMediator | null } | undefined> {
+	const { categoriesSearchParam, productsSearchParam, orderSearchParam } = TABLE_MEDIATOR_METADATA
 
 	switch (mediator) {
-		case products_search_param:
+		case productsSearchParam:
 			return {
 				table: productTable,
 				form: await productForm(),
 			}
-		case categories_search_param:
+		case categoriesSearchParam:
 			return { table: categoriesTable, form: await categoriesForm() }
+		case orderSearchParam:
+			return { table: orderTable, form: null }
 		default:
 			return undefined
 	}

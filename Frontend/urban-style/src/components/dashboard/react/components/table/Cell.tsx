@@ -12,10 +12,7 @@ interface CellChildrenProps extends React.ComponentProps<'div'> {
 export function Cell({ children, className, ...props }: Props) {
 	return (
 		<td
-			className={cn(
-				'border-border group-hover:bg-foreground h-full min-h-11 w-full border-b text-center',
-				className,
-			)}
+			className={cn('group-hover:bg-foreground h-full min-h-11 w-full text-center', className)}
 			{...props}
 		>
 			{children}
@@ -52,7 +49,9 @@ Cell.TagsContainer = ({ children, className }: CellChildrenProps) => (
 )
 
 Cell.Tag = ({ children, className }: CellChildrenProps) => (
-	<span className={cn('bg-accent/95 rounded px-2 py-0.5 backdrop-blur-sm')}>{children}</span>
+	<span className={cn('bg-accent/95 rounded px-2 py-0.5 backdrop-blur-sm', className)}>
+		{children}
+	</span>
 )
 
 Cell.Paragraph = ({ children, className }: CellChildrenProps) => (
