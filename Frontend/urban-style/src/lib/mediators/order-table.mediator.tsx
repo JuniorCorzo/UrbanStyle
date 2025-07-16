@@ -10,6 +10,7 @@ import { ChevronUpIcon, ChevronDownIcon, CreditCardIcon } from '@heroicons/react
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useEffect, useState } from 'react'
 import { cn } from '../cn'
+import { OrderFilterByStatus } from '@/components/orders/react/components/OrderFilterByStatus'
 
 const getUsernameById = (userId: string) => UserService.getUserById(userId).then(({ name }) => name)
 
@@ -94,5 +95,6 @@ export async function orderTable() {
 		columns,
 		data: orders,
 		subComponent: orderSubComponent as SubComponent<unknown>,
+		filterComponents: { right: () => <OrderFilterByStatus /> },
 	})
 }

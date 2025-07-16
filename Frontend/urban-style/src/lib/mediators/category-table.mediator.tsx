@@ -32,6 +32,7 @@ export async function categoriesTable(): Promise<void> {
 		tableStore.set({
 			columns,
 			data: [...category],
+			canSearch: true,
 		})
 	})
 

@@ -94,9 +94,10 @@ export async function productTable(): Promise<void> {
 			data: [...products],
 			columnPinning: { left: ['expanded', 'name'] },
 			columnFilters: [],
-			filterComponent: (ref) => <FiltersDropdown ref={ref} />,
+			filterComponents: { left: (ref) => <FiltersDropdown ref={ref} /> },
 			canExpand: true,
 			subComponent: productSubComponent as SubComponent<unknown>,
+			canSearch: true,
 		})
 	})
 
