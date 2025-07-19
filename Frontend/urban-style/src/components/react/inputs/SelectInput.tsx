@@ -1,5 +1,4 @@
 import type { FieldProperties, SelectOptions } from '@/interface/form-mediator.interface'
-import '@/styles/select.css'
 import { SelectMultiple, type SelectMultipleProps } from './SelectMultiple'
 import { Select, type SelectProps } from './Select'
 
