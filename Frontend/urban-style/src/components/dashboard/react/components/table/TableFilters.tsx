@@ -33,7 +33,7 @@ export function TableFilters() {
 				<div className="h-10 w-fit" title="Filtros">
 					{filterComponents?.left && (
 						<FiltersButton onClick={handleClick}>
-							{filterComponents.left(filterDropdownRef)}
+							<FiltersDropdown ref={filterDropdownRef}>{filterComponents.left()}</FiltersDropdown>
 						</FiltersButton>
 					)}
 				</div>

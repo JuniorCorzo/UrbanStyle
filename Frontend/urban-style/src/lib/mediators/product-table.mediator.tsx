@@ -16,6 +16,7 @@ import { FiltersDropdown } from '@/components/dashboard/react/components/table/f
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import { ProductSubComponent } from '@/components/dashboard/react/components/table/ProductSubComponent'
 import type { SubComponent } from '@/interface/table-mediator.interface'
+import { ProductFilter } from '@/components/dashboard/react/components/table/filters/ProductFilter'
 
 export async function productTable(): Promise<void> {
 	await ProductStore()
@@ -94,7 +95,7 @@ export async function productTable(): Promise<void> {
 			data: [...products],
 			columnPinning: { left: ['expanded', 'name'] },
 			columnFilters: [],
-			filterComponents: { left: (ref) => <FiltersDropdown ref={ref} /> },
+			filterComponents: { left: () => <ProductFilter /> },
 			canExpand: true,
 			subComponent: productSubComponent as SubComponent<unknown>,
 			canSearch: true,
