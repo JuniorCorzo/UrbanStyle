@@ -18,17 +18,14 @@ export function OrderFilterByStatus() {
 	const setValue = () => (selectedItem === 'ALL' ? '' : selectedItem)
 
 	useEffect(() => {
-		const columnFilters = tableStore.get().columnFilters?.filter(({ id }) => id !== 'status')
+		const columnFilters = tableStore.get().columnFilters?.filter(({ id }) => id !== 'status') ?? []
 
-		tableStore.setKey('columnFilters', [
-			...(columnFilters ?? []),
-			{ id: 'status', value: setValue() },
-		])
+		tableStore.setKey('columnFilters', [...columnFilters, { id: 'status', value: setValue() }])
 	}, [selectedItem])
 
 	return (
 		<div
-			className="border-border inline-flex gap-3 rounded-md border px-3 py-2"
+			className="border-border inline-flex max-h-11 gap-2 rounded-md border px-2 py-1.5"
 			onClick={handleClick}
 		>
 			<OrderFilterOption status="ALL" selectedItem={selectedItem} />

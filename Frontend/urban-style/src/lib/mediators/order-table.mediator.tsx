@@ -11,6 +11,7 @@ import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { useEffect, useState } from 'react'
 import { cn } from '../cn'
 import { OrderFilterByStatus } from '@/components/orders/react/components/OrderFilterByStatus'
+import { OrderFilter } from '@/components/dashboard/react/components/table/filters/OrderFilter'
 
 const getUsernameById = (userId: string) => UserService.getUserById(userId).then(({ name }) => name)
 
@@ -53,6 +54,16 @@ export async function orderTable() {
 		columnHelper.accessor('orderDate', {
 			header: 'Fecha de orden',
 			cell: ({ getValue }) => <Cell.Span>{new Date(getValue()).toLocaleDateString()}</Cell.Span>,
+			filterFn: ({ getValue }, columnId, filterValue) => {
+				if (!(typeof filterValue === 'string') || filterValue === '') return true
+
+				const dateValue = filterValue.split('/')
+
+				const orderDate = new Date(getValue<string>(columnId))
+				const initialDate = new Date(`${dateValue[0]}T00:00:00`)
+				const lastDate = new Date(`${dateValue[1]}T00:00:00`)
+				return orderDate >= initialDate && orderDate <= lastDate
+			},
 		}),
 		columnHelper.accessor('status', {
 			header: 'Estado',
@@ -95,6 +106,6 @@ export async function orderTable() {
 		columns,
 		data: orders,
 		subComponent: orderSubComponent as SubComponent<unknown>,
-		filterComponents: { right: () => <OrderFilterByStatus /> },
+		filterComponents: { right: () => <OrderFilter /> },
 	})
 }

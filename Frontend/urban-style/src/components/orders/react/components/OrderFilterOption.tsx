@@ -11,8 +11,8 @@ export function OrderFilterOption({ status, selectedItem }: OrderFilterOptionPro
 	return (
 		<span
 			className={cn(
-				'bg-foreground border-border shadow-border cursor-pointer rounded-lg border px-2 py-1 text-sm transition-all',
-				status === selectedItem ? 'bg-accent shadow-xs' : 'shadow-inner',
+				'bg-foreground border-border shadow-border cursor-pointer rounded-lg border px-2 py-0.5 text-sm transition-all',
+				status === selectedItem ? 'bg-accent custom-ring' : 'shadow-inner',
 			)}
 			data-status={status}
 			aria-selected={status === selectedItem}
