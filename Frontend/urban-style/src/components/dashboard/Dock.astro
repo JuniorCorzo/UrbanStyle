@@ -1,8 +1,9 @@
 ---
 import { TABLE_MEDIATOR_METADATA } from '@/const/table-mediator.const'
 import CardDock from './CardDock.astro'
+import { QueueListIcon, ShoppingBagIcon, TagIcon } from '@heroicons/react/24/outline'
 
-const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA
+const { productsSearchParam, categoriesSearchParam, orderSearchParam } = TABLE_MEDIATOR_METADATA
 ---
 
 <nav
@@ -10,8 +11,21 @@ const { productsSearchParam, categoriesSearchParam } = TABLE_MEDIATOR_METADATA
 	transition:persist
 >
 	<ul id="container_links" class="mb-2.5 flex justify-around gap-5">
-		<CardDock title="Productos" mediator={productsSearchParam} svgName="shopping" />
-		<CardDock title="Categorías" mediator={categoriesSearchParam} svgName="categories" />
+		<CardDock title="Productos" mediator={productsSearchParam}>
+			<span class="pointer-events-none" slot="icon">
+				<ShoppingBagIcon className="stroke-text pointer-events-none size-9" />
+			</span>
+		</CardDock>
+		<CardDock title="Categorías" mediator={categoriesSearchParam}>
+			<span class="pointer-events-none" slot="icon">
+				<TagIcon className="stroke-text pointer-events-none size-9" />
+			</span>
+		</CardDock>
+		<CardDock title="Pedidos" mediator={orderSearchParam}>
+			<span class="pointer-events-none" slot="icon">
+				<QueueListIcon className="stroke-text size-9" />
+			</span>
+		</CardDock>
 	</ul>
 </nav>
 
