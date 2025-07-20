@@ -4,10 +4,14 @@ import { FiltersDropdown, type FilterDropdownRefProps } from './filters/FiltersD
 import { FiltersButton } from './FiltersButton'
 import { useStore } from '@nanostores/react'
 import { OrderFilterByStatus } from '@/components/orders/react/components/OrderFilterByStatus'
+import { Button } from '@/components/react/Button'
+import { selectMediator } from '@/lib/utils/select-mediator'
+import { dispatchShowSidebar } from '@/lib/utils/open-modal-event'
+import { PlusCircleIcon } from '@heroicons/react/24/outline'
 
 export function TableFilters() {
 	const filterDropdownRef = useRef<FilterDropdownRefProps>(null)
-	const { filterComponents, canSearch } = useStore(tableStore)
+	const { filterComponents, canSearch, hasForm } = useStore(tableStore)
 
 	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
 		const { value } = event.currentTarget
@@ -15,6 +19,14 @@ export function TableFilters() {
 	}
 
 	const handleClick = () => filterDropdownRef.current?.toggle()
+
+	const handleShowSidebar = async () => {
+		const dashboardMediator = await selectMediator()
+		if (dashboardMediator) {
+			const { formType, sendData, title } = dashboardMediator.form
+			dispatchShowSidebar(title, formType, sendData)
+		}
+	}
 
 	return (
 		<div className="flex w-full items-center justify-between">
@@ -37,6 +49,21 @@ export function TableFilters() {
 						</FiltersButton>
 					)}
 				</div>
+				{hasForm && (
+					<div>
+						<Button
+							className="bg-secondary shadow-border flex max-h-10 items-center gap-1"
+							size="md"
+							title="Mostrar formulario"
+							onClick={handleShowSidebar}
+						>
+							<span>
+								<PlusCircleIcon className="size-6 stroke-2" />
+							</span>
+							<span>Añadir</span>
+						</Button>
+					</div>
+				)}
 			</div>
 		</div>
 	)

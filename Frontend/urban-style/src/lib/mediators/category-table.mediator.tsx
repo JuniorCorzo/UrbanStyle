@@ -33,6 +33,7 @@ export async function categoriesTable(): Promise<void> {
 			columns,
 			data: [...category],
 			canSearch: true,
+			hasForm: true,
 		})
 	})
 

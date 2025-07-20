@@ -99,6 +99,7 @@ export async function productTable(): Promise<void> {
 			canExpand: true,
 			subComponent: productSubComponent as SubComponent<unknown>,
 			canSearch: true,
+			hasForm: true,
 		})
 	})
 

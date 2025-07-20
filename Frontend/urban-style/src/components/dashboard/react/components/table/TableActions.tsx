@@ -1,4 +1,4 @@
-import { openDeleteModalEvent, openModalEvent } from '@/lib/utils/open-modal-event'
+import { openDeleteModalEvent, dispatchShowSidebar } from '@/lib/utils/open-modal-event'
 import { selectMediator } from '@/lib/utils/select-mediator'
 import { PencilSquareIcon, TrashIcon } from '@heroicons/react/24/outline'
 
@@ -11,7 +11,7 @@ const TableActions: React.FC<Props> = ({ id }) => {
 		const dashboardMediator = await selectMediator()
 		if (dashboardMediator) {
 			const { title, formType, sendData } = dashboardMediator.form
-			openModalEvent(title, formType, sendData, id)
+			dispatchShowSidebar(title, formType, sendData, id)
 		}
 	}
 
