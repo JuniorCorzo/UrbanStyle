@@ -1,4 +1,4 @@
-import SelectInput from '@/components/react/inputs/SelectInput'
+import { SelectInput } from '@/components/react/inputs/SelectInput'
 import { transformToTitleCase } from '@/lib/transform-to-title-case'
 import { MunicipalityStore } from '@/state/location.state'
 import { useStore } from '@nanostores/react'

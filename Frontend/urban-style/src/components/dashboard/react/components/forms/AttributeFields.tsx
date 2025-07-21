@@ -1,5 +1,5 @@
 import { ComboboxInput } from '@/components/react/inputs/ComboboxInput'
-import SelectInput from '@/components/react/inputs/SelectInput'
+import { SelectInput } from '@/components/react/inputs/SelectInput'
 import TextInput from '@/components/react/inputs/TextInput'
 import { CLOTHING_COLORS, CLOTHING_SIZE } from '@/const/product.const'
 import { Button } from '@/components/react/Button'

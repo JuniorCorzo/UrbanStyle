@@ -3,10 +3,11 @@ import bytes from 'bytes'
 import FileInput from './FileInput'
 import type { Images } from '@/interface/product.interface'
 import LabelInput from './LabelInput'
-import SelectInput from './SelectInput'
+import { SelectInput } from './SelectInput'
 import { useImages } from '../hooks/useImages'
 import { cn } from '@/lib/cn'
 import { MessageError } from './MessageError'
+import type { SelectOptions } from '@/interface/form-mediator.interface'
 
 interface Props {
 	label: string
@@ -54,8 +55,12 @@ export function ImagesFileInput({ name, label, defaultImages = [] }: Props) {
 								<SelectInput
 									name={imageUrl}
 									placeholder="Seleccione el color"
-									onChange={(_, newColor) => handleChangeColor(imageUrl, newColor)}
-									value={color ? { text: color, value: color.toLowerCase() } : undefined}
+									onChange={(selectedItem: SelectOptions | null) =>
+										handleChangeColor(imageUrl, selectedItem?.text ?? '')
+									}
+									defaultValue={
+										color ? { text: color, value: color.toLowerCase() } : undefined
+									}
 									options={Array.from(attributes).map((color) => ({
 										text: color,
 										value: color.toLowerCase(),
