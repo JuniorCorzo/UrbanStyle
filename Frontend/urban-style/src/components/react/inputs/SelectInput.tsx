@@ -1,21 +1,12 @@
-import type { FieldProperties, SelectOptions } from '@/interface/form-mediator.interface'
-import { SelectMultiple, type SelectMultipleProps } from './SelectMultiple'
-import { Select, type SelectProps } from './Select'
+import type { SelectInputProps, SelectSingleProps } from '@/interface/form-mediator.interface'
+import { Select } from './Select'
+import { SelectMultiple } from './SelectMultiple'
 
-export interface SelectInputProps extends Omit<FieldProperties, 'value'> {
-	value?: SelectOptions | SelectOptions[]
-	search?: boolean
-	closeOnSelect?: boolean
-	onChange?: (value: string, label: string) => void
-}
-
-export default function SelectInput(Props: SelectInputProps) {
-	const { isMultiple } = Props
-
+export default function SelectInput(props: SelectInputProps) {
 	return (
 		<>
-			{isMultiple && <SelectMultiple {...(Props as SelectMultipleProps)} />}
-			{!isMultiple && <Select {...(Props as SelectProps)} />}
+			{props.isMultiple && <SelectMultiple {...props} />}
+			{!props.isMultiple && <Select {...(props as SelectSingleProps)} />}
 		</>
 	)
 }

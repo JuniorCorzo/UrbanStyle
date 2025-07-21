@@ -1,23 +1,19 @@
 import { useMultipleSelection, useSelect } from 'downshift'
-import type { SelectInputProps } from './SelectInput'
 import { getItemsFilter } from '@/lib/getItemsFilter'
-import type { SelectOptions } from '@/interface/form-mediator.interface'
+import type { SelectMultipleProps, SelectOptions } from '@/interface/form-mediator.interface'
 import { ChevronDownIcon, TrashIcon } from '@heroicons/react/24/outline'
 import { cn } from '@/lib/cn'
 import { SelectList } from './SelectList'
 import { MessageError } from './MessageError'
 import { useEffect } from 'react'
 
-export interface SelectMultipleProps extends Omit<SelectInputProps, 'value'> {
-	value?: SelectOptions[]
-}
-
 export function SelectMultiple({
 	name,
 	label,
 	placeholder,
+	onChange,
 	options,
-	value = [],
+	defaultValue = [],
 }: SelectMultipleProps) {
 	const {
 		selectedItems,
@@ -27,10 +23,10 @@ export function SelectMultiple({
 		addSelectedItem,
 		removeSelectedItem,
 	} = useMultipleSelection<SelectOptions>({
-		initialSelectedItems: value,
+		initialSelectedItems: defaultValue,
 	})
 
-	useEffect(() => setSelectedItems(value), [])
+	useEffect(() => setSelectedItems(defaultValue), [])
 
 	const items = options?.filter(getItemsFilter(selectedItems)) ?? []
 	const {
@@ -66,6 +62,8 @@ export function SelectMultiple({
 				case useSelect.stateChangeTypes.ToggleButtonBlur:
 					if (newSelectedItem) {
 						addSelectedItem(newSelectedItem)
+
+						if (typeof onChange === 'function') onChange(selectedItems)
 					}
 
 					break

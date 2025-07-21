@@ -1,16 +1,11 @@
 import { useSelect, type UseSelectReturnValue } from 'downshift'
-import type { SelectInputProps } from './SelectInput'
 import { optionsToString } from '@/lib/optionsToString'
 import { cn } from '@/lib/cn'
 import { ChevronDownIcon } from '@heroicons/react/24/outline'
 import { SelectList } from './SelectList'
 import { useEffect, useRef, useState } from 'react'
 import { MessageError } from './MessageError'
-import type { SelectOptions } from '@/interface/form-mediator.interface'
-
-export interface SelectProps extends Omit<SelectInputProps, 'value'> {
-	value?: SelectOptions
-}
+import type { SelectOptions, SelectSingleProps } from '@/interface/form-mediator.interface'
 
 export function Select({
 	className,
@@ -20,9 +15,8 @@ export function Select({
 	options,
 	onChange,
 	disable,
-	value: defaultValue,
-	search = true,
-}: SelectProps) {
+	defaultValue,
+}: SelectSingleProps) {
 	const buttonRef = useRef<HTMLDivElement>(null)
 
 	const {
@@ -41,9 +35,7 @@ export function Select({
 
 	useEffect(() => {
 		if (!selectedItem?.value) return
-
-		if (!onChange) return
-		onChange(selectedItem?.value, selectedItem.text)
+		if (typeof onChange === 'function') onChange(selectedItem)
 	}, [selectedItem])
 
 	return (
