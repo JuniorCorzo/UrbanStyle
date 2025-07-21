@@ -3,6 +3,8 @@ package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 import io.github.juniorcorzo.UrbanStyle.application.service.OrderService;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatConstraint;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.CustomerDTO;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderWithCustomerDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
@@ -25,6 +27,17 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     ResponseDTO<OrdersResponseDTO> getAllOrders() {
         return this.orderService.getAllOrders();
+    }
+
+    @GetMapping("/with-customer")
+    @PreAuthorize("hasRole('ADMIN')")
+    ResponseDTO<OrderWithCustomerDTO> getAllOrderWithCustomer() {
+        return this.orderService.getAllOrdersWithCustomer();
+    }
+    @GetMapping("/customers")
+    @PreAuthorize("hasRole('ADMIN')")
+    ResponseDTO<CustomerDTO> getAllCustomers() {
+        return this.orderService.getAllCustomers();
     }
 
     @GetMapping("/by")
@@ -52,7 +65,7 @@ public class OrderController {
     }
 
     @PostMapping("/create")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('USER')")
     public ResponseDTO<OrdersResponseDTO> createOrder(@Validated(OnCreate.class) @RequestBody OrdersSaveDTO insertOrder) {
         return this.orderService.createOrder(insertOrder);
     }

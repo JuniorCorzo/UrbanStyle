@@ -19,7 +19,6 @@ public interface ProductsRepository extends MongoRepository<ProductEntity, Strin
             "{ '$group': { '_id': '$categories.name', 'products': { '$push': '$originalDoc' } } }",
             "{ '$project': { 'category': '$_id', 'products': 1, '_id': 0 } }"
     })
-
     List<ProductAggregationDomain> groupAllByCategories();
 
     @Query("{ '$text': { '$search': '?0'} }")

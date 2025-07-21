@@ -1,10 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.application.exceptions.FailedChangeStatusInOrder;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderHistory;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductSummary;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.*;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.DocumentsName;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
@@ -66,6 +63,24 @@ public class OrderService {
                 HttpStatus.OK,
                 ordersByUser,
                 "Orders retrieved successfully"
+        );
+    }
+
+    public ResponseDTO<OrderWithCustomerDTO> getAllOrdersWithCustomer() {
+        List<OrderWithCustomerDTO> ordersWithCustomer = this.orderRepository.findAllOrdersWithCustomer();
+        return new ResponseDTO<>(
+                HttpStatus.OK,
+                ordersWithCustomer,
+                "Orders with customer retrieved successfully"
+        );
+    }
+
+    public ResponseDTO<CustomerDTO> getAllCustomers() {
+        List<CustomerDTO> customers = this.orderRepository.findALlCustomers();
+        return new ResponseDTO<>(
+                HttpStatus.OK,
+                customers,
+                "Customers retrieved successfully"
         );
     }
 
