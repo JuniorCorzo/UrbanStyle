@@ -50,7 +50,7 @@ export type SelectSingleProps = {
 
 export type SelectInputProps = SelectMultipleProps | SelectSingleProps
 export type SelectRefProps = {
-	selectedItems: SelectOptions | SelectOptions | null
+	selectedItems: () => SelectOptions | SelectOptions[] | null
 }
 
 export type SelectOptions = {
