@@ -1,5 +1,11 @@
 import { PUBLIC_API_URL } from '@/config/env-config'
-import type { CreateOrder, Customer, Order, OrderWithCustomer } from '@/interface/orders.interface'
+import type {
+	CreateOrder,
+	Customer,
+	Order,
+	OrderStatus,
+	OrderWithCustomer,
+} from '@/interface/orders.interface'
 import type { Response } from '@/interface/response.interface'
 import axios from 'axios'
 
@@ -54,6 +60,23 @@ export class OrderService {
 					return response.data
 				})
 		).data
+	}
+
+	static async changeStatus(orderId: string, status: OrderStatus): Promise<Order> {
+		return (
+			await axios
+				.patch<Response<Order>>(
+					`${PUBLIC_API_URL}/orders/change-status?id=${orderId}&status=${status}`,
+					{},
+					{
+						withCredentials: true,
+					},
+				)
+				.then((response) => {
+					if (response.status !== 200) throw Error('expected error')
+					return response.data
+				})
+		).data[0]
 	}
 
 	static async cancelOrder(orderId: string): Promise<Order[]> {

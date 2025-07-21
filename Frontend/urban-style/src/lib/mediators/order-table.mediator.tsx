@@ -1,19 +1,17 @@
 import { Cell } from '@/components/dashboard/react/components/table/Cell'
 import { OrderSubComponent } from '@/components/orders/react/components/OrderSubComponent'
 import { getOrderStatus } from '@/const/orders.const'
-import type { Order, OrderWithCustomer } from '@/interface/orders.interface'
+import type { OrderWithCustomer } from '@/interface/orders.interface'
 import type { SubComponent } from '@/interface/table-mediator.interface'
-import { OrderService } from '@/service/orders.service'
 import { UserService } from '@/service/user.service'
 import { tableStore } from '@/state/table.state'
 import { ChevronUpIcon, ChevronDownIcon, CreditCardIcon } from '@heroicons/react/24/outline'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { useEffect, useState } from 'react'
 import { cn } from '../cn'
-import { OrderFilterByStatus } from '@/components/orders/react/components/OrderFilterByStatus'
 import { OrderFilter } from '@/components/dashboard/react/components/table/filters/OrderFilter'
 import { OrderFilterDropdown } from '@/components/dashboard/react/components/table/filters/OrderFilterDropdown'
 import { orderStore } from '@/state/order.state'
+import { OrderActions } from '@/components/dashboard/react/components/table/OrderActions'
 
 const getUsernameById = (userId: string) => UserService.getUserById(userId).then(({ name }) => name)
 
@@ -89,6 +87,14 @@ export async function orderTable() {
 						<CreditCardIcon className="size-5" />
 						{getValue()}
 					</Cell.Tag>
+				</Cell.Span>
+			),
+		}),
+		columnHelper.display({
+			header: 'Acciones',
+			cell: ({ row }) => (
+				<Cell.Span className="pointer-events-none">
+					<OrderActions orderId={row.original.id} status={row.original.status} />
 				</Cell.Span>
 			),
 		}),
