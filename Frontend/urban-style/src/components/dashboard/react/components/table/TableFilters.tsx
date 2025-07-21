@@ -42,7 +42,7 @@ export function TableFilters() {
 						/>
 					</div>
 				)}
-				<div className="h-10 w-fit" title="Filtros">
+				<div className="min-w-sm flex h-10 justify-end" title="Filtros">
 					{filterComponents?.left && (
 						<FiltersButton onClick={handleClick}>
 							<FiltersDropdown ref={filterDropdownRef}>{filterComponents.left()}</FiltersDropdown>

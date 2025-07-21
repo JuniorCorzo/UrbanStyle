@@ -36,4 +36,12 @@ export interface Order {
 	history: OrderHistory
 }
 
+export type Customer = {
+	userId: string
+	username: string
+}
+
+export interface OrderWithCustomer extends Omit<Order, 'userId'> {
+	customer: Customer
+}
 export interface CreateOrder extends Pick<Order, 'userId' | 'address' | 'paymentMethod'> {}

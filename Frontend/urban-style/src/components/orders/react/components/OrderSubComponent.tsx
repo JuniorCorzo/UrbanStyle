@@ -1,10 +1,10 @@
-import type { Order } from '@/interface/orders.interface'
+import type { Order, OrderWithCustomer } from '@/interface/orders.interface'
 import type { SubComponentProps } from '@/interface/table-mediator.interface'
 import { OrderProductItem } from './OrderProductItem'
 import { OrderAddress } from './OrderAddress'
 import { OrderHistory } from './OrderHistory'
 
-export function OrderSubComponent({ row }: SubComponentProps<Order>) {
+export function OrderSubComponent({ row }: SubComponentProps<OrderWithCustomer>) {
 	const { address, history, products } = row.original
 	return (
 		<div className="grid grid-cols-2 gap-3 py-5">

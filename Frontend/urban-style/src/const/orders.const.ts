@@ -1,11 +1,11 @@
-import type { OrderStatus } from '@/interface/orders.interface'
+import type { OrderStatus, PaymentMethod } from '@/interface/orders.interface'
 
 type OrderMeta = {
 	status: string
 	color: string
 }
 
-export const getOrderStatus = (status: OrderStatus) => {
+export function getOrderStatus(status: OrderStatus) {
 	const statusMap = new Map<OrderStatus, OrderMeta>([
 		['DELIVERED', { status: 'Entregado', color: 'green' }],
 		['CANCELED', { status: 'Cancelado', color: 'bg-red' }],
@@ -14,4 +14,14 @@ export const getOrderStatus = (status: OrderStatus) => {
 	])
 
 	return statusMap.get(status)
+}
+
+export function getPaymentMethod(paymentMethod: PaymentMethod) {
+	const paymentMap = new Map<PaymentMethod, string>([
+		['CARD', 'Tarjeta'],
+		['EFFECTIVE', 'Efectivo'],
+		['PSE', 'PSE'],
+	])
+
+	return paymentMap.get(paymentMethod)
 }

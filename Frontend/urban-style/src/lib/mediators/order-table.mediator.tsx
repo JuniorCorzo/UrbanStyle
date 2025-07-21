@@ -1,7 +1,7 @@
 import { Cell } from '@/components/dashboard/react/components/table/Cell'
 import { OrderSubComponent } from '@/components/orders/react/components/OrderSubComponent'
 import { getOrderStatus } from '@/const/orders.const'
-import type { Order } from '@/interface/orders.interface'
+import type { Order, OrderWithCustomer } from '@/interface/orders.interface'
 import type { SubComponent } from '@/interface/table-mediator.interface'
 import { OrderService } from '@/service/orders.service'
 import { UserService } from '@/service/user.service'
@@ -12,13 +12,13 @@ import { useEffect, useState } from 'react'
 import { cn } from '../cn'
 import { OrderFilterByStatus } from '@/components/orders/react/components/OrderFilterByStatus'
 import { OrderFilter } from '@/components/dashboard/react/components/table/filters/OrderFilter'
+import { OrderFilterDropdown } from '@/components/dashboard/react/components/table/filters/OrderFilterDropdown'
+import { orderStore } from '@/state/order.state'
 
 const getUsernameById = (userId: string) => UserService.getUserById(userId).then(({ name }) => name)
 
 export async function orderTable() {
-	const orders = await OrderService.getAllOrders()
-
-	const columnHelper = createColumnHelper<Order>()
+	const columnHelper = createColumnHelper<OrderWithCustomer>()
 	const columns = [
 		columnHelper.display({
 			id: 'expanded',
@@ -36,16 +36,10 @@ export async function orderTable() {
 				) : null
 			},
 		}),
-		columnHelper.accessor('userId', {
+		columnHelper.accessor('customer.username', {
+			id: 'customer.username',
 			header: 'Usuario',
-			cell: ({ getValue }) => {
-				const [name, setName] = useState<string>()
-
-				useEffect(() => {
-					getUsernameById(getValue()).then(setName)
-				}, [getValue()])
-				return <Cell.Span>{name}</Cell.Span>
-			},
+			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
 		}),
 		columnHelper.accessor('products', {
 			header: 'N° Items',
@@ -100,12 +94,19 @@ export async function orderTable() {
 		}),
 	] as ColumnDef<unknown, any>[]
 
-	const orderSubComponent: SubComponent<Order> = ({ row }) => <OrderSubComponent row={row} />
+	const orderSubComponent: SubComponent<OrderWithCustomer> = ({ row }) => (
+		<OrderSubComponent row={row} />
+	)
 
-	tableStore.set({
-		columns,
-		data: orders,
-		subComponent: orderSubComponent as SubComponent<unknown>,
-		filterComponents: { right: () => <OrderFilter /> },
+	orderStore.listen((orders) => {
+		tableStore.set({
+			columns,
+			data: [...(orders ?? [])],
+			subComponent: orderSubComponent as SubComponent<unknown>,
+			filterComponents: {
+				right: () => <OrderFilter />,
+				left: () => <OrderFilterDropdown />,
+			},
+		})
 	})
 }
