@@ -4,7 +4,7 @@ import { cn } from '@/lib/cn'
 import { tableStore } from '@/state/table.state'
 import { useStore } from '@nanostores/react'
 import { flexRender } from '@tanstack/react-table'
-import { Fragment } from 'react'
+import { Fragment, type MouseEvent } from 'react'
 
 interface Props {
 	tableConfig: ITable
@@ -15,6 +15,17 @@ export function Table({ tableConfig }: Props) {
 	const getPreviousColumn = (accessorKey: string) => {
 		const columnIndex = tableConfig.getAllColumns().findIndex(({ id }) => id === accessorKey)
 		return tableConfig.getAllColumns()[columnIndex - 1]
+	}
+
+	const handleExpanded = (
+		event: MouseEvent<HTMLTableRowElement>,
+		getToggleExpandedHandler: () => void,
+	) => {
+		const target = event.target as HTMLElement
+		console.log(target)
+		if (!target.ariaHasPopup) {
+			getToggleExpandedHandler()
+		}
 	}
 
 	return (
@@ -57,7 +68,7 @@ export function Table({ tableConfig }: Props) {
 						<tr
 							className="group h-full cursor-pointer"
 							key={row.id}
-							onClick={row.getToggleExpandedHandler()}
+							onClick={(event) => handleExpanded(event, row.getToggleExpandedHandler())}
 						>
 							{row.getVisibleCells().map((cell) => (
 								<Cell
