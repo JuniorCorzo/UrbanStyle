@@ -1,5 +1,5 @@
 import FileInput from '@/components/react/inputs/FileInput'
-import SelectInput from '@/components/react/inputs/SelectInput'
+import { SelectInput } from '@/components/react/inputs/SelectInput'
 import TextInput from '@/components/react/inputs/TextInput'
 import type { SelectOptions } from '@/interface/form-mediator.interface'
 import type { Products } from '@/interface/product.interface'
@@ -61,7 +61,7 @@ export function ProductFormFields({ getDefaultValues }: FormFieldsProps<Products
 				name="categories"
 				placeholder="Selecciona una o más categorías"
 				isMultiple={true}
-				value={defaultCategory?.map(({ categoryId, name }) => ({
+				defaultValue={defaultCategory?.map(({ categoryId, name }) => ({
 					text: name,
 					value: categoryId,
 				}))}
