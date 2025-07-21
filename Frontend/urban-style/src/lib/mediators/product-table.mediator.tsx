@@ -16,7 +16,7 @@ import { FiltersDropdown } from '@/components/dashboard/react/components/table/f
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import { ProductSubComponent } from '@/components/dashboard/react/components/table/ProductSubComponent'
 import type { SubComponent } from '@/interface/table-mediator.interface'
-import { ProductFilter } from '@/components/dashboard/react/components/table/filters/ProductFilter'
+import { ProductFilter } from '@/components/dashboard/react/components/table/filters/ProductFilterDropdown'
 
 export async function productTable(): Promise<void> {
 	await ProductStore()
