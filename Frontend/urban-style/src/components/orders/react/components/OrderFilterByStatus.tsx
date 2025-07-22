@@ -25,7 +25,7 @@ export function OrderFilterByStatus() {
 
 	return (
 		<div
-			className="border-border inline-flex max-h-11 gap-2 rounded-md border px-2 py-1.5"
+			className="border-border flex flex-wrap gap-2 overflow-auto rounded-md border px-2 py-1.5 [scrollbar-width:none] sm:flex-nowrap [&::-webkit-scrollbar]:hidden"
 			onClick={handleClick}
 		>
 			<OrderFilterOption status="ALL" selectedItem={selectedItem} />

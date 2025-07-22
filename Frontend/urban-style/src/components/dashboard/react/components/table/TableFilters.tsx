@@ -29,41 +29,45 @@ export function TableFilters() {
 	}
 
 	return (
-		<div className="flex w-full items-center justify-between">
-			<div>{filterComponents?.right && filterComponents.right()}</div>
-			<div className="relative flex items-center justify-center gap-2">
-				{canSearch && (
-					<div className="h-fit">
-						<input
-							type="text"
-							className="border-border focus:custom-ring h-10 w-full max-w-sm rounded border px-2"
-							placeholder="Buscar..."
-							onChange={handleChange}
-						/>
-					</div>
-				)}
-				<div className="min-w-sm flex h-10 justify-end" title="Filtros">
-					{filterComponents?.left && (
-						<FiltersButton onClick={handleClick}>
-							<FiltersDropdown ref={filterDropdownRef}>{filterComponents.left()}</FiltersDropdown>
-						</FiltersButton>
+		<div className="flex w-full flex-col gap-y-3 sm:flex-row">
+			<div className="lg:min-w-3xl flex w-full">
+				{filterComponents?.right && filterComponents.right()}
+			</div>
+			<div className="relative flex w-full gap-2 sm:justify-end">
+				<div className="flex min-h-10 flex-col gap-2 sm:flex-row sm:justify-end" title="Filtros">
+					{canSearch && (
+						<div className="h-fit">
+							<input
+								type="text"
+								className="border-border focus:custom-ring h-10 w-full max-w-sm rounded border px-2"
+								placeholder="Buscar..."
+								onChange={handleChange}
+							/>
+						</div>
 					)}
-				</div>
-				{hasForm && (
-					<div>
-						<Button
-							className="bg-secondary shadow-border flex max-h-10 items-center gap-1"
-							size="md"
-							title="Mostrar formulario"
-							onClick={handleShowSidebar}
-						>
-							<span>
-								<PlusCircleIcon className="size-6 stroke-2" />
-							</span>
-							<span>Añadir</span>
-						</Button>
+					<div className="flex items-end gap-2">
+						{filterComponents?.left && (
+							<FiltersButton onClick={handleClick}>
+								<FiltersDropdown ref={filterDropdownRef}>{filterComponents.left()}</FiltersDropdown>
+							</FiltersButton>
+						)}
+						{hasForm && (
+							<div>
+								<Button
+									className="bg-secondary shadow-border flex max-h-10 items-center gap-1"
+									size="md"
+									title="Mostrar formulario"
+									onClick={handleShowSidebar}
+								>
+									<span>
+										<PlusCircleIcon className="size-6 stroke-2" />
+									</span>
+									<span>Añadir</span>
+								</Button>
+							</div>
+						)}
 					</div>
-				)}
+				</div>
 			</div>
 		</div>
 	)

@@ -48,7 +48,7 @@ export function OrderDateFilter() {
 				className="border-border inline-flex cursor-pointer items-center rounded-md border px-3 py-1"
 				onClick={handleClick}
 			>
-				<span className="inline-flex gap-3">
+				<span className="inline-flex w-full justify-center gap-3">
 					<span>
 						<CalendarDaysIcon className="size-6" />
 					</span>
@@ -62,7 +62,15 @@ export function OrderDateFilter() {
 								<span>{dateState.lastDate}</span>
 							</>
 						)}
-						{!dateState && <span>Seleccione la fecha</span>}
+						{!dateState && (
+							<>
+								<span>Desde</span>
+								<span>
+									<ArrowLongRightIcon className="w-5" />
+								</span>
+								<span>Hasta</span>
+							</>
+						)}
 					</span>
 					<span>
 						{isOpen ? <ChevronUpIcon className="size-5" /> : <ChevronDownIcon className="size-5" />}

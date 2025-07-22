@@ -3,7 +3,7 @@ import { OrderDateFilter } from './OrderDateFilter'
 
 export function OrderFilter() {
 	return (
-		<div className="flex flex-col items-center gap-3 sm:flex-row">
+		<div className="flex flex-row flex-wrap gap-3 lg:flex-nowrap lg:items-center">
 			<OrderFilterByStatus />
 			<OrderDateFilter />
 		</div>
