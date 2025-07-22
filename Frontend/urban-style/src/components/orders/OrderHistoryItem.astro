@@ -1,0 +1,32 @@
+---
+import { getOrderStatus } from '@/const/orders.const'
+import type { OrderHistory } from '@/interface/orders.interface'
+import Steps from '../Steps.astro'
+import Tag from '../Tag.astro'
+import Subtitle from '../text/Subtitle.astro'
+
+interface Props {
+	history: OrderHistory
+}
+
+const { history } = Astro.props
+---
+
+<div class="relative flex flex-col">
+	<Subtitle
+		class="text-lg font-medium uppercase tracking-wide sm:text-base"
+		Text="Historial del pedido"
+	/>
+	<div class="mt-2">
+		{
+			history.map(({ status, date }) => (
+				<Steps>
+					<Tag class="flex w-40 flex-col justify-center px-1.5 py-1 text-center">
+						<span class="text-base font-medium sm:text-sm">{`${getOrderStatus(status)?.status}`}</span>
+						<span class="text-xs">{new Date(date).toLocaleDateString()}</span>
+					</Tag>
+				</Steps>
+			))
+		}
+	</div>
+</div>

@@ -1,0 +1,11 @@
+@import './global.css';
+
+calendar-month {
+	--color-accent: #dce0e8;
+  --color-text-on-accent: var(--color-text)
+
+   
+    &::part(range-inner) {
+      background-color: var(--color-foreground);
+    }
+}

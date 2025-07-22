@@ -1,9 +1,8 @@
-import SelectInput from '@/components/react/inputs/SelectInput'
-import type { Address } from '@/interface/address.interface'
+import { SelectInput } from '@/components/react/inputs/SelectInput'
 import { AddressService } from '@/service/address.service'
 import { AddressStore } from '@/state/address.state'
 import { useStore } from '@nanostores/react'
-import { use, useEffect, useState } from 'react'
+import { useEffect } from 'react'
 
 interface Props {
 	userId: string

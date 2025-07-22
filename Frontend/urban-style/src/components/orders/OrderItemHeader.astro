@@ -1,0 +1,33 @@
+---
+import type { Address } from '@/interface/address.interface'
+import Subtitle from '../text/Subtitle.astro'
+import type { OrderStatus } from '@/interface/orders.interface'
+import Tag from '../Tag.astro'
+import OrderStatusTag from './OrderStatusTag.astro'
+
+interface Props {
+	id: string
+	status: OrderStatus
+	orderDate: string
+	address: Address
+}
+
+const { address, orderDate, id, status } = Astro.props
+const { street, city } = address
+---
+
+<div class="flex w-full flex-col justify-between gap-3 px-3 pt-3">
+	<div class="flex flex-col-reverse justify-between gap-3 sm:flex-row sm:items-center">
+		<span class="flex flex-col">
+			<Subtitle class="tracking-wide" size="xl" Text="DETALLES DEL PEDIDO" />
+			<span class="text-text text-xs">{`ID: #${id}`}</span>
+		</span>
+		<OrderStatusTag status={status} />
+	</div>
+	<div class="flex flex-wrap justify-between gap-y-4">
+		<Tag class="px-2 py-1 normal-case tracking-normal">
+			Ordenado {new Date(orderDate).toLocaleDateString()}
+		</Tag>
+		<Tag class="px-3 py-1 normal-case tracking-normal">Enviado a {`${street}, ${city}`}</Tag>
+	</div>
+</div>

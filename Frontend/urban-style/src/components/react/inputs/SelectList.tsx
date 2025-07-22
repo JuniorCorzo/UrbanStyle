@@ -16,6 +16,7 @@ export interface SelectOptionsProps {
 	selectedItem: SelectOptions | null
 	getItemProps: GetItemsProps<SelectOptions>
 	getMenuProps: GetMenuProps<SelectOptions>
+	isFloating?: boolean
 }
 
 export function SelectList({
@@ -25,6 +26,7 @@ export function SelectList({
 	getMenuProps,
 	highlightedIndex,
 	selectedItem,
+	isFloating,
 }: SelectOptionsProps) {
 	const buttonRef = useRef<HTMLUListElement>(null)
 	const [showAbove, setShowAbove] = useState(false)
@@ -41,11 +43,12 @@ export function SelectList({
 	return (
 		<ul
 			className={cn(
-				'visible absolute z-50 mt-1 max-h-80 w-full overflow-y-auto rounded p-0 opacity-100 landscape:max-h-52',
+				'visible z-50 mt-1 max-h-80 w-full overflow-y-auto rounded opacity-100 landscape:max-h-52',
 				isOpen
 					? 'border-border shadow-crust border shadow transition-all duration-150'
 					: 'invisible opacity-0',
 				showAbove && 'bottom-full',
+				isFloating && 'absolute',
 			)}
 			{...getMenuProps({
 				ref: buttonRef,

@@ -1,18 +1,17 @@
 ---
 interface Props {
 	title: string
-	svgName: string
 	mediator: string
 }
 
-const { mediator, svgName, title } = Astro.props
+const { mediator, title } = Astro.props
 ---
 
 <li
 	class="bg-background border-border group relative flex aspect-square w-14 scale-90 cursor-pointer items-center justify-center rounded border text-center transition-transform duration-300 hover:scale-105"
 	data-mediator={mediator}
 >
-	<img src={`/icons/${svgName}.svg`} class="aspect-square h-6 w-6" data-mediator={mediator} />
+	<slot name="icon" />
 	<span class="animate-up absolute top-0 hidden group-hover:block">
 		{title}
 	</span>

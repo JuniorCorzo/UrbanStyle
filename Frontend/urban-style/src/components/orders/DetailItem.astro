@@ -1,0 +1,16 @@
+---
+import { cn } from '@/lib/cn'
+import type { JSX } from 'astro/jsx-runtime'
+
+interface Props extends JSX.HTMLAttributes {
+	label: string
+	value: string | number
+	classValue?: string
+}
+
+const { label, value, class: className, classValue } = Astro.props
+---
+
+<span class={cn('font-normal inline-flex justify-between sm:justify-start', className)}>
+	{label}: <strong class={cn('font-medium', classValue)}>{value}</strong>
+</span>

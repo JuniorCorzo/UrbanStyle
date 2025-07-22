@@ -16,26 +16,13 @@ import DashboardSummarySection from '@/components/dashboard/DashboardSummarySect
 </Layout>
 
 <script>
-	import { $ } from '@/lib/dom-selector'
-	import { openModalEvent } from '@/lib/utils/open-modal-event'
 	import { selectMediator } from '@/lib/utils/select-mediator'
 	import { CategoriesStore } from '@/state/categories.store'
 
-	const handleMediator = async () => {
-		const dashboardMediator = await selectMediator()
-		if (dashboardMediator) {
-			const { formType, sendData, title } = dashboardMediator.form
-			openModalEvent(title, formType, sendData)
-			dashboardMediator.table()
-		}
-	}
-
-	$('#button_modal')?.addEventListener('click', handleMediator)
+	
 	document.addEventListener('astro:page-load', async () => {
 		const table = (await selectMediator())?.table
 		console.log('Dock table:', table)
 		if (typeof table === 'function') table()
-
-		CategoriesStore()
 	})
 </script>

@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import SelectInput from '@/components/react/inputs/SelectInput'
+import { SelectInput } from '@/components/react/inputs/SelectInput'
 import type { Attributes } from '@/interface/product.interface'
 import { useSearchParam } from './hooks/useSearchParam'
 import type { SelectOptions } from '@/interface/form-mediator.interface'
@@ -38,13 +38,19 @@ export function ProductVariantSelectors({
 		[color],
 	)
 
-	const handleChangeColor = (_: string, label: string) => {
-		setColor(label)
-		setSearchParam('color', label)
+	const handleChangeColor = (selectedItem: SelectOptions | null) => {
+		if (!selectedItem) return
+		const { text } = selectedItem
+
+		setColor(text)
+		setSearchParam('color', text)
 	}
 
-	const handleChangeSize = (_: string, label: string) => {
-		setSearchParam('size', label)
+	const handleChangeSize = (selectedItem: SelectOptions | null) => {
+		if (!selectedItem) return
+		const { text } = selectedItem
+
+		setSearchParam('size', text)
 	}
 
 	return (
@@ -54,9 +60,10 @@ export function ProductVariantSelectors({
 					label="Color:"
 					name="color"
 					placeholder="-- Color --"
-					search={false}
 					options={colorOptions}
-					value={defaultColor ? { text: defaultColor, value: defaultColor } : colorOptions[0]}
+					defaultValue={
+						defaultColor ? { text: defaultColor, value: defaultColor } : colorOptions[0]
+					}
 					onChange={handleChangeColor}
 				/>
 			</div>
@@ -65,9 +72,8 @@ export function ProductVariantSelectors({
 					label="Talla:"
 					name="size"
 					placeholder="-- Talla --"
-					search={false}
 					options={sizeOptions}
-					value={defaultSize ? { text: defaultSize, value: defaultSize } : undefined}
+					defaultValue={defaultSize ? { text: defaultSize, value: defaultSize } : undefined}
 					onChange={handleChangeSize}
 				/>
 			</div>

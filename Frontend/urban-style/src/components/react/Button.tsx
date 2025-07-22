@@ -16,7 +16,7 @@ export function Button({ id, size = 'md', children, className, ...props }: Props
 			id={id}
 			className={cn(
 				sizeClasses[size],
-				'bg-button/70 backdrop-blur-xs backdrop-brightness-80 text-text border-border shadow-button cursor-pointer rounded border text-lg font-semibold hover:shadow',
+				'bg-accent-2/70 backdrop-blur-xs backdrop-brightness-80 text-text border-border shadow-accent-2 cursor-pointer rounded border text-lg font-semibold hover:shadow',
 				className,
 			)}
 			{...props}

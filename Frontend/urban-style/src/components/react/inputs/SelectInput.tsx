@@ -1,22 +1,22 @@
-import type { FieldProperties, SelectOptions } from '@/interface/form-mediator.interface'
-import '@/styles/select.css'
-import { SelectMultiple, type SelectMultipleProps } from './SelectMultiple'
-import { Select, type SelectProps } from './Select'
+import type {
+	SelectInputProps,
+	SelectRefProps,
+	SelectSingleProps,
+} from '@/interface/form-mediator.interface'
+import { Select } from './Select'
+import { SelectMultiple } from './SelectMultiple'
+import React, { useImperativeHandle, useRef } from 'react'
 
-export interface SelectInputProps extends Omit<FieldProperties, 'value'> {
-	value?: SelectOptions | SelectOptions[]
-	search?: boolean
-	closeOnSelect?: boolean
-	onChange?: (value: string, label: string) => void
-}
-
-export default function SelectInput(Props: SelectInputProps) {
-	const { isMultiple } = Props
+export const SelectInput = React.forwardRef<SelectRefProps, SelectInputProps>((props, ref) => {
+	const selectRef = useRef<SelectRefProps>(null)
+	useImperativeHandle(ref, () => ({
+		selectedItems: () => selectRef.current?.selectedItems() ?? null,
+	}))
 
 	return (
 		<>
-			{isMultiple && <SelectMultiple {...(Props as SelectMultipleProps)} />}
-			{!isMultiple && <Select {...(Props as SelectProps)} />}
+			{props.isMultiple && <SelectMultiple ref={selectRef} {...props} />}
+			{!props.isMultiple && <Select ref={selectRef} {...(props as SelectSingleProps)} />}
 		</>
 	)
-}
+})

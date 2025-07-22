@@ -41,6 +41,9 @@ importers:
       bytes:
         specifier: ^3.1.2
         version: 3.1.2
+      cally:
+        specifier: ^0.8.0
+        version: 0.8.0
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
@@ -1019,6 +1022,9 @@ packages:
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
+  atomico@1.79.2:
+    resolution: {integrity: sha512-mshhLRMeIltNYbnQnqgnrvJ/uDa8XDfTQcjw3ymOygQqwHIQ4Sp0LcNYMCbACkV3DtV+eDXb9szwU4qMUuGwYQ==}
+
   axios@1.9.0:
     resolution: {integrity: sha512-re4CqKTJaURpzbLHtIi6XpDv20/CnpXOtjRY5/CU32L8gU8ek9UIivcfvSWvmKEngmVbrUtPpdDwWDWL7DNHvg==}
 
@@ -1074,6 +1080,9 @@ packages:
   callsites@3.1.0:
     resolution: {integrity: sha512-P8BjAsXvZS+VIDUI11hHCQEv74YT67YUi5JJFNWIqL235sBmjX4+qx9Muvls5ivyNENctx46xQLQ3aTuE7ssaQ==}
     engines: {node: '>=6'}
+
+  cally@0.8.0:
+    resolution: {integrity: sha512-jvQ2QMrsZM/ZPG/LWTkJEUPrp/ew1uS2KjKA/E6ru7mVvTMY2JgSagci9IghLmuamFh1pDajrxXAX4Qgo4FHbw==}
 
   camelcase@8.0.0:
     resolution: {integrity: sha512-8WB3Jcas3swSvjIeA2yvCJ+Miyz5l1ZmB6HFb9R1317dt9LCQoswg/BGrmAmkWVEszSrrg4RwmO46qIm2OEnSA==}
@@ -3686,6 +3695,8 @@ snapshots:
 
   asynckit@0.4.0: {}
 
+  atomico@1.79.2: {}
+
   axios@1.9.0:
     dependencies:
       follow-redirects: 1.15.9
@@ -3749,6 +3760,10 @@ snapshots:
       function-bind: 1.1.2
 
   callsites@3.1.0: {}
+
+  cally@0.8.0:
+    dependencies:
+      atomico: 1.79.2
 
   camelcase@8.0.0: {}
 

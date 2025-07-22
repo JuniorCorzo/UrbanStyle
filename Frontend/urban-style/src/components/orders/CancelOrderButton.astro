@@ -1,0 +1,23 @@
+---
+import { cn } from '@/lib/cn'
+import Button from '../Button.astro'
+import type { OrderStatus } from '@/interface/orders.interface'
+
+interface Props {
+	orderId: string
+	status: OrderStatus
+}
+const { status, orderId } = Astro.props
+---
+
+<div class={cn(status !== 'PROCESSING' && 'hidden')}>
+	<Button
+		class="bg-red/70 shadow-red-2 border-red-2 text-red-2 text-base font-medium backdrop-brightness-110"
+		size="sm"
+		type="button"
+		title="Cancelar Pedido"
+		data-order-id={orderId}
+	>
+		Cancelar Pedido
+	</Button>
+</div>

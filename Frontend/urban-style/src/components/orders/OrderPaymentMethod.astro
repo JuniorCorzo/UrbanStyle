@@ -1,0 +1,26 @@
+---
+import { CreditCardIcon } from '@heroicons/react/24/outline'
+import Tag from '../Tag.astro'
+import Subtitle from '../text/Subtitle.astro'
+
+interface Props {
+	paymentMethod: string
+}
+const { paymentMethod } = Astro.props
+---
+
+<div>
+	<span>
+		<Subtitle
+			class="text-lg font-medium uppercase tracking-wide sm:text-base"
+			size="base"
+			Text="Método de Pago"
+		/>
+	</span>
+	<Tag
+		class="float-start mt-2 inline-flex items-center justify-center gap-2 px-2 py-1 sm:float-end"
+	>
+		<CreditCardIcon className="size-5" />
+		{paymentMethod}
+	</Tag>
+</div>

@@ -6,10 +6,11 @@ import axios from 'axios'
 export class UserService {
 	public static async getUserById(userId: string) {
 		return await axios
-			.get<User>(`http://localhost:8080/users?user-id=${userId}`, {
+			.get<User>(`${PUBLIC_API_URL}/users?user-id=${userId}`, {
 				headers: {
 					'Content-Type': 'application/json',
 				},
+				withCredentials: true,
 			})
 			.then((response) => {
 				return (response.data as unknown as Response<User>).data[0]

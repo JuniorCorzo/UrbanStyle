@@ -2,7 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { ColorType, createChart, LineSeries } from 'lightweight-charts'
 import type { ReportSales } from '@/interface/report.interface'
 import { convertToIso } from '@/lib/utils/convert-date'
-import SelectInput from '../../../react/inputs/SelectInput'
+import { SelectInput } from '../../../react/inputs/SelectInput'
+import type { SelectOptions } from '@/interface/form-mediator.interface'
 
 interface Props {
 	reportData: ReportSales
@@ -82,11 +83,11 @@ export default function ChartComponent({ reportData }: Props) {
 		<div className="flex flex-col gap-5">
 			<div className="w-40 text-left">
 				<SelectInput
-					value={{ text: 'Dia', value: 'day' }}
+					defaultValue={{ text: 'Dia', value: 'day' }}
 					label="Agrupar por"
-					search={false}
-					closeOnSelect={true}
-					onChange={setTimeType}
+					onChange={(selectedItem: SelectOptions | null) =>
+						setTimeType(selectedItem?.value ?? 'day')
+					}
 					options={[
 						{ value: 'day', text: 'Dia' },
 						{ value: 'month', text: 'Mes' },

@@ -1,19 +1,29 @@
 import { cn } from '@/lib/cn'
 import { useDropdownContext } from '../../../context/DropdownContext'
 import { CheckIcon } from '@heroicons/react/24/outline'
-import { forwardRef, useImperativeHandle, useState, type ChangeEvent } from 'react'
+import { useFilterContext } from '../../../context/FilterContext'
 
 interface Props extends React.ComponentPropsWithoutRef<'div'> {
-	name: string
+	label?: string
+	value: string
 	columnId: string
-	handleDispatchChecked: (checkedValue: string, columnId: string, isChecked: boolean) => void
 }
 
-export function FilterItem({ name, className, columnId, handleDispatchChecked }: Props) {
+export function FilterItem({ label, value, className, columnId }: Props) {
 	const { isOpen, getItemProps } = useDropdownContext()
+	const { filterState, filterDispatch } = useFilterContext()
+	const isChecked = filterState.some(
+		({ id, value: filterValue }) => filterValue === value && id === columnId,
+	)
 
-	const handleChange = (event: ChangeEvent<HTMLInputElement>, columnId: string, name: string) =>
-		handleDispatchChecked(name, columnId, event.target.checked)
+	const handleChange = () => {
+		if (!isChecked) {
+			filterDispatch({ type: 'ADD_VALUE', payload: { id: columnId, value } })
+			return
+		}
+
+		filterDispatch({ type: 'DELETE_VALUE', payload: { id: columnId, value } })
+	}
 
 	return (
 		<div
@@ -21,15 +31,16 @@ export function FilterItem({ name, className, columnId, handleDispatchChecked }:
 				'hover:bg-accent hover:text-crust flex w-full select-none items-center justify-start gap-2 rounded-md px-2 py-1.5 transition-all duration-200 hover:scale-105 hover:font-medium',
 				className,
 			)}
-			{...getItemProps({ item: name })}
+			{...getItemProps({ item: value })}
 		>
-			<label className="flex w-full items-center gap-2" htmlFor={name.toLowerCase()}>
+			<label className="flex w-full items-center gap-2" htmlFor={value.toLowerCase()}>
 				<div className="relative aspect-square size-5">
 					<input
-						id={name.toLowerCase()}
+						id={value.toLowerCase()}
 						className="bg-background border-border checked:bg-accent-2 focus:custom-ring peer size-5 appearance-none rounded border transition-colors duration-150 focus:outline-none"
 						type="checkbox"
-						onChange={(event) => handleChange(event, columnId, name)}
+						onChange={handleChange}
+						checked={isChecked}
 					/>
 					<CheckIcon
 						className={cn(
@@ -38,7 +49,7 @@ export function FilterItem({ name, className, columnId, handleDispatchChecked }:
 						)}
 					/>
 				</div>
-				<span>{name}</span>
+				<span>{label || value}</span>
 			</label>
 		</div>
 	)

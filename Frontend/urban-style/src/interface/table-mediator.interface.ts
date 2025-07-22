@@ -1,4 +1,3 @@
-import type { FilterDropdownRefProps } from '@/components/dashboard/react/components/table/filters/FiltersDropdown'
 import type {
 	ColumnDef,
 	ColumnFiltersState,
@@ -16,14 +15,20 @@ export interface SubComponentProps<T> {
 }
 
 export type SubComponent<T> = (props: SubComponentProps<T>) => React.ReactNode
+export type FilterComponents = {
+	right?: () => React.ReactNode
+	left?: () => React.ReactNode
+}
 
 export interface TableState {
 	columns: ColumnDef<unknown, any>[]
 	data: unknown[]
+	canSearch?: boolean
 	searchFilter?: string
 	columnPinning?: ColumnPinningState
 	columnFilters?: ColumnFiltersState
-	filterComponent?: (ref: React.RefObject<FilterDropdownRefProps | null>) => React.ReactNode
+	filterComponents?: FilterComponents
 	canExpand?: boolean
 	subComponent?: SubComponent<unknown>
+	hasForm?: boolean
 }

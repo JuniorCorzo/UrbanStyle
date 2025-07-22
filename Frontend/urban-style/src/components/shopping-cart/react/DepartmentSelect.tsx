@@ -1,6 +1,7 @@
-import SelectInput from '@/components/react/inputs/SelectInput'
+import { SelectInput } from '@/components/react/inputs/SelectInput'
 import { useLocationApi } from './hook/useLocationApi'
 import { transformToTitleCase } from '@/lib/transform-to-title-case'
+import type { SelectOptions } from '@/interface/form-mediator.interface'
 
 export function DepartmentSelect() {
 	const { departments, setDepartmentCode } = useLocationApi()
@@ -12,7 +13,7 @@ export function DepartmentSelect() {
 				name="state"
 				label="Departamento:"
 				placeholder="Ej: Norte de Santander"
-				onChange={(value) => setDepartmentCode(value)}
+				onChange={(selectedItem: SelectOptions | null) => setDepartmentCode(selectedItem?.value)}
 				options={departments?.map(({ departmentCode, departmentName }) => {
 					return {
 						value: departmentCode,

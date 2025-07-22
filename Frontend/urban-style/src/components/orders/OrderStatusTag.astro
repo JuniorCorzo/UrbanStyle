@@ -1,0 +1,33 @@
+---
+import type { OrderStatus } from '@/interface/orders.interface'
+import { getOrderStatus } from '@/const/orders.const'
+import { cn } from '@/lib/cn'
+import Tag from '../Tag.astro'
+
+interface Props {
+	status: OrderStatus
+}
+
+const { status } = Astro.props
+const orderStatus = getOrderStatus(status)
+---
+
+<Tag
+	class={cn(
+		'flex items-center gap-2 text-base h-fit px-2 py-1.5',
+		status === 'PROCESSING' && 'bg-yellow/90 text-yellow-2',
+		status === 'SENT' && 'bg-green-1/90 text-green-2',
+		status === 'CANCELED' && 'bg-red/70 text-red-2',
+		status === 'DELIVERED' && 'bg-blue-1/90 text-blue-2',
+	)}
+>
+	<span
+		class={cn(
+			'backdrop-blur-xs size-4 animate-pulse rounded-full shadow-sm saturate-150 backdrop-brightness-200',
+			status === 'PROCESSING' && 'bg-yellow-2 shadow-yellow-2',
+			status === 'SENT' && 'bg-green-2 shadow-green-2',
+			status === 'CANCELED' && 'bg-red-2 shadow-red-2 animate-none',
+			status === 'DELIVERED' && 'bg-blue-2 shadow-blue-2 animate-none',
+		)}></span>
+	<span class="">{orderStatus?.status}</span>
+</Tag>

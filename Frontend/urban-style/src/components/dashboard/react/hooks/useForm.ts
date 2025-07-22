@@ -32,12 +32,12 @@ export function useForm() {
 	const getCategoryValues = () => categories.find(({ id: categoryId }) => categoryId === id)
 
 	useEffect(() => {
-		window.addEventListener('open-modal', (e: Event) => {
+		window.addEventListener('show-sidebar', (e: Event) => {
 			handleFormConfig(e as CustomEvent<OpenModalEvent>)
 		})
 
 		return () => {
-			window.removeEventListener('open-modal', (e: Event) =>
+			window.removeEventListener('show-sidebar', (e: Event) =>
 				handleFormConfig(e as CustomEvent<OpenModalEvent>),
 			)
 		}

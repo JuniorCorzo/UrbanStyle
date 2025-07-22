@@ -1,9 +1,11 @@
 import type { TableState } from '@/interface/table-mediator.interface'
 import { map } from 'nanostores'
 
-const initialState = {
+const initialState: TableState = {
 	columns: [],
 	data: [],
+	canSearch: true,
+	hasForm: true,
 }
 
 export const tableStore = map<TableState>(initialState)

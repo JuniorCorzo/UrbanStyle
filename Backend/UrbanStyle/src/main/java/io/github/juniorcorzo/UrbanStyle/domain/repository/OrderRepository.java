@@ -1,8 +1,6 @@
 package io.github.juniorcorzo.UrbanStyle.domain.repository;
 
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderHistory;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.*;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.Query;
@@ -26,6 +24,22 @@ public interface OrderRepository extends ListCrudRepository<OrdersEntity, String
             "{ $limit: 10 }"
     })
     List<SalesRecord> findProductsMoreSold();
+
+    @Aggregation(pipeline = {
+            "{ $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'user' } }",
+            "{ $unwind: { path: '$user' } }",
+            "{ $addFields: { customer: { userId: '$userId', username: '$user.name' } } }",
+            "{ $unset: ['user', 'userId', '_class'] }"
+    })
+    List<OrderWithCustomerDTO> findAllOrdersWithCustomer();
+
+    @Aggregation(pipeline = {
+            "{ $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'user' } }",
+            "{ $unwind: { path: '$user' } }",
+            "{ $group: { _id: { userId: '$userId', username: '$user.name' } } }",
+            "{ $project: { _id: 0, userId: '$_id.userId', username: '$_id.username' } }"
+    })
+    List<CustomerDTO> findALlCustomers();
 
     @Aggregation(
             pipeline = {

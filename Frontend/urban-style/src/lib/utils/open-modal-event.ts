@@ -10,9 +10,14 @@ export interface OpenDeleteModal {
 	id: string
 }
 
-export function openModalEvent(title: string, formType: FormType, sendData: SendForm, id?: string) {
+export function dispatchShowSidebar(
+	title: string,
+	formType: FormType,
+	sendData: SendForm,
+	id?: string,
+) {
 	window.dispatchEvent(
-		new CustomEvent<OpenModalEvent>('open-modal', {
+		new CustomEvent<OpenModalEvent>('show-sidebar', {
 			detail: {
 				title,
 				formType,

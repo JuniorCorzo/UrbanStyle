@@ -1,0 +1,28 @@
+---
+import type { ProductSummary } from '@/interface/product.interface'
+import type { OrderHistory } from '@/interface/orders.interface'
+import OrderProductSummary from './OrderProductSummary.astro'
+import OrderDetails from './OrderDetails.astro'
+import type { Address } from '@/interface/address.interface'
+
+interface Props {
+	products: ProductSummary[]
+	history: OrderHistory
+	address: Address
+	orderId: string
+	paymentMethod: string
+}
+const { orderId, products, history, address, paymentMethod } = Astro.props
+---
+
+<div class="border-border border-b px-3 pb-3">
+	<div class="grid grid-cols-1 items-center gap-5">
+		{products.map((product) => <OrderProductSummary product={product} />)}
+		<OrderDetails
+			orderId={orderId}
+			paymentMethod={paymentMethod}
+			address={address}
+			history={history}
+		/>
+	</div>
+</div>
