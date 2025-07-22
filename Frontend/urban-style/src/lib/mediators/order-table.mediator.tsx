@@ -36,26 +36,8 @@ export async function orderTable() {
 		}),
 		columnHelper.accessor('customer.username', {
 			id: 'customer.username',
-			header: 'Usuario',
+			header: 'Cliente',
 			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
-		}),
-		columnHelper.accessor('products', {
-			header: 'N° Items',
-			cell: ({ getValue }) => <Cell.Span>{getValue().length}</Cell.Span>,
-		}),
-		columnHelper.accessor('orderDate', {
-			header: 'Fecha de orden',
-			cell: ({ getValue }) => <Cell.Span>{new Date(getValue()).toLocaleDateString()}</Cell.Span>,
-			filterFn: ({ getValue }, columnId, filterValue) => {
-				if (!(typeof filterValue === 'string') || filterValue === '') return true
-
-				const dateValue = filterValue.split('/')
-
-				const orderDate = new Date(getValue<string>(columnId))
-				const initialDate = new Date(`${dateValue[0]}T00:00:00`)
-				const lastDate = new Date(`${dateValue[1]}T00:00:00`)
-				return orderDate >= initialDate && orderDate <= lastDate
-			},
 		}),
 		columnHelper.accessor('status', {
 			header: 'Estado',
@@ -75,12 +57,43 @@ export async function orderTable() {
 				)
 			},
 		}),
+		columnHelper.accessor('orderDate', {
+			header: 'Fecha',
+			cell: ({ getValue }) => (
+				<Cell.Span>
+					{new Intl.DateTimeFormat('es-CO', {
+						dateStyle: 'long',
+					}).format(new Date(getValue()))}
+				</Cell.Span>
+			),
+			filterFn: ({ getValue }, columnId, filterValue) => {
+				if (!(typeof filterValue === 'string') || filterValue === '') return true
+
+				const dateValue = filterValue.split('/')
+
+				const orderDate = new Date(getValue<string>(columnId))
+				const initialDate = new Date(`${dateValue[0]}T00:00:00`)
+				const lastDate = new Date(`${dateValue[1]}T00:00:00`)
+				return orderDate >= initialDate && orderDate <= lastDate
+			},
+		}),
+		columnHelper.accessor('products', {
+			header: 'Items',
+			cell: ({ getValue }) => <Cell.Span>{getValue().length}</Cell.Span>,
+		}),
 		columnHelper.accessor('total', {
-			header: 'Total',
-			cell: ({ getValue }) => <Cell.Span>{getValue().toLocaleString()}</Cell.Span>,
+			header: 'Monto Total',
+			cell: ({ getValue }) => (
+				<Cell.Span>
+					{new Intl.NumberFormat('es-CO', {
+						style: 'currency',
+						currency: 'COP',
+					}).format(getValue())}
+				</Cell.Span>
+			),
 		}),
 		columnHelper.accessor('paymentMethod', {
-			header: 'Método de pago',
+			header: 'Pago',
 			cell: ({ getValue }) => (
 				<Cell.Span>
 					<Cell.Tag className="bg-accent flex w-fit items-center justify-center gap-2">
@@ -104,7 +117,7 @@ export async function orderTable() {
 		<OrderSubComponent row={row} />
 	)
 
-	orderStore.listen((orders) => {
+	orderStore.subscribe((orders) => {
 		tableStore.set({
 			columns,
 			data: [...(orders ?? [])],
