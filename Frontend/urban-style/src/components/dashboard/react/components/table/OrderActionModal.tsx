@@ -39,12 +39,12 @@ export const OrderActionModal = React.forwardRef<OrderActionModalRef, OrderActio
 				onClick={(event) => event.stopPropagation()}
 				className="bg-background -translate-1/2 min-w-sm border-border shadow-crust fixed left-1/2 top-1/2 overflow-visible rounded-md border shadow-lg"
 			>
-				<ModalHeader title="Cambiar" handleModal={handleClose} />
+				<ModalHeader title="Actualizar estado del pedido" handleModal={handleClose} />
 				<div className="grid grid-cols-1 gap-2 px-4 py-2.5">
 					<div className="">
 						<SelectInput
 							ref={selectRef}
-							placeholder="Estados"
+							placeholder="Cambiar a..."
 							name={`status-${orderId}`}
 							options={Object.keys(ORDER_STATUS)
 								.filter((orderStatus) => orderStatus !== status)
