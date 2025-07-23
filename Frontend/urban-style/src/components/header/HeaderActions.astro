@@ -8,12 +8,12 @@ const { user } = Astro.locals
 ---
 
 <ul
-	class="flex h-full flex-col-reverse items-center gap-x-6 gap-y-3 px-2 max-lg:w-full lg:flex-row"
+	class="flex h-full flex-col-reverse items-center gap-x-4 gap-y-3 px-2 max-md:w-full md:flex-row"
 >
-	<li class="w-full lg:w-fit">
+	<li class="w-full md:w-fit">
 		<CartAnchor />
 	</li>
-	<li class="group w-full lg:w-fit">
+	<li class="group w-full md:w-fit">
 		{
 			!user && (
 				<>

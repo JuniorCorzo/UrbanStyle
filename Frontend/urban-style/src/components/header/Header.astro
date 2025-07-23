@@ -6,14 +6,14 @@ const { user } = Astro.locals
 ---
 
 <header
-	class="backdrop-blur-xs bg-accent/70 shadow-crust sticky top-0 z-40 grid min-h-14 grid-cols-1 items-center justify-between gap-y-3 px-5 shadow md:px-14 lg:grid-cols-3"
+	class="backdrop-blur-xs bg-accent/70 shadow-crust sticky top-0 z-40 grid min-h-14 grid-cols-1 items-center justify-between gap-y-3 px-5 shadow md:grid-cols-3 md:px-8"
 	transition:persist
 >
 	<div class="flex min-h-14 items-center justify-between">
 		<h1 id="home" class="cursor-pointer text-nowrap text-xl font-bold">Urban Style</h1>
 		<span
 			id="menu_toggle"
-			class="cursor-pointer lg:hidden"
+			class="cursor-pointer md:hidden"
 			aria-label="Toggle Menu"
 			aria-expanded="false"
 			role="button"
@@ -21,10 +21,10 @@ const { user } = Astro.locals
 			<Bars3Icon className="pointer-events-none size-10" />
 		</span>
 	</div>
-	<div id="header_menu" class="relative flex justify-center px-2 max-lg:hidden">
+	<div id="header_menu" class="relative flex justify-center px-2 max-md:hidden">
 		<HeaderMenu />
 	</div>
-	<nav id="header_actions" class="relative flex h-full justify-end max-lg:hidden">
+	<nav id="header_actions" class="relative flex h-full justify-end max-md:hidden">
 		<HeaderActions />
 	</nav>
 </header>
@@ -44,8 +44,8 @@ const { user } = Astro.locals
 			$menuToggle.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
 
 		$menuToggle.setAttribute('aria-expanded', isExpanded)
-		$headerMenu.classList.toggle('max-lg:hidden')
-		$headerActions.classList.toggle('max-lg:hidden')
+		$headerMenu.classList.toggle('max-md:hidden')
+		$headerActions.classList.toggle('max-md:hidden')
 		$headerElement.classList.toggle('pb-3')
 	}
 
