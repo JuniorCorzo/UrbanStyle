@@ -9,13 +9,16 @@ const { user } = Astro.props
 const { name: userName, role } = user
 ---
 
-<div class="text-right">
+<div
+	id="user_container"
+	class="max-lg:bg-background border-border w-full rounded-md max-lg:w-full max-lg:border max-lg:px-2 max-lg:py-1 lg:text-right"
+>
 	<span id="user_name" class="cursor-pointer">{userName}</span>
 	<div
 		id="user_menu"
-		class="bg-accent/85 backdrop-blur-xs invisible absolute -right-5 top-full max-h-0 w-52 gap-4 rounded-bl rounded-br px-3 py-4 text-left opacity-0 transition-[max-height,opacity] duration-[400ms] group-hover:visible group-hover:max-h-96 group-hover:opacity-100"
+		class="lg:bg-accent/85 backdrop-blur-xs invisible -right-5 top-full hidden max-h-0 gap-2 overflow-hidden rounded-bl rounded-br py-2 text-left transition-[max-height,opacity] duration-[400ms] lg:absolute lg:block lg:w-52 lg:gap-4 lg:px-3 lg:py-4"
 	>
-		<ul class="flex w-full flex-col gap-6">
+		<ul class="flex w-full flex-col lg:gap-6">
 			<li>
 				<a href="#">Perfil</a>
 			</li>
@@ -38,7 +41,7 @@ const { name: userName, role } = user
 
 <style>
 	li {
-		@apply w-full cursor-pointer border-b-2 border-transparent px-[12px] py-[7px];
+		@apply not-last:border-b-2 w-full cursor-pointer border-transparent px-[12px] py-[7px];
 		&:hover {
 			border-color: var(--color-border);
 			transition: border-color 300ms;
@@ -56,6 +59,17 @@ const { name: userName, role } = user
 			$aElement?.parentElement?.addEventListener('click', () => {
 				navigate(($aElement as HTMLAnchorElement).href)
 			})
+		})
+
+		$('#user_container')?.addEventListener('click', (event) => {
+			event.stopPropagation()
+			const $userMenu = (event.currentTarget as HTMLDivElement).querySelector('#user_menu')
+			if ($userMenu) {
+				$userMenu.classList.toggle('hidden')
+				$userMenu.classList.toggle('invisible')
+				$userMenu.classList.toggle('max-h-0')
+				$userMenu.classList.toggle('max-h-96')
+			}
 		})
 
 		$('#logout')?.parentElement?.addEventListener('click', () => {

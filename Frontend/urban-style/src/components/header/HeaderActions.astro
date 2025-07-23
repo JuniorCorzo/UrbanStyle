@@ -1,0 +1,29 @@
+---
+import CartAnchor from './CartAnchor.astro'
+import LoginModal from './LoginModal.astro'
+import UserMenu from './UserMenu.astro'
+import Button from '../Button.astro'
+
+const { user } = Astro.locals
+---
+
+<ul
+	class="flex h-full flex-col-reverse items-center gap-x-6 gap-y-3 px-2 max-lg:w-full lg:flex-row"
+>
+	<li class="w-full lg:w-fit">
+		<CartAnchor />
+	</li>
+	<li class="group w-full lg:w-fit">
+		{
+			!user && (
+				<>
+					<Button id="login_button" size="sm">
+						<span class=""> Iniciar Sesión </span>
+					</Button>
+					<LoginModal />
+				</>
+			)
+		}
+		{user && <UserMenu user={user} />}
+	</li>
+</ul>

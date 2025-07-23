@@ -1,0 +1,16 @@
+---
+import InputSearch from '@/components/header/InputSearch.astro'
+import HeaderMenuItem from '@/components/header/HeaderMenuItem.astro'
+---
+
+<ul class="flex w-full flex-col items-center justify-center gap-x-6 gap-y-3 lg:w-fit lg:flex-row">
+	<HeaderMenuItem href="" text="Hombres" />
+	<HeaderMenuItem href="" text="Mujeres" />
+	<li
+		id="search_container"
+		class="max-lg:bg-background border-border flex flex-col gap-2 rounded-md max-lg:w-full max-lg:border max-lg:px-2 max-lg:py-1 lg:flex-row lg:items-center"
+	>
+		<span>Buscar</span>
+		<InputSearch />
+	</li>
+</ul>

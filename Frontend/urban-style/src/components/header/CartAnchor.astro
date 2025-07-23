@@ -11,13 +11,13 @@ const cartLength = (await CartService().getCartByUserId(id, accessToken))?.items
 
 <a
 	id="to_cart"
-	class="backdrop-blur-xs flex items-center justify-center gap-1 rounded border px-3 py-1 transition-all hover:scale-110"
+	class="backdrop-blur-xs flex w-full items-center justify-center gap-1 rounded border px-3 py-1 transition-all hover:scale-110"
 	title="Carrito de Compras"
 	href="/shopping-cart"
 	type="button"
 >
-	<ShoppingCartIcon className="pointer-events-none size-5" />
-	<span class="pointer-events-none text-sm">
+	<ShoppingCartIcon className="pointer-events-none size-6 sm:size-5" />
+	<span class="pointer-events-none text-base sm:text-sm">
 		Carrito
 		<span id="cart_count">{cartLength === 0 ? '' : `(${cartLength})`}</span>
 	</span>
