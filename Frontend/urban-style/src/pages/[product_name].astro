@@ -12,5 +12,8 @@ const productById = productStore.get().filter(({ id }) => id === productId)[0]
 
 <Layout>
 	<ProductSection product={productById} />
-	<RecommendedProductsSection categoryName={productById?.categories[0].name} />
+	<RecommendedProductsSection
+		class="px-6 py-4 md:hidden"
+		categoryName={productById?.categories[0].name}
+	/>
 </Layout>

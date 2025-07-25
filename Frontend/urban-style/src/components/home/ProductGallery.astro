@@ -1,9 +1,8 @@
 ---
 import { initializeProductGroupeStore } from '@/state/product.store'
-import ProductContainer from './ProductContainer.astro'
 import ProductsSearchResult from './ProductsSearchResult.astro'
-import type { Products, ProductsGroupedCategory } from '@/interface/product.interface'
-import { productGroupedStore, ProductStore } from '@/state/product.store'
+import type { ProductsGroupedCategory } from '@/interface/product.interface'
+import { productGroupedStore } from '@/state/product.store'
 import ProductRowByCategory from './ProductRowByCategory.astro'
 
 const searchQuery = Astro.url.searchParams.get('search')
@@ -15,9 +14,8 @@ if (!searchQuery) {
 }
 ---
 
-<section class="flex flex-col gap-5 px-10">
+<section class="flex flex-col gap-5 px-3 md:px-10">
 	{!searchQuery && products.map((group) => <ProductRowByCategory group={group} />)}
-
 	{searchQuery && <ProductsSearchResult searchQuery={searchQuery.trim()} />}
 </section>
 

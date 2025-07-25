@@ -11,9 +11,9 @@ interface Props {
 const { alt, images } = Astro.props
 ---
 
-<div class="mx-auto w-fit">
+<div class="">
 	<Image
-		class="aspect-square rounded-xl"
+		class="aspect-square size-full max-w-full rounded-tl-md max-sm:rounded-md"
 		src={`${CLOUDFLARE_URL}/${images[0].image}`}
 		alt={alt}
 		width={450}

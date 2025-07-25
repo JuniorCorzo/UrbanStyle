@@ -3,6 +3,7 @@
 
 @theme {
 	--font-primary: 'Roboto', sans-serif;
+	--breakpoint-xs: 30rem;
 
 	--color-primary: #cba6f7;
 	--color-secondary: #ccd0da;

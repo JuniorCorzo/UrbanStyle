@@ -1,31 +1,31 @@
 ---
 import ProductCard from '@/components/home/ProductCard.astro'
 import Subtitle from '@/components/text/Subtitle.astro'
+import { cn } from '@/lib/cn'
 import { getProductByCategory } from '@/service/product.service'
+import type { JSX } from 'astro/jsx-runtime'
 
-interface Props {
+interface Props extends Partial<JSX.IntrinsicElements['div']> {
 	categoryName: string
 }
-const { categoryName } = Astro.props
+const { categoryName, class: className } = Astro.props
 
 const productsRecommended = await getProductByCategory(categoryName)
 ---
 
-<div class="px-6">
-	<section class="flex w-full gap-10">
-		<article class="flex w-full flex-col gap-2">
-			<Subtitle Text="Productos Relacionados" size="2xl" />
-			<div
-				class="flex w-full flex-wrap items-center justify-center gap-2 sm:items-start sm:justify-start"
-			>
-				{
-					productsRecommended.map((product) => (
-						<div>
-							<ProductCard product={product} borderEffect={false} />
-						</div>
-					))
-				}
-			</div>
-		</article>
-	</section>
-</div>
+<section class={cn('flex w-full gap-10', className)}>
+	<article class="flex w-full flex-col gap-2">
+		<Subtitle Text="Productos Relacionados" size="2xl" />
+		<div
+			class="grid w-full auto-rows-auto grid-cols-2 gap-5 sm:grid-cols-[repeat(auto-fill,minmax(10rem,15rem))]"
+		>
+			{
+				productsRecommended.map((product) => (
+					<div>
+						<ProductCard product={product} borderEffect={false} />
+					</div>
+				))
+			}
+		</div>
+	</article>
+</section>
