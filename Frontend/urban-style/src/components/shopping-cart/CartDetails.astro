@@ -19,17 +19,20 @@ const total = calculateTotal
 ---
 
 <article
-	class="border-border mx-5 flex w-full max-w-lg basis-96 flex-col gap-1 rounded border-2 px-5 py-3 md:mr-3"
+	class="border-border md:min-w-sm 2xl:min-w-lg flex w-full basis-96 flex-col gap-1 rounded border-2 px-3 py-3 md:mr-3 md:px-6"
 >
 	<Subtitle size="xl" Text="Detalles" />
 	<div class="border-border flex flex-col gap-11 pt-5">
 		<div class="flex flex-col gap-1">
-			<InfoRow label="Total" value={`<strong>${total.toLocaleString()}</strong>`} />
+			<InfoRow
+				label="Total"
+				value={`<strong>${Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(total)}</strong>`}
+			/>
 			<InfoRow label="Envió" value="<strong>Gratis</strong>" />
 			<InfoRow
 				class="pt-5"
 				label="Total con Iva"
-				value={`<strong id="total">${(total + total * 0.19).toLocaleString()}</strong>`}
+				value={`<strong id="total">${Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(total + total * 0.19)}</strong>`}
 			/>
 		</div>
 		<div class="flex flex-col items-center justify-center gap-2">
@@ -37,8 +40,6 @@ const total = calculateTotal
 			<Button
 				id="address_button"
 				class="bg-primary shadow-primary h-fit w-full backdrop-brightness-100 hover:shadow hover:ring-0"
-				transition:name="address_dialog"
-				transition:animate="fade"
 			>
 				<span class="pointer-events-none flex items-center justify-center gap-2 text-slate-800">
 					<MapPinIcon className="size-6" />

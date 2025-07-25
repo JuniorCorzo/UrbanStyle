@@ -5,6 +5,7 @@ import type { Products } from '@/interface/product.interface'
 
 import { fade } from 'astro:transitions'
 import RecommendedProductsSection from './RecommendedProductsSection.astro'
+import { slide } from 'node_modules/astro/dist/transitions'
 
 interface Props {
 	product: Products
@@ -22,7 +23,8 @@ if (description === undefined) {
 <div class="px-6">
 	<section
 		class="@container border-border shadow-accent relative flex flex-col rounded-md border shadow-md sm:border-0 md:grid-cols-3 md:flex-row"
-		transition:animate={fade({ duration: 150 })}
+		transition:animate={slide({ duration: 300 })}
+		transition:name={product.id}
 	>
 		<article class="border-border col-span-2 flex grow flex-col sm:rounded-l-md sm:border">
 			<ProductImage alt={description} images={images} />
@@ -31,7 +33,7 @@ if (description === undefined) {
 			</div>
 		</article>
 		<article
-			class="2xl:min-w-2xl lg:min-w-xl min-w-xs border-border rounded-r-md sm:min-h-screen sm:border sm:border-l-0"
+			class="2xl:min-w-2xl lg:min-w-lg border-border rounded-r-md sm:min-h-screen sm:border sm:border-l-0"
 		>
 			<ProductDetailsPanel product={product} userId={userId} />
 		</article>

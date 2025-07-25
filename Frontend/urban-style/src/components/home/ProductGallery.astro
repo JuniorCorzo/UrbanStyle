@@ -14,7 +14,11 @@ if (!searchQuery) {
 }
 ---
 
-<section class="flex flex-col gap-5 px-3 md:px-10">
+<section
+	class="flex flex-col gap-5 px-3 md:px-10"
+	transition:name="home-products"
+	transition:animate="slide"
+>
 	{!searchQuery && products.map((group) => <ProductRowByCategory group={group} />)}
 	{searchQuery && <ProductsSearchResult searchQuery={searchQuery.trim()} />}
 </section>

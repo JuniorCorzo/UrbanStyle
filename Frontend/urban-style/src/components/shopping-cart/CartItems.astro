@@ -14,11 +14,11 @@ const { items, userId } = Astro.props
 const { getProductById } = await ProductStore()
 ---
 
-<article class="flex grow flex-col gap-14 px-7">
+<article class="flex w-full grow-[999] flex-col gap-4">
 	{
 		items.map(({ productId, name, price, quantity, color, size }) => (
-			<div class="flex gap-5">
-				<div class="flex w-full justify-between">
+			<div class="bg-foreground border-border shadow-accent relative flex gap-5 rounded-md border shadow-md">
+				<div class="xs:flex-row flex w-full flex-col justify-between gap-x-5 gap-y-2">
 					<ProductDetailsCard
 						productId={productId}
 						userId={userId}
@@ -27,7 +27,7 @@ const { getProductById } = await ProductStore()
 						size={size}
 						getProductById={getProductById}
 					/>
-					<div class="flex flex-col items-end gap-1">
+					<div class="flex flex-col items-end gap-1 px-3 py-2">
 						<Counter
 							id="quantity_input"
 							maxNumber={getProductById(productId).get()?.stock || 0}
@@ -37,11 +37,23 @@ const { getProductById } = await ProductStore()
 							data-color={color}
 							data-size={size}
 						/>
-						<Subtitle id="price_unit" size="lg" Text={`$${price.toLocaleString()}/u`} />
 						<Subtitle
 							id="product_total"
-							size="lg"
-							Text={`$${(price * quantity).toLocaleString()}`}
+							size="base"
+							Text={`${Intl.NumberFormat('es-CO', {
+								style: 'currency',
+								currency: 'COP',
+								currencyDisplay: 'code',
+							}).format(price * quantity)}`}
+						/>
+						<Subtitle
+							id="price_unit"
+							class="font-normal"
+							size="xs"
+							Text={`(${Intl.NumberFormat('es-CO', {
+								style: 'currency',
+								currency: 'COP',
+							}).format(price)}c/u)`}
 						/>
 					</div>
 				</div>

@@ -15,8 +15,12 @@ const orders = await OrderService.getOrderByUserId(user.id, accessToken)
 	import { OrderService } from '@/service/orders.service'
 
 	const cancelOrder = (target: HTMLButtonElement) => {
+		if (!target.classList.contains('cancel-button')) return
+
 		const orderId = target.dataset.orderId
 		if (!orderId) return
+
+		target.ariaBusy = 'true'
 		OrderService.cancelOrder(orderId)
 			.then(() => {
 				window.location.reload()
@@ -24,15 +28,29 @@ const orders = await OrderService.getOrderByUserId(user.id, accessToken)
 			.catch((error) => {
 				console.error('Error canceling order:', error)
 			})
+			.finally(() => {
+				target.ariaBusy = 'false'
+			})
 	}
 
 	const toggleDetails = (target: HTMLButtonElement) => {
 		if (target.classList.contains('details-button')) {
 			const { orderId } = target.dataset
 			if (!orderId) return
+
 			const $orderHistoryDiv = $<HTMLDivElement>(`#order-details-${orderId}`)
 			$orderHistoryDiv?.classList.toggle('hidden')
 			$orderHistoryDiv?.classList.toggle('flex')
+
+			// Toggle the aria-expanded attribute and update button text
+			const ariaExpanded = target.getAttribute('aria-expanded') === 'true'
+			target.ariaExpanded = ariaExpanded ? 'true' : 'false'
+			target.textContent = target.ariaExpanded ? 'Mostrar menos' : 'Mostrar más'
+			target.title = ariaExpanded
+				? 'Mostrar menos detalles del pedido'
+				: 'Mostrar más detalles del pedido'
+
+			target.setAttribute('aria-label', target.textContent)
 		}
 	}
 
@@ -43,7 +61,7 @@ const orders = await OrderService.getOrderByUserId(user.id, accessToken)
 		$orderSection.addEventListener('click', (event) => {
 			const target = event.target
 			if (target instanceof HTMLButtonElement) {
-				// cancelOrder(target)
+				cancelOrder(target)
 				toggleDetails(target)
 			}
 		})

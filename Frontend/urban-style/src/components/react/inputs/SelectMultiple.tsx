@@ -76,7 +76,7 @@ export const SelectMultiple = React.forwardRef<SelectRefProps, SelectMultiplePro
 		}))
 
 		return (
-			<div className="relative w-full max-w-md">
+			<div className="relative w-full">
 				<div className="flex flex-col gap-1">
 					<label
 						className="pointer-events-none flex flex-col gap-1 transition-all"

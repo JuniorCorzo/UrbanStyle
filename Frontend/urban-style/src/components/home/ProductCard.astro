@@ -3,6 +3,7 @@ import type { Products } from '@/interface/product.interface'
 import { Image } from 'astro:assets'
 import BorderEffect from './BorderEffect.astro'
 import { CLOUDFLARE_URL } from '@/config/env-config'
+import { slide } from 'astro:transitions'
 
 interface Props {
 	product: Products

@@ -2,7 +2,7 @@
 interface Props {
 	Text: string
 	class?: string
-	size?: 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl'
+	size?: 'xs' | 'sm' | 'base' | 'lg' | 'xl' | '2xl' | '3xl' | '4xl' | '5xl'
 	id?: string
 	title?: string
 }
@@ -10,6 +10,7 @@ interface Props {
 const { Text, id, title, size = '4xl', class: className = '' } = Astro.props
 
 const sizeClasses = {
+	xs: 'text-xs',
 	sm: 'text-sm',
 	base: 'text-base',
 	lg: 'text-lg',

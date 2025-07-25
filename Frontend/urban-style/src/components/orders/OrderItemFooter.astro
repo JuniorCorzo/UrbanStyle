@@ -25,6 +25,9 @@ const { total, orderId, status } = Astro.props
 				type="button"
 				data-order-id={orderId}
 				title="Ver mas detalles del pedido"
+				aria-label="Ver mas detalles del pedido"
+				aria-controls={`order-details-${orderId}`}
+				aria-expanded="false"
 			>
 				Mostrar más
 			</Button>
