@@ -3,6 +3,7 @@
 
 @theme {
 	--font-primary: 'Roboto', sans-serif;
+	--breakpoint-xs: 30rem;
 
 	--color-primary: #cba6f7;
 	--color-secondary: #ccd0da;
@@ -149,4 +150,5 @@ body {
 	min-height: 100vh;
 	max-width: 100vw;
 	color: var(--color-text);
+	font-family: 'Roboto';
 }

@@ -11,40 +11,46 @@ const userId = Astro.locals.user?.id ?? ''
 
 <dialog
 	id="address_dialog"
-	class="bg-background -translate-1/2 border-border shadow-crust fixed left-1/2 top-1/2 z-10 mx-5 w-full max-w-md overflow-visible rounded-2xl border-2 shadow-md sm:max-w-xl"
+	class="-translate-1/2 xs:max-w-xl fixed left-1/2 top-1/2 z-10 w-full max-w-xs bg-transparent px-3 md:px-6"
 	transition:name="address_dialog"
 >
-	<div>
-		<div class="bg-accent inline-flex w-full items-center justify-between rounded-t-2xl px-5 py-3">
-			<Subtitle size="2xl" Text="Agregar dirección de envío" />
-			<XMarkIcon id="close_address" className="size-8 cursor-pointer" />
+	<div
+		class="bg-background border-border shadow-crust overflow-visible rounded-2xl border-2 shadow-md"
+	>
+		<div>
+			<div
+				class="bg-accent inline-flex w-full items-center justify-between rounded-t-2xl px-5 py-3"
+			>
+				<Subtitle size="2xl" Text="Agregar dirección de envío" />
+				<XMarkIcon id="close_address" className="size-8 cursor-pointer" />
+			</div>
 		</div>
-	</div>
-	<div>
-		<form
-			id="address_form"
-			method="dialog"
-			class="relative flex flex-col items-end justify-center gap-y-5 px-3 py-5 sm:grid sm:grid-flow-row-dense sm:grid-cols-[repeat(auto-fill,minmax(15rem,17rem))]"
-			data-user-id={userId}
-		>
-			<InputField
-				label="Dirección"
-				name="street"
-				placeholder="Ej: Calle 45 #23-10"
-				errorId="street_error"
-			/>
-			<DepartmentSelect client:idle />
-			<MunicipalitySelect client:idle />
-			<InputField
-				label="Postal Code"
-				name="postalCode"
-				placeholder="Ej: 110111"
-				errorId="postalCode_error"
-			/>
-			<Button class="col-span-full w-full" type="submit">
-				<span>Guardar Dirección</span>
-			</Button>
-		</form>
+		<div>
+			<form
+				id="address_form"
+				method="dialog"
+				class="relative flex flex-col items-end justify-center gap-y-5 px-3 py-5 sm:grid sm:grid-flow-row-dense sm:grid-cols-[repeat(auto-fill,minmax(15rem,17rem))]"
+				data-user-id={userId}
+			>
+				<InputField
+					label="Dirección"
+					name="street"
+					placeholder="Ej: Calle 45 #23-10"
+					errorId="street_error"
+				/>
+				<DepartmentSelect client:idle />
+				<MunicipalitySelect client:idle />
+				<InputField
+					label="Postal Code"
+					name="postalCode"
+					placeholder="Ej: 110111"
+					errorId="postalCode_error"
+				/>
+				<Button class="col-span-full w-full" type="submit">
+					<span>Guardar Dirección</span>
+				</Button>
+			</form>
+		</div>
 	</div>
 </dialog>
 

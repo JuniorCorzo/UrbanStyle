@@ -9,7 +9,7 @@ export function ProductDetail({ label, children, className }: ProductDetailProps
 	return (
 		<div
 			className={cn(
-				'border-border flex h-fit w-full max-w-sm flex-col gap-2 overflow-auto rounded-lg border px-5 py-3 sm:max-w-xl',
+				'border-border flex h-fit w-fit max-w-sm flex-col gap-2 overflow-auto rounded-lg border px-5 py-3 sm:max-w-xl',
 				className,
 			)}
 		>

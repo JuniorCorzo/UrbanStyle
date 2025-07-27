@@ -1,0 +1,228 @@
+[{
+  "_id": "687bee6912a68dc079c5d4f0",
+  "userId": "687ad31e5c767760ff3463de",
+  "products": [
+    {
+      "productId": "687ae9cd2f72ceb4434c48b2",
+      "name": "Polo Clásico Marino",
+      "color": "Negro",
+      "size": "XS",
+      "price": 60000,
+      "quantity": 8,
+      "discount": 0
+    },
+    {
+      "productId": "687aec4aadf022930a017936",
+      "name": "Camisa Slim Fit Negra - Elegancia Minimal",
+      "color": "Negro",
+      "size": "XS",
+      "price": 56999,
+      "quantity": 7,
+      "discount": 0
+    }
+  ],
+  "total": 878993,
+  "status": "DELIVERED",
+  "address": {
+    "_id": "687bee6112a68dc079c5d4ef",
+    "userId": "687ad31e5c767760ff3463de",
+    "street": "Calle 10 #5-32",
+    "city": "Cúcuta",
+    "state": "Norte de Santander",
+    "country": "Colombia",
+    "postalCode": "540001"
+  },
+  "paymentMethod": "PSE",
+  "orderDate": {
+    "$date": "2025-07-19T19:13:45.509Z"
+  },
+  "history": [
+    {
+      "status": "PROCESSING",
+      "date": {
+        "$date": "2025-07-19T19:13:45.511Z"
+      }
+    },
+    {
+      "status": "SENT",
+      "date": {
+        "$date": "2025-07-21T21:36:49.520Z"
+      }
+    },
+    {
+      "status": "DELIVERED",
+      "date": {
+        "$date": "2025-07-21T22:21:33.244Z"
+      }
+    }
+  ],
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity"
+},
+{
+  "_id": "687d47e9baee23d0826dbbf8",
+  "userId": "687ad31e5c767760ff3463de",
+  "products": [
+    {
+      "productId": "687aec4aadf022930a017936",
+      "name": "Camisa Slim Fit Negra - Elegancia Minimal",
+      "color": "Negro",
+      "size": "S",
+      "price": 56999,
+      "quantity": 5,
+      "discount": 0
+    }
+  ],
+  "total": 284995,
+  "status": "PROCESSING",
+  "address": {
+    "_id": "687bee6112a68dc079c5d4ef",
+    "userId": "687ad31e5c767760ff3463de",
+    "street": "Calle 10 #5-32",
+    "city": "Cúcuta",
+    "state": "Norte de Santander",
+    "country": "Colombia",
+    "postalCode": "540001"
+  },
+  "paymentMethod": "PSE",
+  "orderDate": {
+    "$date": "2025-07-20T19:47:52.976Z"
+  },
+  "history": [
+    {
+      "status": "PROCESSING",
+      "date": {
+        "$date": "2025-07-20T19:47:52.978Z"
+      }
+    }
+  ],
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity"
+},
+{
+  "_id": "687d4b2525d81ebf05056d2c",
+  "userId": "687d4912baee23d0826dbbf9",
+  "products": [
+    {
+      "productId": "687ae9cd2f72ceb4434c48b2",
+      "name": "Polo Clásico Marino",
+      "color": "Azul",
+      "size": "XS",
+      "price": 60000,
+      "quantity": 9,
+      "discount": 0
+    }
+  ],
+  "total": 540000,
+  "status": "SENT",
+  "address": {
+    "_id": "687d4954baee23d0826dbbfa",
+    "userId": "687d4912baee23d0826dbbf9",
+    "street": "Avenida 5 #6-21 Caobos",
+    "city": "San José de Cúcuta",
+    "state": "Norte de Santander",
+    "country": "Colombia",
+    "postalCode": "212121"
+  },
+  "paymentMethod": "PSE",
+  "orderDate": {
+    "$date": "2025-07-20T20:01:41.005Z"
+  },
+  "history": [
+    {
+      "status": "PROCESSING",
+      "date": {
+        "$date": "2025-07-20T20:01:41.010Z"
+      }
+    },
+    {
+      "status": "SENT",
+      "date": {
+        "$date": "2025-07-21T22:24:23.492Z"
+      }
+    }
+  ],
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity"
+},
+{
+  "_id": "6882d1e383cbb46b8ea8ad2d",
+  "userId": "687ad31e5c767760ff3463de",
+  "products": [
+    {
+      "productId": "687ae9cd2f72ceb4434c48b2",
+      "name": "Polo Clásico Marino",
+      "color": "Azul",
+      "size": "S",
+      "price": 60000,
+      "quantity": 7,
+      "discount": 0
+    },
+    {
+      "productId": "687aec4aadf022930a017936",
+      "name": "Camisa Slim Fit Negra - Elegancia Minimal",
+      "color": "Negro",
+      "size": "XS",
+      "price": 56999,
+      "quantity": 8,
+      "discount": 0
+    }
+  ],
+  "total": 875992,
+  "status": "CANCELED",
+  "address": {
+    "_id": "687bee6112a68dc079c5d4ef",
+    "userId": "687ad31e5c767760ff3463de",
+    "street": "Calle 10 #5-32",
+    "city": "Cúcuta",
+    "state": "Norte de Santander",
+    "country": "Colombia",
+    "postalCode": "540001"
+  },
+  "paymentMethod": "PSE",
+  "orderDate": {
+    "$date": "2025-07-25T00:37:55.406Z"
+  },
+  "history": [
+    {
+      "status": "PROCESSING",
+      "date": {
+        "$date": "2025-07-25T00:37:55.408Z"
+      }
+    },
+    {
+      "status": "CANCELED",
+      "date": {
+        "$date": "2025-07-25T22:57:54.883Z"
+      }
+    },
+    {
+      "status": "CANCELED",
+      "date": {
+        "$date": "2025-07-25T22:58:00.440Z"
+      }
+    },
+    {
+      "status": "CANCELED",
+      "date": {
+        "$date": "2025-07-25T22:58:02.645Z"
+      }
+    },
+    {
+      "status": "CANCELED",
+      "date": {
+        "$date": "2025-07-25T22:58:04.326Z"
+      }
+    },
+    {
+      "status": "CANCELED",
+      "date": {
+        "$date": "2025-07-25T22:58:07.243Z"
+      }
+    },
+    {
+      "status": "CANCELED",
+      "date": {
+        "$date": "2025-07-25T22:58:14.536Z"
+      }
+    }
+  ],
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity"
+}]

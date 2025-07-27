@@ -48,7 +48,7 @@ export const Select = React.forwardRef<SelectRefProps, SelectSingleProps>(
 		}))
 
 		return (
-			<div className="relative w-full max-w-md">
+			<div className="relative w-full">
 				<div
 					className={cn('text-text flex w-full flex-col', disable && 'cursor-not-allowed')}
 					ref={buttonRef}

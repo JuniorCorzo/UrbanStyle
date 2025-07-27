@@ -3,6 +3,7 @@ import type { Products } from '@/interface/product.interface'
 import { Image } from 'astro:assets'
 import BorderEffect from './BorderEffect.astro'
 import { CLOUDFLARE_URL } from '@/config/env-config'
+import { slide } from 'astro:transitions'
 
 interface Props {
 	product: Products
@@ -17,20 +18,28 @@ const { product, borderEffect = true } = Astro.props
 	title={product.description}
 >
 	<div
-		class="bg-accent/30 shadow-crust group relative flex h-fit w-fit min-w-56 flex-col items-center gap-2 rounded-lg pb-5 shadow transition-all duration-500 hover:scale-105"
+		class="bg-foreground shadow-crust xs:pb-5 group relative flex h-fit min-w-32 flex-col items-center gap-2 rounded-lg pb-2 shadow transition-all duration-500 hover:scale-105"
 	>
 		{borderEffect && <BorderEffect />}
 		<Image
-			class="aspect-square rounded-t-lg"
+			class="aspect-square size-full rounded-t-lg"
 			src={`${CLOUDFLARE_URL}/${product.images[0].image}`}
 			alt={product.name}
 			width={240}
 			height={240}
 		/>
-		<div class="flex w-full flex-col gap-1 px-5 text-left">
-			<span class="w-full text-center font-bold">{product.name}</span>
+		<div class="xs:px-5 flex w-full flex-col gap-1 px-2 text-left">
+			<span
+				class="w-full overflow-hidden text-ellipsis text-nowrap text-center text-sm font-bold sm:text-base"
+				>{product.name}</span
+			>
 			<span class="text-right font-bold">
-				{`$ ${product.price.toLocaleString()}`}
+				{
+					Intl.NumberFormat('es-CO', {
+						style: 'currency',
+						currency: 'COP',
+					}).format(product.price)
+				}
 			</span>
 		</div>
 	</div>

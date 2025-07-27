@@ -6,6 +6,7 @@ import type { Products } from '@/interface/product.interface'
 import type { ReadableAtom } from 'nanostores'
 import { Image } from 'astro:assets'
 import { CLOUDFLARE_URL } from '@/config/env-config'
+import DetailItem from '../orders/DetailItem.astro'
 
 interface Props {
 	userId: string
@@ -19,39 +20,44 @@ interface Props {
 const { userId, productId, name, color, size, getProductById } = Astro.props
 ---
 
-<div class="flex gap-5">
-	<div>
+<div class="xs:flex-row flex flex-col gap-x-3 gap-y-1 md:gap-x-5">
+	<div class="xs:max-h-64 xs:max-w-64 aspect-square">
 		<Image
-			class="aspect-square rounded-lg"
+			class="xs:rounded-l-md max-xs:rounded-t-md aspect-square size-full"
 			src={`${CLOUDFLARE_URL}/${getProductById(productId).get()?.images[0].image}`}
 			alt={name}
-			width={250}
-			height={250}
+			width={400}
+			height={400}
 		/>
 	</div>
-	<div class="flex w-full justify-between">
-		<div class="flex flex-col">
+	<div class="xs:py-2 max-xs:px-2 flex w-full justify-between">
+		<div class="flex w-full flex-col">
 			<div class="flex grow flex-col gap-1">
-				<Subtitle size="xl" Text={name} />
-				<span>
-					Color: <strong>{color}</strong>
-				</span>
-				<span>
-					Talla: <strong>{size}</strong>
-				</span>
+				<Subtitle
+					class="xs:text-base line-clamp-2 overflow-hidden text-ellipsis font-medium"
+					size="lg"
+					Text={name}
+				/>
+				<DetailItem label="Color" value={color} />
+				<DetailItem label="Talla" value={size} />
 			</div>
-			<div class="basis-5">
+			<div class="max-xs:absolute bottom-2 left-2 basis-5">
 				<Button
 					id="remove-product"
-					class="flex items-center gap-2 border-0 bg-transparent backdrop-brightness-100 hover:scale-105 hover:ring-0"
+					class="flex items-center gap-2 border-0 bg-transparent backdrop-brightness-100 hover:scale-105 hover:shadow-none"
 					size="custom"
 					data-product-id={productId}
 					data-user-id={userId}
 					data-color={color}
 					data-size={size}
+					title="Eliminar producto del carrito"
+					aria-label="Eliminar producto del carrito"
+					aria-describedby="remove-product-description"
 				>
-					<TrashIcon className="stroke-red pointer-events-none size-6" />
-					<span class="text-red pointer-events-none font-semibold"> Remover </span>
+					<TrashIcon className="stroke-red xs:size-5 pointer-events-none size-8 md:size-6" />
+					<span class="text-red max-xs:hidden pointer-events-none font-semibold max-md:text-sm">
+						Remover
+					</span>
 				</Button>
 			</div>
 		</div>

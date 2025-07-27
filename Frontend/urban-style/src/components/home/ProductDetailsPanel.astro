@@ -2,9 +2,8 @@
 import Subtitle from '@/components/text/Subtitle.astro'
 import RegularText from '@/components/text/RegularText.astro'
 import Tags from '@/components/home/Tags.astro'
-import { SelectInput } from '@/components/react/inputs/SelectInput'
 import Counter from '@/components/home/Counter.astro'
-import Button, { sizeClasses } from '@/components/Button.astro'
+import Button from '@/components/Button.astro'
 import { ProductVariantSelectors } from '@/components/react/ProductVariantSelectors'
 import type { Products } from '@/interface/product.interface'
 
@@ -20,11 +19,18 @@ const colorParam = searchParams.get('color') ?? undefined
 const sizeParam = searchParams.get('size') ?? undefined
 ---
 
-<div class="flex h-full w-fit min-w-[450px] flex-col justify-center gap-2 rounded px-8 py-5">
-	<Subtitle Text={name} />
+<div
+	class="flex aspect-auto flex-col justify-start gap-2 rounded px-3 py-5 md:sticky md:top-12 lg:px-8"
+>
+	<Subtitle Text={name} size="2xl" />
 	<RegularText>{description}</RegularText>
 	<Tags categories={categories} />
-	<Subtitle size="3xl" class="py-3" Text={`$ ${price.toLocaleString()}`} title="Precio" />
+	<Subtitle
+		size="3xl"
+		class="py-3"
+		Text={Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(price)}
+		title="Precio"
+	/>
 	<div class="flex min-h-[42px] w-full flex-col gap-4 sm:flex-row">
 		<ProductVariantSelectors
 			attributes={attributes}
@@ -35,12 +41,7 @@ const sizeParam = searchParams.get('size') ?? undefined
 	</div>
 	<div class="flex flex-col gap-5 pt-5">
 		<Counter id="product_quantity" maxNumber={stock} />
-		<Button
-			id="add_cart"
-			class="bg-accent/70 h-fit w-full max-w-lg"
-			size="md"
-			data-user-id={userId}
-		>
+		<Button id="add_cart" class="h-fit w-full max-w-full" size="md" data-user-id={userId}>
 			Añadir al Carrito
 		</Button>
 	</div>
@@ -55,8 +56,6 @@ const sizeParam = searchParams.get('size') ?? undefined
 	import { CartService } from '@/service/cart.service'
 	import { ProductStore } from '@/state/product.store'
 	import { z } from 'zod'
-
-	const productId = new URLSearchParams(location.search).get('id')
 
 	const sendCart = (createCart: Cart) => {
 		CartService()
@@ -159,6 +158,7 @@ const sizeParam = searchParams.get('size') ?? undefined
 	 * @param event - MouseEvent from the click action
 	 */
 	async function handleClick(event: MouseEvent): Promise<void> {
+		const productId = new URLSearchParams(location.search).get('id')
 		if (!productId) return
 
 		const eventData = extractEventData(event)

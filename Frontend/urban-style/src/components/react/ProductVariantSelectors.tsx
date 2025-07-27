@@ -54,7 +54,7 @@ export function ProductVariantSelectors({
 	}
 
 	return (
-		<div className="flex min-h-[42px] w-full flex-col gap-4 sm:flex-row">
+		<div className="flex w-full flex-col gap-4 lg:flex-row">
 			<div className="grow">
 				<SelectInput
 					label="Color:"

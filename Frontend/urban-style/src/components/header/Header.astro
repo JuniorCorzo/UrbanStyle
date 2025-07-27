@@ -1,70 +1,62 @@
 ---
-import InputSearch from '@/components/header/InputSearch.astro'
-import LoginModal from './LoginModal.astro'
-import UserMenu from './UserMenu.astro'
-import CartAnchor from './CartAnchor.astro'
-import Button from '../Button.astro'
+import HeaderMenu from '@/components/header/HeaderMenu.astro'
+import HeaderActions from '@/components/header/HeaderActions.astro'
+import { Bars3Icon } from '@heroicons/react/24/outline'
 const { user } = Astro.locals
 ---
 
 <header
-	class="backdrop-blur-xs bg-accent/70 shadow-crust sticky top-0 z-10 flex min-h-14 items-center justify-between px-14 shadow"
-	transition:persist
+	class="backdrop-blur-xs bg-accent/70 shadow-crust sticky top-0 z-40 grid min-h-14 grid-cols-1 items-center justify-between gap-y-3 px-5 shadow md:grid-cols-3 md:px-8"
 >
-	<div>
-		<h1 id="home" class="cursor-pointer text-3xl font-bold">Urban Style</h1>
+	<div class="flex min-h-14 items-center justify-between">
+		<h1 id="home" class="cursor-pointer text-nowrap text-xl font-bold">Urban Style</h1>
+		<span
+			id="menu_toggle"
+			class="cursor-pointer md:hidden"
+			aria-label="Toggle Menu"
+			aria-expanded="false"
+			role="button"
+		>
+			<Bars3Icon className="pointer-events-none size-10" />
+		</span>
 	</div>
-	<div id="links_container" class="relative px-2">
-		<ul class="flex w-fit items-center justify-center gap-6">
-			<li>
-				<a href="">Hombres</a>
-			</li>
-			<li>
-				<a href="">Mujeres</a>
-			</li>
-			<li id="search_container" class="flex cursor-pointer items-center gap-2">
-				<span>Buscar</span>
-				<InputSearch />
-			</li>
-		</ul>
+	<div id="header_menu" class="relative flex justify-center px-2 max-md:hidden">
+		<HeaderMenu />
 	</div>
-	<nav class="relative h-full">
-		<ul class="flex h-full gap-6 px-2">
-			<li>
-				<CartAnchor />
-			</li>
-			<li class="group">
-				{
-					!user && (
-						<>
-							<Button id="login_button" size="sm">
-								<span class=""> Iniciar Sesión </span>
-							</Button>
-							<LoginModal />
-						</>
-					)
-				}
-				{user && <UserMenu user={user} />}
-			</li>
-		</ul>
+	<nav id="header_actions" class="relative flex h-full justify-end max-md:hidden">
+		<HeaderActions />
 	</nav>
 </header>
-
-<style>
-	nav ul li {
-		@apply flex h-full items-center;
-	}
-</style>
 
 <script>
 	import { $ } from '@/lib/dom-selector'
 	import { navigate } from 'astro:transitions/client'
+
+	const handleExpanded = () => {
+		const $menuToggle = $<HTMLDivElement>('#menu_toggle')
+		const $headerMenu = $<HTMLDivElement>('#header_menu')
+		const $headerActions = $<HTMLDivElement>('#header_actions')
+		const $headerElement = $<HTMLHeadElement>('header')
+		if (!$menuToggle || !$headerMenu || !$headerActions || !$headerElement) return
+
+		const isExpanded: string =
+			$menuToggle.getAttribute('aria-expanded') === 'true' ? 'false' : 'true'
+
+		$menuToggle.setAttribute('aria-expanded', isExpanded)
+		$headerMenu.classList.toggle('max-md:hidden')
+		$headerActions.classList.toggle('max-md:hidden')
+		$headerElement.classList.toggle('pb-3')
+	}
 
 	const initializeListener = () => {
 		$('#home')?.addEventListener('click', () => {
 			navigate('/home', {
 				history: 'push',
 			})
+		})
+		$('#menu_toggle')?.addEventListener('click', (event) => {
+			event.stopPropagation()
+			handleExpanded()
 		})
 	}
 	document.addEventListener('astro:page-load', initializeListener)

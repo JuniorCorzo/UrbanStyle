@@ -12,11 +12,13 @@ const { status, orderId } = Astro.props
 
 <div class={cn(status !== 'PROCESSING' && 'hidden')}>
 	<Button
-		class="bg-red/70 shadow-red-2 border-red-2 text-red-2 text-base font-medium backdrop-brightness-110"
+		class="bg-red/70 shadow-red-2 border-red-2 text-red-2 cancel-button text-base font-medium backdrop-brightness-110"
 		size="sm"
 		type="button"
 		title="Cancelar Pedido"
 		data-order-id={orderId}
+		aria-busy="false"
+		aria-label="Cancelar Pedido"
 	>
 		Cancelar Pedido
 	</Button>

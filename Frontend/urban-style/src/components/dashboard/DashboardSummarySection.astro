@@ -10,7 +10,7 @@ const reportData = await ReportStore(accessToken).getReportSales()
 const salesLastMonth = reportData?.month[reportData.month.length - 2]
 ---
 
-<article class="grid w-full grid-cols-3 gap-5">
+<article class="grid w-full grid-cols-2 gap-5 md:grid-cols-3">
 	<DashboardSummaryStats salesLastMonth={salesLastMonth} />
 	<DashboardChartReport reportData={reportData} />
 	<DashboardTableMostSold />

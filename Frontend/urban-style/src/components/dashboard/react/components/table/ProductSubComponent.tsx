@@ -4,26 +4,37 @@ import type { SubComponentProps } from '@/interface/table-mediator.interface'
 import { CLOUDFLARE_URL } from '@/config/env-config'
 import { AttributeTable } from '../forms/AttributeTable'
 import { ProductDetail } from './ProductDetail'
+import { cn } from '@/lib/cn'
 
 export function ProductSubComponent({ row }: SubComponentProps<Products>) {
 	const { description, images, attributes } = row.original
 	return (
-		<div className="border-border bg-background shadow-border mx-auto my-5 flex h-full w-full flex-wrap justify-start gap-5 rounded-md border px-3 py-5 shadow-md sm:justify-center">
-			<ProductDetail className="max-w-56 landscape:max-w-56 sm:landscape:max-w-xl" label="Imágenes">
-				<div className="flex flex-wrap items-center justify-center gap-5 sm:max-w-md sm:justify-between">
-					{images.map(({ image }) => (
-						<img
-							className="border-border shadow-border aspect-square size-48 rounded-2xl shadow"
-							src={`${CLOUDFLARE_URL}/${image}`}
-							loading="lazy"
-							decoding="async"
-							alt={description}
-							key={image}
-						/>
-					))}
-				</div>
-			</ProductDetail>
-			<div className="flex flex-col justify-center gap-5">
+		<div className="border-border bg-background shadow-border mx-auto my-5 grid h-full w-full max-w-6xl grid-cols-2 gap-5 rounded-md border px-3 py-5 shadow-md 2xl:max-w-7xl">
+			<div className="flex justify-center">
+				<ProductDetail className="float-right" label="Imágenes">
+					<div
+						className={cn(
+							'grid',
+							images.length >= 2 ? 'grid-cols-2' : 'grid-cols-1 justify-center',
+						)}
+					>
+						{images.map(({ image }) => (
+							<img
+								className={cn(
+									'border-border shadow-border aspect-square rounded-lg shadow',
+									images.length === 1 && 'w-md mx-auto',
+								)}
+								src={`${CLOUDFLARE_URL}/${image}`}
+								loading="lazy"
+								decoding="async"
+								alt={description}
+								key={image}
+							/>
+						))}
+					</div>
+				</ProductDetail>
+			</div>
+			<div className="flex w-fit flex-col justify-center gap-5">
 				<ProductDetail label="Descripción">
 					<Cell.Paragraph>{description}</Cell.Paragraph>
 				</ProductDetail>
