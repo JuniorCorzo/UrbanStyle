@@ -37,21 +37,6 @@ public class OrderService {
         );
     }
 
-    public ResponseDTO<SalesRecord> getProductsMoreSold() {
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                this.orderRepository.findProductsMoreSold(),
-                "Orders retrieved successfully"
-        );
-    }
-
-    public ResponseDTO<SalesRecord> getCategoryMoreSold() {
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                this.orderRepository.findCategoriesMoreSold(),
-                "Orders retrieved successfully"
-        );
-    }
 
     public ResponseDTO<OrdersResponseDTO> getOrdersByUserId(String userId) {
         List<OrdersResponseDTO> ordersByUser = this.orderRepository.findAllOrdersByUserId(userId)
@@ -81,14 +66,6 @@ public class OrderService {
                 HttpStatus.OK,
                 customers,
                 "Customers retrieved successfully"
-        );
-    }
-
-    public ResponseDTO<ReportSalesDTO> reportSales() {
-        return new ResponseDTO<>(
-                HttpStatus.OK,
-                this.orderRepository.reportSales(),
-                "Orders retrieved successfully"
         );
     }
 

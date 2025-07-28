@@ -46,24 +46,6 @@ public class OrderController {
         return this.orderService.getOrdersByUserId(userId);
     }
 
-    @GetMapping("/products-most-sold")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseDTO<SalesRecord> getProductsMoreSold() {
-        return this.orderService.getProductsMoreSold();
-    }
-
-    @GetMapping("/categories-most-sold")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseDTO<SalesRecord> getCategoryMoreSold() {
-        return this.orderService.getCategoryMoreSold();
-    }
-
-    @GetMapping("/report-sales")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseDTO<ReportSalesDTO> reportSales() {
-        return this.orderService.reportSales();
-    }
-
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
     public ResponseDTO<OrdersResponseDTO> createOrder(@Validated(OnCreate.class) @RequestBody OrdersSaveDTO insertOrder) {
