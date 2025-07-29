@@ -4,6 +4,10 @@ import java.util.List;
 
 public record ReportSalesDTO(
         List<SalesDataDTO> day,
-        List<SalesDataDTO> month
+        List<SalesDataDTO> month,
+        double aov,
+        double dailyTransactionsAverage,
+        int transactions
+
 ) {
 }
