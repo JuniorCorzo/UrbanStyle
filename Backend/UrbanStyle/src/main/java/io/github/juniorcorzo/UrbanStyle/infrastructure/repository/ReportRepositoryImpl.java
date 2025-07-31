@@ -170,26 +170,31 @@ public class ReportRepositoryImpl implements ReportRepository {
 
     @NotNull
     private static Aggregation getDayAggregation() {
+        final AggregationOperation groupByDate = ctx ->
+                new Document(
+                        "$group",
+                        new Document(
+                                "_id",
+                                DateOperators.DateToString
+                                        .dateOf("$orderDate")
+                                        .toString("%Y-%m-%d")
+                                        .toDocument(ctx)
+                        ).append(
+                                "sales",
+                                AccumulatorOperators.Sum
+                                        .sumOf("$products.quantity")
+                                        .toDocument(ctx)
+                        ).append(
+                                "total",
+                                ArrayOperators.First
+                                        .firstOf("$total")
+                                        .toDocument(ctx)
+                        )
+                );
+
         return Aggregation.newAggregation(
                 Aggregation.unwind("$products"),
-                Aggregation.stage("""
-                        {
-                          $group: {
-                            _id: {
-                              $dateToString: {
-                                format: "%Y-%m-%d",
-                                date: "$orderDate"
-                              }
-                            },
-                            sales: {
-                              $sum: "$products.quantity"
-                            },
-                            total: {
-                              $first: "$total"
-                            }
-                          }
-                        }
-                        """),
+                groupByDate,
                 Aggregation.sort(Sort.Direction.ASC, "_id"),
                 Aggregation.project("sales", "total")
                         .and(
@@ -201,6 +206,29 @@ public class ReportRepositoryImpl implements ReportRepository {
 
     @NotNull
     private static Aggregation getMonthAggregation() {
+        final AggregationOperation groupByDate = ctx ->
+                new Document(
+                        "$group",
+                        new Document(
+                                "_id",
+                                DateOperators.DateToString
+                                        .dateOf("$orderDate")
+                                        .toString("%Y-%m")
+                                        .toDocument(ctx)
+                        ).append(
+                                "sales",
+                                AccumulatorOperators.Sum
+                                        .sumOf("$sales")
+                                        .toDocument(ctx)
+                        ).append(
+                                "total",
+                                ArrayOperators.First
+                                        .firstOf("$total")
+                                        .toDocument(ctx)
+                        )
+                );
+
+
         return Aggregation.newAggregation(
                 Aggregation.project("orderDate", "total")
                         .and(
@@ -209,24 +237,7 @@ public class ReportRepositoryImpl implements ReportRepository {
                                         .withInitialValue(0)
                                         .reduce(ArithmeticOperators.Add.valueOf("$$value").add("$$this.quantity"))
                         ).as("sales"),
-                Aggregation.stage("""
-                        {
-                          $group: {
-                            _id: {
-                              $dateToString: {
-                                format: "%Y-%m",
-                                date: "$orderDate"
-                              }
-                            },
-                            sales: {
-                              $sum: "$sales"
-                            },
-                            total: {
-                              $sum: "$total"
-                            }
-                          }
-                        }
-                        """),
+                groupByDate,
                 Aggregation.sort(Sort.Direction.ASC, "_id"),
                 Aggregation.project("sales", "total")
                         .and(
