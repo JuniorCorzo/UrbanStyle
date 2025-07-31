@@ -1,9 +1,9 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.CategoryReportSalesDTO;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderReportDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductReportSalesDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.ReportRepository;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -15,13 +15,18 @@ import org.springframework.stereotype.Service;
 public class ReportService {
     private final ReportRepository reportRepository;
 
-    public ResponseDTO<ProductReportSalesDTO> findProductsMoreSold() {
-        return new ResponseDTO<>(HttpStatus.OK, this.reportRepository.findProductsMoreSold(), "Products more sold found successfully");
+    public ResponseDTO<ProductReportSalesDTO> productReport() {
+        return new ResponseDTO<>(HttpStatus.OK, this.reportRepository.productReport(), "Products more sold found successfully");
     }
 
-    public ResponseDTO<CategoryReportSalesDTO> findCategoriesMoreSold() {
-        return new ResponseDTO<>(HttpStatus.OK, reportRepository.findCategoriesMoreSold(), "Categories more sold found successfully");
+    public ResponseDTO<CategoryReportSalesDTO> categoryReport() {
+        return new ResponseDTO<>(HttpStatus.OK, reportRepository.categoryReport(), "Categories more sold found successfully");
     }
+
+    public ResponseDTO<OrderReportDTO> orderReport() {
+        return new ResponseDTO<>(HttpStatus.OK, this.reportRepository.orderReport(), "Order report found successfully");
+    }
+
     public ResponseDTO<ReportSalesDTO> reportSales() {
         return new ResponseDTO<>(HttpStatus.OK, this.reportRepository.reportSales(), "Report sales found successfully");
     }

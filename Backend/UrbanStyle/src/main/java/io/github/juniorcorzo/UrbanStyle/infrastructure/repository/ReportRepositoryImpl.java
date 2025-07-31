@@ -1,8 +1,10 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.repository;
 
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.CategoryReportSalesDTO;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderReportDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductReportSalesDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
+import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.ReportRepository;
 import lombok.RequiredArgsConstructor;
 import org.bson.Document;
@@ -21,7 +23,7 @@ public class ReportRepositoryImpl implements ReportRepository {
 
 
     @Override
-    public List<ProductReportSalesDTO> findProductsMoreSold() {
+    public List<ProductReportSalesDTO> productReport() {
         final GroupOperation productDetails = getProductDetails();
         final GroupOperation calculateProductIncome = getProductIncome();
         final MatchOperation filterMonthPrevious = getMonthPrevious();
@@ -52,7 +54,7 @@ public class ReportRepositoryImpl implements ReportRepository {
     }
 
     @Override
-    public List<CategoryReportSalesDTO> findCategoriesMoreSold() {
+    public List<CategoryReportSalesDTO> categoryReport() {
         final GroupOperation categoryDetails = getCategoryDetails();
         final GroupOperation categoryIncome = getCategoryIncome();
         final MatchOperation filterMonthPrevious = getMonthPrevious();
@@ -78,6 +80,63 @@ public class ReportRepositoryImpl implements ReportRepository {
         final AggregationResults<CategoryReportSalesDTO> aggregationResults = mongoTemplate.aggregate(aggregation, "orders", CategoryReportSalesDTO.class);
 
         return aggregationResults.getMappedResults();
+    }
+
+    @Override
+    public List<OrderReportDTO> orderReport() {
+        final GroupOperation orderGroup = getOrderGroup();
+        final ConditionalOperators.Cond cancellationRate = getOrderCancellationRate();
+
+        final Aggregation aggregation = Aggregation.newAggregation(
+                orderGroup,
+                Aggregation.project("startedOrders", "canceledOrders")
+                        .and(cancellationRate)
+                        .as("cancellationRate")
+        );
+
+        final AggregationResults<OrderReportDTO> aggregationResults = mongoTemplate.aggregate(aggregation, "orders", OrderReportDTO.class);
+
+        return aggregationResults.getMappedResults();
+    }
+
+    private static ConditionalOperators.Cond getOrderCancellationRate() {
+        return ConditionalOperators.Cond.when(
+                        ComparisonOperators.Eq
+
+                                .valueOf("$cancellationOrders")
+                                .equalToValue(1)
+                ).then(0)
+                .otherwiseValueOf(ctx ->
+                        new Document(
+                                "$trunc",
+                                List.of(
+                                        ArithmeticOperators.Multiply
+                                                .valueOf(
+                                                        ArithmeticOperators.Divide
+                                                                .valueOf("$canceledOrders")
+                                                                .divideBy("$startedOrders")
+                                                ).multiplyBy(100)
+                                                .toDocument(ctx),
+                                        2
+                                )
+                        )
+                );
+    }
+
+    @NotNull
+    private static GroupOperation getOrderGroup() {
+        return Aggregation.group()
+                .count()
+                .as("startedOrders")
+                .sum(
+                        ConditionalOperators.Cond
+                                .when(
+                                        ComparisonOperators.Eq
+                                                .valueOf("$status")
+                                                .equalToValue(OrderStatus.CANCELED.name())
+                                ).then(1)
+                                .otherwise(0)
+                ).as("canceledOrders");
     }
 
     @Override
