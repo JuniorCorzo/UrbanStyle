@@ -1,11 +1,8 @@
 ---
-import type { ReportSales } from '@/interface/report.interface'
 import ChartComponent from './react/components/ChartComponent'
 ---
 
-<div
-	class="border-border col-span-2 flex flex-col justify-center rounded border px-5 py-2.5 text-center"
->
+<div class="border-border flex flex-col justify-center rounded border px-5 py-2.5 text-center">
 	<span class="text-lg">Historial de Ventas</span>
 	<ChartComponent client:only="react" />
 </div>

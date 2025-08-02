@@ -49,6 +49,12 @@ export default function ChartComponent() {
 					labelBackgroundColor: colors.lineColor,
 				},
 			},
+			handleScroll: {
+				mouseWheel: true,
+			},
+			handleScale: {
+				mouseWheel: false,
+			},
 		})
 
 		chart.timeScale().fitContent()
