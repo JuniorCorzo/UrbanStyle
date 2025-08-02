@@ -1,4 +1,5 @@
 ---
+import { TABLE_MODE, TABLE_TYPE } from '@/interface/table-mediator.interface'
 import type { User } from '@/interface/user.interface'
 
 interface Props {
@@ -28,7 +29,7 @@ const { name: userName, role } = user
 			{
 				role === 'ROLE_ADMIN' && (
 					<li>
-						<a href="/dashboard?mediator=products">Dashboard</a>
+						<a href={`/dashboard?mode=${TABLE_MODE.ALL}&type=${TABLE_TYPE.PRODUCTS}`}>Dashboard</a>
 					</li>
 				)
 			}
