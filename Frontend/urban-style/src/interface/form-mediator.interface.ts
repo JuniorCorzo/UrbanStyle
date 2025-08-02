@@ -1,4 +1,3 @@
-import type { JSX } from 'astro/jsx-runtime'
 import type React from 'react'
 
 export type FormType = 'product' | 'category'
@@ -51,6 +50,7 @@ export type SelectSingleProps = {
 export type SelectInputProps = SelectMultipleProps | SelectSingleProps
 export type SelectRefProps = {
 	selectedItems: () => SelectOptions | SelectOptions[] | null
+	setSelectedItem?: (item: SelectOptions | null) => void
 }
 
 export type SelectOptions = {

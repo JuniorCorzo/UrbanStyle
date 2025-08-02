@@ -1,17 +1,16 @@
-import { TABLE_MEDIATOR_METADATA } from '@/const/table-mediator.const'
 import { DashboardMediator } from '../dashboard-mediator'
 import type { FormMediator } from '@/interface/form-mediator.interface'
-import type { TableConfig } from '@/interface/table-mediator.interface'
+import { TABLE_PARAM, type TableConfig } from '@/interface/table-mediator.interface'
 
 export async function selectMediator(): Promise<
 	| {
 			table: TableConfig
-			form: FormMediator
+			form: FormMediator | null
 	  }
 	| undefined
 > {
-	const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA
-	const mediator = new URLSearchParams(location.search).get(mediatorSearchParam)
+	const mode = new URLSearchParams(location.search).get(TABLE_PARAM.MODE)
+	const type = new URLSearchParams(location.search).get(TABLE_PARAM.TYPE)
 
-	return await DashboardMediator(mediator)
+	return await DashboardMediator(mode, type)
 }

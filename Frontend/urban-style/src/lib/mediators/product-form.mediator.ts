@@ -18,8 +18,9 @@ import {
 	CreateProductScheme,
 	UpdateProductScheme,
 } from '../validations/product.validations'
+import { formStore } from '@/state/form.state'
 
-export async function productForm(): Promise<FormMediator> {
+export async function productForm() {
 	const sendProduct = async (data?: FormData, id?: string) => {
 		if (!data) return
 
@@ -50,12 +51,12 @@ export async function productForm(): Promise<FormMediator> {
 		deleteProduct(id)
 	}
 
-	return {
+	formStore.set({
 		title: 'Nuevo producto',
 		formType: 'product',
 		sendData: sendProduct,
 		sendDelete,
-	}
+	})
 }
 
 async function checkImages(productId: string) {

@@ -1,22 +1,17 @@
 import type { Products } from '@/interface/product.interface'
-import {
-	createColumnHelper,
-	type CellContext,
-	type ColumnDef,
-	type Row,
-} from '@tanstack/react-table'
+import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
 import { productStore, ProductStore } from '@/state/product.store'
 import { ReportService } from '@/service/report.service'
-import type { BestSeller } from '@/interface/report.interface'
-import { tableMostSoldStore, tableStore } from '@/state/table.state'
+import { tableStore } from '@/state/table.state'
 import TableActions from '@/components/dashboard/react/components/table/TableActions'
 import { Cell } from '@/components/dashboard/react/components/table/Cell'
 import type { CategorySummary } from '@/interface/category.interface'
-import { FiltersDropdown } from '@/components/dashboard/react/components/table/filters/FiltersDropdown'
 import { ChevronDownIcon, ChevronUpIcon } from '@heroicons/react/24/outline'
 import { ProductSubComponent } from '@/components/dashboard/react/components/table/ProductSubComponent'
 import type { SubComponent } from '@/interface/table-mediator.interface'
 import { ProductFilter } from '@/components/dashboard/react/components/table/filters/ProductFilterDropdown'
+import type { ProductReport } from '@/interface/report.interface'
+import { ModeSelector } from '@/components/dashboard/react/components/ModeSelector'
 
 export async function productTable(): Promise<void> {
 	await ProductStore()
@@ -95,32 +90,111 @@ export async function productTable(): Promise<void> {
 			data: [...products],
 			columnPinning: { left: ['expanded', 'name'] },
 			columnFilters: [],
-			filterComponents: { left: () => <ProductFilter /> },
+			filterComponents: {
+				left: () => <ProductFilter />,
+				right: () => <ModeSelector />,
+			},
 			canExpand: true,
 			subComponent: productSubComponent as SubComponent<unknown>,
 			canSearch: true,
 			hasForm: true,
 		})
 	})
-
-	await mostSoldTable()
 }
 
-async function mostSoldTable() {
-	const columnAccessor = createColumnHelper<BestSeller>()
+export async function productReportTable() {
+	const columnAccessor = createColumnHelper<ProductReport>()
 	const columns = [
 		columnAccessor.accessor('name', {
 			header: 'Producto',
 			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
 		}),
-		columnAccessor.accessor('sold', {
-			header: 'Vendido',
-			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
-		}),
-	] as ColumnDef<unknown, any>[]
+		columnAccessor.accessor('categories', {
+			header: 'Categorías',
+			minSize: 150,
+			cell: (info) => {
+				const category = info.getValue()
 
-	tableMostSoldStore.set({
-		columns,
-		data: await ReportService().productsMoreSold(),
+				return (
+					<Cell.TagsContainer>
+						{category.map(({ name }) => (
+							<Cell.Tag key={crypto.randomUUID()}>{name}</Cell.Tag>
+						))}
+					</Cell.TagsContainer>
+				)
+			},
+			filterFn: (row, columnId, filterValue: string[]) => {
+				const categories = row.getValue<CategorySummary[]>(columnId)
+				return filterValue.length === 0
+					? true
+					: categories.some(({ name }) => filterValue.includes(name))
+			},
+		}),
+		columnAccessor.group({
+			header: 'Mensual',
+			minSize: 300,
+			columns: [
+				columnAccessor.accessor('monthly.income', {
+					header: 'ingresos',
+					cell: (row) => (
+						<Cell.Span>
+							{Intl.NumberFormat('es-CO', {
+								style: 'currency',
+								currency: 'COP',
+								currencyDisplay: 'code',
+							}).format(row.getValue())}
+						</Cell.Span>
+					),
+				}),
+				columnAccessor.accessor('monthly.unitsSold', {
+					header: 'vendido',
+					cell: (row) => (
+						<Cell.Span>
+							{Intl.NumberFormat('es-CO', {
+								maximumFractionDigits: 2,
+							}).format(row.getValue())}
+						</Cell.Span>
+					),
+				}),
+			],
+		}),
+		columnAccessor.group({
+			header: 'Total',
+			minSize: 300,
+			columns: [
+				columnAccessor.accessor('total.income', {
+					header: 'ingresos',
+					cell: (row) => (
+						<Cell.Span>
+							{Intl.NumberFormat('es-CO', {
+								style: 'currency',
+								currency: 'COP',
+								currencyDisplay: 'code',
+							}).format(row.getValue())}
+						</Cell.Span>
+					),
+				}),
+				columnAccessor.accessor('total.unitsSold', {
+					header: 'vendido',
+					cell: (row) => (
+						<Cell.Span>
+							{Intl.NumberFormat('es-CO', {
+								maximumFractionDigits: 2,
+							}).format(row.getValue())}
+						</Cell.Span>
+					),
+				}),
+			],
+		}),
+	]
+
+	tableStore.set({
+		columns: columns as ColumnDef<unknown, any>[],
+		data: await ReportService().productsReport(),
+		columnFilters: [],
+		filterComponents: { left: () => <ProductFilter />, right: () => <ModeSelector /> },
+		canExpand: true,
+		canSearch: true,
+		hasForm: true,
 	})
 }

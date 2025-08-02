@@ -1,9 +1,8 @@
 import { Cell } from '@/components/dashboard/react/components/table/Cell'
 import { OrderSubComponent } from '@/components/orders/react/components/OrderSubComponent'
-import { getOrderStatus } from '@/const/orders.const'
+import { getOrderStatus, getPaymentMethod } from '@/const/orders.const'
 import type { OrderWithCustomer } from '@/interface/orders.interface'
 import type { SubComponent } from '@/interface/table-mediator.interface'
-import { UserService } from '@/service/user.service'
 import { tableStore } from '@/state/table.state'
 import { ChevronUpIcon, ChevronDownIcon, CreditCardIcon } from '@heroicons/react/24/outline'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
@@ -12,8 +11,6 @@ import { OrderFilter } from '@/components/dashboard/react/components/table/filte
 import { OrderFilterDropdown } from '@/components/dashboard/react/components/table/filters/OrderFilterDropdown'
 import { orderStore } from '@/state/order.state'
 import { OrderActions } from '@/components/dashboard/react/components/table/OrderActions'
-
-const getUsernameById = (userId: string) => UserService.getUserById(userId).then(({ name }) => name)
 
 export async function orderTable() {
 	const columnHelper = createColumnHelper<OrderWithCustomer>()
@@ -98,7 +95,7 @@ export async function orderTable() {
 				<Cell.Span>
 					<Cell.Tag className="bg-accent flex w-fit items-center justify-center gap-2">
 						<CreditCardIcon className="size-5" />
-						{getValue()}
+						{getPaymentMethod(getValue())}
 					</Cell.Tag>
 				</Cell.Span>
 			),
