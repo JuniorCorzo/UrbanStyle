@@ -27,7 +27,7 @@ public class ReportRepositoryImpl implements ReportRepository {
         final GroupOperation productDetails = getProductDetails();
         final GroupOperation calculateProductIncome = getProductIncome();
         final MatchOperation filterMonthPrevious = getMonthPrevious();
-        final VariableOperators.Map productStast = getProductStats();
+        final VariableOperators.Map productStats = getProductStats();
 
         final Aggregation aggregation = Aggregation.newAggregation(
                 Aggregation.match(Criteria.where("status").is("DELIVERED")),
@@ -41,7 +41,7 @@ public class ReportRepositoryImpl implements ReportRepository {
                         .as("totalIncome")
                         .and(filterMonthPrevious, calculateProductIncome)
                         .as("monthlyIncome"),
-                Aggregation.project().and(productStast).as("productsStats"),
+                Aggregation.project().and(productStats).as("productsStats"),
                 Aggregation.unwind("$productsStats"),
                 Aggregation.replaceRoot("$productsStats"),
                 UnsetOperation.unset("$total._id", "$monthly._id"),
@@ -186,9 +186,10 @@ public class ReportRepositoryImpl implements ReportRepository {
                                         .toDocument(ctx)
                         ).append(
                                 "total",
-                                ArrayOperators.First
-                                        .firstOf("$total")
-                                        .toDocument(ctx)
+                                AccumulatorOperators.Sum.sumOf(
+                                        ArithmeticOperators.Multiply.valueOf("$products.price")
+                                                .multiplyBy("$products.quantity")
+                                ).toDocument(ctx)
                         )
                 );
 
@@ -222,8 +223,8 @@ public class ReportRepositoryImpl implements ReportRepository {
                                         .toDocument(ctx)
                         ).append(
                                 "total",
-                                ArrayOperators.First
-                                        .firstOf("$total")
+                                AccumulatorOperators.Sum
+                                        .sumOf("$total")
                                         .toDocument(ctx)
                         )
                 );
