@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { ColorType, createChart, LineSeries } from 'lightweight-charts'
-import type { ReportSales } from '@/interface/report.interface'
 import { convertToIso } from '@/lib/utils/convert-date'
 import { SelectInput } from '../../../react/inputs/SelectInput'
 import type { SelectOptions } from '@/interface/form-mediator.interface'
+import { useStore } from '@nanostores/react'
+import { reportSalesStore } from '@/state/report.store'
+import type { ReportSales } from '@/interface/report.interface'
 
-interface Props {
-	reportData: ReportSales
-}
+type TimeType = keyof Pick<ReportSales, 'day' | 'month'>
 
-export default function ChartComponent({ reportData }: Props) {
+export default function ChartComponent() {
+	const reportData = useStore(reportSalesStore)
 	const $containerChartRef = useRef<HTMLDivElement>(null)
-	const [timeType, setTimeType] = useState('day')
+	const [timeType, setTimeType] = useState<TimeType>('day')
 
 	const colors = {
 		backgroundColor: '#eff1f5',
@@ -63,14 +64,15 @@ export default function ChartComponent({ reportData }: Props) {
 			borderColor: colors.lineColor,
 		})
 
-		lineSeries.setData(
-			reportData[timeType as keyof ReportSales].map(({ date, sales }) => {
-				return {
-					time: convertToIso(date),
-					value: sales,
-				}
-			}),
-		)
+		reportData &&
+			lineSeries.setData(
+				reportData[timeType]?.map(({ date, sales }) => {
+					return {
+						time: convertToIso(date),
+						value: sales,
+					}
+				}),
+			)
 
 		window.addEventListener('resize', handleResize)
 		return () => {
@@ -86,7 +88,7 @@ export default function ChartComponent({ reportData }: Props) {
 					defaultValue={{ text: 'Dia', value: 'day' }}
 					label="Agrupar por"
 					onChange={(selectedItem: SelectOptions | null) =>
-						setTimeType(selectedItem?.value ?? 'day')
+						setTimeType((selectedItem?.value as TimeType) ?? 'day')
 					}
 					options={[
 						{ value: 'day', text: 'Dia' },
