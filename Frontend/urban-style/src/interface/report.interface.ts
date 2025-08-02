@@ -20,13 +20,19 @@ export type ProductReport = ReportBase & {
 	categories: CategorySummary[]
 }
 
+export type OrderReport = {
+	startedOrders: number
+	canceledOrders: number
+	cancellationRate: number
+}
+
 export interface SalesData {
 	date: string
 	sales: number
 	total: number
 }
 
-export interface ReportSales {
+export type ReportSales = {
 	day: SalesData[]
 	month: SalesData[]
 	aov: number

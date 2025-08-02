@@ -1,42 +1,30 @@
-import type { BestSeller, ReportSales } from '@/interface/report.interface'
+import type { SummaryStatProps } from '@/components/dashboard/react/components/stats/SummaryStat'
+import type { ReportSales } from '@/interface/report.interface'
 import { ReportService } from '@/service/report.service'
-import { map } from 'nanostores'
+import { atom, computed, onMount } from 'nanostores'
 
-const productMoreSoldStore = map<BestSeller[]>()
-const categoriesMoreSoldStore = map<BestSeller[]>()
-export const reportSalesStore = map<ReportSales>()
+export const reportSalesStore = atom<ReportSales | null>(null)
+export const dashboardStatsStore = atom<SummaryStatProps[]>([])
 
-export function ReportStore(token: string) {
-	const getProductsMoreSold = async () => {
-		if (!productMoreSoldStore.get().length) {
-			const report = await ReportService().productsMoreSold()
-			productMoreSoldStore.set(report)
-		}
+onMount(reportSalesStore, () => {
+	ReportService()
+		.reportSales()
+		.then((report) => reportSalesStore.set(report))
+})
 
-		return productMoreSoldStore.get()
-	}
+export const getReportPreviousMonth = () =>
+	computed(reportSalesStore, (report) => {
+		if (!report) return
 
-	const getCategoriesMoreSold = async () => {
-		if (!categoriesMoreSoldStore.get().length) {
-			const report = await ReportService().categoriesMoreSold()
-			categoriesMoreSoldStore.set(report)
-		}
+		const dateNow = new Date()
+		const monthPrevious = Intl.DateTimeFormat('en', {
+			month: '2-digit',
+			year: 'numeric',
+		})
+			.format(dateNow.setMonth(dateNow.getMonth() - 1))
+			.replace('/', '-')
 
-		return categoriesMoreSoldStore.get()
-	}
-
-	const getReportSales = async () => {
-		if (reportSalesStore.get()?.day == undefined) {
-			const report = await ReportService().reportSales(token)
-			reportSalesStore.set(report)
-		}
-
-		return reportSalesStore.get()
-	}
-
-	return {
-		getProductsMoreSold,
-		getCategoriesMoreSold,
-		getReportSales,
-	}
-}
+		const index = report.month.findLastIndex(({ date }) => date === monthPrevious)
+		console.log(index)
+		return report.month[index]
+	}).get()
