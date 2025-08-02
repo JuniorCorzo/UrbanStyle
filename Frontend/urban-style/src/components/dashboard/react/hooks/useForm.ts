@@ -1,44 +1,37 @@
-import type { FormType, SendForm } from '@/interface/form-mediator.interface'
-import type { OpenModalEvent } from '@/lib/utils/open-modal-event'
+import type { OpenSidebarEvent } from '@/lib/utils/open-modal-event'
 import { categoriesStore } from '@/state/categories.store'
+import { formStore } from '@/state/form.state'
 import { productStore } from '@/state/product.store'
 import { useStore } from '@nanostores/react'
-import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { useEffect, useState, type FormEvent } from 'react'
 
 export function useForm() {
-	const sendForm = useRef<SendForm>(null)
-	const titleRef = useRef<string>(null)
-	const [id, setId] = useState<string>()
-	const formType = useRef<FormType>(null)
 	const [visible, setVisible] = useState(false)
-
+	const formState = useStore(formStore)
+	const [id, setId] = useState('')
 	const products = useStore(productStore)
 	const categories = useStore(categoriesStore)
 
 	const handleOpen = () => setVisible((prev) => !prev)
 
-	const handleFormConfig = (event: CustomEvent<OpenModalEvent>) => {
-		const { formType: form, sendData, title, id: idDocument } = event.detail
-		formType.current = form
-		sendForm.current = sendData
-		titleRef.current = title
-		setId(idDocument)
+	const handleFormConfig = (event: CustomEvent<OpenSidebarEvent>) => {
+		const { id: idDocument } = event.detail
+		setId(idDocument ?? '')
 
 		handleOpen()
 	}
 
 	const getProductValues = () => products.find(({ id: productId }) => productId === id)
-
 	const getCategoryValues = () => categories.find(({ id: categoryId }) => categoryId === id)
 
 	useEffect(() => {
 		window.addEventListener('show-sidebar', (e: Event) => {
-			handleFormConfig(e as CustomEvent<OpenModalEvent>)
+			handleFormConfig(e as CustomEvent<OpenSidebarEvent>)
 		})
 
 		return () => {
 			window.removeEventListener('show-sidebar', (e: Event) =>
-				handleFormConfig(e as CustomEvent<OpenModalEvent>),
+				handleFormConfig(e as CustomEvent<OpenSidebarEvent>),
 			)
 		}
 	}, [])
@@ -49,8 +42,8 @@ export function useForm() {
 		const formData = new FormData(form)
 
 		try {
-			if (typeof sendForm.current !== 'function') return
-			sendForm.current(formData, id)
+			if (!formState || typeof formState.sendData !== 'function') return
+			formState.sendData(formData, id)
 		} catch (error) {
 			console.error('Error submitting form:', error)
 		}
@@ -58,8 +51,8 @@ export function useForm() {
 
 	return {
 		id,
-		title: titleRef.current,
-		formType: formType.current,
+		title: formState?.title,
+		formType: formState?.formType,
 		getProductValues,
 		getCategoryValues,
 		visible,
