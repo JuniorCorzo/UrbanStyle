@@ -24,9 +24,8 @@ export function Sidebar() {
 	return (
 		<aside
 			className={cn(
-				'bg-background border-border invisible fixed right-0 z-50 ml-5 h-full min-h-dvh w-full max-w-xl overflow-auto border-l-2 pb-10',
-				visible && 'animate-aside-open visible',
-				formType && 'animate-aside-close',
+				'bg-background border-border invisible fixed right-0 z-50 ml-5 h-full min-h-dvh w-full max-w-xl overflow-auto border-l-2 pb-10 transition-all duration-300',
+				visible ? 'visible' : '-right-full',
 			)}
 		>
 			<div className="bg-accent/70 backdrop-blur-xs sticky top-0 z-[9999] flex items-center justify-between px-5 py-3">
