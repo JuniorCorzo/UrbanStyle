@@ -32,6 +32,7 @@ export const Select = React.forwardRef<SelectRefProps, SelectSingleProps>(
 			getItemProps,
 			getMenuProps,
 			highlightedIndex,
+			selectItem,
 		} = useSelect({
 			items: options ?? [],
 			itemToString: optionsToString,
@@ -45,6 +46,7 @@ export const Select = React.forwardRef<SelectRefProps, SelectSingleProps>(
 
 		useImperativeHandle(ref, () => ({
 			selectedItems: () => selectedItem,
+			setSelectedItem: selectItem,
 		}))
 
 		return (
@@ -58,7 +60,7 @@ export const Select = React.forwardRef<SelectRefProps, SelectSingleProps>(
 						{...getLabelProps()}
 					>
 						{label}
-						<MessageError errorId={`${name}_error`} />
+						{name && <MessageError errorId={`${name}_error`} />}
 						<div
 							className={cn(
 								'bg-background border-border focus:custom-ring pointer-events-auto flex w-full cursor-pointer items-center justify-between rounded border p-2 transition-all',

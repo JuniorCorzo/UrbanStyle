@@ -75,6 +75,9 @@ importers:
         specifier: ^3.25.67
         version: 3.25.67
     devDependencies:
+      '@nanostores/logger':
+        specifier: github:nanostores/logger
+        version: https://codeload.github.com/nanostores/logger/tar.gz/e1acb11b1b98696a126d4fe4229f15e17467886d(nanostores@1.0.1)
       '@tailwindcss/typography':
         specifier: ^0.5.16
         version: 0.5.16(tailwindcss@4.1.8)
@@ -581,6 +584,13 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.25':
     resolution: {integrity: sha512-vNk6aEwybGtawWmy/PzwnGDOjCkLWSD2wqvjGGAgOAwCGWySYXfYoxt00IJkTF+8Lb57DwOb3Aa0o9CApepiYQ==}
+
+  '@nanostores/logger@https://codeload.github.com/nanostores/logger/tar.gz/e1acb11b1b98696a126d4fe4229f15e17467886d':
+    resolution: {tarball: https://codeload.github.com/nanostores/logger/tar.gz/e1acb11b1b98696a126d4fe4229f15e17467886d}
+    version: 1.0.0
+    engines: {node: ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      nanostores: ^0.10.0 || ^0.11.0 || ^1.0.0
 
   '@nanostores/react@https://codeload.github.com/nanostores/react/tar.gz/a6ad745cc307881916944ee4d6ba04bdda978dc6':
     resolution: {tarball: https://codeload.github.com/nanostores/react/tar.gz/a6ad745cc307881916944ee4d6ba04bdda978dc6}
@@ -3183,6 +3193,10 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.0
+
+  '@nanostores/logger@https://codeload.github.com/nanostores/logger/tar.gz/e1acb11b1b98696a126d4fe4229f15e17467886d(nanostores@1.0.1)':
+    dependencies:
+      nanostores: 1.0.1
 
   '@nanostores/react@https://codeload.github.com/nanostores/react/tar.gz/a6ad745cc307881916944ee4d6ba04bdda978dc6(nanostores@1.0.1)(react@19.1.0)':
     dependencies:

@@ -22,13 +22,13 @@ if (description === undefined) {
 
 <div class="px-6">
 	<section
-		class="@container border-border shadow-accent relative flex flex-col rounded-md border shadow-md sm:border-0 md:grid-cols-3 md:flex-row"
+		class="@container border-border shadow-accent relative flex flex-col rounded-md border shadow-md sm:border-0 md:grid-cols-3 md:flex-row landscape:max-lg:flex-col"
 		transition:animate={slide({ duration: 300 })}
 		transition:name={product.id}
 	>
 		<article class="border-border col-span-2 flex grow flex-col sm:rounded-l-md sm:border">
 			<ProductImage alt={description} images={images} />
-			<div class="px-3 py-5 max-md:hidden">
+			<div class="px-3 py-5 max-md:hidden landscape:max-lg:hidden">
 				<RecommendedProductsSection categoryName={product.categories[0].name} />
 			</div>
 		</article>

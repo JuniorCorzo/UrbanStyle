@@ -1,27 +1,25 @@
 ---
-import { TABLE_MEDIATOR_METADATA } from '@/const/table-mediator.const'
 import CardDock from './CardDock.astro'
 import { QueueListIcon, ShoppingBagIcon, TagIcon } from '@heroicons/react/24/outline'
-
-const { productsSearchParam, categoriesSearchParam, orderSearchParam } = TABLE_MEDIATOR_METADATA
+import { TABLE_TYPE } from '@/interface/table-mediator.interface'
 ---
 
 <nav
-	class="before:border-border before:bg-accent sticky bottom-0 mx-auto w-fit px-7 before:absolute before:bottom-1 before:left-0 before:-z-10 before:h-7 before:w-full before:rounded before:border"
+	class="before:border-border before:bg-accent sticky bottom-0 z-50 mx-auto w-fit px-7 before:absolute before:bottom-1 before:left-0 before:-z-10 before:h-7 before:w-full before:rounded before:border"
 	transition:persist
 >
 	<ul id="container_links" class="mb-2.5 flex justify-around gap-5">
-		<CardDock title="Productos" mediator={productsSearchParam}>
+		<CardDock title="Productos" mediator={TABLE_TYPE.PRODUCTS}>
 			<span class="pointer-events-none" slot="icon">
 				<ShoppingBagIcon className="stroke-text pointer-events-none size-9" />
 			</span>
 		</CardDock>
-		<CardDock title="Categorías" mediator={categoriesSearchParam}>
+		<CardDock title="Categorías" mediator={TABLE_TYPE.CATEGORIES}>
 			<span class="pointer-events-none" slot="icon">
 				<TagIcon className="stroke-text pointer-events-none size-9" />
 			</span>
 		</CardDock>
-		<CardDock title="Pedidos" mediator={orderSearchParam}>
+		<CardDock title="Pedidos" mediator={TABLE_TYPE.ORDERS}>
 			<span class="pointer-events-none" slot="icon">
 				<QueueListIcon className="stroke-text size-9" />
 			</span>
@@ -31,11 +29,9 @@ const { productsSearchParam, categoriesSearchParam, orderSearchParam } = TABLE_M
 
 <script>
 	import { $ } from '@/lib/dom-selector'
-	import { TABLE_MEDIATOR_METADATA } from '@/const/table-mediator.const'
 	import { dispatchMediatorEvent } from '@/lib/utils/change-mediator-event'
-	import { DashboardMediator } from '@/lib/dashboard-mediator'
-
-	const { mediatorSearchParam } = TABLE_MEDIATOR_METADATA
+	import { selectMediator } from '@/lib/utils/select-mediator'
+	import { TABLE_PARAM } from '@/interface/table-mediator.interface'
 
 	function getMediatorFromTarget(target: HTMLElement) {
 		if (!(target instanceof HTMLLIElement) && !(target instanceof HTMLImageElement)) {
@@ -44,17 +40,15 @@ const { productsSearchParam, categoriesSearchParam, orderSearchParam } = TABLE_M
 		return target.dataset.mediator || null
 	}
 
-	function updateTableData(mediator: string) {
-		DashboardMediator(mediator).then((mediator) => {
-			mediator?.table()
-		})
+	function updateTableData() {
+		selectMediator()
 	}
 
 	function updateUrlWithMediator(mediator: string) {
 		const url = new URL(window.location.href)
-		url.searchParams.set(mediatorSearchParam, mediator)
+		url.searchParams.set(TABLE_PARAM.TYPE, mediator)
 		window.history.replaceState({}, '', url)
-		updateTableData(mediator)
+		updateTableData()
 	}
 
 	function handleDockClick(event: Event) {

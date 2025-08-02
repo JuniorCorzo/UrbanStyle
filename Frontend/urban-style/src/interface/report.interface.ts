@@ -1,6 +1,29 @@
-export interface BestSeller {
+import type { CategorySummary } from './category.interface'
+
+type SaleInfo = {
+	unitsSold: number
+	income: number
+}
+
+type ReportBase = {
 	name: string
-	sold: number
+	total: SaleInfo[]
+	monthly: SaleInfo[]
+}
+
+export type CategoryReport = ReportBase & {
+	categoryId: string
+}
+
+export type ProductReport = ReportBase & {
+	productId: string
+	categories: CategorySummary[]
+}
+
+export type OrderReport = {
+	startedOrders: number
+	canceledOrders: number
+	cancellationRate: number
 }
 
 export interface SalesData {
@@ -9,7 +32,10 @@ export interface SalesData {
 	total: number
 }
 
-export interface ReportSales {
+export type ReportSales = {
 	day: SalesData[]
 	month: SalesData[]
+	aov: number
+	dailyTransactionsAverage: number
+	transactions: number
 }

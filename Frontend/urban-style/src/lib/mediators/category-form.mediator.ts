@@ -5,8 +5,9 @@ import { CategoriesStore } from '@/state/categories.store'
 import { CategoryScheme } from '../validations/category.validations'
 import { ZodError } from 'zod'
 import { showError } from '../showErrorMessages'
+import { formStore } from '@/state/form.state'
 
-export async function categoriesForm(id?: string): Promise<FormMediator> {
+export async function categoriesForm() {
 	const sendData = async (formData?: FormData) => {
 		if (!formData) return
 
@@ -34,10 +35,10 @@ export async function categoriesForm(id?: string): Promise<FormMediator> {
 		deleteCategory(id)
 	}
 
-	return {
+	formStore.set({
 		title: 'Nueva categoría',
 		formType: 'category',
 		sendData,
 		sendDelete,
-	}
+	})
 }

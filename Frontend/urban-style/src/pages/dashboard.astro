@@ -7,7 +7,7 @@ import DashboardSummarySection from '@/components/dashboard/DashboardSummarySect
 ---
 
 <Layout>
-	<Sidebar slot="sidebar" client:idle />
+	<Sidebar slot="sidebar" client:only="react" />
 	<section class="flex h-full w-full flex-col items-center gap-5 p-5">
 		<DashboardSummarySection />
 		<DashboardTableSection />
@@ -17,9 +17,7 @@ import DashboardSummarySection from '@/components/dashboard/DashboardSummarySect
 
 <script>
 	import { selectMediator } from '@/lib/utils/select-mediator'
-	import { CategoriesStore } from '@/state/categories.store'
 
-	
 	document.addEventListener('astro:page-load', async () => {
 		const table = (await selectMediator())?.table
 		console.log('Dock table:', table)

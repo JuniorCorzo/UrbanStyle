@@ -11,6 +11,7 @@ export const SelectInput = React.forwardRef<SelectRefProps, SelectInputProps>((p
 	const selectRef = useRef<SelectRefProps>(null)
 	useImperativeHandle(ref, () => ({
 		selectedItems: () => selectRef.current?.selectedItems() ?? null,
+		setSelectedItem: selectRef.current?.setSelectedItem,
 	}))
 
 	return (

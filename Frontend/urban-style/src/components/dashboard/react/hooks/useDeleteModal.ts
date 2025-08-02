@@ -1,10 +1,14 @@
 import type { OpenDeleteModal } from '@/lib/utils/open-modal-event'
+import { formStore } from '@/state/form.state'
+import { useStore } from '@nanostores/react'
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
 
 export function useDeleteModal() {
+	const [detailsEvent, setDetailsEvent] = useState<OpenDeleteModal>()
 	const dialogRef = useRef<HTMLDialogElement>(null)
 	const open = useRef(false)
-	const [detailsEvent, setDetailsEvent] = useState<OpenDeleteModal>()
+
+	const formState = useStore(formStore)
 
 	const handleClose = () => {
 		dialogRef.current?.classList.remove('flex')
@@ -29,8 +33,8 @@ export function useDeleteModal() {
 
 	const handleSendRequest = () => {
 		if (detailsEvent) {
-			const { id, sendDelete } = detailsEvent
-			sendDelete(id)
+			const { id } = detailsEvent
+			formState?.sendDelete(id)
 		}
 	}
 
@@ -46,7 +50,7 @@ export function useDeleteModal() {
 	}, [])
 
 	return {
-		title: detailsEvent?.typeModal,
+		title: formState?.title,
 		dialogRef,
 		handleClose,
 		handleOpen,

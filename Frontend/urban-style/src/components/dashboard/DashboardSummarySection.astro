@@ -1,17 +1,9 @@
 ---
-import { ReportStore } from '@/state/report.store'
-import DashboardSummaryStats from '@/components/dashboard/DashboardSummaryStats.astro'
 import DashboardChartReport from './DashboardChartReport.astro'
-import DashboardTableMostSold from './DashboardTableMostSold.astro'
-
-const { accessToken } = Astro.locals
-
-const reportData = await ReportStore(accessToken).getReportSales()
-const salesLastMonth = reportData?.month[reportData.month.length - 2]
+import { DashboardSummaryStats } from './react/components/stats/DashboardSummaryStats'
 ---
 
-<article class="grid w-full grid-cols-2 gap-5 md:grid-cols-3">
-	<DashboardSummaryStats salesLastMonth={salesLastMonth} />
-	<DashboardChartReport reportData={reportData} />
-	<DashboardTableMostSold />
+<article class="flex w-full flex-col gap-5">
+	<DashboardSummaryStats client:only="react" />
+	<DashboardChartReport />
 </article>

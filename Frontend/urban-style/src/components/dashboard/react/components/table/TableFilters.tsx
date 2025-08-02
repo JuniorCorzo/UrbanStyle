@@ -21,19 +21,15 @@ export function TableFilters() {
 	const handleClick = () => filterDropdownRef.current?.toggle()
 
 	const handleShowSidebar = async () => {
-		const dashboardMediator = await selectMediator()
-		if (dashboardMediator) {
-			const { formType, sendData, title } = dashboardMediator.form
-			dispatchShowSidebar(title, formType, sendData)
-		}
+		dispatchShowSidebar()
 	}
 
 	return (
 		<div className="flex w-full flex-col gap-y-3 sm:flex-row">
-			<div className="lg:min-w-3xl flex w-full">
+			<div className="lg:min-w-3xl flex w-full items-center">
 				{filterComponents?.right && filterComponents.right()}
 			</div>
-			<div className="relative flex w-full gap-2 sm:justify-end">
+			<div className="relative flex w-full items-center gap-2 sm:justify-end">
 				<div className="flex min-h-10 flex-col gap-2 sm:flex-row sm:justify-end" title="Filtros">
 					{canSearch && (
 						<div className="h-fit">
