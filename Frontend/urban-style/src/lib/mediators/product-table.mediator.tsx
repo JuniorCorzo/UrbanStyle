@@ -1,7 +1,6 @@
 import type { Products } from '@/interface/product.interface'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { productStore, ProductStore } from '@/state/product.store'
-import { ReportService } from '@/service/report.service'
+import { productReportStore, productStore, ProductStore } from '@/state/product.store'
 import { tableStore } from '@/state/table.state'
 import TableActions from '@/components/dashboard/react/components/table/TableActions'
 import { Cell } from '@/components/dashboard/react/components/table/Cell'
@@ -188,13 +187,15 @@ export async function productReportTable() {
 		}),
 	]
 
-	tableStore.set({
-		columns: columns as ColumnDef<unknown, any>[],
-		data: await ReportService().productsReport(),
-		columnFilters: [],
-		filterComponents: { left: () => <ProductFilter />, right: () => <ModeSelector /> },
-		canExpand: true,
-		canSearch: true,
-		hasForm: true,
+	productReportStore.subscribe((productReport) => {
+		tableStore.set({
+			columns: columns as ColumnDef<unknown, any>[],
+			data: [...productReport],
+			columnFilters: [],
+			filterComponents: { left: () => <ProductFilter />, right: () => <ModeSelector /> },
+			canExpand: true,
+			canSearch: true,
+			hasForm: true,
+		})
 	})
 }
