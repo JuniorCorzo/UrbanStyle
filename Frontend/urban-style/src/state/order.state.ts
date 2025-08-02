@@ -23,16 +23,23 @@ export const setOrderStats = () =>
 		dashboardStatsStore.set([
 			...getDashboardStats(),
 			{
-				label: 'Pedidos Iniciados',
+				label: 'Iniciados',
 				value: orderReport?.startedOrders ?? 0,
+				title: `Pedidos iniciados: ${orderReport?.startedOrders ?? 0}`,
 			},
 			{
-				label: 'Pedidos cancelados',
+				label: 'Cancelados',
 				value: orderReport?.canceledOrders ?? 0,
+				title: `Pedidos cancelados: ${orderReport?.canceledOrders ?? 0}`,
 			},
 			{
-				label: 'Taza de cancelación',
-				value: orderReport?.cancellationRate ?? 0,
+				label: 'Cancelación (%)',
+				value: Intl.NumberFormat('es-CO', {
+					style: 'unit',
+					unit: 'percent',
+					unitDisplay: 'short',
+				}).format(orderReport?.cancellationRate ?? 0),
+				title: `Taza de cancelaciones: ${orderReport?.cancellationRate ?? 0}`,
 			},
 		])
 	})

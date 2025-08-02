@@ -32,16 +32,22 @@ export function getDashboardStats() {
 		},
 		{
 			label: 'AOV',
-			value: reportState?.aov ?? 0,
-			title: `AOV: ${reportState?.aov}`,
+			value: Intl.NumberFormat('es-CO', {
+				notation: 'compact',
+				compactDisplay: 'short',
+				maximumFractionDigits: 2,
+			}).format(reportState?.aov ?? 0),
+			title: `Valor promedio por pedido: ${reportState?.aov}`,
 		},
 		{
-			label: 'Pedidos diarios promedio',
+			label: 'Pedidos diarios',
 			value: reportState?.dailyTransactionsAverage ?? 0,
+			title: `Promedio de pedidos diarios: ${reportState?.dailyTransactionsAverage ?? 0}`,
 		},
 		{
-			label: 'Pedidos',
+			label: 'Pedidos Completados',
 			value: reportState?.transactions ?? 0,
+			title: `Total de pedidos completados: ${reportState?.transactions ?? 0}`,
 		},
 	]
 
