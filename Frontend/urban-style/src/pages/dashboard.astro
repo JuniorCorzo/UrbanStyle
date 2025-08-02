@@ -17,7 +17,6 @@ import DashboardSummarySection from '@/components/dashboard/DashboardSummarySect
 
 <script>
 	import { selectMediator } from '@/lib/utils/select-mediator'
-	import { CategoriesStore } from '@/state/categories.store'
 
 	document.addEventListener('astro:page-load', async () => {
 		const table = (await selectMediator())?.table

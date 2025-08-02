@@ -27,6 +27,7 @@ import '@/styles/global.css'
 	import { categoriesStore, CategoriesStore } from '@/state/categories.store'
 	import { formStore } from '@/state/form.state'
 	import { productStore, ProductStore } from '@/state/product.store'
+	import { reportSalesStore } from '@/state/report.store'
 	import { tableStore } from '@/state/table.state'
 	import { logger } from '@nanostores/logger'
 
@@ -35,6 +36,7 @@ import '@/styles/global.css'
 		categories: categoriesStore,
 		tableStore: tableStore,
 		formStore: formStore,
+		reportStore: reportSalesStore,
 	})
 	ProductStore()
 	CategoriesStore()
