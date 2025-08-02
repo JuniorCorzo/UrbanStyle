@@ -24,9 +24,18 @@ import '@/styles/global.css'
 </html>
 
 <script>
-	import { CategoriesStore } from '@/state/categories.store'
-	import { ProductStore } from '@/state/product.store'
+	import { categoriesStore, CategoriesStore } from '@/state/categories.store'
+	import { formStore } from '@/state/form.state'
+	import { productStore, ProductStore } from '@/state/product.store'
+	import { tableStore } from '@/state/table.state'
+	import { logger } from '@nanostores/logger'
 
+	logger({
+		product: productStore,
+		categories: categoriesStore,
+		tableStore: tableStore,
+		formStore: formStore,
+	})
 	ProductStore()
 	CategoriesStore()
 </script>
