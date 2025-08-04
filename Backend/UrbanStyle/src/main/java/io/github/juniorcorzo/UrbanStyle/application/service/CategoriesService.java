@@ -4,6 +4,7 @@ import io.github.juniorcorzo.UrbanStyle.application.service.bulks.BulkCategorySe
 import io.github.juniorcorzo.UrbanStyle.domain.entities.CategoryEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.DocumentsName;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DeleteDocumentFailed;
+import io.github.juniorcorzo.UrbanStyle.domain.exceptions.DocumentNotFound;
 import io.github.juniorcorzo.UrbanStyle.domain.exceptions.SaveDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.domain.repository.CategoriesRepository;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.CategoryDTO;
@@ -34,6 +35,20 @@ public class CategoriesService {
                 HttpStatus.OK,
                 categoryDTOs,
                 "Categories retrieved successfully"
+        );
+    }
+
+    public ResponseDTO<String> getDescriptionByName(String name) {
+        final String description = this.categoriesRepository
+                .findDescriptionByName(name)
+                .orElseThrow(() -> new DocumentNotFound(DocumentsName.CATEGORY))
+                .get("description")
+                .toString();
+
+        return new ResponseDTO<>(
+                HttpStatus.OK,
+                List.of(description),
+                "Description retrieved successfully"
         );
     }
 
