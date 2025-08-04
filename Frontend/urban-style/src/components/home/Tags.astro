@@ -1,15 +1,17 @@
 ---
-import type { Category } from '@/interface/category.interface'
+import type { CategorySummary } from '@/interface/category.interface'
 
 const { categories } = Astro.props as {
-	categories: Pick<Category, 'id' | 'name'>[]
+	categories: CategorySummary[]
 }
 ---
 
 <div class="flex gap-2">
 	{
 		categories.map(({ name }) => (
-			<span class="bg-accent text-text rounded-lg px-1.5 py-1 text-base">{name}</span>
+			<a href={`/category/${name}`}>
+				<span class="bg-accent text-text rounded-lg px-1.5 py-1 text-base">{name}</span>
+			</a>
 		))
 	}
 </div>

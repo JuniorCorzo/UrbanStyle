@@ -3,7 +3,6 @@ import type { Products } from '@/interface/product.interface'
 import { Image } from 'astro:assets'
 import BorderEffect from './BorderEffect.astro'
 import { CLOUDFLARE_URL } from '@/config/env-config'
-import { slide } from 'astro:transitions'
 
 interface Props {
 	product: Products
@@ -27,6 +26,7 @@ const { product, borderEffect = true } = Astro.props
 			alt={product.name}
 			width={240}
 			height={240}
+			transition:name={product.id}
 		/>
 		<div class="xs:px-5 flex w-full flex-col gap-1 px-2 text-left">
 			<span

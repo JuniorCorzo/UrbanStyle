@@ -1,0 +1,39 @@
+---
+import { getProductByCategory } from '@/service/product.service'
+import CategoryService from '@/service/categories.service'
+import Layout from '@/layouts/Layout.astro'
+import ProductContainer from '@/components/home/ProductContainer.astro'
+import Button from '@/components/Button.astro'
+
+const { category_name: categoryName } = Astro.params
+
+const productsByCategory = await getProductByCategory(categoryName ?? '')
+const description = await CategoryService.getDescriptionByName(categoryName ?? '')
+---
+
+<Layout>
+	<section class="flex flex-col gap-5 px-6 py-4">
+		<div class="bg-foreground/80 border-border shadow-accent rounded-md px-3 py-3 shadow-md">
+			<span class="inline-block max-w-5xl text-balance px-3">
+				<h1 class="leading-12 text-3xl font-semibold tracking-wide">{categoryName}</h1>
+				<p class="text-text/90 text-base leading-6">
+					{description}
+				</p>
+			</span>
+		</div>
+		{productsByCategory.length > 0 && <ProductContainer products={productsByCategory} />}
+		{
+			productsByCategory.length === 0 && (
+				<div class="text-text flex flex-col items-center gap-3 text-center text-lg">
+					<span class="tracking-wide">No hay productos disponibles en esta categoría.</span>
+					<a
+						href="/home"
+						class="hover:border-text/90 border-b border-transparent text-base transition-all hover:scale-105"
+					>
+						Volver a la tienda
+					</a>
+				</div>
+			)
+		}
+	</section>
+</Layout>

@@ -24,6 +24,11 @@ public class CategoryController {
         return this.categoryService.getAllCategories();
     }
 
+    @GetMapping("/description")
+    public ResponseDTO<String> getDescriptionByName(@NotBlank @RequestParam String name) {
+        return this.categoryService.getDescriptionByName(name);
+    }
+
     @PostMapping("/create")
     @ResponseStatus(HttpStatus.CREATED)
     @PreAuthorize("hasRole('ADMIN')")
