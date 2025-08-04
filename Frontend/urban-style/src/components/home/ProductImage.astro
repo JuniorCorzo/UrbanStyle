@@ -5,10 +5,11 @@ import type { Images } from '@/interface/product.interface'
 
 interface Props {
 	alt: string
+	productId: string
 	images: Images[]
 }
 
-const { alt, images } = Astro.props
+const { alt, images, productId } = Astro.props
 ---
 
 <div class="">
@@ -19,5 +20,6 @@ const { alt, images } = Astro.props
 		width={450}
 		height={450}
 		loading="lazy"
+		transition:name={productId}
 	/>
 </div>
