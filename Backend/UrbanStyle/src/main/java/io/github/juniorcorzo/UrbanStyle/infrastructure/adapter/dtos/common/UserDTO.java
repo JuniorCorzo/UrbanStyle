@@ -12,6 +12,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 
+import java.time.LocalDateTime;
+
 public record UserDTO(
         @IdFormatConstraint(groups = OnUpdate.class)
         @IdMustExists(entity = UserEntity.class, groups = {OnUpdate.class})
@@ -24,11 +26,16 @@ public record UserDTO(
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         @NotBlank(groups = {OnCreate.class})
         String password,
+        String avatar,
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         Roles role,
         @NotNull(groups = {OnCreate.class, OnUpdate.class})
         @Pattern(regexp = "^\\d{10}$", message = "Phone must be numeric", groups = {OnCreate.class, OnUpdate.class})
-        String phone
+        String phone,
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        LocalDateTime createdAt,
+        @JsonProperty(access = JsonProperty.Access.READ_ONLY)
+        LocalDateTime updatedAt
 ) {
 
 }
