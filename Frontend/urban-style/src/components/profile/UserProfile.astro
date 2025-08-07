@@ -1,0 +1,44 @@
+---
+import { EnvelopeIcon, MapPinIcon, PhoneIcon, UserIcon } from '@heroicons/react/24/outline'
+import UserItem from './UserItem.astro'
+import { Image } from 'astro:assets'
+import { CLOUDFLARE_URL } from '@/config/env-config'
+
+interface Props {
+	name: string
+	email: string
+	phone: string
+	avatar?: string
+}
+
+const { name, email, phone, avatar } = Astro.props
+---
+
+<article class="bg-foreground flex w-full items-center gap-5 rounded-md p-5">
+	<div class="bg-background rounded-lg">
+		{
+			avatar && (
+				<Image
+					class="aspect-square rounded-lg object-cover"
+					src={`${CLOUDFLARE_URL}/${avatar}`}
+					width={208}
+					height={208}
+					alt={`Foto de perfil para ${name}`}
+				/>
+			)
+		}
+		{!avatar && <UserIcon className="size-52" />}
+	</div>
+	<div class="w-xs grid h-fit auto-rows-min grid-cols-2">
+		<h1 class="col-span-full min-h-12 text-3xl font-bold">{name}</h1>
+		<UserItem label={email}>
+			<EnvelopeIcon className="size-6" />
+		</UserItem>
+		<UserItem label="Cucuta, CO">
+			<MapPinIcon className="size-6" />
+		</UserItem>
+		<UserItem label={`+57 ${phone}`}>
+			<PhoneIcon className="size-6" />
+		</UserItem>
+	</div>
+</article>

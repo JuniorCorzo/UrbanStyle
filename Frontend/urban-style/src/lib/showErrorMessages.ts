@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import { ZodError, type z, type ZodIssue } from 'zod'
 import { $ } from './dom-selector'
 
 declare global {
@@ -67,11 +67,21 @@ export function toggleErrorMessagesWithLabel(message: string, $spanElement: HTML
 	}
 }
 
-export const showError = (errors: z.ZodError) => {
-	errors.errors.forEach(({ message, path }) => {
-		const $errorElement = $<HTMLSpanElement>(`#${path[0]}_error`)
-		if ($errorElement) {
-			toggleErrorMessagesWithLabel(message, $errorElement)
-		}
-	})
+type ZodErrorOrIssue = z.ZodError | ZodIssue
+
+export const showError = (errors: ZodErrorOrIssue) => {
+	if (errors instanceof ZodError) {
+		errors.errors.forEach(({ message, path }) => {
+			const $errorElement = $<HTMLSpanElement>(`#${path[0]}_error`)
+			if ($errorElement) {
+				toggleErrorMessagesWithLabel(message, $errorElement)
+			}
+		})
+		return
+	}
+
+	const $errorElement = $<HTMLSpanElement>(`#${errors.path[0]}_error`)
+	if ($errorElement) {
+		toggleErrorMessagesWithLabel(errors.message, $errorElement)
+	}
 }

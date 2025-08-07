@@ -20,6 +20,20 @@ export class UserService {
 				throw error
 			})
 	}
+
+	static async validatePassword(userId: string, password: string): Promise<boolean> {
+		return (
+			await axios
+				.get<
+					Response<boolean>
+				>(`${PUBLIC_API_URL}/users/verify-password?user-id=${userId}&password=${password}`, { withCredentials: true })
+				.then((response) => {
+					if (response.status !== 200) throw Error('Unexpected error')
+					return response.data
+				})
+		).data[0]
+	}
+
 	public static async signUp(createUser: CreateUser) {
 		const responseRequest: User = await axios
 			.post(`${PUBLIC_API_URL}/users/create`, createUser, {
