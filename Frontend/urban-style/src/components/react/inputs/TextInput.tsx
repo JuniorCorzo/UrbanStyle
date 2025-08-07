@@ -12,7 +12,7 @@ export const TextInput = ({ label, name, className, ...props }: Props) => {
 			<MessageError errorId={`${name}_error`} />
 			<input
 				className={cn(
-					'border-border focus:custom-ring text-text pointer-events-auto h-10 w-full rounded border px-2 py-1 focus:outline-none',
+					'border-border focus:custom-ring text-text pointer-events-auto h-10 w-full rounded border px-2 py-1 transition-all focus:outline-none disabled:cursor-not-allowed disabled:opacity-70',
 					className,
 				)}
 				name={name}
