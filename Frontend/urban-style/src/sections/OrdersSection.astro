@@ -6,7 +6,7 @@ const { user, accessToken } = Astro.locals
 const orders = await OrderService.getOrderByUserId(user.id, accessToken)
 ---
 
-<section id="order_section" class="@container flex h-full flex-col gap-10 px-6">
+<section id="order_section" class="@container mt-5 flex h-full w-full flex-col gap-10 px-6">
 	{orders.map((order) => <OrderItem order={order} />)}
 </section>
 
