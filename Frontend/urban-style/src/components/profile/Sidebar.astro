@@ -1,0 +1,19 @@
+---
+import MenuItem from '@/components/profile/MenuItem.astro'
+import { QueueListIcon, UserIcon } from '@heroicons/react/24/outline'
+
+const pathname = Astro.url.pathname
+---
+
+<aside class="w-full max-w-xs" slot="sidebar">
+	<nav
+		class="bg-foreground border-border fixed flex h-screen w-full max-w-xs flex-col items-center gap-5 border-r px-6 pt-12"
+	>
+		<MenuItem label="Mi perfil" href="/profile" highlight={pathname === '/profile'}>
+			<UserIcon className="size-5" />
+		</MenuItem>
+		<MenuItem label="Mis pedidos" href="/profile/orders" highlight={pathname === '/profile/orders'}>
+			<QueueListIcon className="size-5" />
+		</MenuItem>
+	</nav>
+</aside>

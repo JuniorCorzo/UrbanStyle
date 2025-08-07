@@ -1,0 +1,24 @@
+---
+import { cn } from '@/lib/cn'
+
+interface Props {
+	label: string
+	href: string
+	highlight: boolean
+}
+
+const { label, href, highlight } = Astro.props
+---
+
+<a
+	href={href}
+	class={cn(
+		'bg-background  border-border hover:bg-accent flex w-full items-center gap-2 rounded-md border px-3 py-2 transition-all duration-200 hover:scale-105 shadow-inner shadow-border',
+		!highlight && 'shadow-md ',
+	)}
+>
+	<i>
+		<slot />
+	</i>
+	<span class="font-medium"> {label} </span>
+</a>
