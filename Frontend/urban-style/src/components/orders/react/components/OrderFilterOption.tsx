@@ -1,6 +1,6 @@
 import { getOrderStatus } from '@/const/orders.const'
 import type { OrderOptions } from './OrderFilterByStatus'
-import { cn } from '@/lib/cn'
+import { Tag } from '@/components/react/Tag'
 
 interface OrderFilterOptionProps {
 	status: OrderOptions
@@ -9,15 +9,11 @@ interface OrderFilterOptionProps {
 
 export function OrderFilterOption({ status, selectedItem }: OrderFilterOptionProps) {
 	return (
-		<span
-			className={cn(
-				'bg-foreground border-border shadow-border cursor-pointer rounded-lg border px-2 py-0.5 text-sm transition-all',
-				status === selectedItem ? 'bg-accent custom-ring' : 'shadow-inner',
-			)}
+		<Tag
+			value={status}
+			label={status === 'ALL' ? 'Todos' : getOrderStatus(status)?.status}
+			selectedItem={selectedItem}
 			data-status={status}
-			aria-selected={status === selectedItem}
-		>
-			{status === 'ALL' ? 'Todos' : getOrderStatus(status)?.status}
-		</span>
+		/>
 	)
 }
