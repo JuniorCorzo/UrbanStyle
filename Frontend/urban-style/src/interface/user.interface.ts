@@ -15,6 +15,8 @@ export interface CreateUser extends Omit<User, 'id' | 'role' | 'createdAt' | 'up
 	password: string
 }
 
+export type UpdateUser = Pick<User, 'id' | 'name' | 'email' | 'phone'>
+
 export interface UserCredentials {
 	email: string
 	password: string

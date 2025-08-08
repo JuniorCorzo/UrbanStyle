@@ -1,14 +1,11 @@
-import { showError } from '@/lib/showErrorMessages'
+import { showError, showErrorOnlyField } from '@/lib/showErrorMessages'
 import { debounce } from '@/lib/utils/debounce'
-import {
-	changePasswordScheme,
-	type ChangePasswordValid,
-} from '@/lib/validations/user.validations'
+import { changePasswordScheme, type ChangePasswordValid } from '@/lib/validations/user.validations'
 import { UserService } from '@/service/user.service'
 import { userStore } from '@/state/user.state'
 import { useStore } from '@nanostores/react'
-import { useReducer, useState, useCallback, type ChangeEvent } from 'react'
-import type { ZodError } from 'zod'
+import { useState, useCallback, type ChangeEvent, useRef } from 'react'
+import { useMapReducer } from '@/components/react/hooks/useMapReducer'
 
 type ChangePassword = {
 	oldPassword: string
@@ -16,71 +13,61 @@ type ChangePassword = {
 	confirmPassword: string
 }
 
-type ActionsType = 'UPDATE_VALUE'
-type Payload = {
-	key: keyof ChangePassword
-	value: string
-}
-
-type Actions = {
-	type: ActionsType
-	payload: Payload
-}
-
-const reducer = (state: Map<keyof ChangePassword, string>, actions: Actions) => {
-	const { type, payload } = actions
-	const { key, value } = payload
-	switch (type) {
-		case 'UPDATE_VALUE':
-			state.set(key, value)
-
-			return state
-	}
-
-	return state
-}
-
-const handleError = (error: ZodError, key: keyof ChangePassword) => {
-	const errorPath = error.errors.find((err) => err.path.includes(key))
-	if (errorPath) {
-		showError(errorPath)
-	}
-}
-
 export const useChangePassword = () => {
 	const user = useStore(userStore)
 	const [isPassword, setPassword] = useState<boolean>()
-	const [passwordValues, dispatch] = useReducer(reducer, new Map())
+	const { formState: passwordValues, updateValue } = useMapReducer<ChangePassword>()
+	const canSubmit = useRef<boolean>(false)
 
-	const validateField = (key: keyof ChangePassword) => {
-		const data: ChangePasswordValid = {
-			oldPassword: passwordValues.get('oldPassword'),
-			newPassword: passwordValues.get('newPassword'),
-			confirmPassword: passwordValues.get('confirmPassword'),
-		}
-		const isValid = changePasswordScheme.safeParse(data)
+	const validateField = useCallback(
+		(key: keyof ChangePassword, value: string) => {
+			const data: Partial<ChangePasswordValid> = {
+				oldPassword: passwordValues.get('oldPassword'),
+				newPassword: passwordValues.get('newPassword'),
+				confirmPassword: passwordValues.get('confirmPassword'),
+				[key]: value,
+			}
 
-		if (isValid.error) {
-			handleError(isValid.error, key)
-		}
-	}
+			const isValid = changePasswordScheme.safeParse(data)
 
-	const debouncedValidate = useCallback(debounce(validateField, 500), [])
+			canSubmit.current = isValid.success
+			if (isValid.error) showErrorOnlyField<ChangePassword>(isValid.error, key)
+		},
+		[passwordValues],
+	)
 
-	const handleChange = (event: ChangeEvent<HTMLInputElement>, key: keyof ChangePassword) => {
-		dispatch({ type: 'UPDATE_VALUE', payload: { key, value: event.target.value } })
-		debouncedValidate(key)
+	const handleChange = debounce(
+		(event: ChangeEvent<HTMLInputElement>, key: keyof ChangePassword) => {
+			const value = event.target.value
+			updateValue(key, value)
+			validateField(key, value)
+		},
+		300,
+	)
+
+	const sendRequest = () => {
+		const oldPassword = passwordValues.get('oldPassword')
+		const newPassword = passwordValues.get('newPassword')
+		if (!user?.id || !oldPassword || !newPassword) return
+
+		UserService.changePassword(user?.id, oldPassword, newPassword).then(({ message }) => {
+			console.log(message)
+		})
 	}
 
 	const handleValidatePassword = () => {
-		UserService.validatePassword(user?.id ?? '', passwordValues.get('oldPassword')).then(
-			(response) => setPassword(response),
-		)
+		const userId = user?.id
+		const oldPassword = passwordValues.get('oldPassword')
+		if (!userId || !oldPassword) return
+
+		UserService.validatePassword(userId, oldPassword).then((response) => setPassword(response))
 	}
 
 	return {
 		isPassword,
 		handleChange,
 		handleValidatePassword,
+		canSubmit: canSubmit.current,
+		sendRequest,
 	}
 }

@@ -48,6 +48,24 @@ export const createUserSchema = userCredentialsSchema
 
 export type CreateUserValid = z.infer<typeof createUserSchema>
 
+export const updateUserScheme = z.object({
+	name: z
+		.string({ required_error: 'El nombre de usuario es requerido' })
+		.min(3, 'El nombre de usuario debe tener al menos 3 caracteres')
+		.max(32, 'El nombre de usuario no puede exceder los 32 caracteres'),
+	email: z
+		.string({ required_error: 'El correo electrónico es requerido' })
+		.email('El correo electrónico no es válido'),
+	phone: z
+		.string()
+		.min(10, 'Número inválido')
+		.max(10, 'Número inválido')
+		.refine((number) => /^\d{10}$/.test(number), {
+			message: 'Número inválido',
+		}),
+})
+export type UpdateUserValid = z.infer<typeof updateUserScheme>
+
 export const changePasswordScheme = z
 	.object({
 		oldPassword: passwordSchema,

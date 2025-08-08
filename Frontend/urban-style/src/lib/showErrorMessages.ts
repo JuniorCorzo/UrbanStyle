@@ -24,7 +24,6 @@ function createEventListener(id: string, $inputElement: HTMLInputElement) {
 	removeEventListener($inputElement)
 	$inputElement._clearErrorHandler = clearErrorMessage.bind(null, id, $inputElement)
 
-	console.log($inputElement._clearErrorHandler)
 	if ($inputElement instanceof HTMLDivElement) {
 		$inputElement.addEventListener('click', $inputElement._clearErrorHandler)
 		return
@@ -83,5 +82,12 @@ export const showError = (errors: ZodErrorOrIssue) => {
 	const $errorElement = $<HTMLSpanElement>(`#${errors.path[0]}_error`)
 	if ($errorElement) {
 		toggleErrorMessagesWithLabel(errors.message, $errorElement)
+	}
+}
+
+export const showErrorOnlyField = <T>(error: ZodError, key: keyof T) => {
+	const errorPath = error.errors.find((err) => err.path.includes(key as string | number))
+	if (errorPath) {
+		showError(errorPath)
 	}
 }

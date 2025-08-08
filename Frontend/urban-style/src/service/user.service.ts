@@ -1,6 +1,6 @@
 import { PUBLIC_API_URL } from '@/config/env-config'
 import type { Response } from '@/interface/response.interface'
-import type { CreateUser, User } from '@/interface/user.interface'
+import type { CreateUser, UpdateUser, User } from '@/interface/user.interface'
 import axios from 'axios'
 
 export class UserService {
@@ -44,5 +44,29 @@ export class UserService {
 			})
 
 		return responseRequest
+	}
+
+	static async updateUser(user: UpdateUser): Promise<Response<User>> {
+		return await axios
+			.put<Response<User>>(`${PUBLIC_API_URL}/users/update?user-id=${user.id}`, user, {
+				withCredentials: true,
+			})
+			.then((response) => {
+				if (response.status !== 200) throw Error('Unexpected error')
+				return response.data
+			})
+	}
+
+	static async changePassword(userId: string, oldPassword: string, newPassword: string) {
+		return await axios
+			.patch<Response>(
+				`${PUBLIC_API_URL}/users/change-password?user-id=${userId}&old-password=${oldPassword}&new-password=${newPassword}`,
+				null,
+				{ withCredentials: true },
+			)
+			.then((response) => {
+				if (response.status !== 200) throw Error('Unexpected error')
+				return response.data
+			})
 	}
 }

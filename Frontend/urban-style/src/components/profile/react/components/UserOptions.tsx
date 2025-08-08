@@ -26,7 +26,7 @@ export function UserOptions() {
 
 	console.log(option)
 	return (
-		<article className="flex flex-col gap-5">
+		<article className="flex h-full w-full grow flex-col gap-5">
 			<OptionsTab />
 			{optionsMap.get(option ?? 'PERSONAL_DATA')}
 		</article>
