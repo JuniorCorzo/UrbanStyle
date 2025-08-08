@@ -6,7 +6,7 @@ const { user } = Astro.locals
 const { name, email, phone, avatar } = user
 ---
 
-<section id="profile_section" class="mt-5 flex h-full w-full flex-col gap-5 px-6">
+<section id="profile_section" class="mt-5 flex min-h-full w-full flex-col gap-5">
 	<UserProfile name={name} email={email} phone={phone} avatar={avatar} />
 	<UserOptions client:only="react" />
 </section>
