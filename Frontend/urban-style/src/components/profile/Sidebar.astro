@@ -1,14 +1,29 @@
 ---
 import MenuItem from '@/components/profile/MenuItem.astro'
-import { QueueListIcon, UserIcon } from '@heroicons/react/24/outline'
+import {
+	ArrowRightStartOnRectangleIcon,
+	QueueListIcon,
+	UserIcon,
+} from '@heroicons/react/24/outline'
 
 const pathname = Astro.url.pathname
 ---
 
-<aside class="w-full max-w-xs" slot="sidebar">
+<aside
+	id="container_sidebar"
+	class="w-full max-w-52 transition-all duration-500 md:max-w-xs"
+	slot="sidebar"
+>
 	<nav
-		class="bg-foreground border-border fixed flex h-screen w-full max-w-xs flex-col items-center gap-5 border-r px-6 pt-12"
+		id="menu_sidebar"
+		class="bg-foreground border-border fixed z-10 flex h-screen w-full max-w-52 flex-col items-center gap-5 border-r px-6 pt-12 transition-all duration-500 md:max-w-xs"
 	>
+		<span
+			id="show_sidebar"
+			class="bg-foreground border-border absolute left-full top-5 z-20 cursor-pointer rounded-r-md border border-l-0 px-1 py-3"
+		>
+			<ArrowRightStartOnRectangleIcon className="size-5 rotate-180" />
+		</span>
 		<MenuItem label="Mi perfil" href="/profile" highlight={pathname === '/profile'}>
 			<UserIcon className="size-5" />
 		</MenuItem>
@@ -17,3 +32,24 @@ const pathname = Astro.url.pathname
 		</MenuItem>
 	</nav>
 </aside>
+
+<script>
+	import { $ } from '@/lib/dom-selector'
+
+	document.addEventListener('astro:page-load', () => {
+		const $showButton = $('#show_sidebar')
+
+		$showButton?.addEventListener('click', () => {
+			const $menuSidebar = $<HTMLElement>('#menu_sidebar')
+			const $containerSidebar = $<HTMLElement>('#container_sidebar')
+
+			$menuSidebar?.classList.toggle('right-full')
+			$menuSidebar?.querySelectorAll('a')?.forEach((element) => element.classList.toggle('hidden'))
+			$containerSidebar?.classList.toggle('max-w-0')
+			$containerSidebar?.classList.toggle('md:max-w-xs')
+			$containerSidebar?.classList.toggle('max-w-52')
+			$containerSidebar?.classList.toggle('overflow-visible')
+			$showButton.querySelector('svg')?.classList.toggle('rotate-180')
+		})
+	})
+</script>
