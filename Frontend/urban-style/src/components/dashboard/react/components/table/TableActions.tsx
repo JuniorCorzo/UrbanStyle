@@ -12,12 +12,9 @@ const TableActions: React.FC<Props> = ({ id }) => {
 	}
 
 	const handleDelete = async () => {
-		const dashboardMediator = await selectMediator()
-		if (dashboardMediator) {
-			dispatchDeleteModal({
-				id,
-			})
-		}
+		dispatchDeleteModal({
+			id,
+		})
 	}
 
 	return (

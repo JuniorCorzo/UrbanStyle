@@ -12,7 +12,6 @@ interface Props {
 }
 
 export function TablePagination({ tableConfig }: Props) {
-	console.log(tableConfig.getPageCount(), tableConfig.getPageOptions())
 	return (
 		<div className="bg-accent flex py-3">
 			<div className="flex w-full justify-center gap-2">
