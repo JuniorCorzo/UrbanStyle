@@ -22,7 +22,6 @@ export function Table({ tableConfig }: Props) {
 		getToggleExpandedHandler: () => void,
 	) => {
 		const target = event.target as HTMLElement
-		console.log(target)
 		if (!target.ariaHasPopup) {
 			getToggleExpandedHandler()
 		}
