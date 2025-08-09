@@ -13,7 +13,10 @@ export function useLocationApi() {
 	}, [])
 
 	useEffect(() => {
-		if (!departmentCode) return
+		if (!departmentCode) {
+			MunicipalityStore.set([])
+			return
+		}
 		AddressService.getMunicipality(departmentCode).then((data) => {
 			MunicipalityStore.set(data)
 		})

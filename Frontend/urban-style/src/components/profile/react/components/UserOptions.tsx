@@ -1,8 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { OptionsTab, type Options } from './OptionsTab'
 import { PersonalData } from './PersonalData'
-import { useSearchParam } from '@/components/react/hooks/useSearchParam'
 import { UserSecurity } from './UserSecurity'
+import { UserAddress } from './UserAddress'
 
 export function UserOptions() {
 	const [option, setOption] = useState<Options>()
@@ -11,6 +11,7 @@ export function UserOptions() {
 			new Map([
 				['PERSONAL_DATA', <PersonalData />],
 				['SECURITY', <UserSecurity />],
+				['DIRECTIONS', <UserAddress />],
 			]),
 		[],
 	)
