@@ -2,9 +2,11 @@
 import LayoutWithSidebar from '@/layouts/LayoutWithSidebar.astro'
 import Sidebar from '@/components/profile/Sidebar.astro'
 import ProfileSection from '@/sections/ProfileSection.astro'
+import { FormSidebar } from '@/components/dashboard/react/components/FormSidebar'
 ---
 
 <LayoutWithSidebar>
 	<Sidebar />
 	<ProfileSection />
+	<FormSidebar slot="right_sidebar" client:load />
 </LayoutWithSidebar>

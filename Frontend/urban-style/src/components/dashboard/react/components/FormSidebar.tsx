@@ -4,12 +4,13 @@ import { useForm } from '../hooks/useForm'
 import { ProductFormFields } from '@/components/dashboard/react/components/forms/ProductFormFields'
 import { CategoriesFormFields } from './forms/CategoriesFormFields'
 import { Button } from '@/components/react/Button'
+import { AddressFieldForm } from '@/components/profile/react/components/AddressFieldForm'
 
 export interface FormFieldsProps<T> {
 	getDefaultValues: () => T | undefined
 }
 
-export function Sidebar() {
+export function FormSidebar() {
 	const {
 		visible,
 		formType,
@@ -19,6 +20,7 @@ export function Sidebar() {
 		id,
 		getProductValues,
 		getCategoryValues,
+		getAddressValues,
 	} = useForm()
 
 	return (
@@ -46,6 +48,7 @@ export function Sidebar() {
 						{formType === 'category' && (
 							<CategoriesFormFields key={id} getDefaultValues={getCategoryValues} />
 						)}
+						{formType === 'address' && <AddressFieldForm getDefaultValues={getAddressValues} />}
 						<div className="col-span-full flex w-full justify-center">
 							<Button className="w-full" type="submit">
 								Enviar
