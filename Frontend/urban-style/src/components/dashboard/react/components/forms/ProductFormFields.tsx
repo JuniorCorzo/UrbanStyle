@@ -7,7 +7,7 @@ import { CategoriesStore } from '@/state/categories.store'
 import { useLayoutEffect, useState } from 'react'
 import { AttributeFields } from './AttributeFields'
 import { TextAreaInput } from '@/components/react/inputs/TextAreaInput'
-import type { FormFieldsProps } from '../Sidebar'
+import type { FormFieldsProps } from '../FormSidebar'
 import { ImagesFileInput } from '@/components/react/inputs/ImagesFileInput'
 
 export function ProductFormFields({ getDefaultValues }: FormFieldsProps<Products>) {

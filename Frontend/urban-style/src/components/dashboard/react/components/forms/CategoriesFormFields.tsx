@@ -1,6 +1,6 @@
 import { TextAreaInput } from '@/components/react/inputs/TextAreaInput'
 import TextInput from '@/components/react/inputs/TextInput'
-import type { FormFieldsProps } from '../Sidebar'
+import type { FormFieldsProps } from '../FormSidebar'
 import type { Category } from '@/interface/category.interface'
 
 export function CategoriesFormFields({ getDefaultValues }: FormFieldsProps<Category>) {
