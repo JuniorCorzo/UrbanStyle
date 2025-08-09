@@ -12,7 +12,7 @@ const userKeys: (keyof UpdateUser)[] = ['id', 'email', 'name', 'phone'] as const
 
 export function usePersonalData() {
 	const user = useStore(userStore) ?? { id: '', name: '', email: '', phone: '' }
-	const { formState: userValues, updateValue } = useMapReducer<UpdateUser>(new Map())
+	const { formState: userValues, updateValue } = useMapReducer<UpdateUser>()
 	const [canSubmit, setCanSubmit] = useState(false)
 
 	const canReset = useMemo(() => {
