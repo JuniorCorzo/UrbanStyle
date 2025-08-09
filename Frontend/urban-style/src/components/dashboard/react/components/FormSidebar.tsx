@@ -12,9 +12,10 @@ export interface FormFieldsProps<T> {
 
 export function FormSidebar() {
 	const {
-		visible,
+		isVisible,
 		formType,
 		handleOpen,
+		handleClose,
 		handleSubmit,
 		title,
 		id,
@@ -27,12 +28,12 @@ export function FormSidebar() {
 		<aside
 			className={cn(
 				'bg-background border-border invisible fixed right-0 z-50 ml-5 h-full min-h-dvh w-full max-w-xl overflow-auto border-l-2 pb-10 transition-all duration-300',
-				visible ? 'visible' : '-right-full',
+				isVisible ? 'visible' : '-right-full',
 			)}
 		>
 			<div className="bg-accent/70 backdrop-blur-xs sticky top-0 z-[9999] flex items-center justify-between px-5 py-3">
 				<h2 className="text-text text-xl font-medium">{title}</h2>
-				<XMarkIcon onClick={handleOpen} className="size-7 cursor-pointer"></XMarkIcon>
+				<XMarkIcon onClick={handleClose} className="size-7 cursor-pointer"></XMarkIcon>
 			</div>
 			<div>
 				<form

@@ -1,4 +1,5 @@
 import type { OpenSidebarEvent } from '@/lib/utils/open-modal-event'
+import { AddressState } from '@/state/address.state'
 import { categoriesStore } from '@/state/categories.store'
 import { formStore } from '@/state/form.state'
 import { productStore } from '@/state/product.store'
@@ -6,13 +7,15 @@ import { useStore } from '@nanostores/react'
 import { useEffect, useState, type FormEvent } from 'react'
 
 export function useForm() {
-	const [visible, setVisible] = useState(false)
+	const [isVisible, setVisible] = useState(false)
 	const formState = useStore(formStore)
 	const [id, setId] = useState('')
+
 	const products = useStore(productStore)
 	const categories = useStore(categoriesStore)
 
-	const handleOpen = () => setVisible((prev) => !prev)
+	const handleOpen = () => setVisible(true)
+	const handleClose = () => setVisible(false)
 
 	const handleFormConfig = (event: CustomEvent<OpenSidebarEvent>) => {
 		const { id: idDocument } = event.detail
@@ -23,6 +26,7 @@ export function useForm() {
 
 	const getProductValues = () => products.find(({ id: productId }) => productId === id)
 	const getCategoryValues = () => categories.find(({ id: categoryId }) => categoryId === id)
+	const getAddressValues = () => AddressState.getAddressById(id).get()
 
 	useEffect(() => {
 		window.addEventListener('show-sidebar', (e: Event) => {
@@ -35,6 +39,8 @@ export function useForm() {
 			)
 		}
 	}, [])
+
+	useEffect(() => formStore.setKey('isVisible', isVisible), [isVisible])
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
@@ -55,8 +61,10 @@ export function useForm() {
 		formType: formState?.formType,
 		getProductValues,
 		getCategoryValues,
-		visible,
+		getAddressValues,
+		isVisible,
 		handleOpen,
+		handleClose,
 		handleSubmit,
 	}
 }
