@@ -1,4 +1,4 @@
-import { useReducer } from 'react'
+import { useCallback, useReducer } from 'react'
 
 export type ActionsType = 'UPDATE_VALUE'
 
@@ -21,16 +21,15 @@ export const reducer = <T>(state: Payload<T>[], actions: Actions<T>) => {
 			const index = state.findIndex((state) => state.key === key)
 			if (index === -1) return [...state, { key, value }]
 
-			state[index].value = value
-			return state
+			return state.map((item, i) => (index === i ? { ...item, value } : item))
 		}
 		default:
 			return state
 	}
 }
 
-export const useMapReducer = <T>() => {
-	const [formState, dispatch] = useReducer(reducer<T>, [])
+export const useMapReducer = <T>(initialize: Payload<T>[] = []) => {
+	const [formState, dispatch] = useReducer(reducer<T>, initialize)
 
 	const updateValue = (key: keyof T, value: string) => {
 		dispatch({
@@ -39,10 +38,18 @@ export const useMapReducer = <T>() => {
 		})
 	}
 
-	const getValueByKey = (key: keyof T) => formState.find((state) => state.key === key)?.value
+	console.log(formState)
+	const getValueByKey = (key: keyof T) => {
+		const index = formState.findIndex((state) => state.key === key)
+		if (index === -1) return
+		const stateValue = formState[index].value
+		console.log(stateValue)
+		return stateValue
+	}
 
 	return {
 		formState: {
+			getAll: () => formState,
 			get: getValueByKey,
 		},
 		updateValue,

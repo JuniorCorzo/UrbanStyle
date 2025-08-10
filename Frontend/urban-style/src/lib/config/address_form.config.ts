@@ -12,6 +12,7 @@ export function AddressForm(sendRequest: SendForm) {
 	}
 
 	formStore.set({
+		isVisible: false,
 		formType: 'address',
 		title: 'Dirección',
 		sendData: sendRequest,

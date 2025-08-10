@@ -19,7 +19,7 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 	const departmentSelectRef = useRef<SelectRefProps>(null)
 	const municipalitySelectRef = useRef<SelectRefProps>(null)
 
-	const { formState: addressFieldsState, updateValue } = useMapReducer<AddressKey>()
+	const { formState: addressFieldsState, updateValue } = useMapReducer<AddressKey>([])
 	const { departments, setDepartmentCode } = useLocationApi()
 
 	const user = useStore(userStore)
@@ -33,7 +33,7 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 				updateValue(key, defaultValue[key])
 			}
 		})
-	}, [defaultValue, addressKeys, updateValue])
+	}, [defaultValue, addressKeys])
 
 	const setupDepartment = useCallback(() => {
 		if (!defaultValue?.state || !departments || !departmentSelectRef.current?.setSelectedItem)
@@ -59,13 +59,6 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 		})
 	}, [defaultValue?.city])
 
-	const resetAddressFields = useCallback(() => {
-		console.log('reset Field', defaultValue)
-		addressKeys.forEach((key) => {
-			updateValue(key, '')
-		})
-	}, [addressKeys, updateValue, defaultValue])
-
 	const resetDepartment = useCallback(() => {
 		if (departmentSelectRef.current?.setSelectedItem) {
 			departmentSelectRef.current.setSelectedItem(null)
@@ -80,15 +73,13 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 	}, [])
 
 	const resetAllFields = useCallback(() => {
-		resetAddressFields()
 		resetDepartment()
 		resetMunicipality()
-	}, [resetAddressFields, resetDepartment, resetMunicipality])
+	}, [resetDepartment, resetMunicipality])
 
 	useEffect(() => {
 		if (!defaultValue || !departments) return
 
-		console.log('Setting up form with defaultValue:', defaultValue)
 		updateAddressFields()
 		setupDepartment()
 		setupMunicipality()
@@ -105,6 +96,7 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 			}
 			const addressValid = AddressScheme.safeParse(addressData)
 			if (addressValid.error) showErrorOnlyField(addressValid.error, key)
+			if (addressValid.success) formStore.setKey('sendData', sendRequest)
 		},
 		[addressFieldsState],
 	)
@@ -132,7 +124,11 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 		}
 
 		if (id) {
-			console.log(addressFieldsState.get('city'))
+			const addressUpdate = AddressAdapter.toAddressUpdate(address as AddressValidate, user.id, id)
+			AddressService.updateAddress(addressUpdate).then((address) => {
+				AddressStore.set([...AddressStore.get(), address])
+				console.log('address updated')
+			})
 			return
 		}
 
@@ -144,6 +140,8 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 			AddressState.updateAddressStore()
 		})
 	}
+
+	// useEffect(() => formStore.setKey('sendData', sendRequest), [addressFieldsState])
 
 	useEffect(() => {
 		if (isFormVisible) return
