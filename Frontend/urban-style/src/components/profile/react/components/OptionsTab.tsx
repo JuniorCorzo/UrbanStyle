@@ -5,7 +5,7 @@ export function OptionsTab() {
 	const { selectedItem, handleClick } = useOptionsTab()
 
 	return (
-		<div className="inline-flex w-full items-center justify-center">
+		<div className="inline-flex w-full items-center justify-center px-5">
 			<div
 				className="bg-foreground border-border shadow-border inline-flex w-fit gap-5 rounded-md border px-5 py-2 shadow-md"
 				onClick={handleClick}
@@ -23,4 +23,3 @@ export function OptionsTab() {
 		</div>
 	)
 }
-export { Options }

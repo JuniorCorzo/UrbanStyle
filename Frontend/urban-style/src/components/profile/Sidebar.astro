@@ -11,18 +11,18 @@ const pathname = Astro.url.pathname
 
 <aside
 	id="container_sidebar"
-	class="w-full max-w-52 transition-all duration-500 md:max-w-xs"
+	class="w-full max-w-52 transition-all duration-500 max-sm:max-w-0 md:max-w-xs"
 	slot="sidebar"
 >
 	<nav
 		id="menu_sidebar"
-		class="bg-foreground border-border fixed z-10 flex h-screen w-full max-w-52 flex-col items-center gap-5 border-r px-6 pt-12 transition-all duration-500 md:max-w-xs"
+		class="bg-foreground border-border fixed z-10 flex h-screen w-full max-w-52 flex-col items-center gap-5 border-r px-6 pt-12 transition-all duration-500 max-sm:-translate-x-full md:max-w-xs"
 	>
 		<span
 			id="show_sidebar"
 			class="bg-foreground border-border absolute left-full top-5 z-20 cursor-pointer rounded-r-md border border-l-0 px-1 py-3"
 		>
-			<ArrowRightStartOnRectangleIcon className="size-5 rotate-180" />
+			<ArrowRightStartOnRectangleIcon className="xs:rotate-180 size-5" />
 		</span>
 		<MenuItem label="Mi perfil" href="/profile" highlight={pathname === '/profile'}>
 			<UserIcon className="size-5" />
@@ -36,20 +36,46 @@ const pathname = Astro.url.pathname
 <script>
 	import { $ } from '@/lib/dom-selector'
 
-	document.addEventListener('astro:page-load', () => {
+	let isMobile = window.innerWidth < 640
+
+	const handleMobileToggle = ($menuSidebar: HTMLElement, $showButton: HTMLElement) => {
+		$menuSidebar.classList.toggle('max-sm:-translate-x-full')
+		$showButton.querySelector('svg')?.classList.toggle('rotate-180')
+	}
+
+	const handleDesktopToggle = ($menuSidebar: HTMLElement, $containerSidebar: HTMLElement) => {
+		$menuSidebar?.classList.toggle('-translate-x-full')
+		$containerSidebar.classList.toggle('max-w-0')
+		$containerSidebar.classList.toggle('max-w-52')
+		$containerSidebar.classList.toggle('md:max-w-xs')
+	}
+
+	const handleSidebarToggle = () => {
+		const $menuSidebar = $<HTMLElement>('#menu_sidebar')
+		const $containerSidebar = $<HTMLElement>('#container_sidebar')
 		const $showButton = $('#show_sidebar')
+		if (!$showButton || !$menuSidebar || !$containerSidebar) return
 
-		$showButton?.addEventListener('click', () => {
-			const $menuSidebar = $<HTMLElement>('#menu_sidebar')
-			const $containerSidebar = $<HTMLElement>('#container_sidebar')
-
-			$menuSidebar?.classList.toggle('right-full')
-			$menuSidebar?.querySelectorAll('a')?.forEach((element) => element.classList.toggle('hidden'))
-			$containerSidebar?.classList.toggle('max-w-0')
-			$containerSidebar?.classList.toggle('md:max-w-xs')
-			$containerSidebar?.classList.toggle('max-w-52')
+		$showButton.addEventListener('click', () => {
 			$containerSidebar?.classList.toggle('overflow-visible')
-			$showButton.querySelector('svg')?.classList.toggle('rotate-180')
+			$showButton.querySelector('svg')?.classList.toggle('xs:rotate-180')
+
+			if (isMobile) {
+				handleMobileToggle($menuSidebar, $showButton)
+				return
+			}
+
+			handleDesktopToggle($menuSidebar, $containerSidebar)
 		})
-	})
+	}
+
+	const handleResize = () =>
+		window.addEventListener('resize', () => (isMobile = window.innerWidth < 440))
+
+	const initializeEvents = () => {
+		handleSidebarToggle()
+		handleResize()
+	}
+
+	document.addEventListener('astro:page-load', initializeEvents)
 </script>

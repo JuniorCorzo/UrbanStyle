@@ -2,7 +2,7 @@ import { useSearchParam } from '@/components/react/hooks/useSearchParam'
 import { useEffect, useState, type MouseEvent } from 'react'
 
 export const OPTIONS_TAB = {
-	PERSONAL_DATA: 'Datos personales',
+	PERSONAL_DATA: 'Perfil',
 	SECURITY: 'Seguridad',
 	DIRECTIONS: 'Direcciones',
 } as const
