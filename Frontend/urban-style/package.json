@@ -24,6 +24,7 @@
 		"bytes": "^3.1.2",
 		"cally": "^0.8.0",
 		"clsx": "^2.1.1",
+		"cropperjs": "^2.0.1",
 		"downshift": "^9.0.9",
 		"jwt-decode": "^4.0.0",
 		"lightweight-charts": "^5.0.6",

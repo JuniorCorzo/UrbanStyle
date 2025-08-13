@@ -57,6 +57,24 @@ export class UserService {
 			})
 	}
 
+	static async changeAvatar(userId: string, avatarBase64: string) {
+		return axios
+			.patch<Response>(
+				`${PUBLIC_API_URL}/users/change-avatar?user-id=${userId}`,
+				{
+					userId,
+					avatar: avatarBase64,
+				},
+				{
+					withCredentials: true,
+				},
+			)
+			.then((response) => {
+				if (response.status !== 200) throw Error()
+				return response.data
+			})
+	}
+
 	static async changePassword(userId: string, oldPassword: string, newPassword: string) {
 		return await axios
 			.patch<Response>(
@@ -68,5 +86,13 @@ export class UserService {
 				if (response.status !== 200) throw Error('Unexpected error')
 				return response.data
 			})
+	}
+
+	static async deleteAvatar(userId: string) {
+		return await axios
+			.delete(`${PUBLIC_API_URL}/users/delete-avatar?user-id=${userId}`, {
+				withCredentials: true,
+			})
+			.then((response) => response.data)
 	}
 }
