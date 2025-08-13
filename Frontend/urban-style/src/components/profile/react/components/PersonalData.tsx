@@ -9,7 +9,7 @@ export function PersonalData() {
 
 	return (
 		<>
-			<div className="flex h-full flex-col gap-3 px-6">
+			<div className="flex h-full flex-col gap-3 px-5 md:px-11">
 				<span className="text-lg font-medium tracking-wide">Editar perfil</span>
 				<div className="grid h-fit grid-cols-1 gap-5 md:grid-cols-2">
 					<TextInput

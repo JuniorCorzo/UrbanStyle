@@ -3,9 +3,7 @@ import { useRef, type ChangeEvent } from 'react'
 import { FiltersDropdown, type FilterDropdownRefProps } from './filters/FiltersDropdown'
 import { FiltersButton } from './FiltersButton'
 import { useStore } from '@nanostores/react'
-import { OrderFilterByStatus } from '@/components/orders/react/components/OrderFilterByStatus'
 import { Button } from '@/components/react/Button'
-import { selectMediator } from '@/lib/utils/select-mediator'
 import { dispatchShowSidebar } from '@/lib/utils/open-modal-event'
 import { PlusCircleIcon } from '@heroicons/react/24/outline'
 
@@ -26,9 +24,9 @@ export function TableFilters() {
 
 	return (
 		<div className="flex w-full flex-col gap-y-3 sm:flex-row">
-			<div className="lg:min-w-3xl flex w-full items-center">
-				{filterComponents?.right && filterComponents.right()}
-			</div>
+			{filterComponents?.right && (
+				<div className="lg:min-w-3xl flex w-full items-center">{filterComponents.right()}</div>
+			)}
 			<div className="relative flex w-full items-center gap-2 sm:justify-end">
 				<div className="flex min-h-10 flex-col gap-2 sm:flex-row sm:justify-end" title="Filtros">
 					{canSearch && (

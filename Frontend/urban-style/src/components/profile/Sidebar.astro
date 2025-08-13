@@ -1,81 +1,81 @@
 ---
 import MenuItem from '@/components/profile/MenuItem.astro'
-import {
-	ArrowRightStartOnRectangleIcon,
-	QueueListIcon,
-	UserIcon,
-} from '@heroicons/react/24/outline'
+import { ArchiveBoxIcon, ChevronDoubleRightIcon, UserIcon } from '@heroicons/react/24/outline'
 
 const pathname = Astro.url.pathname
 ---
 
 <aside
 	id="container_sidebar"
-	class="w-full max-w-52 transition-all duration-500 max-sm:max-w-0 md:max-w-xs"
-	slot="sidebar"
+	class="@container group relative w-full max-w-12 shrink-0 transition-all duration-500 aria-expanded:max-w-sm aria-expanded:max-md:max-w-12 aria-expanded:md:max-w-xs"
+	aria-expanded="true"
 >
 	<nav
 		id="menu_sidebar"
-		class="bg-foreground border-border fixed z-10 flex h-screen w-full max-w-52 flex-col items-center gap-5 border-r px-6 pt-12 transition-all duration-500 max-sm:-translate-x-full md:max-w-xs"
+		class="bg-foreground border-border fixed z-10 flex h-full w-full shrink-0 flex-col items-center gap-5 border-r px-2 pt-4 transition-all duration-500 group-aria-[expanded='false']:max-w-12 group-aria-[expanded='true']:px-6 group-aria-[expanded='true']:max-md:max-w-52 md:sticky md:w-full group-aria-[expanded='true']:md:max-w-xs"
+		aria-label="Navegación del perfil"
+		role="menu"
 	>
-		<span
-			id="show_sidebar"
-			class="bg-foreground border-border absolute left-full top-5 z-20 cursor-pointer rounded-r-md border border-l-0 px-1 py-3"
-		>
-			<ArrowRightStartOnRectangleIcon className="xs:rotate-180 size-5" />
-		</span>
 		<MenuItem label="Mi perfil" href="/profile" highlight={pathname === '/profile'}>
 			<UserIcon className="size-5" />
 		</MenuItem>
 		<MenuItem label="Mis pedidos" href="/profile/orders" highlight={pathname === '/profile/orders'}>
-			<QueueListIcon className="size-5" />
+			<ArchiveBoxIcon className="size-6" />
 		</MenuItem>
 	</nav>
+	<button
+		id="toggle_sidebar"
+		class="border-border fixed bottom-0 z-20 inline-flex w-full min-w-0 max-w-12 shrink-0 cursor-pointer items-center justify-center border-t p-2 text-center transition-all duration-500 group-aria-[expanded='true']:max-w-xs group-aria-[expanded='true']:max-md:max-w-52 md:absolute"
+		aria-controls="menu_sidebar"
+		aria-expanded="true"
+	>
+		<span class="w-full text-center group-aria-[expanded='false']:hidden">Ocultar</span>
+		<ChevronDoubleRightIcon className="float-end size-8 group-aria-[expanded='true']:rotate-180" />
+	</button>
 </aside>
 
 <script>
 	import { $ } from '@/lib/dom-selector'
-
-	let isMobile = window.innerWidth < 640
-
-	const handleMobileToggle = ($menuSidebar: HTMLElement, $showButton: HTMLElement) => {
-		$menuSidebar.classList.toggle('max-sm:-translate-x-full')
-		$showButton.querySelector('svg')?.classList.toggle('rotate-180')
-	}
-
-	const handleDesktopToggle = ($menuSidebar: HTMLElement, $containerSidebar: HTMLElement) => {
-		$menuSidebar?.classList.toggle('-translate-x-full')
-		$containerSidebar.classList.toggle('max-w-0')
-		$containerSidebar.classList.toggle('max-w-52')
-		$containerSidebar.classList.toggle('md:max-w-xs')
-	}
+	import { detectMobile } from '@/lib/utils/is_mobile'
 
 	const handleSidebarToggle = () => {
-		const $menuSidebar = $<HTMLElement>('#menu_sidebar')
 		const $containerSidebar = $<HTMLElement>('#container_sidebar')
-		const $showButton = $('#show_sidebar')
-		if (!$showButton || !$menuSidebar || !$containerSidebar) return
+		const $toggleButton = $<HTMLButtonElement>('#toggle_sidebar')
+		if (!$toggleButton || !$containerSidebar) return
 
-		$showButton.addEventListener('click', () => {
-			$containerSidebar?.classList.toggle('overflow-visible')
-			$showButton.querySelector('svg')?.classList.toggle('xs:rotate-180')
+		$toggleButton.addEventListener('click', () => {
+			const isExpanded = $containerSidebar.ariaExpanded === 'true'
+			const newIsExpanded = String(!isExpanded)
 
-			if (isMobile) {
-				handleMobileToggle($menuSidebar, $showButton)
-				return
-			}
-
-			handleDesktopToggle($menuSidebar, $containerSidebar)
+			$containerSidebar.ariaExpanded = newIsExpanded
+			$toggleButton.ariaExpanded = newIsExpanded
 		})
 	}
 
-	const handleResize = () =>
-		window.addEventListener('resize', () => (isMobile = window.innerWidth < 440))
+	const handleResize = () => window.addEventListener('resize', setupMobileSidebar)
 
-	const initializeEvents = () => {
+	const setupMobileSidebar = () => {
+		const isMobile = detectMobile()
+		const $containerSidebar = $<HTMLElement>('#container_sidebar')
+		if (!$containerSidebar) {
+			console.error('Not found DOMElement')
+			return
+		}
+
+		if (isMobile) {
+			$containerSidebar.ariaExpanded = 'false'
+		}
+	}
+
+	const setupSidebar = () => {
+		setupEventsListeners()
+		setupMobileSidebar()
+	}
+
+	const setupEventsListeners = () => {
 		handleSidebarToggle()
 		handleResize()
 	}
 
-	document.addEventListener('astro:page-load', initializeEvents)
+	document.addEventListener('astro:page-load', setupSidebar)
 </script>

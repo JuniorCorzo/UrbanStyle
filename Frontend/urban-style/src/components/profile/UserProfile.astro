@@ -14,7 +14,7 @@ const { name, email, phone, avatar } = Astro.props
 ---
 
 <article id="profile_container" class="@container px-8">
-	<div class="bg-foreground @max-xl:flex-col flex w-full items-center gap-5 rounded-md p-5">
+	<div class="@max-xl:flex-col flex w-full items-center gap-5 rounded-md p-5">
 		<div class="rounded-lg">
 			{avatar && <UserAvatar avatar={avatar} name={name} />}
 			{!avatar && <UserIcon className="size-52" />}

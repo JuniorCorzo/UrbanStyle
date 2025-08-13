@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
-import { OptionsTab, type Options } from './OptionsTab'
+import { OptionsTab } from './OptionsTab'
 import { PersonalData } from './PersonalData'
 import { UserSecurity } from './UserSecurity'
 import { UserAddress } from './UserAddress'
+import type { Options } from '../hooks/useOptionsTab'
 
 export function UserOptions() {
 	const [option, setOption] = useState<Options>()
@@ -27,8 +28,10 @@ export function UserOptions() {
 
 	console.log(option)
 	return (
-		<article className="flex h-full w-full grow flex-col gap-5">
-			<OptionsTab />
+		<article className="flex h-full w-full max-w-full grow flex-col gap-5">
+			<div className="px-5">
+				<OptionsTab />
+			</div>
 			{optionsMap.get(option ?? 'PERSONAL_DATA')}
 		</article>
 	)

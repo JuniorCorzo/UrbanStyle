@@ -35,6 +35,10 @@ export class OrderService {
 	}
 
 	static async getOrderByUserId(userId: string, token: string): Promise<Order[]> {
+		if (!userId) {
+			console.error('User id not found')
+			return []
+		}
 		return (
 			await axios
 				.get<Response<Order>>(`${PUBLIC_API_URL}/orders/by?user-id=${userId}`, {

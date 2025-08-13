@@ -10,11 +10,11 @@ export function UserAddress() {
 	const { tableConfig } = useTable()
 
 	return (
-		<div className="flex flex-col gap-3 px-8">
-			<span className="text-right text-lg font-medium tracking-wide">{'Direcciones'}</span>
+		<div className="flex min-w-0 flex-col gap-3 overflow-auto px-5 md:px-11">
+			<span className="text-lg font-medium tracking-wide">{'Direcciones'}</span>
 			<TableFilters />
-			<div className="border-border shadow-border border shadow-sm">
-				<div className="overflow-auto">
+			<div className="border-border shadow-border min-w-0 overflow-auto border shadow-sm">
+				<div className="overflow-x-auto">
 					<Table tableConfig={tableConfig}></Table>
 				</div>
 				<TablePagination tableConfig={tableConfig}></TablePagination>

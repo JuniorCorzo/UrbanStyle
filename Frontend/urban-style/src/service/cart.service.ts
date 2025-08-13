@@ -18,7 +18,7 @@ export function CartService() {
 				return (response.data as Response<Cart>).data[0]
 			})
 			.catch((error) => {
-				console.error('Error fetching cart user by ID:', error)
+				// console.error('Error fetching cart user by ID:', error)
 			})
 
 		return resultRequest

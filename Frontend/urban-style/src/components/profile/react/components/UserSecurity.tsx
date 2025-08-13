@@ -10,7 +10,7 @@ export function UserSecurity() {
 
 	return (
 		<>
-			<div className="flex h-full flex-col gap-3 px-6">
+			<div className="flex h-full flex-col gap-3 px-5 md:px-11">
 				<span className="text-lg font-medium tracking-wide">Cambiar contraseña</span>
 				<div className="grid items-end gap-3 md:grid-cols-2">
 					<span className="max-xs:flex-col xs:items-end col-span-full flex gap-x-5 gap-y-3">
