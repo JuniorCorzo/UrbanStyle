@@ -68,14 +68,14 @@ export function usePersonalData() {
 		debounceValid(key, value)
 	}
 
-	console.log(canSubmit)
-
 	useEffect(() => {
-		userStore.listen((user) => {
-			if (user) resetUser(user)
-		})
-	}, [])
+		if (!user) {
+			console.error('User no found')
+			return
+		}
 
+		userKeys.map((key) => updateValue(key, user[key]))
+	}, [user])
 	return {
 		user,
 		userValues,

@@ -13,7 +13,7 @@ export function ActionsFooter({ canSubmit, canReset, resetFn, sendFn }: ActionFo
 		<div
 			className={cn(
 				'bg-foreground/90 bottom-0 flex w-full gap-5 px-5 py-2 backdrop-blur-lg',
-				canSubmit && canReset ? 'justify-between' : 'justify-end',
+				canReset ? 'justify-between' : 'justify-end',
 			)}
 		>
 			<Button

@@ -11,7 +11,8 @@ export function UserAddress() {
 
 	return (
 		<div className="flex flex-col gap-3 px-8">
-			<TableFilters></TableFilters>
+			<span className="text-right text-lg font-medium tracking-wide">{'Direcciones'}</span>
+			<TableFilters />
 			<div className="border-border shadow-border border shadow-sm">
 				<div className="overflow-auto">
 					<Table tableConfig={tableConfig}></Table>

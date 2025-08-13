@@ -6,7 +6,7 @@ export function PersonalData() {
 	const { user, userValues, handleChange, reset, canSubmit, canReset, sendRequest } =
 		usePersonalData()
 	const { name, email, phone } = user ?? {}
-	console.log(canReset)
+
 	return (
 		<>
 			<div className="flex h-full flex-col gap-3 px-6">
