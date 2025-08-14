@@ -77,6 +77,13 @@ public class UserService {
         }
     }
 
+
+    /**
+     * Send avatar at the storage
+     *
+     * @param avatar avatar to send
+     * @return avatar id storage
+     * */
     @Nullable
     private String sendAvatarToStorage(String avatar) {
         if (avatar == null || avatar.isBlank()) {
@@ -111,8 +118,9 @@ public class UserService {
 
     public ResponseDTO<Object> changeAvatar(String userId, String avatar) {
         final String avatarIdStorage = this.sendAvatarToStorage(avatar);
-        this.userRepository.insertNewAvatar(userId, avatarIdStorage);
+        this.deleteAvatar(userId);
 
+        this.userRepository.insertNewAvatar(userId, avatarIdStorage);
         return new ResponseDTO<>(
                 HttpStatus.OK,
                 "Avatar updated"
@@ -130,13 +138,14 @@ public class UserService {
     }
 
     public ResponseDTO<Object> deleteAvatar(String userId) {
-        final List<String> avatarIdStorage = this.getUserById(userId).data()
+        final List<String> avatarIdStorage = this.userRepository
+                .findById(userId)
+                .map(UserEntity::getAvatar)
                 .stream()
-                .map(UserDTO::avatar)
                 .toList();
 
         this.imageStorageService.deleteImagesFromStorage(avatarIdStorage);
-        this.userRepository.insertNewAvatar(userId, null);
+        this.userRepository.insertNewAvatar(userId, "default_profile.webp");
 
         return new ResponseDTO<>(
                 HttpStatus.OK,

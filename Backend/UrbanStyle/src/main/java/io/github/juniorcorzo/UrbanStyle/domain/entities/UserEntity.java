@@ -23,8 +23,7 @@ public class UserEntity implements GrantedAuthority {
     @Indexed(unique = true)
     private String email;
     private String password;
-    @Indexed(unique = true)
-    private String avatar;
+    private String avatar = "default_profile.webp";
     private Roles role;
     private String phone;
     private LocalDateTime createdAt = LocalDateTime.now();

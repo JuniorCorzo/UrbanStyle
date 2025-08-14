@@ -25,7 +25,7 @@ public interface UserRepository extends MongoRepository<UserEntity, String> {
 
 
     @Query("{'_id': ?#{[0].id} }")
-    @Update(value = "{ '$set': { 'name': ?#{[0].name}, 'email': ?#{[0].email}, 'phone': ?#{[0].phone}, 'updatedAt': 'ISODate()' } }" )
+    @Update(value = "{ '$set': { 'name': ?#{[0].name}, 'email': ?#{[0].email}, 'phone': ?#{[0].phone}, 'updatedAt': ?#{[0].updatedAt} } }" )
     void updateUser(UserEntity user);
 
     @Query("{ '_id': ?0 }")
