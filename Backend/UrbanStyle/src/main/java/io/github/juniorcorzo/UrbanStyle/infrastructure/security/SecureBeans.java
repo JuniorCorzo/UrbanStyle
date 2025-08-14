@@ -55,8 +55,7 @@ public class SecureBeans {
     @Bean
     public AuthenticationManager authenticationManager(PasswordEncoder passwordEncoder) {
         log.info("Creating AuthenticationManager bean");
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(this.customerUserDetailsService);
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(this.customerUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder);
 
         return new ProviderManager(provider);
