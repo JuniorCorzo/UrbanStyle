@@ -4,6 +4,8 @@ import io.github.juniorcorzo.UrbanStyle.domain.dtos.CustomerDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderHistory;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderWithCustomerDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.Query;
 import org.springframework.data.mongodb.repository.Update;
@@ -15,7 +17,7 @@ import java.util.List;
 @Repository
 public interface OrderRepository extends ListCrudRepository<OrdersEntity, String> {
     @Query("{ 'userId': ?0 }")
-    List<OrdersEntity> findAllOrdersByUserId(String userId);
+    Page<OrdersEntity> findAllOrdersByUserId(String userId, Pageable pageable);
 
     @Aggregation(pipeline = {
             "{ $lookup: { from: 'users', localField: 'userId', foreignField: '_id', as: 'user' } }",

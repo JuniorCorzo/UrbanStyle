@@ -5,13 +5,15 @@ import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatCo
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.CustomerDTO;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderWithCustomerDTO;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.ReportSalesDTO;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.SalesRecord;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.OrdersSaveDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.OrdersResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,7 @@ public class OrderController {
     ResponseDTO<OrderWithCustomerDTO> getAllOrderWithCustomer() {
         return this.orderService.getAllOrdersWithCustomer();
     }
+
     @GetMapping("/customers")
     @PreAuthorize("hasRole('ADMIN')")
     ResponseDTO<CustomerDTO> getAllCustomers() {
@@ -42,8 +45,13 @@ public class OrderController {
 
     @GetMapping("/by")
     @PreAuthorize("hasRole('USER')")
-    public ResponseDTO<OrdersResponseDTO> getOrdersByUserId(@IdFormatConstraint @RequestParam("user-id") String userId) {
-        return this.orderService.getOrdersByUserId(userId);
+    public ResponseDTO<Page<OrdersResponseDTO>> getOrdersByUserId(
+            @IdFormatConstraint
+            @RequestParam("user-id")
+            String userId,
+            Pageable pageable
+    ) {
+        return this.orderService.getOrdersByUserId(userId, pageable);
     }
 
     @PostMapping("/create")

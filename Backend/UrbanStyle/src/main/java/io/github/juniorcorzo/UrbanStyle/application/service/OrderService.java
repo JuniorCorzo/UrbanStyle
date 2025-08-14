@@ -1,7 +1,10 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.application.exceptions.FailedChangeStatusInOrder;
-import io.github.juniorcorzo.UrbanStyle.domain.dtos.*;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.CustomerDTO;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderHistory;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.OrderWithCustomerDTO;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductSummary;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.OrdersEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.DocumentsName;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
@@ -14,6 +17,11 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.Res
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
+import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -38,15 +46,15 @@ public class OrderService {
     }
 
 
-    public ResponseDTO<OrdersResponseDTO> getOrdersByUserId(String userId) {
-        List<OrdersResponseDTO> ordersByUser = this.orderRepository.findAllOrdersByUserId(userId)
-                .stream()
-                .map(orderMapper::toDTO)
-                .toList();
+    public ResponseDTO<Page<OrdersResponseDTO>> getOrdersByUserId(String userId, Pageable pageable) {
+        Page<OrdersResponseDTO> ordersByUser = this.orderRepository
+                .findAllOrdersByUserId(userId, pageable)
+                .map(orderMapper::toDTO);
+
 
         return new ResponseDTO<>(
                 HttpStatus.OK,
-                ordersByUser,
+                List.of(ordersByUser),
                 "Orders retrieved successfully"
         );
     }
@@ -77,7 +85,7 @@ public class OrderService {
             orderEntity.setHistory(List.of(new OrderHistory(orderEntity.getStatus(), LocalDateTime.now())));
             OrdersEntity orderSaved = this.orderRepository.save(orderEntity);
 
-            removeCart(insertOrder.userId());
+            this.removeCart(insertOrder.userId());
             return new ResponseDTO<>(
                     HttpStatus.CREATED,
                     List.of(this.orderMapper.toDTO(orderSaved)),
