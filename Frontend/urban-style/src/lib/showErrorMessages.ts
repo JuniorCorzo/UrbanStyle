@@ -1,4 +1,4 @@
-import type { z } from 'zod'
+import { ZodError, type z, type ZodIssue } from 'zod'
 import { $ } from './dom-selector'
 
 declare global {
@@ -24,7 +24,6 @@ function createEventListener(id: string, $inputElement: HTMLInputElement) {
 	removeEventListener($inputElement)
 	$inputElement._clearErrorHandler = clearErrorMessage.bind(null, id, $inputElement)
 
-	console.log($inputElement._clearErrorHandler)
 	if ($inputElement instanceof HTMLDivElement) {
 		$inputElement.addEventListener('click', $inputElement._clearErrorHandler)
 		return
@@ -67,11 +66,28 @@ export function toggleErrorMessagesWithLabel(message: string, $spanElement: HTML
 	}
 }
 
-export const showError = (errors: z.ZodError) => {
-	errors.errors.forEach(({ message, path }) => {
-		const $errorElement = $<HTMLSpanElement>(`#${path[0]}_error`)
-		if ($errorElement) {
-			toggleErrorMessagesWithLabel(message, $errorElement)
-		}
-	})
+type ZodErrorOrIssue = z.ZodError | ZodIssue
+
+export const showError = (errors: ZodErrorOrIssue) => {
+	if (errors instanceof ZodError) {
+		errors.errors.forEach(({ message, path }) => {
+			const $errorElement = $<HTMLSpanElement>(`#${path[0]}_error`)
+			if ($errorElement) {
+				toggleErrorMessagesWithLabel(message, $errorElement)
+			}
+		})
+		return
+	}
+
+	const $errorElement = $<HTMLSpanElement>(`#${errors.path[0]}_error`)
+	if ($errorElement) {
+		toggleErrorMessagesWithLabel(errors.message, $errorElement)
+	}
+}
+
+export const showErrorOnlyField = <T>(error: ZodError, key: keyof T) => {
+	const errorPath = error.errors.find((err) => err.path.includes(key as string | number))
+	if (errorPath) {
+		showError(errorPath)
+	}
 }

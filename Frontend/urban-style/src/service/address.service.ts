@@ -31,8 +31,9 @@ export class AddressService {
 				if (response.status !== 200) throw Error()
 				return response.data
 			})
+			.catch(console.error)
 
-		return DepartmentAdapter.toDepartment(result)
+		return DepartmentAdapter.toDepartment(result as DepartmentDTOResponse)
 	}
 
 	static async getMunicipality(departmentCode: string) {
@@ -74,5 +75,16 @@ export class AddressService {
 					return response.data
 				})
 		).data[0]
+	}
+
+	static async deleteAddress(id: string) {
+		return await axios
+			.delete<Response>(`${PUBLIC_API_URL}/address/delete/${id}`, {
+				withCredentials: true,
+			})
+			.then((response) => {
+				if (response.status !== 200) throw Error(response.statusText)
+				return response.data
+			})
 	}
 }

@@ -1,4 +1,5 @@
 'use client'
+import { dispatchUrlChange } from '@/lib/utils/url-change-event'
 import { useEffect, useReducer, useState } from 'react'
 
 type actions = 'SET_NEW_SEARCH_PARAM' | 'RESET_URL'
@@ -24,13 +25,14 @@ function searchReducer(state: URL | undefined, action: SearchActions) {
 	}
 }
 
-export function useSearchParam(key: string = '') {
+export function useSearchParam() {
 	const [url, dispatch] = useReducer(searchReducer, undefined)
 
 	useEffect(() => dispatch({ type: 'RESET_URL', payload: { param: '', value: '' } }), [])
 
 	useEffect(() => {
-		history.pushState({}, '', url)
+		history.replaceState({}, '', url)
+		dispatchUrlChange()
 	}, [url])
 
 	const setSearchParam = (param: string, value: string) => {
@@ -44,7 +46,9 @@ export function useSearchParam(key: string = '') {
 	}
 
 	return {
+		url,
 		searchParam: url?.searchParams,
 		setSearchParam,
+		searchParamDispatch: dispatch,
 	}
 }

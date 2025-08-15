@@ -13,8 +13,11 @@ public interface UserMapper {
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "email", source = "email"),
             @Mapping(target = "password", source = "password"),
+            @Mapping(target = "avatar", source = "avatar"),
             @Mapping(target = "role", source = "role", defaultValue = "ROLE_USER"),
             @Mapping(target = "phone", source = "phone"),
+            @Mapping(target = "createdAt", ignore = true),
+            @Mapping(target = "updatedAt", ignore = true)
     })
     UserEntity toEntity(UserDTO userDto);
 
@@ -22,8 +25,11 @@ public interface UserMapper {
             @Mapping(target = "id", source = "id"),
             @Mapping(target = "name", source = "name"),
             @Mapping(target = "email", source = "email"),
+            @Mapping(target = "avatar", source = "avatar"),
             @Mapping(target = "role", source = "role"),
             @Mapping(target = "phone", source = "phone"),
+            @Mapping(target = "createdAt", source =  "createdAt"),
+            @Mapping(target = "updatedAt", source = "updatedAt")
     })
     UserDTO toDto(UserEntity userEntity);
 }

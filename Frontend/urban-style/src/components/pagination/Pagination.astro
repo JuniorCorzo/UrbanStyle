@@ -1,0 +1,114 @@
+---
+import type { Page } from '@/interface/response.interface'
+
+import PageButton from './PageButton.astro'
+import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/24/outline'
+
+interface Props {
+	page: Page
+}
+
+const { page } = Astro.props
+const pageNumber = page.number + 1
+const isFirst = pageNumber === 1
+const isLast = pageNumber === page.totalPages
+---
+
+<div
+	class="bg-foreground border-border flex w-full items-center justify-center gap-5 rounded-md border px-3 py-2"
+>
+	<PageButton
+		id="prev_button"
+		disabled={isFirst}
+		title="Anterior"
+		aria-label="Pagina anterior"
+		aria-disabled={isFirst}
+	>
+		<ChevronLeftIcon className="size-8" />
+	</PageButton>
+	<div class="inline-flex items-center gap-3">
+		<input
+			id="page_input"
+			class="border-crust focus:custom-ring bg-crust aspect-square size-10 rounded-lg border text-center text-lg text-slate-100 hover:scale-110"
+			type="number"
+			min="1"
+			max={page.totalPages}
+			value={pageNumber}
+		/>
+		<span class="text-xl font-medium">{`de ${page.totalPages}`}</span>
+	</div>
+	<PageButton
+		id="next_button"
+		disabled={isLast}
+		title="Siguiente"
+		aria-label="Siguiente pagina"
+		aria-disabled={isLast}
+	>
+		<ChevronRightIcon className="size-8" />
+	</PageButton>
+</div>
+
+<script>
+	import { $ } from '@/lib/dom-selector'
+
+	const SELECTORS = {
+		PAGE_INPUT: '#page_input',
+		NEXT_BUTTON: '#next_button',
+		PREV_BUTTON: '#prev_button',
+	} as const
+
+	const getPageSearchParam = () => new URLSearchParams(location.search).get('page') ?? '1'
+
+	const setPageSearchParam = (page: string) => {
+		const url = new URL(window.location.href)
+		url.searchParams.set('page', page)
+
+		history.pushState('', '', url)
+		location.reload()
+	}
+
+	const handleNextPage = () => {
+		const page = Number(getPageSearchParam()) + 1
+		setPageSearchParam(String(page))
+	}
+
+	const handlePageChange = (event: Event) => {
+		const target = event.target as HTMLInputElement
+		const value = Number(target.value) < 1 ? '1' : target.value
+
+		setPageSearchParam(value)
+	}
+
+	const handleInput = (event: Event) => {
+		const target = event.target as HTMLInputElement
+		let value = target.value.replace(/\D/g, '')
+
+		if (Number(value) > Number(target.max)) value = target.max
+
+		target.value = value
+	}
+
+	const handlePrevPage = () => {
+		const page = Number(getPageSearchParam()) - 1
+		setPageSearchParam(String(page))
+	}
+
+	const setupInitializersEvents = () => {
+		const $pageInput = $<HTMLInputElement>(SELECTORS.PAGE_INPUT)
+		const $nextButton = $<HTMLButtonElement>(SELECTORS.NEXT_BUTTON)
+		const $prevButton = $<HTMLButtonElement>(SELECTORS.PREV_BUTTON)
+
+		if (!$pageInput) {
+			console.error('Not found page input in DOM')
+			return
+		}
+
+		$pageInput.addEventListener('input', handleInput)
+		$pageInput.addEventListener('change', handlePageChange)
+
+		$nextButton?.addEventListener('click', handleNextPage)
+		$prevButton?.addEventListener('click', handlePrevPage)
+	}
+
+	document.addEventListener('astro:page-load', setupInitializersEvents)
+</script>

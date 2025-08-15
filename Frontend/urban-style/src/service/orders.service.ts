@@ -6,7 +6,7 @@ import type {
 	OrderStatus,
 	OrderWithCustomer,
 } from '@/interface/orders.interface'
-import type { Response } from '@/interface/response.interface'
+import type { Pagination, Response } from '@/interface/response.interface'
 import axios from 'axios'
 
 export class OrderService {
@@ -34,19 +34,32 @@ export class OrderService {
 		).data
 	}
 
-	static async getOrderByUserId(userId: string, token: string): Promise<Order[]> {
+	static async getOrderByUserId(
+		userId: string,
+		token: string,
+		page: number = 0,
+	): Promise<Pagination<Order[]> | undefined> {
+		if (!userId) {
+			console.error('User id not found')
+			return
+		}
+
 		return (
 			await axios
-				.get<Response<Order>>(`${PUBLIC_API_URL}/orders/by?user-id=${userId}`, {
-					headers: {
-						Authorization: `Bearer ${token}`,
+				.get<Response<Pagination<Order[]>>>(
+					`${PUBLIC_API_URL}/orders/by?user-id=${userId}&page=${page}&size=10&sort=orderDate,desc`,
+					{
+						headers: {
+							Authorization: `Bearer ${token}`,
+						},
 					},
-				})
+				)
 				.then((response) => {
 					if (response.status !== 200) throw Error('Error sending request')
 					return response.data
 				})
-		).data
+				.catch((error) => console.error(error))
+		)?.data[0]
 	}
 
 	static async createOrder(createOrder: CreateOrder): Promise<Order[]> {

@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@astrojs/node':
-        specifier: ^9.2.2
-        version: 9.2.2(astro@5.9.1(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3))
+        specifier: ^9.4.0
+        version: 9.4.0(astro@5.12.9(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3))
       '@astrojs/react':
         specifier: 4.3.0
         version: 4.3.0(@types/node@22.15.30)(@types/react-dom@19.1.6(@types/react@19.1.6))(@types/react@19.1.6)(jiti@2.4.2)(lightningcss@1.30.1)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -33,8 +33,8 @@ importers:
         specifier: ^19.1.2
         version: 19.1.6(@types/react@19.1.6)
       astro:
-        specifier: 5.9.1
-        version: 5.9.1(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3)
+        specifier: 5.12.9
+        version: 5.12.9(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3)
       axios:
         specifier: ^1.8.4
         version: 1.9.0
@@ -47,6 +47,9 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
+      cropperjs:
+        specifier: ^2.0.1
+        version: 2.0.1
       downshift:
         specifier: ^9.0.9
         version: 9.0.9(react@19.1.0)
@@ -78,6 +81,9 @@ importers:
       '@nanostores/logger':
         specifier: github:nanostores/logger
         version: https://codeload.github.com/nanostores/logger/tar.gz/e1acb11b1b98696a126d4fe4229f15e17467886d(nanostores@1.0.1)
+      '@nanostores/persistent':
+        specifier: github:nanostores/persistent
+        version: https://codeload.github.com/nanostores/persistent/tar.gz/b85a11f8ff4e587a0c9c394a8bae892c35d8b4b6(nanostores@1.0.1)
       '@tailwindcss/typography':
         specifier: ^0.5.16
         version: 0.5.16(tailwindcss@4.1.8)
@@ -124,14 +130,17 @@ packages:
   '@astrojs/compiler@2.12.1':
     resolution: {integrity: sha512-WDSyVIiz7sNcJcCJxJFITu6XjfGhJ50Z0auyaWsrM+xb07IlhBLFtQuDkNy0caVHWNcKTM2LISAaHhgkRqGAVg==}
 
-  '@astrojs/internal-helpers@0.6.1':
-    resolution: {integrity: sha512-l5Pqf6uZu31aG+3Lv8nl/3s4DbUzdlxTWDof4pEpto6GUJNhhCbelVi9dEyurOVyqaelwmS9oSyOWOENSfgo9A==}
+  '@astrojs/compiler@2.12.2':
+    resolution: {integrity: sha512-w2zfvhjNCkNMmMMOn5b0J8+OmUaBL1o40ipMvqcG6NRpdC+lKxmTi48DT8Xw0SzJ3AfmeFLB45zXZXtmbsjcgw==}
 
-  '@astrojs/markdown-remark@6.3.2':
-    resolution: {integrity: sha512-bO35JbWpVvyKRl7cmSJD822e8YA8ThR/YbUsciWNA7yTcqpIAL2hJDToWP5KcZBWxGT6IOdOkHSXARSNZc4l/Q==}
+  '@astrojs/internal-helpers@0.7.1':
+    resolution: {integrity: sha512-7dwEVigz9vUWDw3nRwLQ/yH/xYovlUA0ZD86xoeKEBmkz9O6iELG1yri67PgAPW6VLL/xInA4t7H0CK6VmtkKQ==}
 
-  '@astrojs/node@9.2.2':
-    resolution: {integrity: sha512-PtLPuuojmcl9O3CEvXqL/D+wB4x5DlbrGOvP0MeTAh/VfKFprYAzgw1+45xsnTO+QvPWb26l1cT+ZQvvohmvMw==}
+  '@astrojs/markdown-remark@6.3.5':
+    resolution: {integrity: sha512-MiR92CkE2BcyWf3b86cBBw/1dKiOH0qhLgXH2OXA6cScrrmmks1Rr4Tl0p/lFpvmgQQrP54Pd1uidJfmxGrpWQ==}
+
+  '@astrojs/node@9.4.0':
+    resolution: {integrity: sha512-Gxs0iVUvOmQmK+H1DBoabcgvdSDg277SwbujRv2cUBlnpcOTJQDFRhRvyJ7G+Zkd06/jhRphsTTmmrBY0PqI4g==}
     peerDependencies:
       astro: ^5.3.0
 
@@ -237,6 +246,39 @@ packages:
 
   '@capsizecss/unpack@2.4.0':
     resolution: {integrity: sha512-GrSU71meACqcmIUxPYOJvGKF0yryjN/L1aCuE9DViCTJI7bfkjgYDPD1zbNDcINJwSSP6UaBZY9GAbYDO7re0Q==}
+
+  '@cropper/element-canvas@2.0.1':
+    resolution: {integrity: sha512-OKxq/O0HL9W2JegOsc2zh1NRpERZcLM5+M8aQ/eXdmMcfi1lzosPftag3Irp6pTsVpwV6B6ypIxKESzJ4ci9Fw==}
+
+  '@cropper/element-crosshair@2.0.1':
+    resolution: {integrity: sha512-bS5msU9cTU/jf1/kDw+QJmEM9/rw8IgOdpolR85iMVUCR8sRcLa0wgom42MBHcpBYB6hvL5YfiOeXZ7lHIYMpw==}
+
+  '@cropper/element-grid@2.0.1':
+    resolution: {integrity: sha512-ayqCvYQJ+GVT31HhFpttzHabW1T/LsIwLJY5PLTMG0cEZLw/E8ihg8mxctjZbo852D7oEePbz6/2SeuCb1018Q==}
+
+  '@cropper/element-handle@2.0.1':
+    resolution: {integrity: sha512-fdifyyPIaR9S2eQ7qPHuM8fX8uToAfBsi8vQlR9EM+oJkDNil0uO4rWyArLWEtlr0/q7U0OvsufcuJ7ffqfmpg==}
+
+  '@cropper/element-image@2.0.1':
+    resolution: {integrity: sha512-gPj5Sl2T8Cno198Cz3F3TDfcYoALW3yJ3fV6PHXmhMnX8sBkL7J441do7Vwkg0mEd2CogCtTLAf+p7ljdV0kgA==}
+
+  '@cropper/element-selection@2.0.1':
+    resolution: {integrity: sha512-atv+Aeq2N2eWawelIRPGh1kYFdNrpb0QkUPPheGxz1ImfxpLdcHO9gb9T5noQijizUW2G0pNvts4ZaITQ0I71Q==}
+
+  '@cropper/element-shade@2.0.1':
+    resolution: {integrity: sha512-YIYgJ690NdFQ6wJLRFh/EySNVxGFKArncQ4FrsJ3yHU+ShgtOKz4FpjFLpqJRJB9swoVbD3WKTimGyzXrwjZrQ==}
+
+  '@cropper/element-viewer@2.0.1':
+    resolution: {integrity: sha512-HDj25l08pWi/AO6El/OqfQHBpBC4Lh5NEnQN1SOldsmxEwt27Ubv6ndDsF8LkTK7XPwjjZRpyQPyfig4w8L2JQ==}
+
+  '@cropper/element@2.0.1':
+    resolution: {integrity: sha512-Jn1hR7XWzWQM/QfXRGMGzdkJ2gG/UcLdQPZQ7OKs0JiFfRzKpzu4u/nYrXHeH3MM2iOslLqh2kqYju6mjZLMJQ==}
+
+  '@cropper/elements@2.0.1':
+    resolution: {integrity: sha512-paFbBLXTKXNngn1yDi2ZIf+FO1pIEQXyBntmqOjuxqtG73KuEKv633wsJPFpj958bgcfSakgBbF80j+3nHbPug==}
+
+  '@cropper/utils@2.0.1':
+    resolution: {integrity: sha512-A9RnAFmgNF5aZk5q2VZnFnHtXWu1kPyEN0LVsX8wJ2LBRu2nyETKwz+ZXVsVWliktToCaYojHKrS+6/HODyEZA==}
 
   '@emnapi/runtime@1.4.3':
     resolution: {integrity: sha512-pBPWdu6MLKROBX05wSNKcNb++m5Er+KQ9QkB+WVM+pW2Kx9hoSrVTnu3BdkI5eBLZoKu/J6mW/B6i6bJB2ytXQ==}
@@ -591,6 +633,13 @@ packages:
     engines: {node: ^20.0.0 || >=22.0.0}
     peerDependencies:
       nanostores: ^0.10.0 || ^0.11.0 || ^1.0.0
+
+  '@nanostores/persistent@https://codeload.github.com/nanostores/persistent/tar.gz/b85a11f8ff4e587a0c9c394a8bae892c35d8b4b6':
+    resolution: {tarball: https://codeload.github.com/nanostores/persistent/tar.gz/b85a11f8ff4e587a0c9c394a8bae892c35d8b4b6}
+    version: 1.1.0
+    engines: {node: ^20.0.0 || >=22.0.0}
+    peerDependencies:
+      nanostores: ^0.9.0 || ^0.10.0 || ^0.11.0 || ^1.0.0
 
   '@nanostores/react@https://codeload.github.com/nanostores/react/tar.gz/a6ad745cc307881916944ee4d6ba04bdda978dc6':
     resolution: {tarball: https://codeload.github.com/nanostores/react/tar.gz/a6ad745cc307881916944ee4d6ba04bdda978dc6}
@@ -968,11 +1017,6 @@ packages:
     peerDependencies:
       acorn: ^6.0.0 || ^7.0.0 || ^8.0.0
 
-  acorn@8.14.1:
-    resolution: {integrity: sha512-OvQ/2pUDKmgfCg++xsTX1wGxfTaszcHVcTctW4UJB4hibJx2HXxxO5UmVgyjMa+ZDsiaf5wWLXYpRWMmBI0QHg==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-
   acorn@8.15.0:
     resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
@@ -1018,8 +1062,8 @@ packages:
     resolution: {integrity: sha512-JepyLROIad6f44uyqMF6HKE2QbunNzp3mYKRcPoDGt0QkxXmH222FAFC64WTyQu2Kg8NNEXHTN/sWuUId9sSxw==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
 
-  astro@5.9.1:
-    resolution: {integrity: sha512-wxoJcTbuDZNFSv6EaL0PAlrp0Wx6VnOAULCXvy0scsV70oWMeUkdxuBxfO54JxO5Qgyvwj9h99y6E0elqOpGtA==}
+  astro@5.12.9:
+    resolution: {integrity: sha512-cZ7kZ61jyE5nwSrFKSRyf5Gds+uJELqQxJFqMkcgiWQvhWZJUSShn8Uz3yc9WLyLw5Kim5P5un9SkJSGogfEZQ==}
     engines: {node: 18.20.8 || ^20.3.0 || >=22.0.0, npm: '>=9.6.5', pnpm: '>=7.1.0'}
     hasBin: true
 
@@ -1184,6 +1228,9 @@ packages:
   cookie@1.0.2:
     resolution: {integrity: sha512-9Kr/j4O16ISv8zBBhJoi4bXOYNTkFLOqSL3UDB0njXxCXNezjeyVrJyGOWtgfs/q2km1gwBcfH8q1yEGoMYunA==}
     engines: {node: '>=18'}
+
+  cropperjs@2.0.1:
+    resolution: {integrity: sha512-hiJwk2SCPZqxMA7aR3byzLpYUqOrQo+ihMk8k/WRm/xe/LX8wNzAIzMwEB/NEGJYA6sbewxW9TUlrRUYi/2Ipg==}
 
   cross-fetch@3.2.0:
     resolution: {integrity: sha512-Q+xVJLoGOeIMXZmbUK4HYk+69cQH6LudR0Vu/pRm2YlU/hDV9CiS0gKUMaWY5f2NeUH9C1nV3bsTlCo0FsTV1Q==}
@@ -2757,11 +2804,13 @@ snapshots:
 
   '@astrojs/compiler@2.12.1': {}
 
-  '@astrojs/internal-helpers@0.6.1': {}
+  '@astrojs/compiler@2.12.2': {}
 
-  '@astrojs/markdown-remark@6.3.2':
+  '@astrojs/internal-helpers@0.7.1': {}
+
+  '@astrojs/markdown-remark@6.3.5':
     dependencies:
-      '@astrojs/internal-helpers': 0.6.1
+      '@astrojs/internal-helpers': 0.7.1
       '@astrojs/prism': 3.3.0
       github-slugger: 2.0.0
       hast-util-from-html: 2.0.3
@@ -2785,10 +2834,10 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@astrojs/node@9.2.2(astro@5.9.1(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3))':
+  '@astrojs/node@9.4.0(astro@5.12.9(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3))':
     dependencies:
-      '@astrojs/internal-helpers': 0.6.1
-      astro: 5.9.1(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3)
+      '@astrojs/internal-helpers': 0.7.1
+      astro: 5.12.9(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3)
       send: 1.2.0
       server-destroy: 1.0.1
     transitivePeerDependencies:
@@ -2952,6 +3001,72 @@ snapshots:
       fontkit: 2.0.4
     transitivePeerDependencies:
       - encoding
+
+  '@cropper/element-canvas@2.0.1':
+    dependencies:
+      '@cropper/element': 2.0.1
+      '@cropper/utils': 2.0.1
+
+  '@cropper/element-crosshair@2.0.1':
+    dependencies:
+      '@cropper/element': 2.0.1
+      '@cropper/utils': 2.0.1
+
+  '@cropper/element-grid@2.0.1':
+    dependencies:
+      '@cropper/element': 2.0.1
+      '@cropper/utils': 2.0.1
+
+  '@cropper/element-handle@2.0.1':
+    dependencies:
+      '@cropper/element': 2.0.1
+      '@cropper/utils': 2.0.1
+
+  '@cropper/element-image@2.0.1':
+    dependencies:
+      '@cropper/element': 2.0.1
+      '@cropper/element-canvas': 2.0.1
+      '@cropper/utils': 2.0.1
+
+  '@cropper/element-selection@2.0.1':
+    dependencies:
+      '@cropper/element': 2.0.1
+      '@cropper/element-canvas': 2.0.1
+      '@cropper/element-image': 2.0.1
+      '@cropper/utils': 2.0.1
+
+  '@cropper/element-shade@2.0.1':
+    dependencies:
+      '@cropper/element': 2.0.1
+      '@cropper/element-canvas': 2.0.1
+      '@cropper/element-selection': 2.0.1
+      '@cropper/utils': 2.0.1
+
+  '@cropper/element-viewer@2.0.1':
+    dependencies:
+      '@cropper/element': 2.0.1
+      '@cropper/element-canvas': 2.0.1
+      '@cropper/element-image': 2.0.1
+      '@cropper/element-selection': 2.0.1
+      '@cropper/utils': 2.0.1
+
+  '@cropper/element@2.0.1':
+    dependencies:
+      '@cropper/utils': 2.0.1
+
+  '@cropper/elements@2.0.1':
+    dependencies:
+      '@cropper/element': 2.0.1
+      '@cropper/element-canvas': 2.0.1
+      '@cropper/element-crosshair': 2.0.1
+      '@cropper/element-grid': 2.0.1
+      '@cropper/element-handle': 2.0.1
+      '@cropper/element-image': 2.0.1
+      '@cropper/element-selection': 2.0.1
+      '@cropper/element-shade': 2.0.1
+      '@cropper/element-viewer': 2.0.1
+
+  '@cropper/utils@2.0.1': {}
 
   '@emnapi/runtime@1.4.3':
     dependencies:
@@ -3195,6 +3310,10 @@ snapshots:
       '@jridgewell/sourcemap-codec': 1.5.0
 
   '@nanostores/logger@https://codeload.github.com/nanostores/logger/tar.gz/e1acb11b1b98696a126d4fe4229f15e17467886d(nanostores@1.0.1)':
+    dependencies:
+      nanostores: 1.0.1
+
+  '@nanostores/persistent@https://codeload.github.com/nanostores/persistent/tar.gz/b85a11f8ff4e587a0c9c394a8bae892c35d8b4b6(nanostores@1.0.1)':
     dependencies:
       nanostores: 1.0.1
 
@@ -3549,8 +3668,6 @@ snapshots:
     dependencies:
       acorn: 8.15.0
 
-  acorn@8.14.1: {}
-
   acorn@8.15.0: {}
 
   ajv@6.12.6:
@@ -3602,16 +3719,16 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  astro@5.9.1(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3):
+  astro@5.12.9(@types/node@22.15.30)(jiti@2.4.2)(lightningcss@1.30.1)(rollup@4.42.0)(typescript@5.8.3):
     dependencies:
-      '@astrojs/compiler': 2.12.1
-      '@astrojs/internal-helpers': 0.6.1
-      '@astrojs/markdown-remark': 6.3.2
+      '@astrojs/compiler': 2.12.2
+      '@astrojs/internal-helpers': 0.7.1
+      '@astrojs/markdown-remark': 6.3.5
       '@astrojs/telemetry': 3.3.0
       '@capsizecss/unpack': 2.4.0
       '@oslojs/encoding': 1.1.0
       '@rollup/pluginutils': 5.1.4(rollup@4.42.0)
-      acorn: 8.14.1
+      acorn: 8.15.0
       aria-query: 5.3.2
       axobject-query: 4.1.0
       boxen: 8.0.1
@@ -3649,6 +3766,7 @@ snapshots:
       rehype: 13.0.2
       semver: 7.7.2
       shiki: 3.6.0
+      smol-toml: 1.3.4
       tinyexec: 0.3.2
       tinyglobby: 0.2.14
       tsconfck: 3.1.6(typescript@5.8.3)
@@ -3847,6 +3965,11 @@ snapshots:
   cookie-es@1.2.2: {}
 
   cookie@1.0.2: {}
+
+  cropperjs@2.0.1:
+    dependencies:
+      '@cropper/elements': 2.0.1
+      '@cropper/utils': 2.0.1
 
   cross-fetch@3.2.0:
     dependencies:

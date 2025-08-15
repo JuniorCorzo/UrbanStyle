@@ -1,4 +1,4 @@
 import type { FormMediator } from '@/interface/form-mediator.interface'
-import { atom } from 'nanostores'
+import { atom, map } from 'nanostores'
 
-export const formStore = atom<FormMediator | undefined>()
+export const formStore = map<FormMediator>()

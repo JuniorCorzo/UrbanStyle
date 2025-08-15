@@ -1,0 +1,14 @@
+---
+import type { JSX } from 'astro/jsx-runtime'
+
+interface Props extends JSX.ButtonHTMLAttributes {}
+
+const props = Astro.props
+---
+
+<button
+	class="shadow-border bg-accent-2 border-border flex aspect-square size-10 cursor-pointer items-center justify-center rounded-lg border text-lg shadow-md transition-all hover:scale-110 disabled:hidden aria-selected:text-slate-100 aria-selected:shadow-none"
+	{...props}
+>
+	<slot />
+</button>

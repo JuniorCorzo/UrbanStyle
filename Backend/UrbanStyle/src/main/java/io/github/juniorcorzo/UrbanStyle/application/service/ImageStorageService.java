@@ -30,6 +30,20 @@ public class ImageStorageService {
         this.executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
     }
 
+    public String sendImageToStorage(String image) {
+        long startTime = Instant.now().toEpochMilli();
+        log.info("Sending image to Cloudflare R2");
+        try {
+            ByteBuffer imageWebp = this.imageProcessingService.convertToWebp(image);
+            return this.storageFileClient.uploadImage(imageWebp);
+        } catch (Exception e) {
+            log.error("Error sending image to Cloudflare R2: {}", e.getMessage(), e);
+            throw new FailedSendImagesToR2();
+        } finally {
+            log.info("Sending image to Cloudflare R2 completed in {} ms", Instant.now().toEpochMilli() - startTime);
+        }
+    }
+
     public List<Images> sendImagesToStorage(List<ImagesDTO> images) {
         final long startTime = Instant.now().toEpochMilli();
         log.info("Sending {} images to Cloudflare R2", images.size());
@@ -62,10 +76,9 @@ public class ImageStorageService {
     public void deleteImagesFromStorage(List<String> images) {
         log.info("Delete {} images to Cloudflare R2", images.size());
         try {
-
-        images.forEach(image -> this.executorService
-                .submit(() -> this.storageFileClient.deleteImage(image))
-        );
+            images.forEach(image -> this.executorService
+                    .submit(() -> this.storageFileClient.deleteImage(image))
+            );
         } catch (Exception e) {
             log.error("Error deleting images to Cloudflare R2: {}", e.getMessage(), e);
             throw new FailedDeletingImagesToR2();

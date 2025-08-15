@@ -1,12 +1,13 @@
 import type React from 'react'
 
-export type FormType = 'product' | 'category'
+export type FormType = 'product' | 'category' | 'address'
 export type SendForm = (formData?: FormData, id?: string) => void
 
 export interface FormMediator {
-	formType: FormType
-	sendData: SendForm
 	title: string
+	formType: FormType
+	isVisible: boolean
+	sendData: SendForm
 	sendDelete: (id: string) => void
 }
 

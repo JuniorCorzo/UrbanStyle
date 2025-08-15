@@ -1,13 +1,13 @@
 ---
 import Dock from '@/components/dashboard/Dock.astro'
 import Layout from '@/layouts/Layout.astro'
-import { Sidebar } from '@/components/dashboard/react/components/Sidebar'
+import { FormSidebar } from '@/components/dashboard/react/components/FormSidebar'
 import DashboardTableSection from '@/components/dashboard/DashboardTableSection.astro'
 import DashboardSummarySection from '@/components/dashboard/DashboardSummarySection.astro'
 ---
 
 <Layout>
-	<Sidebar slot="sidebar" client:only="react" />
+	<FormSidebar slot="sidebar" client:only="react" />
 	<section class="flex h-full w-full flex-col items-center gap-5 p-5">
 		<DashboardSummarySection />
 		<DashboardTableSection />

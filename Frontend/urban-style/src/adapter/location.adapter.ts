@@ -5,6 +5,7 @@ import type {
 	DepartmentDTOResponse,
 	Municipality,
 	MunicipalityDTOResponse,
+	UpdateAddress,
 } from '@/interface/address.interface'
 import type { AddressValidate } from '@/lib/validations/address.validations'
 
@@ -19,6 +20,13 @@ export class AddressAdapter {
 			state,
 			postalCode,
 			country: 'Colombia',
+		}
+	}
+
+	static toAddressUpdate(address: AddressValidate, userId: string, id: string): UpdateAddress {
+		return {
+			...this.toAddress(address, userId),
+			id,
 		}
 	}
 }

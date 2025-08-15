@@ -20,7 +20,7 @@ export const AuthRequest = async (userCredentials: UserCredentials) => {
 		})
 }
 
-export const verifyToken = async (cookie: string) => {
+export const verifyToken = async (cookie?: string) => {
 	return await axios
 		.get<User>(`${PUBLIC_API_URL}/auth/verify`, {
 			withCredentials: true,

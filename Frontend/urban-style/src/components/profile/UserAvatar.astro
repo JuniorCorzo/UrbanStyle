@@ -1,0 +1,93 @@
+---
+import { CLOUDFLARE_URL } from '@/config/env-config'
+import { CameraIcon, TrashIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { Image } from 'astro:assets'
+import Button from '../Button.astro'
+
+interface Props {
+	avatar?: string
+	name: string
+}
+
+const { name, avatar } = Astro.props
+const defaultHref = `${CLOUDFLARE_URL}/${avatar}`
+---
+
+<div class="@max-lg:size-80 group relative aspect-square rounded-lg">
+	<Image
+		id={'profile_avatar'}
+		class="@max-lg:size-80 aspect-square rounded-lg object-cover"
+		src={defaultHref}
+		width={208}
+		height={208}
+		alt={`Foto de perfil para ${name}`}
+		data-initialize-img={defaultHref}
+	/>
+	<span class="pointer-events-none absolute inset-0">
+		<span
+			id="profile_overlay"
+			class="md:bg-crust/20 bg-foreground shadow-border md:shadow-crust pointer-events-auto absolute flex flex-col gap-2 gap-y-3 overflow-hidden rounded-lg px-3 py-2 opacity-0 shadow-md backdrop-blur-sm transition-all duration-500 group-hover:opacity-100 data-[open='']:max-h-28 data-[open='']:opacity-100 max-md:top-full max-md:mt-2 max-md:max-h-0 max-md:w-full max-md:hover:flex max-md:group-hover:max-h-28 md:inset-0 md:flex md:size-full md:items-center md:justify-center"
+		>
+			<label
+				for="profile_input"
+				class="max-md:hover:bg-accent-2 max-md:border-border border-crust max-md:bg-accent shadow-border cursor-pointer rounded-xl transition-all hover:scale-105 hover:border max-md:shadow-sm"
+				role="button"
+				aria-label="cambiar foto"
+			>
+				<span
+					id="profile_hover"
+					class="md:text-foreground md:bg-crust/40 pointer-events-none flex cursor-pointer gap-2 rounded-xl px-3 py-2 font-semibold backdrop-blur-xl transition-all duration-150 md:items-center md:justify-center"
+				>
+					<CameraIcon className="size-6" />
+					Cambiar Foto
+				</span>
+			</label>
+			<Button
+				id="delete_avatar"
+				class="md:bg-crust/40 md:text-foreground shadow-border max-md:hover:border-border md:hover:border-crust max-md:hover:bg-accent-2 inline-flex items-center gap-2 rounded-xl border border-transparent px-3 py-2 font-medium backdrop-brightness-100 transition-all hover:scale-105 max-md:shadow-sm md:justify-center md:hover:shadow-none"
+				size="custom"
+			>
+				<TrashIcon className="size-6" />
+				Eliminar
+			</Button>
+		</span>
+		<span
+			id="camera_icon"
+			class="absolute bottom-0 right-0 bg-transparent transition-all duration-300 group-hover:opacity-0"
+		>
+			<Button
+				class="bg-foreground flex size-10 items-center justify-center rounded-none rounded-tl-lg border-0 backdrop-brightness-100 hover:shadow-none"
+				size="custom"
+			>
+				<CameraIcon className="pointer-events-none aspect-square size-7" />
+			</Button>
+		</span>
+	</span>
+	<input id="profile_input" type="file" class="hidden" />
+</div>
+<span
+	id="container_buttons"
+	class="bg-foreground mb-2 mt-3 hidden w-full justify-between rounded-md"
+>
+	<Button
+		id="cancel_button"
+		class="flex items-center justify-center border-0 hover:shadow-none"
+		size="sm"
+	>
+		Cancelar
+	</Button>
+	<Button
+		id="submit_button"
+		class="flex items-center justify-center border-0 hover:shadow-none"
+		size="sm"
+	>
+		Confirmar
+	</Button>
+</span>
+
+<script>
+	import AvatarManager from '@/scripts/profile/AvatarManager'
+
+	document.addEventListener('astro:page-load', AvatarManager.initializeAvatarListeners)
+	document.addEventListener('astro:after-preparation', AvatarManager.cleanupAvatarModule)
+</script>

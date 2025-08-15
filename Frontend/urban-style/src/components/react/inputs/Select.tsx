@@ -37,12 +37,18 @@ export const Select = React.forwardRef<SelectRefProps, SelectSingleProps>(
 			items: options ?? [],
 			itemToString: optionsToString,
 			initialSelectedItem: defaultValue,
+			onSelectedItemChange: ({ selectedItem: newSelectedItem }) => {
+				if (newSelectedItem && typeof onChange === 'function') {
+					onChange(newSelectedItem)
+				}
+			},
 		})
 
 		useEffect(() => {
-			if (!selectedItem?.value) return
-			if (typeof onChange === 'function') onChange(selectedItem)
-		}, [selectedItem])
+			if (defaultValue !== undefined) {
+				selectItem(defaultValue)
+			}
+		}, [defaultValue])
 
 		useImperativeHandle(ref, () => ({
 			selectedItems: () => selectedItem,

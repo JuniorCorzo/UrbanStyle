@@ -5,6 +5,7 @@ import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatCo
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdMustExists;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
+import io.github.juniorcorzo.UrbanStyle.domain.entities.AddressEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.UserEntity;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -13,7 +14,7 @@ import jakarta.validation.constraints.Size;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record AddressDTO(
         @IdFormatConstraint(groups = OnUpdate.class)
-        @IdMustExists(entity = AddressDTO.class, groups = OnUpdate.class)
+        @IdMustExists(entity = AddressEntity.class, groups = OnUpdate.class)
         String id,
         @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         @IdFormatConstraint(groups = {OnCreate.class, OnUpdate.class})

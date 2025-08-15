@@ -1,6 +1,6 @@
 import { z } from 'zod'
 
-const passwordSchema = z
+export const passwordSchema = z
 	.string()
 	.max(32, { message: 'La contraseña no puede exceder los 32 caracteres' })
 	.min(8, { message: 'La contraseña debe tener al menos 8 caracteres' })
@@ -47,3 +47,36 @@ export const createUserSchema = userCredentialsSchema
 	})
 
 export type CreateUserValid = z.infer<typeof createUserSchema>
+
+export const updateUserScheme = z.object({
+	name: z
+		.string({ required_error: 'El nombre de usuario es requerido' })
+		.min(3, 'El nombre de usuario debe tener al menos 3 caracteres')
+		.max(32, 'El nombre de usuario no puede exceder los 32 caracteres'),
+	email: z
+		.string({ required_error: 'El correo electrónico es requerido' })
+		.email('El correo electrónico no es válido'),
+	phone: z
+		.string()
+		.min(10, 'Número inválido')
+		.max(10, 'Número inválido')
+		.refine((number) => /^\d{10}$/.test(number), {
+			message: 'Número inválido',
+		}),
+})
+export type UpdateUserValid = z.infer<typeof updateUserScheme>
+
+export const changePasswordScheme = z
+	.object({
+		oldPassword: passwordSchema,
+		newPassword: passwordSchema,
+		confirmPassword: z.string({
+			required_error: 'La confirmación de contraseña es requerida',
+		}),
+	})
+	.refine(({ newPassword, confirmPassword }) => newPassword === confirmPassword, {
+		message: 'Las contraseñas no coinciden',
+		path: ['confirmPassword'],
+	})
+
+export type ChangePasswordValid = z.infer<typeof changePasswordScheme>

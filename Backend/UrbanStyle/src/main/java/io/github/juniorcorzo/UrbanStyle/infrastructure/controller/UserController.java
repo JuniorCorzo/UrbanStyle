@@ -6,6 +6,7 @@ import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatCo
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.common.UserDTO;
+import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.request.UserAvatarDTO;
 import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.dtos.response.ResponseDTO;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
@@ -32,6 +33,11 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @GetMapping("/verify-password")
+    public ResponseDTO<Boolean> validatePassword(@RequestParam("user-id") String userId, @RequestParam String password) {
+        return this.userService.validatedPassword(userId, password);
+    }
+
     @PostMapping("/create")
     public ResponseDTO<UserDTO> createUser(@Validated(OnCreate.class) @RequestBody UserDTO userDTO) {
         return userService.createUser(userDTO);
@@ -41,6 +47,21 @@ public class UserController {
     @PreAuthorize("hasRole('USER')")
     public ResponseDTO<UserDTO> updateUser(@Validated(OnUpdate.class) @RequestBody UserDTO userDTO, @NotBlank @RequestParam("user-id") String userId) {
         return userService.updateUser(userDTO);
+    }
+
+    @PatchMapping("/change-password")
+    public ResponseDTO<Object> changePassword(
+            @RequestParam("user-id") String userId,
+            @RequestParam("old-password") String oldPassword,
+            @RequestParam("new-password") String newPassword
+    ) {
+        return this.userService.changePassword(userId, oldPassword, newPassword);
+    }
+
+    @PatchMapping("/change-avatar")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseDTO<Object> changeAvatar(@RequestBody UserAvatarDTO userAvatar) {
+        return this.userService.changeAvatar(userAvatar.userId(), userAvatar.avatar());
     }
 
     @PatchMapping("/assign-user-role")
@@ -59,11 +80,16 @@ public class UserController {
         return userDTO;
     }
 
-
     @DeleteMapping("/delete/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseDTO<UserDTO> deleteUser(@IdFormatConstraint @PathVariable String id) {
         return userService.deleteUser(id);
+    }
+
+    @DeleteMapping("/delete-avatar")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseDTO<Object> deleteAvatar(@RequestParam("user-id") @IdFormatConstraint String userId) {
+        return this.userService.deleteAvatar(userId);
     }
 
     private void addSetCookieHeader(HttpServletResponse response, UserDTO userDTO) {

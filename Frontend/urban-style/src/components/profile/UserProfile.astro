@@ -1,0 +1,35 @@
+---
+import { EnvelopeIcon, MapPinIcon, PhoneIcon, UserIcon } from '@heroicons/react/24/outline'
+import UserItem from './UserItem.astro'
+import UserAvatar from './UserAvatar.astro'
+
+interface Props {
+	name: string
+	email: string
+	phone: string
+	avatar?: string
+}
+
+const { name, email, phone, avatar } = Astro.props
+---
+
+<article id="profile_container" class="@container px-8">
+	<div class="@max-xl:flex-col flex w-full items-center gap-5 rounded-md p-5">
+		<div class="rounded-lg">
+			{avatar && <UserAvatar avatar={avatar} name={name} />}
+			{!avatar && <UserIcon className="size-52" />}
+		</div>
+		<div class="@lg:w-sm @xs:grid-cols-2 @max-lg:max-w-md grid h-fit w-full px-3">
+			<h1 class="col-span-full min-h-12 text-3xl font-bold">{name}</h1>
+			<UserItem label={email}>
+				<EnvelopeIcon className="size-6" />
+			</UserItem>
+			<UserItem label="Cucuta, CO">
+				<MapPinIcon className="size-6" />
+			</UserItem>
+			<UserItem label={`+57 ${phone}`}>
+				<PhoneIcon className="size-6" />
+			</UserItem>
+		</div>
+	</div>
+</article>

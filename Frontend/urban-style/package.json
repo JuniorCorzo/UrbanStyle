@@ -11,7 +11,7 @@
 		"lint:fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix"
 	},
 	"dependencies": {
-		"@astrojs/node": "^9.2.2",
+		"@astrojs/node": "^9.4.0",
 		"@astrojs/react": "4.3.0",
 		"@heroicons/react": "^2.2.0",
 		"@nanostores/react": "github:nanostores/react",
@@ -19,11 +19,12 @@
 		"@tanstack/react-table": "^8.21.3",
 		"@types/react": "^19.1.2",
 		"@types/react-dom": "^19.1.2",
-		"astro": "5.9.1",
+		"astro": "5.12.9",
 		"axios": "^1.8.4",
 		"bytes": "^3.1.2",
 		"cally": "^0.8.0",
 		"clsx": "^2.1.1",
+		"cropperjs": "^2.0.1",
 		"downshift": "^9.0.9",
 		"jwt-decode": "^4.0.0",
 		"lightweight-charts": "^5.0.6",
@@ -36,6 +37,7 @@
 	},
 	"devDependencies": {
 		"@nanostores/logger": "github:nanostores/logger",
+		"@nanostores/persistent": "github:nanostores/persistent",
 		"@tailwindcss/typography": "^0.5.16",
 		"@types/bytes": "^3.1.5",
 		"@types/node": "^22.14.0",

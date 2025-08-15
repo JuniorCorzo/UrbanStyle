@@ -1,0 +1,31 @@
+---
+import { cn } from '@/lib/cn'
+
+interface Props {
+	label: string
+	href: string
+	highlight: boolean
+}
+
+const { label, href, highlight } = Astro.props
+const pathname = Astro.url.pathname
+---
+
+<a
+	href={href}
+	class={cn(
+		"aria-selected:bg-crust  aria-selected:text-slate-100 border-border hover:bg-accent flex w-full items-center group-aria-[expanded='false']:justify-center gap-2 rounded-md border p-2 transition-all duration-200 hover:scale-105 shadow-inner shadow-border group-aria-[expanded='false']:aspect-square group-aria-[expanded='false']:size-8 group-aria-[expanded=true]:px-3 group-aria-[expanded=true]:py-2",
+		!highlight && 'shadow-md',
+	)}
+	aria-selected={href === pathname}
+	role="menuitem"
+>
+	<i>
+		<slot />
+	</i>
+	<span
+		class="overflow-hidden text-ellipsis text-nowrap font-medium group-aria-[expanded='false']:hidden"
+	>
+		{label}
+	</span>
+</a>
