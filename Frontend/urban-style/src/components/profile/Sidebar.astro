@@ -7,31 +7,37 @@ const pathname = Astro.url.pathname
 
 <aside
 	id="container_sidebar"
-	class="@container group relative w-full max-w-12 shrink-0 transition-all duration-500 aria-expanded:max-w-sm aria-expanded:max-md:max-w-12 aria-expanded:md:max-w-xs"
+	class="@container group relative max-h-[calc(100dvh_-_3.5rem)] w-full max-w-12 shrink-0 transition-all duration-500 aria-expanded:max-w-sm aria-expanded:max-md:max-w-12 aria-expanded:md:max-w-xs"
 	aria-expanded="true"
 >
 	<nav
 		id="menu_sidebar"
-		class="bg-foreground border-border fixed z-10 flex h-full w-full shrink-0 flex-col items-center gap-5 border-r px-2 pt-4 transition-all duration-500 group-aria-[expanded='false']:max-w-12 group-aria-[expanded='true']:px-6 group-aria-[expanded='true']:max-md:max-w-52 md:sticky md:w-full group-aria-[expanded='true']:md:max-w-xs"
+		class="bg-foreground border-border fixed z-10 flex h-full max-h-[calc(100dvh_-_3.5rem)] w-full shrink-0 flex-col items-center gap-5 border-r px-2 pt-4 transition-all duration-500 group-aria-[expanded='false']:max-w-12 group-aria-[expanded='true']:px-6 group-aria-[expanded='true']:max-md:max-w-52 md:w-full group-aria-[expanded='true']:md:max-w-xs"
 		aria-label="Navegación del perfil"
 		role="menu"
 	>
-		<MenuItem label="Mi perfil" href="/profile" highlight={pathname === '/profile'}>
+		<MenuItem
+			label="Mi perfil"
+			href="/profile?option=personal_data"
+			highlight={pathname === '/profile'}
+		>
 			<UserIcon className="size-5" />
 		</MenuItem>
 		<MenuItem label="Mis pedidos" href="/profile/orders" highlight={pathname === '/profile/orders'}>
 			<ArchiveBoxIcon className="size-6" />
 		</MenuItem>
+		<button
+			id="toggle_sidebar"
+			class="border-border absolute bottom-0 z-20 inline-flex w-full min-w-0 max-w-12 shrink-0 cursor-pointer items-center justify-center border-t p-2 text-center transition-all duration-500 group-aria-[expanded='true']:max-w-xs group-aria-[expanded='true']:max-md:max-w-52"
+			aria-controls="menu_sidebar"
+			aria-expanded="true"
+		>
+			<span class="w-full text-center group-aria-[expanded='false']:hidden">Ocultar</span>
+			<ChevronDoubleRightIcon
+				className="float-end size-8 group-aria-[expanded='true']:rotate-180"
+			/>
+		</button>
 	</nav>
-	<button
-		id="toggle_sidebar"
-		class="border-border fixed bottom-0 z-20 inline-flex w-full min-w-0 max-w-12 shrink-0 cursor-pointer items-center justify-center border-t p-2 text-center transition-all duration-500 group-aria-[expanded='true']:max-w-xs group-aria-[expanded='true']:max-md:max-w-52 md:absolute"
-		aria-controls="menu_sidebar"
-		aria-expanded="true"
-	>
-		<span class="w-full text-center group-aria-[expanded='false']:hidden">Ocultar</span>
-		<ChevronDoubleRightIcon className="float-end size-8 group-aria-[expanded='true']:rotate-180" />
-	</button>
 </aside>
 
 <script>
