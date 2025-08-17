@@ -1,5 +1,6 @@
 package io.github.juniorcorzo.UrbanStyle.application.service;
 
+import io.github.juniorcorzo.UrbanStyle.application.service.aggregations.ProductAggregationService;
 import io.github.juniorcorzo.UrbanStyle.application.service.bulks.BulkProductService;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.Images;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
@@ -28,6 +29,7 @@ import java.util.List;
 public class ProductService {
     private final ProductsRepository productsRepository;
     private final ProductMapper productMapper;
+    private final ProductAggregationService productAggregationService;
     private final ImageStorageService imageStorageService;
     private final BulkProductService bulkProductService;
 
@@ -48,7 +50,7 @@ public class ProductService {
     }
 
     public ResponseDTO<ProductAggregationDomain> groupProductsByCategories() {
-        List<ProductAggregationDomain> productsGroupedByCategories = this.productsRepository.groupAllByCategories();
+        List<ProductAggregationDomain> productsGroupedByCategories = this.productAggregationService.productsGroupedByCategory();
 
         return new ResponseDTO<>(HttpStatus.OK, productsGroupedByCategories, "Product retrieved successfully");
     }
