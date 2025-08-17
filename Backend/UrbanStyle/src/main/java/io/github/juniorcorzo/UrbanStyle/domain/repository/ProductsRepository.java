@@ -14,10 +14,71 @@ import java.util.Optional;
 public interface ProductsRepository extends MongoRepository<ProductEntity, String> {
 
     @Aggregation(pipeline = {
-            "{ '$addFields': { 'originalDoc': '$$ROOT' } }",
-            "{ '$unwind': '$categories' }",
-            "{ '$group': { '_id': '$categories.name', 'products': { '$push': '$originalDoc' } } }",
-            "{ '$project': { 'category': '$_id', 'products': 1, '_id': 0 } }"
+            "{ $lookup: { " +
+                    "from: 'orders', " +
+                    "localField: '_id', " +
+                    "foreignField: 'products.productId', " +
+                    "as: 'orders' " +
+                    "} }",
+            "{ $addFields: { " +
+                    "originalDoc: '$$ROOT' " +
+                    "} }",
+            "{ $unwind: { " +
+                    "path: '$categories' " +
+                    "} }",
+            "{ $group: { " +
+                    "_id: { " +
+                    "categoryId: '$categories.categoryId', " +
+                    "categoryName: '$categories.name' " +
+                    "}, " +
+                    "products: { " +
+                    "$push: '$originalDoc' " +
+                    "} " +
+                    "} }",
+            "{ $project: { " +
+                    "_id: 0, " +
+                    "category: '$_id.categoryName', " +
+                    "products: 1, " +
+                    "sold: { " +
+                    "$sum: { " +
+                    "$map: { " +
+                    "input: '$products', " +
+                    "as: 'product', " +
+                    "in: { " +
+                    "$sum: { " +
+                    "$map: { " +
+                    "input: '$$product.orders', " +
+                    "as: 'order', " +
+                    "in: { " +
+                    "$reduce: { " +
+                    "input: { " +
+                    "$filter: { " +
+                    "input: '$$order.products', " +
+                    "cond: { " +
+                    "$and: [ " +
+                    "{ $eq: ['$$this.productId', '$$product._id'] }, " +
+                    "{ $eq: ['$$order.status', 'DELIVERED'] } " +
+                    "] " +
+                    "} " +
+                    "} " +
+                    "}, " +
+                    "initialValue: 0, " +
+                    "in: { " +
+                    "$add: ['$$value', '$$this.quantity'] " +
+                    "} " +
+                    "} " +
+                    "} " +
+                    "} " +
+                    "} " +
+                    "} " +
+                    "} " +
+                    "} " +
+                    "} " +
+                    "} }",
+            "{ $sort: { " +
+                    "sold: -1 " +
+                    "} }",
+            "{ $unset: ['sold', 'products.orders'] }"
     })
     List<ProductAggregationDomain> groupAllByCategories();
 

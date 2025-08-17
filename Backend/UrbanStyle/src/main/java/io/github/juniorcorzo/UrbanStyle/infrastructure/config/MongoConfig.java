@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.MongoDatabaseFactory;
 import org.springframework.data.mongodb.MongoTransactionManager;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions;
+import org.springframework.data.mongodb.core.messaging.DefaultMessageListenerContainer;
+import org.springframework.data.mongodb.core.messaging.MessageListenerContainer;
 
 import java.util.List;
 
@@ -23,5 +25,13 @@ public class MongoConfig {
     @Bean
     ReportRepository reportRepository(MongoTemplate mongoTemplate) {
         return new ReportRepositoryImpl(mongoTemplate);
+    }
+
+    @Bean
+    MessageListenerContainer messageListenerContainer(MongoTemplate mongoTemplate) {
+        DefaultMessageListenerContainer container = new DefaultMessageListenerContainer(mongoTemplate);
+        container.start();
+
+        return container;
     }
 }
