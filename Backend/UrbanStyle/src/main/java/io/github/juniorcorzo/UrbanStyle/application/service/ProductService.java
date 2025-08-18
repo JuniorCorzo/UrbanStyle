@@ -2,6 +2,7 @@ package io.github.juniorcorzo.UrbanStyle.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.application.service.aggregations.ProductAggregationService;
 import io.github.juniorcorzo.UrbanStyle.application.service.bulks.BulkProductService;
+import io.github.juniorcorzo.UrbanStyle.domain.dtos.CategorySummary;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.Images;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.Attribute;
@@ -21,7 +22,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -44,44 +48,64 @@ public class ProductService {
     }
 
     public ResponseDTO<ProductDTO> getProductById(String id) {
-        ProductEntity productResponse = this.productsRepository.findById(id).orElseThrow(() -> new DocumentNotFound(DocumentsName.PRODUCT, id));
+        ProductEntity productResponse = this.productsRepository.findById(id)
+                .orElseThrow(() -> new DocumentNotFound(DocumentsName.PRODUCT, id));
 
-        return new ResponseDTO<>(HttpStatus.OK, List.of(this.productMapper.toDTO(productResponse)), "Product retrieved successfully");
+        return new ResponseDTO<>(HttpStatus.OK, List.of(this.productMapper.toDTO(productResponse)),
+                "Product retrieved successfully");
     }
 
     public ResponseDTO<ProductAggregationDomain> groupProductsByCategories() {
-        List<ProductAggregationDomain> productsGroupedByCategories = this.productAggregationService.productsGroupedByCategory();
+        List<ProductAggregationDomain> productsGroupedByCategories = this.productAggregationService
+                .productsGroupedByCategory();
 
         return new ResponseDTO<>(HttpStatus.OK, productsGroupedByCategories, "Product retrieved successfully");
     }
 
     public ResponseDTO<ProductDTO> getProductsByCategory(String categoryName) {
-        List<ProductDTO> products = this.productsRepository.findByCategory(categoryName).orElseThrow(() -> new DocumentNotFound(DocumentsName.CATEGORY, categoryName)).stream().map(this.productMapper::toDTO).toList();
+        List<ProductDTO> products = this.productsRepository.findByCategory(categoryName)
+                .orElseThrow(() -> new DocumentNotFound(DocumentsName.CATEGORY, categoryName)).stream()
+                .map(this.productMapper::toDTO).toList();
 
         return new ResponseDTO<>(HttpStatus.OK, products, "Products retrieved successfully");
     }
 
     public ResponseDTO<ProductDTO> searchProducts(String search) {
-        List<ProductDTO> products = this.productsRepository.searchProducts(search).stream().map(this.productMapper::toDTO).toList();
+        List<ProductDTO> products = this.productsRepository
+                .searchProducts(search)
+                .stream()
+                .map(this.productMapper::toDTO)
+                .toList();
 
         return new ResponseDTO<>(HttpStatus.OK, products, "Products retrieved successfully");
     }
 
     public ResponseDTO<ProductDTO> createProduct(ProductDTO productDTO) {
-        ProductEntity productEntity = this.productMapper.toEntity(productDTO);
-        List<Images> futureImages = this.imageStorageService.sendImagesToStorage(productDTO.images());
-
+        final ProductEntity productEntity = this.productMapper.toEntity(productDTO);
+        final List<Images> futureImages = this.imageStorageService.sendImagesToStorage(productDTO.images());
         int stock = getTotalStock(productEntity.getAttributes());
         productEntity.setStock(stock);
         productEntity.setImages(futureImages);
 
+        this.setAttributesSku(productEntity);
+
         try {
             ProductEntity savedProduct = this.productsRepository.save(productEntity);
-            return new ResponseDTO<>(HttpStatus.CREATED, List.of(this.productMapper.toDTO(savedProduct)), "Product created successfully");
+            return new ResponseDTO<>(HttpStatus.CREATED, List.of(this.productMapper.toDTO(savedProduct)),
+                    "Product created successfully");
         } catch (Exception e) {
             log.error("Error creating product", e);
             throw new SaveDocumentFailed(DocumentsName.PRODUCT);
         }
+    }
+
+    private void setAttributesSku(final ProductEntity productEntity) {
+        final String categorySku = this.createSku(productEntity.getCategories());
+        productEntity.getAttributes().forEach((attr) -> {
+            final String attributeSku = this.createSku(attr.getSize(), attr.getColor());
+            final String sku = String.format("%s-%s", categorySku, attributeSku);
+            attr.setSku(sku);
+        });
     }
 
     public ResponseDTO<ProductDTO> addImages(ProductImagesDTO productImagesDTO) {
@@ -99,6 +123,7 @@ public class ProductService {
     public ResponseDTO<ProductDTO> updateProduct(ProductDTO productDTO) {
         ProductEntity productEntity = this.productMapper.toEntity(productDTO);
         productEntity.setStock(getTotalStock(productEntity.getAttributes()));
+        this.setAttributesSku(productEntity);
         try {
             if (this.productsRepository.findNameById(productDTO.id()).equals(productDTO.name())) {
 
@@ -107,15 +132,13 @@ public class ProductService {
                 return new ResponseDTO<>(
                         HttpStatus.OK,
                         List.of(this.productMapper.toDTO(updatedProduct)),
-                        "Product updated successfully"
-                );
+                        "Product updated successfully");
             }
             ProductDTO updatedProduct = this.bulkProductService.updateProduct(productEntity);
             return new ResponseDTO<>(
                     HttpStatus.OK,
                     List.of(updatedProduct),
-                    "Product` updated successfully"
-            );
+                    "Product` updated successfully");
         } catch (Exception e) {
             log.error("Error updating product", e);
             throw new SaveDocumentFailed(DocumentsName.PRODUCT);
@@ -158,13 +181,39 @@ public class ProductService {
                                     .builder()
                                     .color(images.color())
                                     .image(images.image())
-                                    .build()
-                            ).toList());
+                                    .build())
+                            .toList());
 
             return new ResponseDTO<>(HttpStatus.OK, "Images deleted successfully");
         } catch (RuntimeException e) {
             log.error("Error deleting images from product", e);
             throw new DeleteDocumentFailed(DocumentsName.IMAGES, productImagesDTO.productId());
         }
+    }
+
+    private String createSku(List<CategorySummary> categories) {
+        return categories.stream()
+                .filter(Predicate.not( category ->  category.categoryId().equals("68a11eafe8d5abf2ff67d53b")))
+                .map(CategorySummary::name)
+                .map(name -> name.substring(0, 3))
+                .map(String::toUpperCase)
+                .collect(Collectors.joining("-"));
+    }
+
+    private String createSku(String size, String color) {
+        StringBuilder sku = new StringBuilder();
+        Predicate<String> isSeparator = (str) -> str.equalsIgnoreCase("y") || str.equals(",");
+
+        sku.append(size.toUpperCase());
+        sku.append("-");
+        sku.append(
+                Arrays.stream(color.split(" "))
+                        .filter(Predicate.not(isSeparator))
+                        .map(colorFiltered -> colorFiltered.substring(0, 3))
+                        .map(String::toUpperCase)
+                        .collect(Collectors.joining("-"))
+        );
+
+        return sku.toString();
     }
 }

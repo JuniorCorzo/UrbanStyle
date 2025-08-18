@@ -2,6 +2,7 @@ package io.github.juniorcorzo.UrbanStyle.domain.repository;
 
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.Images;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
+import io.github.juniorcorzo.UrbanStyle.domain.entities.Attribute;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -32,6 +33,10 @@ public interface ProductsRepository extends MongoRepository<ProductEntity, Strin
             " $push: { 'categories': { '$each': ?#{[0].categories} }, 'attributes': { '$each': ?#{[0].attributes} }" +
             "}")
     void updateProduct(ProductEntity product);
+
+    @Query("{ '_id': ?0 }")
+    @Update("{ '$set': { 'attributes': ?1 } }")
+    void setSku(String productId, List<Attribute> attribute);
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$pullAll': { 'images': ?1} }")
