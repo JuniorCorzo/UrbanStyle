@@ -1,0 +1,271 @@
+[{
+  "_id": "687ae9cd2f72ceb4434c48b2",
+  "name": "Polo Clásico Marino",
+  "description": "Polo azul marino de corte clásico con cuello estructurado y botones al tono. Incorpora un pequeño bordado de personaje animado que le da un toque juvenil y divertido. Perfecto para looks semi-formales con personalidad.",
+  "price": 60000,
+  "discount": 0,
+  "images": [
+    {
+      "color": "Azul",
+      "image": "2de201eb-f723-4b88-b8eb-c9d52d1c7a78"
+    }
+  ],
+  "categories": [
+    {
+      "categoryId": "687ae5e42f72ceb4434c48b0",
+      "name": "Camisas"
+    },
+    {
+      "categoryId": "687ae5f02f72ceb4434c48b1",
+      "name": "Hombres"
+    }
+  ],
+  "attributes": [
+    {
+      "color": "Azul",
+      "size": "S",
+      "quantity": 30
+    },
+    {
+      "color": "Azul",
+      "size": "XS",
+      "quantity": 40
+    },
+    {
+      "color": "Azul",
+      "size": "M",
+      "quantity": 20
+    }
+  ],
+  "stock": 90,
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity"
+},
+{
+  "_id": "687aec4aadf022930a017936",
+  "name": "Camisa Slim Fit Negra - Elegancia Minimal",
+  "description": "Camisa de vestir negra con corte slim fit, pensada para ofrecer una silueta moderna y sofisticada. Ideal para ocasiones formales o eventos de noche, con un diseño limpio que resalta por su elegancia discreta.",
+  "price": 56999,
+  "discount": 0,
+  "images": [
+    {
+      "color": "Negro",
+      "image": "59b59fa2-7643-4b95-be89-6eaf6f597e39"
+    }
+  ],
+  "categories": [
+    {
+      "categoryId": "687ae5e42f72ceb4434c48b0",
+      "name": "Camisas"
+    },
+    {
+      "categoryId": "687ae5f02f72ceb4434c48b1",
+      "name": "Hombres"
+    }
+  ],
+  "attributes": [
+    {
+      "color": "Negro",
+      "size": "S",
+      "quantity": 30
+    },
+    {
+      "color": "Negro",
+      "size": "XS",
+      "quantity": 30
+    }
+  ],
+  "stock": 60,
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity"
+},
+{
+  "_id": "688534ee2314000c7af4b5bd",
+  "name": "Camisetas Básicas Logo Laurel - Pack Dúo",
+  "description": "Este pack de camisetas ofrece una combinación clásica de negro y gris claro, con un diseño minimalista y elegante. Confeccionadas en algodón suave, destacan por el pequeño logo de laurel \"BS BLOOK\" bordado al frente. Ideales para un estilo casual y limpio.",
+  "price": 120000,
+  "discount": 0,
+  "images": [
+    {
+      "color": "Negro y Gris",
+      "image": "14e408df-9d09-4376-b756-c9caff217d1e"
+    }
+  ],
+  "categories": [
+    {
+      "categoryId": "687ae5f02f72ceb4434c48b1",
+      "name": "Hombres"
+    },
+    {
+      "categoryId": "687ae5e42f72ceb4434c48b0",
+      "name": "Camisas"
+    }
+  ],
+  "attributes": [
+    {
+      "color": "Negro y Gris",
+      "size": "S",
+      "quantity": 20
+    },
+    {
+      "color": "Negro y Gris",
+      "size": "XS",
+      "quantity": 10
+    },
+    {
+      "color": "Negro y Gris",
+      "size": "M",
+      "quantity": 30
+    }
+  ],
+  "stock": 60,
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity"
+},
+{
+  "_id": "688535b42314000c7af4b5be",
+  "name": "Camiseta Connect Essentials - Pack x3",
+  "description": "Conjunto de tres camisetas en tonos tierra y neutros. El diseño \"connect the future\" al frente de la camiseta azul agrega un detalle moderno y tecnológico. Hechas con materiales frescos y resistentes, son ideales para uso diario.",
+  "price": 159999,
+  "discount": 0,
+  "images": [
+    {
+      "color": "Azul, Negro y Beige",
+      "image": "c776addc-ff88-4a25-920e-3bc515d9d26b"
+    }
+  ],
+  "categories": [
+    {
+      "categoryId": "687ae5e42f72ceb4434c48b0",
+      "name": "Camisas"
+    },
+    {
+      "categoryId": "687ae5f02f72ceb4434c48b1",
+      "name": "Hombres"
+    }
+  ],
+  "attributes": [
+    {
+      "color": "Azul, Negro y Beige",
+      "size": "XXS",
+      "quantity": 30
+    },
+    {
+      "color": "Azul, Negro y Beige",
+      "size": "S",
+      "quantity": 30
+    },
+    {
+      "color": "Azul, Negro y Beige",
+      "size": "XS",
+      "quantity": 50
+    }
+  ],
+  "stock": 110,
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity"
+},
+{
+  "_id": "6885362e2314000c7af4b5bf",
+  "name": "Camisa Casual Lino Azul Oscuro",
+  "description": "Camisa de lino en azul oscuro, perfecta para climas cálidos gracias a su transpirabilidad y textura ligera. Su diseño relajado y atemporal la hace versátil para combinar con jeans, bermudas o pantalones de vestir.",
+  "price": 79999,
+  "discount": 0,
+  "images": [
+    {
+      "color": "Azul",
+      "image": "f473586a-aeb5-4108-b28c-7bbc7de8db84"
+    }
+  ],
+  "categories": [
+    {
+      "categoryId": "687ae5e42f72ceb4434c48b0",
+      "name": "Camisas"
+    },
+    {
+      "categoryId": "687ae5f02f72ceb4434c48b1",
+      "name": "Hombres"
+    }
+  ],
+  "attributes": [
+    {
+      "color": "Azul",
+      "size": "S",
+      "quantity": 30
+    },
+    {
+      "color": "Azul",
+      "size": "M",
+      "quantity": 30
+    },
+    {
+      "color": "Azul",
+      "size": "XS",
+      "quantity": 30
+    }
+  ],
+  "stock": 90,
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity"
+},
+{
+  "_id": "6892633ddebc8e91cedfc8cb",
+  "name": "Producto 2",
+  "description": "es una lindo camisa",
+  "price": 30000,
+  "discount": 0,
+  "images": [
+    {
+      "color": "Negro",
+      "image": "d5daa1b0-55af-4909-8301-6f32f31017e2"
+    }
+  ],
+  "categories": [
+    {
+      "categoryId": "683774031e8aa31da72e1cf4",
+      "name": "Hombre"
+    }
+  ],
+  "attributes": [
+    {
+      "color": "Negro",
+      "size": "S",
+      "quantity": 20
+    },
+    {
+      "color": "Nogro",
+      "size": "L",
+      "quantity": 20
+    }
+  ],
+  "stock": 40,
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity"
+},
+{
+  "_id": "6892649b7cbcd34394d242c1",
+  "name": "Producto 2",
+  "description": "es una lindo camisa",
+  "price": 30000,
+  "discount": 0,
+  "images": [
+    {
+      "color": "Negro",
+      "image": "cc9fb04e-e388-455b-bb21-c1572ac5480d"
+    }
+  ],
+  "categories": [
+    {
+      "categoryId": "683774031e8aa31da72e1cf4",
+      "name": "Hombre"
+    }
+  ],
+  "attributes": [
+    {
+      "color": "Negro",
+      "size": "S",
+      "quantity": 20
+    },
+    {
+      "color": "Nogro",
+      "size": "L",
+      "quantity": 20
+    }
+  ],
+  "stock": 40,
+  "_class": "io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity"
+}]

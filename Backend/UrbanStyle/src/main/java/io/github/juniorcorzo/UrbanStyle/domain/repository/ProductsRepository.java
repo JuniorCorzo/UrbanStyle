@@ -13,14 +13,6 @@ import java.util.Optional;
 
 public interface ProductsRepository extends MongoRepository<ProductEntity, String> {
 
-    @Aggregation(pipeline = {
-            "{ '$addFields': { 'originalDoc': '$$ROOT' } }",
-            "{ '$unwind': '$categories' }",
-            "{ '$group': { '_id': '$categories.name', 'products': { '$push': '$originalDoc' } } }",
-            "{ '$project': { 'category': '$_id', 'products': 1, '_id': 0 } }"
-    })
-    List<ProductAggregationDomain> groupAllByCategories();
-
     @Query("{ '$text': { '$search': '?0'} }")
     List<ProductEntity> searchProducts(String search);
 
