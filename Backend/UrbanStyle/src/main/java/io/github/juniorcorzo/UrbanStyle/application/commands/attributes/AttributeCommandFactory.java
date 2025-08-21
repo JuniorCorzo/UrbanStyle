@@ -1,27 +1,25 @@
 package io.github.juniorcorzo.UrbanStyle.application.commands.attributes;
 
+import io.github.juniorcorzo.UrbanStyle.application.utils.AttributesManageUtils;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.Attribute;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AttributeCommandFactory {
     public static List<AttributeCommand> createAttributeCommand(
             final String productId,
             final List<Attribute> currentAttributes,
-            final List<Attribute> AttributesToUpdate
+            final List<Attribute> attributesToUpdate
     ) {
-        final Map<String, Attribute> actualAttributesMap = currentAttributes
-                .parallelStream()
-                .collect(Collectors.toMap(Attribute::getSku, attribute -> attribute));
-
-        final Map<String, Attribute> updateAttributesMap = AttributesToUpdate
-                .parallelStream()
-                .collect(Collectors.toMap(Attribute::getSku, attribute -> attribute));
+        final Map<String, Attribute> actualAttributesMap = AttributesManageUtils.toMapBySku(currentAttributes);
+        final Map<String, Attribute> updateAttributesMap = AttributesManageUtils.toMapBySku(attributesToUpdate);
 
         final List<AttributeCommand> attributeCommands = new ArrayList<>(updateAttributesMap.entrySet()
                 .parallelStream()
@@ -32,16 +30,17 @@ public class AttributeCommandFactory {
                         )
                 ).filter(Optional::isPresent)
                 .map(Optional::get)
-                .toList());
+                .toList()
+        );
 
         attributeCommands.addAll(
-          actualAttributesMap.entrySet()
-                  .parallelStream()
-                  .filter(Predicate.not(attributeEntry -> updateAttributesMap.containsKey(attributeEntry.getKey())))
-                  .map(attributeEntry -> createDeleteAttributeCommand(productId, attributeEntry.getKey()))
-                  .filter(Optional::isPresent)
-                  .map(Optional::get)
-                  .toList()
+                actualAttributesMap.entrySet()
+                        .parallelStream()
+                        .filter(Predicate.not(attributeEntry -> updateAttributesMap.containsKey(attributeEntry.getKey())))
+                        .map(attributeEntry -> createDeleteAttributeCommand(productId, attributeEntry.getKey()))
+                        .filter(Optional::isPresent)
+                        .map(Optional::get)
+                        .toList()
         );
 
         return attributeCommands;

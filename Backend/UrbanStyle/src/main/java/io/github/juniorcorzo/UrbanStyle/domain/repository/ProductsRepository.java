@@ -4,6 +4,8 @@ import io.github.juniorcorzo.UrbanStyle.domain.dtos.Images;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.Attribute;
 import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
+import io.github.juniorcorzo.UrbanStyle.domain.projections.ObtainAttributes;
+import io.github.juniorcorzo.UrbanStyle.domain.projections.ObtainStock;
 import org.springframework.data.mongodb.repository.Aggregation;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -23,6 +25,16 @@ public interface ProductsRepository extends MongoRepository<ProductEntity, Strin
     @Query("{ 'categories.name': ?0 }")
     Optional<List<ProductEntity>> findByCategory(String category);
 
+    @Aggregation(pipeline = {
+            "{ '$addFields': { 'quantity': { '$filter': { 'input': '$attributes', 'cond': { '$and': [ { '$eq': ['$$this.sku', ?1] }, { '$eq': ['$_id', ?0] } ] } } } } }",
+            "{ '$unwind': '$quantity' }",
+            "{ '$project': { '_id': 0, 'stock': '$quantity.quantity' } }"
+    })
+    Optional<ObtainStock> findStockById(String productId, String sku);
+
+    @Query(value = "{ '_id': ?0 }", fields = "{ 'attributes': 1, '_id': 0 }")
+    ObtainAttributes findAttributesById(String productId);
+
     @Query("{ '_id': ?0 }")
     @Update("{ '$push': { 'images': { '$each': ?1} } }")
     void saveImagesToProduct(String id, List<Images> images);
@@ -30,13 +42,13 @@ public interface ProductsRepository extends MongoRepository<ProductEntity, Strin
     @Query("{ '_id': ?#{[0].id} }")
     @Update("{" +
             "$set: { 'name': ?#{[0].name}, 'description': ?#{[0].description}, 'price': ?#{[0].price}, 'discount': ?#{[0].discount}, 'stock': ?#{[0].stock} }," +
-            " $push: { 'categories': { '$each': ?#{[0].categories} }, 'attributes': { '$each': ?#{[0].attributes} }" +
+            " $push: { 'categories': { '$each': ?#{[0].categories} } }" +
             "}")
     void updateProduct(ProductEntity product);
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$set': { 'attributes': ?1 } }")
-    void setSku(String productId, List<Attribute> attribute);
+    void updateAttributes(String productId, List<Attribute> attribute);
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$pullAll': { 'images': ?1} }")

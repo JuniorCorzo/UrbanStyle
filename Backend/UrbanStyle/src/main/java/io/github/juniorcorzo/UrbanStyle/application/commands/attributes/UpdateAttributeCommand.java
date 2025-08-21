@@ -22,8 +22,8 @@ public record UpdateAttributeCommand(
         );
 
         final Update update = Update
-                .update("attributes.$[sku]", updateAttribute)
-                .filterArray(Criteria.where("attributes.sku").is(sku));
+                .update("attributes.$[attr]", updateAttribute)
+                .filterArray(Criteria.where("attr.sku").is(sku));
 
         return operations.updateOne(query, update);
     }

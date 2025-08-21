@@ -1,10 +1,10 @@
-package io.github.juniorcorzo.UrbanStyle.application.commands.attributes;
+package io.github.juniorcorzo.UrbanStyle.application.commands.stock;
 
 import io.github.juniorcorzo.UrbanStyle.application.commands.Command;
 import org.springframework.data.mongodb.core.BulkOperations;
 
 @FunctionalInterface
-public interface AttributeCommand extends Command {
+public interface StockMovementCommand extends Command {
 
     /**
      * Executes the command using the provided BulkOperations instance.
