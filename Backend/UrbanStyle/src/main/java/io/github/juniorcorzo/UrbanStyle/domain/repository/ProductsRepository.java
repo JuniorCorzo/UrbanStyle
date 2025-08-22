@@ -41,7 +41,7 @@ public interface ProductsRepository extends MongoRepository<ProductEntity, Strin
 
     @Query("{ '_id': ?#{[0].id} }")
     @Update("{" +
-            "$set: { 'name': ?#{[0].name}, 'description': ?#{[0].description}, 'price': ?#{[0].price}, 'discount': ?#{[0].discount}, 'stock': ?#{[0].stock} }," +
+            "$set: { 'name': ?#{[0].name}, 'description': ?#{[0].description}, 'price': ?#{[0].price}, 'discount': ?#{[0].discount}, 'newStock': ?#{[0].newStock} }," +
             " $push: { 'categories': { '$each': ?#{[0].categories} } }" +
             "}")
     void updateProduct(ProductEntity product);

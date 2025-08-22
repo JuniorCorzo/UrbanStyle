@@ -23,21 +23,21 @@ public class StockCalculateHelper {
                     .build();
 
             case DELETE_ATTRIBUTE -> StockMovementData.builder()
-                    .quantityChange(-currentStock) // It's deleting stock so always negative
+                    .quantityChange(-currentStock) // It's deleting newStock so always negative
                     .previousStock(currentStock)
                     .newStock(0)
                     .build();
 
             case SALE -> StockMovementData.builder()
-                    .quantityChange(-Math.abs(newStock)) // Always negative (sale)
-                    .previousStock(currentStock + Math.abs(newStock))
-                    .newStock(currentStock)
+                    .quantityChange(-Math.abs(currentStock - newStock)) // Always negative (sale)
+                    .previousStock(currentStock)
+                    .newStock(newStock)
                     .build();
 
             case ORDER_CANCELLATION -> StockMovementData.builder()
-                    .quantityChange(Math.abs(newStock)) // Always positive (order cancellation)
-                    .previousStock(currentStock - Math.abs(newStock))
-                    .newStock(currentStock)
+                    .quantityChange(Math.abs(currentStock - newStock)) // Always positive (order cancellation)
+                    .previousStock(currentStock)
+                    .newStock(newStock)
                     .build();
         };
     }

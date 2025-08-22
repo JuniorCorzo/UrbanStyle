@@ -13,6 +13,18 @@ import java.util.function.Predicate;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AttributeCommandFactory {
+    public static AttributeCommand createChangeStockCommand(
+            final String productId,
+            final String sku,
+            final int newStock
+    ){
+        return ChangeStockAttributeCommand.builder()
+                .productId(productId)
+                .sku(sku)
+                .newStock(newStock)
+                .build();
+    }
+
     public static List<AttributeCommand> createAttributeCommand(
             final String productId,
             final List<Attribute> currentAttributes,

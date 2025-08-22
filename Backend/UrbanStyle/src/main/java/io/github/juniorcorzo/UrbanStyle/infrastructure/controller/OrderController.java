@@ -1,6 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.infrastructure.controller;
 
 import io.github.juniorcorzo.UrbanStyle.application.service.OrderService;
+import io.github.juniorcorzo.UrbanStyle.application.service.bulks.SaleProcessorService;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.constraint.IdFormatConstraint;
 import io.github.juniorcorzo.UrbanStyle.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.CustomerDTO;
@@ -24,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 @SuppressWarnings("unused")
 public class OrderController {
     private final OrderService orderService;
+    private final SaleProcessorService saleProcessorService;
 
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
@@ -57,7 +59,7 @@ public class OrderController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('USER')")
     public ResponseDTO<OrdersResponseDTO> createOrder(@Validated(OnCreate.class) @RequestBody OrdersSaveDTO insertOrder) {
-        return this.orderService.createOrder(insertOrder);
+        return this.saleProcessorService.processSale(insertOrder);
     }
 
 
@@ -70,6 +72,6 @@ public class OrderController {
     @PatchMapping("/cancel-order")
     @PreAuthorize("hasRole('USER')")
     public ResponseDTO<OrdersResponseDTO> cancelOrder(@IdFormatConstraint @RequestParam("id") String orderId) {
-        return this.orderService.cancelOrder(orderId);
+        return this.saleProcessorService.processCancelOrder(orderId);
     }
 }

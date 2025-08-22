@@ -17,7 +17,7 @@ import java.util.function.Predicate;
 public class StockCommandFactory {
     private final ProductAggregationService productsAggregation;
 
-    public List<StockMovementCommand> createStockCommand(
+    public List<StockMovementCommand> createStockMovementCommand(
             final String productId,
             final String associate,
             final List<Attribute> currentAttributes,
@@ -52,6 +52,24 @@ public class StockCommandFactory {
         return stockCommands;
     }
 
+    public StockMovementCommand createStockMovementCommand(
+            String productId,
+            String sku,
+            String associate,
+            OperationType operationType,
+            int currentStock,
+            int newStock
+    ) {
+        return UpsertRegisterStockCommand.builder()
+                .productId(productId)
+                .sku(sku)
+                .associate(associate)
+                .operationType(operationType)
+                .currentStock(currentStock)
+                .newStock(newStock)
+                .build();
+    }
+
     public StockMovementCommand createUpsertStockCommand(
             String productId,
             String sku,
@@ -70,7 +88,7 @@ public class StockCommandFactory {
                 .build();
     }
 
-    public StockMovementCommand createDeleteStockCommand(String productId, String sku, String associate, int currentStock) {
+    private StockMovementCommand createDeleteStockCommand(String productId, String sku, String associate, int currentStock) {
         return DeleteRegisterStockCommand.builder()
                 .productId(productId)
                 .sku(sku)

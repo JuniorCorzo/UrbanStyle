@@ -1,11 +1,14 @@
 package io.github.juniorcorzo.UrbanStyle.application.service.aggregations;
 
 import io.github.juniorcorzo.UrbanStyle.domain.dtos.ProductAggregationDomain;
+import io.github.juniorcorzo.UrbanStyle.domain.entities.ProductEntity;
 import io.github.juniorcorzo.UrbanStyle.domain.enums.OrderStatus;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +17,12 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductAggregationService {
     private final MongoTemplate mongoTemplate;
+
+    public boolean existsByIdAndSku(final String productId,final String sku) {
+        final Query query = Query.query(Criteria.where("_id").is(productId).and("attributes.sku").is(sku));
+
+        return  this.mongoTemplate.exists(query, ProductEntity.class);
+    }
 
     public List<ProductAggregationDomain> productsGroupedByCategory() {
         final LookupOperation orderLookup = createOrderLookup();
