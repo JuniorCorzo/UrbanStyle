@@ -45,28 +45,28 @@ public class ProductCategorizationScheduler {
      * Executes the product categorization process and updates the product categories
      * in the database based on the sales data. This method is scheduled to run every
      * 12 hours as defined by the cron expression.
-     *
+     * <p>
      * The process includes:
-     * 1. Filtering delivered orders from the orders collection.
-     * 2. Unwinding the products array in each order document.
+     * 1. Filtering delivered orders from the order's collection.
+     * 2. Unwinding the product's array in each order document.
      * 3. Grouping products by their ID and summing their sold quantities.
      * 4. Sorting products in descending order by the number of units sold.
      * 5. Limiting the result to a predefined number of top products.
      * 6. Merging the categorized product information back into the product collection.
-     *
+     * <p>
      * Logs are generated for the start and successful completion of this process.
-     *
+     * <p>
      * Dependencies:
-     * - MongoDB for reading and updating the orders and products collections.
+     * - MongoDB for reading and updating the order and products collections.
      * - Methods such as {@link #createDeliveredOrdersFilter()},
-     *   {@link #createProductSalesGrouping()}, and {@link #createCategoryMergeOperation()}
-     *   to construct various parts of the aggregation pipeline.
-     *
+     * {@link #createProductSalesGrouping()}, and {@link #createCategoryMergeOperation()}
+     * to construct various parts of the aggregation pipeline.
+     * <p>
      * Errors:
      * - If the category document for categorization cannot be retrieved from the database, a
-     *   {@link DocumentNotFound} exception is thrown during the merge operation preparation.
+     * {@link DocumentNotFound} exception is thrown during the merge operation preparation.
      */
-    @Scheduled(cron = "* * */12 * * *")
+    @Scheduled(cron = "0 0 */12 * * ?")
     private void executeProductCategorization() {
         this.executeRemoveProductCategorization();
         log.info("Product categorization started");
@@ -75,27 +75,16 @@ public class ProductCategorizationScheduler {
         final GroupOperation productSalesGrouping = createProductSalesGrouping();
         final MergeOperation categoryMergeOperation = createCategoryMergeOperation();
 
-        final Aggregation productCategorizationPipeline = Aggregation.newAggregation(
-                deliveredOrdersFilter,
-                Aggregation.unwind("$products"),
-                productSalesGrouping,
-                Aggregation.sort(Sort.Direction.DESC, "$sold"),
-                Aggregation.limit(TOP_PRODUCTS_LIMIT),
-                categoryMergeOperation
-        );
+        final Aggregation productCategorizationPipeline = Aggregation.newAggregation(deliveredOrdersFilter, Aggregation.unwind("$products"), productSalesGrouping, Aggregation.sort(Sort.Direction.DESC, "$sold"), Aggregation.limit(TOP_PRODUCTS_LIMIT), categoryMergeOperation);
 
-        AggregationResults<Document> categorizationResult = mongoTemplate.aggregate(
-                productCategorizationPipeline, "orders", Document.class);
+        AggregationResults<Document> categorizationResult = mongoTemplate.aggregate(productCategorizationPipeline, "orders", Document.class);
 
         log.info("Product categorization executed successfully: {}", categorizationResult);
     }
 
     private void executeRemoveProductCategorization() {
         log.info("Product categorization removed");
-        mongoTemplate.getCollection("products").updateMany(
-                new Document("categories.categoryId", POPULAR_CATEGORY_ID),
-                new Document("$pull", new Document("categories", new Document("categoryId", POPULAR_CATEGORY_ID)))
-        );
+        mongoTemplate.getCollection("products").updateMany(new Document("categories.categoryId", POPULAR_CATEGORY_ID), new Document("$pull", new Document("categories", new Document("categoryId", POPULAR_CATEGORY_ID))));
         log.info("Product categorization removed successfully");
     }
 
@@ -105,30 +94,10 @@ public class ProductCategorizationScheduler {
      * within the last month but excludes the current month.
      *
      * @return a MatchOperation instance representing the filter for delivered orders
-     *         within the specified date range.
+     * within the specified date range.
      */
     private MatchOperation createDeliveredOrdersFilter() {
-        return Aggregation.match(
-                Criteria.where("status")
-                        .is("DELIVERED")
-                        .andOperator(
-                                Criteria.expr(
-                                        BooleanOperators.And.and(
-                                                ComparisonOperators.Gte
-                                                        .valueOf("$orderDate")
-                                                        .greaterThanEqualTo(
-                                                                DateOperators.DateTrunc.truncateValue(
-                                                                        DateOperators.DateSubtract
-                                                                                .subtractValue(1, "month")
-                                                                                .fromDateOf("$$NOW")
-                                                                ).to("month")
-                                                        ),
-                                                ComparisonOperators.Lt.valueOf("$orderDate")
-                                                        .lessThan(DateOperators.DateTrunc.truncateValue("$$NOW").to("month"))
-                                        )
-                                )
-                        )
-        );
+        return Aggregation.match(Criteria.where("status").is("DELIVERED").andOperator(Criteria.expr(BooleanOperators.And.and(ComparisonOperators.Gte.valueOf("$orderDate").greaterThanEqualTo(DateOperators.DateTrunc.truncateValue(DateOperators.DateSubtract.subtractValue(1, "month").fromDateOf("$$NOW")).to("month")), ComparisonOperators.Lt.valueOf("$orderDate").lessThan(DateOperators.DateTrunc.truncateValue("$$NOW").to("month"))))));
     }
 
     /**
@@ -137,19 +106,17 @@ public class ProductCategorizationScheduler {
      * quantity sold for each product.
      *
      * @return a GroupOperation that groups sales data by product ID
-     *         and computes the total quantity sold.
+     * and computes the total quantity sold.
      */
     private GroupOperation createProductSalesGrouping() {
-        return Aggregation.group("$products.productId")
-                .sum("$products.quantity")
-                .as("sold");
+        return Aggregation.group("$products.productId").sum("$products.quantity").as("sold");
     }
 
     /**
      * Creates a {@link MergeOperation} to merge an aggregated result of top products with the existing product categories collection.
      * The operation updates the "categories" and "updateAt" fields if a match is found on the "_id" field, and discards documents
      * when no match is found.
-     *
+     * <p>
      * This method utilizes a {@link Document} generated by {@code createCategoryDocument()} to define a category structure
      * that is added to the list of categories in the update operation. The categories are aggregated using a set union operation to
      * ensure uniqueness of values.
@@ -159,24 +126,7 @@ public class ProductCategorizationScheduler {
     private MergeOperation createCategoryMergeOperation() {
         final Document categoryDocument = createCategoryDocument();
 
-        return MergeOperation.builder()
-                .intoCollection("products")
-                .on("$_id")
-                .whenMatched(
-                        MergeOperation.WhenDocumentsMatch.updateWith(
-                                Aggregation.newUpdate()
-                                        .set("categories")
-                                        .toValue(SetOperators.SetUnion.arrayAsSet("$categories")
-                                                .union(AggregationExpression.from(() ->
-                                                        new Document("$literal", Collections.singletonList(categoryDocument))
-                                                ))
-                                        )
-                                        .set("updateAt")
-                                        .toValue("$$NOW")
-                        )
-                )
-                .whenNotMatched(MergeOperation.WhenDocumentsDontMatch.discardDocument())
-                .build();
+        return MergeOperation.builder().intoCollection("products").on("$_id").whenMatched(MergeOperation.WhenDocumentsMatch.updateWith(Aggregation.newUpdate().set("categories").toValue(SetOperators.SetUnion.arrayAsSet("$categories").union(AggregationExpression.from(() -> new Document("$literal", Collections.singletonList(categoryDocument))))).set("updateAt").toValue("$$NOW"))).whenNotMatched(MergeOperation.WhenDocumentsDontMatch.discardDocument()).build();
     }
 
     /**
@@ -188,11 +138,6 @@ public class ProductCategorizationScheduler {
      * @throws DocumentNotFound if the category with the predefined ID is not found.
      */
     private Document createCategoryDocument() {
-        return this.categoriesRepository
-                .findById(POPULAR_CATEGORY_ID)
-                .map(category -> new Document()
-                        .append("categoryId", category.getId())
-                        .append("name", category.getName()))
-                .orElseThrow(() -> new DocumentNotFound(DocumentsName.CATEGORY, POPULAR_CATEGORY_ID));
+        return this.categoriesRepository.findById(POPULAR_CATEGORY_ID).map(category -> new Document().append("categoryId", category.getId()).append("name", category.getName())).orElseThrow(() -> new DocumentNotFound(DocumentsName.CATEGORY, POPULAR_CATEGORY_ID));
     }
 }

@@ -18,10 +18,7 @@ import io.github.juniorcorzo.UrbanStyle.infrastructure.adapter.mapper.OrderMappe
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PagedModel;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -34,6 +31,8 @@ import java.util.List;
 public class OrderService {
     private final OrderRepository orderRepository;
     private final ShoppingCartService shoppingCartService;
+    private final StockMovementsService stockService;
+
     private final OrderMapper orderMapper;
 
     public ResponseDTO<OrdersResponseDTO> getAllOrders() {
@@ -77,20 +76,19 @@ public class OrderService {
         );
     }
 
-    public ResponseDTO<OrdersResponseDTO> createOrder(OrdersSaveDTO insertOrder) {
+    public OrdersResponseDTO createOrder(OrdersSaveDTO insertOrder) {
+        final OrdersEntity orderEntity = this.orderMapper.toEntity(insertOrder, shoppingCartService);
+        final double total = this.getTotal(orderEntity.getProducts());
+
         try {
-            final OrdersEntity orderEntity = this.orderMapper.toEntity(insertOrder, shoppingCartService);
-            final double total = this.getTotal(orderEntity.getProducts());
             orderEntity.setTotal(total);
             orderEntity.setHistory(List.of(new OrderHistory(orderEntity.getStatus(), LocalDateTime.now())));
-            OrdersEntity orderSaved = this.orderRepository.save(orderEntity);
 
+            OrdersEntity orderSaved = this.orderRepository.save(orderEntity);
             this.removeCart(insertOrder.userId());
-            return new ResponseDTO<>(
-                    HttpStatus.CREATED,
-                    List.of(this.orderMapper.toDTO(orderSaved)),
-                    "Order created successfully"
-            );
+
+            return this.orderMapper.toDTO(orderSaved);
+
         } catch (Exception e) {
             log.error("Error creating order", e);
             throw new SaveDocumentFailed(DocumentsName.ORDER);
@@ -121,9 +119,11 @@ public class OrderService {
         }
     }
 
-    public ResponseDTO<OrdersResponseDTO> cancelOrder(String orderId) {
+    public OrdersResponseDTO cancelOrder(String orderId) {
         final OrderStatus status = OrderStatus.CANCELED;
-        return this.changeStatus(orderId, status);
+        return this.changeStatus(orderId, status)
+                .data()
+                .getFirst();
     }
 
     private void removeCart(String userId) {

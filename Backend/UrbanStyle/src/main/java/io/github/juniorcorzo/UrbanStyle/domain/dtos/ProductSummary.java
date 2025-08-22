@@ -13,6 +13,8 @@ public record ProductSummary(
         @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String productId,
         @NotBlank(groups = {OnCreate.class, OnUpdate.class})
+        String sku,
+        @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String name,
         @NotBlank(groups = {OnCreate.class, OnUpdate.class})
         String color,

@@ -52,7 +52,7 @@ public class BulkProductService {
                 .set("discount", productEntity.getDiscount())
                 .set("categories", productEntity.getCategories())
                 .set("attributes", productEntity.getAttributes())
-                .set("stock", productEntity.getStock());
+                .set("newStock", productEntity.getStock());
 
         bulkOperations.updateOne(query, update);
 
