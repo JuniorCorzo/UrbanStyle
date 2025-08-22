@@ -3,7 +3,6 @@ package io.github.juniorcorzo.UrbanStyle.product.infrastructure.adapters.change_
 import com.mongodb.client.model.changestream.ChangeStreamDocument;
 import com.mongodb.client.model.changestream.FullDocument;
 import io.github.juniorcorzo.UrbanStyle.product.application.command.stock.StockCommandFactory;
-import io.github.juniorcorzo.UrbanStyle.product.application.service.StockMovementsService;
 import io.github.juniorcorzo.UrbanStyle.product.application.service.bulks.ProductStockCommandOrchestrator;
 import io.github.juniorcorzo.UrbanStyle.product.domain.entities.ProductEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,7 @@ public class InsertProductListener {
     private final ProductStockCommandOrchestrator productStockOrchestrator;
     private final StockCommandFactory stockCommandFactory;
 
-    public InsertProductListener(MessageListenerContainer messageListener, StockMovementsService stockService, ProductStockCommandOrchestrator productStockOrchestrator, StockCommandFactory stockCommandFactory) {
+    public InsertProductListener(MessageListenerContainer messageListener, ProductStockCommandOrchestrator productStockOrchestrator, StockCommandFactory stockCommandFactory) {
         this.messageListener = messageListener;
         this.productStockOrchestrator = productStockOrchestrator;
         this.stockCommandFactory = stockCommandFactory;
