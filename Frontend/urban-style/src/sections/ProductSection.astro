@@ -18,14 +18,14 @@ if (description === undefined) {
 }
 ---
 
-<section class="@container mx-auto max-w-7xl" transition:animate={slide({ duration: 300 })}>
+<section class="@container mx-auto max-w-7xl px-3" transition:animate={slide({ duration: 300 })}>
 	<div
-		class="border-border bg-foreground shadow-border mx-auto flex w-fit justify-center gap-20 rounded-md border p-5 shadow-md"
+		class="border-border bg-foreground shadow-border mx-auto flex w-fit flex-col justify-center gap-5 rounded-md border shadow-md md:p-5 lg:flex-row lg:gap-x-20"
 	>
-		<article class="border-border min-w-md flex aspect-square w-fit flex-col">
+		<article class="border-border flex h-fit justify-center">
 			<ProductImage alt={description} images={images} productId={id} />
 		</article>
-		<article class="border-border relative rounded-md">
+		<article class="border-border relative rounded-md max-md:p-2">
 			<ProductDetailsPanel product={product} userId={userId} />
 		</article>
 	</div>
