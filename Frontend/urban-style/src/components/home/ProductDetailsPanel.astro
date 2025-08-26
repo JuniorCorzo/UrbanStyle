@@ -6,6 +6,8 @@ import Counter from '@/components/home/Counter.astro'
 import Button from '@/components/Button.astro'
 import { ProductVariantSelectors } from '@/components/react/ProductVariantSelectors'
 import type { Products } from '@/interface/product.interface'
+import Title from '../text/Title.astro'
+import { ShoppingCartIcon } from '@heroicons/react/24/outline'
 
 interface Props {
 	userId: string
@@ -13,21 +15,19 @@ interface Props {
 }
 
 const { userId, product } = Astro.props
+const isLogged = Astro.locals.user !== undefined
 const { name, description, categories, attributes, price, stock } = product
 const { searchParams } = Astro.url
 const colorParam = searchParams.get('color') ?? undefined
 const sizeParam = searchParams.get('size') ?? undefined
 ---
 
-<div
-	class="flex aspect-auto flex-col justify-start gap-2 rounded px-3 py-5 md:sticky md:top-12 lg:px-8"
->
-	<Subtitle Text={name} size="2xl" />
-	<RegularText>{description}</RegularText>
+<div class="flex flex-col gap-3 rounded-md">
 	<Tags categories={categories} />
+	<Title>{name}</Title>
+	<RegularText>{description}</RegularText>
 	<Subtitle
-		size="3xl"
-		class="py-3"
+		size="2xl"
 		Text={Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP' }).format(price)}
 		title="Precio"
 	/>
@@ -39,166 +39,26 @@ const sizeParam = searchParams.get('size') ?? undefined
 			client:idle
 		/>
 	</div>
-	<div class="flex flex-col gap-5 pt-5">
-		<Counter id="product_quantity" maxNumber={stock} />
-		<Button id="add_cart" class="h-fit w-full max-w-full" size="md" data-user-id={userId}>
-			Añadir al Carrito
-		</Button>
-	</div>
+	{
+		isLogged && (
+			<div class="flex gap-5">
+				<Counter id="product_quantity" maxNumber={stock} />
+				<Button
+					id="add_cart"
+					class="flex max-h-9 gap-2 px-4 py-2 text-sm font-medium"
+					size="custom"
+					data-user-id={userId}
+				>
+					<ShoppingCartIcon className="size-5" />
+					Añadir al Carrito
+				</Button>
+			</div>
+		)
+	}
 </div>
 
 <script>
-	import type { Cart } from '@/interface/cart.interface'
-	import { $ } from '@/lib/dom-selector'
-	import { showError } from '@/lib/showErrorMessages'
-	import { dispatchCartCountEvent } from '@/lib/utils/cart-count-event'
-	import { CartCreateScheme } from '@/lib/validations/cart.validation'
-	import { CartService } from '@/service/cart.service'
-	import { ProductStore } from '@/state/product.store'
-	import { z } from 'zod'
+	import CartHandler from '@/scripts/product/CartHandler'
 
-	const sendCart = (createCart: Cart) => {
-		CartService()
-			.addProductToCart(createCart)
-			.then((cart) => {
-				dispatchCartCountEvent(cart.items.length)
-			})
-	}
-
-	/**
-	 * Extracts userId and productQuantity from the event.
-	 * @param event - MouseEvent from the click action
-	 * @returns An object containing userId and productQuantity, or null if missing
-	 */
-	function extractEventData(event: MouseEvent): { userId: string; productQuantity: number } | null {
-		const target = event.target as HTMLButtonElement
-		const userId = target.dataset.userId
-		const quantityInput = $('#product_quantity') as HTMLInputElement | null
-		if (!userId || !quantityInput) return null
-
-		return { userId, productQuantity: quantityInput.valueAsNumber }
-	}
-
-	/**
-	 * Retrieves product details from the store based on productId.
-	 * @param productId - ID of the product to find
-	 * @returns Product details (name, price, discount) or null if not found
-	 */
-	async function fetchProductDetails(
-		productId: string,
-	): Promise<{ name: string; price: number; discount: number } | null> {
-		const { productStore } = await ProductStore()
-		const product = productStore.get().find((item) => item.id === productId)
-
-		if (!product || product.discount === undefined) return null
-		const { name, price, discount } = product
-
-		return { name, price, discount }
-	}
-
-	function getInputElement(): {
-		colorInput: HTMLInputElement | null
-		sizeInput: HTMLInputElement | null
-	} {
-		const colorInput = $<HTMLInputElement>("input[name='color']")
-		const sizeInput = $<HTMLInputElement>("input[name='size']")
-
-		return { colorInput, sizeInput }
-	}
-
-	/**
-	 * Parses color and size inputs from the DOM.
-	 * @returns An object containing color and size strings, or null if parsing fails
-	 */
-	function parseColorSize(): { color: string; size: string } | undefined {
-		const { colorInput, sizeInput } = getInputElement()
-
-		const colorValue = colorInput?.value
-		const sizeValue = sizeInput?.value
-
-		if (!colorValue || !sizeValue) return
-		const [, color] = colorValue.split(',')
-		const [, size] = sizeValue.split(',')
-		if (!color || !size) return
-
-		return { color, size }
-	}
-
-	/**
-	 * Constructs the Cart object based on provided parameters.
-	 * @param userId - ID of the user
-	 * @param productId - ID of the product
-	 * @param name - Product name
-	 * @param price - Product price
-	 * @param discount - Product discount
-	 * @param color - Chosen color
-	 * @param size - Chosen size
-	 * @param quantity - Quantity to add
-	 * @returns A Cart object ready to be sent
-	 */
-	function buildCart(
-		userId: string,
-		productId: string,
-		name: string,
-		price: number,
-		discount: number,
-		color: string,
-		size: string,
-		quantity: number,
-	): Cart {
-		return {
-			userId,
-			items: [{ productId, name, color, size, discount, price, quantity }],
-		}
-	}
-
-	/**
-	 * Main click handler to add a product to the cart.
-	 * @param productId - ID of the product to add
-	 * @param event - MouseEvent from the click action
-	 */
-	async function handleClick(event: MouseEvent): Promise<void> {
-		const productId = new URLSearchParams(location.search).get('id')
-		if (!productId) return
-
-		const eventData = extractEventData(event)
-		if (!eventData) return
-		const { userId, productQuantity } = eventData
-
-		const productDetails = await fetchProductDetails(productId)
-		if (!productDetails) return
-		const { name, price, discount } = productDetails
-
-		const variant = parseColorSize()
-		const { color, size } = variant ?? {}
-
-		try {
-			CartCreateScheme.parse({ color, size })
-		} catch (err) {
-			if (err instanceof z.ZodError) {
-				showError(err)
-				return
-			}
-			console.error('Validation error:', err)
-			return
-		}
-
-		// Build and send cart
-		if (!color || !size) return
-		const cart = buildCart(userId, productId, name, price, discount, color, size, productQuantity)
-		sendCart(cart)
-	}
-
-	//Reset the selectors for evict errors in validation
-	const resetSelects = () => {
-		const { colorInput, sizeInput } = getInputElement()
-		if (!colorInput || !sizeInput) return
-		colorInput.value = ''
-		sizeInput.value = ''
-	}
-
-	document.addEventListener('astro:page-load', () => {
-		$('#add_cart')?.addEventListener('click', handleClick)
-		resetSelects()
-	})
+	document.addEventListener('astro:page-load', CartHandler.setupEventListener)
 </script>

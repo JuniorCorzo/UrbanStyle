@@ -11,19 +11,19 @@ interface Props {
 const { maxNumber, id, value = '1', ...props } = Astro.props
 ---
 
-<div class="flex w-full">
-	<div class="border-border flex w-full rounded border" {...props}>
+<div class="flex w-full max-w-32">
+	<div class="border-border flex h-9 w-full rounded border" {...props}>
 		<Button
 			id="decrement"
-			class="flex aspect-square size-10 items-center justify-center rounded-br-[0] rounded-tr-[0] border-0"
-			size="sm"
+			class="flex aspect-square w-9 items-center justify-center rounded-br-none rounded-tr-none border-b border-none shadow-none"
+			size="custom"
 		>
 			<MinusIcon className="pointer-events-none size-5" />
 		</Button>
 		<input
 			id={id}
 			type="number"
-			class="border-border focus:custom-ring w-full min-w-14 border-l border-r text-center focus:outline-none"
+			class="border-border focus:custom-ring max-h-9 w-full min-w-14 border-l border-r text-center focus:outline-none"
 			value={value}
 			min="1"
 			max={maxNumber}
@@ -31,7 +31,7 @@ const { maxNumber, id, value = '1', ...props } = Astro.props
 		/>
 		<Button
 			id="increment"
-			class="flex aspect-square size-10 items-center justify-center rounded-bl-[0] rounded-tl-[0] border-0"
+			class="flex aspect-square w-9 items-center justify-center rounded-bl-[0] rounded-tl-[0] border-0"
 			size="sm"
 		>
 			<PlusIcon className="pointer-events-none size-5" />

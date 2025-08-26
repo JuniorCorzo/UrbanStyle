@@ -1,6 +1,6 @@
 import { cn } from '@/lib/cn'
 import { CheckIcon, PencilIcon, TrashIcon } from '@heroicons/react/24/outline'
-import type { Attributes } from '@/interface/product.interface'
+import type { Attribute } from '@/interface/product.interface'
 import {
 	useEffect,
 	useRef,
@@ -11,7 +11,7 @@ import {
 } from 'react'
 import type { BooleanField } from 'node_modules/astro/dist/env/schema'
 
-interface AttributesWithId extends Attributes {
+interface AttributesWithId extends Attribute {
 	id: string
 }
 

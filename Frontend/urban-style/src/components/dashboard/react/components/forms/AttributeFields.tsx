@@ -4,7 +4,7 @@ import TextInput from '@/components/react/inputs/TextInput'
 import { CLOTHING_COLORS, CLOTHING_SIZE } from '@/const/product.const'
 import { Button } from '@/components/react/Button'
 import { TrashIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import type { Attributes } from '@/interface/product.interface'
+import type { Attribute } from '@/interface/product.interface'
 import { useRef, useState } from 'react'
 import { cn } from '@/lib/cn'
 import { AttributeTable } from './AttributeTable'
@@ -12,7 +12,7 @@ import { AttributeFormFields } from './AttributeFormFields'
 import { useAttributes } from '../../hooks/useAttributes'
 import { MessageError } from '@/components/react/inputs/MessageError'
 
-export interface AttributesWithId extends Attributes {
+export interface AttributesWithId extends Attribute {
 	id: string
 }
 

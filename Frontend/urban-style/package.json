@@ -11,7 +11,7 @@
 		"lint:fix": "npx eslint . --ext .js,.jsx,.ts,.tsx --fix"
 	},
 	"dependencies": {
-		"@astrojs/node": "^9.4.0",
+		"@astrojs/node": "^9.4.3",
 		"@astrojs/react": "4.3.0",
 		"@heroicons/react": "^2.2.0",
 		"@nanostores/react": "github:nanostores/react",
@@ -19,7 +19,7 @@
 		"@tanstack/react-table": "^8.21.3",
 		"@types/react": "^19.1.2",
 		"@types/react-dom": "^19.1.2",
-		"astro": "5.12.9",
+		"astro": "5.13.3",
 		"axios": "^1.8.4",
 		"bytes": "^3.1.2",
 		"cally": "^0.8.0",

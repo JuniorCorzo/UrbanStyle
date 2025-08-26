@@ -10,7 +10,7 @@ const { categories } = Astro.props as {
 	{
 		categories.map(({ name }) => (
 			<a href={`/category/${name}`}>
-				<span class="bg-accent text-text rounded-lg px-1.5 py-1 text-base">{name}</span>
+				<span class="bg-accent text-text rounded-lg px-1.5 py-1 text-sm">{name}</span>
 			</a>
 		))
 	}
