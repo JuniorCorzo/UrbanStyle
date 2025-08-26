@@ -13,7 +13,7 @@ const productById = productStore.get().filter(({ id }) => id === productId)[0]
 <Layout>
 	<ProductSection product={productById} />
 	<RecommendedProductsSection
-		class="px-6 py-4 md:hidden landscape:max-lg:block"
+		class="mx-auto max-w-7xl py-7"
 		categoryName={productById?.categories[0].name}
 	/>
 </Layout>

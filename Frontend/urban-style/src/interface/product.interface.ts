@@ -1,7 +1,8 @@
 import type { BaseDocument } from './base.interface'
 import type { CategorySummary } from './category.interface'
 
-export type Attributes = {
+export type Attribute = {
+	sku: string
 	color: string
 	size: string
 	quantity: number
@@ -18,7 +19,7 @@ export interface Products extends BaseDocument {
 	price: number
 	images: Images[]
 	categories: CategorySummary[]
-	attributes: Attributes[]
+	attributes: Attribute[]
 	stock: number
 	discount?: number
 }

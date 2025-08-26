@@ -1,7 +1,7 @@
 import type { Category, CategorySummary } from '@/interface/category.interface'
 import type { SelectOptions } from '@/interface/form-mediator.interface'
 import type {
-	Attributes,
+	Attribute,
 	CreateProduct,
 	Images,
 	Products,
@@ -20,7 +20,7 @@ export class ProductAdapter {
 				return { categoryId: value, name: text }
 			})
 
-		const getAttributes = (): Attributes[] => JSON.parse(attributes)
+		const getAttributes = (): Attribute[] => JSON.parse(attributes)
 
 		const getImages = async () => {
 			const imageState = imagesStore.get()

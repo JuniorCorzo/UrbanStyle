@@ -3,8 +3,6 @@ import ProductDetailsPanel from '@/components/home/ProductDetailsPanel.astro'
 import ProductImage from '@/components/home/ProductImage.astro'
 import type { Products } from '@/interface/product.interface'
 
-import { fade } from 'astro:transitions'
-import RecommendedProductsSection from './RecommendedProductsSection.astro'
 import { slide } from 'node_modules/astro/dist/transitions'
 
 interface Props {
@@ -20,21 +18,15 @@ if (description === undefined) {
 }
 ---
 
-<div class="px-6">
-	<section
-		class="@container border-border shadow-accent relative flex flex-col rounded-md border shadow-md sm:border-0 md:grid-cols-3 md:flex-row landscape:max-lg:flex-col"
-		transition:animate={slide({ duration: 300 })}
+<section class="@container mx-auto max-w-7xl" transition:animate={slide({ duration: 300 })}>
+	<div
+		class="border-border bg-foreground shadow-border mx-auto flex w-fit justify-center gap-20 rounded-md border p-5 shadow-md"
 	>
-		<article class="border-border col-span-2 flex grow flex-col sm:rounded-l-md sm:border">
+		<article class="border-border min-w-md flex aspect-square w-fit flex-col">
 			<ProductImage alt={description} images={images} productId={id} />
-			<div class="px-3 py-5 max-md:hidden landscape:max-lg:hidden">
-				<RecommendedProductsSection categoryName={product.categories[0].name} />
-			</div>
 		</article>
-		<article
-			class="2xl:min-w-2xl lg:min-w-lg border-border rounded-r-md sm:min-h-screen sm:border sm:border-l-0"
-		>
+		<article class="border-border relative rounded-md">
 			<ProductDetailsPanel product={product} userId={userId} />
 		</article>
-	</section>
-</div>
+	</div>
+</section>
