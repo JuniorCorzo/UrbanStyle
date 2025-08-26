@@ -1,13 +1,22 @@
 import type { Cart } from '@/interface/cart.interface'
+import type { ChangeVariantEvent } from '@/lib/custom-events/change-variants'
 import { $ } from '@/lib/dom-selector'
 import { showError } from '@/lib/showErrorMessages'
 import { dispatchCartCountEvent } from '@/lib/utils/cart-count-event'
 import { CartCreateScheme } from '@/lib/validations/cart.validation'
 import { CartService } from '@/service/cart.service'
-import { searchProducts } from '@/service/product.service'
 import { ProductStore } from '@/state/product.store'
 import { z } from 'zod'
 
+const SELECTORS = {
+	PRODUCT_QUANTITY: '#product_quantity',
+} as const
+
+/**
+ * Send the actual cart to api
+ *
+ * @param createCart cart to send
+ */
 const sendCart = (createCart: Cart) => {
 	CartService()
 		.addProductToCart(createCart)
@@ -24,7 +33,7 @@ const sendCart = (createCart: Cart) => {
 function extractEventData(event: MouseEvent): { userId: string; productQuantity: number } | null {
 	const target = event.target as HTMLButtonElement
 	const userId = target.dataset.userId
-	const quantityInput = $('#product_quantity') as HTMLInputElement | null
+	const quantityInput = $(SELECTORS.PRODUCT_QUANTITY) as HTMLInputElement | null
 	if (!userId || !quantityInput) return null
 
 	return { userId, productQuantity: quantityInput.valueAsNumber }
@@ -128,10 +137,33 @@ async function handleClick(event: MouseEvent): Promise<void> {
 }
 
 /**
+ * Sets the maximum quantity based on the product variant selected by the user
+ *
+ * @author JuniorCorzo
+ * @param event it's custom event dispatch when change any product variant
+ * @returns void
+ */
+function handleCounterMax(event: CustomEvent<ChangeVariantEvent>): void {
+	const $inputCounter = $<HTMLInputElement>(SELECTORS.PRODUCT_QUANTITY)
+	const inputValue = $inputCounter?.valueAsNumber ?? 0
+	const maxNumber = event.detail.quantity
+
+	if (!$inputCounter) {
+		console.error('Not input element found in DOM')
+		event.stopPropagation()
+		return
+	}
+
+	if (inputValue > maxNumber) $inputCounter.value = String(maxNumber)
+	$inputCounter.max = String(maxNumber)
+}
+
+/**
  * Initialize the events listener for cart handler
  */
 function setupEventListener() {
 	$('#add_cart')?.addEventListener('click', handleClick)
+	document.addEventListener('product:change-variant', handleCounterMax)
 }
 
 export default {

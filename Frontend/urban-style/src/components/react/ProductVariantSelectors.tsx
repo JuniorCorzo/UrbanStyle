@@ -2,8 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import type { Attribute } from '@/interface/product.interface'
 import { useSearchParam } from './hooks/useSearchParam'
 import { VariantSelector } from './VariantSelector'
+import { useProductVariants } from './hooks/useProductVariants'
 
-interface ProductVariantSelectorsProps {
+export type ProductVariantSelectorsProps = {
 	attributes: Attribute[]
 	defaultColor?: string
 	defaultSize?: string
@@ -14,38 +15,12 @@ export function ProductVariantSelectors({
 	defaultColor,
 	defaultSize,
 }: ProductVariantSelectorsProps) {
-	const { setSearchParam } = useSearchParam()
-	const [color, setColor] = useState<string | undefined>(defaultColor)
-	const sizeSelected = useRef<string>(defaultSize)
-
-	const colorOptions = useMemo(
-		() => Array.from(new Set(attributes.map((attr) => attr.color))).map((color) => color),
-		[],
-	)
-
-	const sizeOptions = useMemo(
-		() => attributes.filter((attr) => attr.color === color).map(({ size }) => size),
-		[color],
-	)
-
-	useEffect(() => {
-		if (!defaultColor) setColor(colorOptions[0])
-	}, [])
-
-	useEffect(() => setSearchParam('color', color ?? ''), [color])
-	const handleColorSelect = (color: string) => {
-		if (!color) return
-
-		setColor(color)
-		setSearchParam('color', color)
-	}
-
-	const handleSizeSelect = (size: string) => {
-		if (!size) return
-
-		sizeSelected.current = size
-		setSearchParam('size', size)
-	}
+	const { colorOptions, sizeOptions, sizeSelected, handleColorSelect, handleSizeSelect } =
+		useProductVariants({
+			attributes,
+			defaultColor,
+			defaultSize,
+		})
 
 	return (
 		<div className="flex w-full flex-col gap-3">

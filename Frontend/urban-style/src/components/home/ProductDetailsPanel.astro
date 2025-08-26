@@ -15,6 +15,7 @@ interface Props {
 }
 
 const { userId, product } = Astro.props
+const isLogged = Astro.locals.user !== undefined
 const { name, description, categories, attributes, price, stock } = product
 const { searchParams } = Astro.url
 const colorParam = searchParams.get('color') ?? undefined
@@ -38,18 +39,22 @@ const sizeParam = searchParams.get('size') ?? undefined
 			client:idle
 		/>
 	</div>
-	<div class="flex gap-5">
-		<Counter id="product_quantity" maxNumber={stock} />
-		<Button
-			id="add_cart"
-			class="flex max-h-9 gap-2 px-4 py-2 text-sm font-medium"
-			size="custom"
-			data-user-id={userId}
-		>
-			<ShoppingCartIcon className="size-5" />
-			Añadir al Carrito
-		</Button>
-	</div>
+	{
+		isLogged && (
+			<div class="flex gap-5">
+				<Counter id="product_quantity" maxNumber={stock} />
+				<Button
+					id="add_cart"
+					class="flex max-h-9 gap-2 px-4 py-2 text-sm font-medium"
+					size="custom"
+					data-user-id={userId}
+				>
+					<ShoppingCartIcon className="size-5" />
+					Añadir al Carrito
+				</Button>
+			</div>
+		)
+	}
 </div>
 
 <script>
