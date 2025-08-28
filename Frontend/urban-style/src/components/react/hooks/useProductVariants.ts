@@ -27,7 +27,11 @@ export function useProductVariants({
 
 	useEffect(() => {
 		if (!defaultColor) setColor(colorOptions[0])
-		if (!defaultSize) sizeSelected.current = attributes[0].size
+
+		if (!defaultSize) {
+			sizeSelected.current = attributes[0].size
+			handleSizeSelect(sizeSelected.current)
+		}
 	}, [])
 
 	useEffect(() => {
@@ -40,7 +44,6 @@ export function useProductVariants({
 		if (!color) return
 
 		setColor(color)
-		setSearchParam('color', color)
 	}
 
 	const handleSizeSelect = (size: string) => {
