@@ -1,6 +1,6 @@
 ---
 import { ProductService } from '@/service/product.service'
-import CategoryService from '@/service/categories.service'
+import { CategoryService } from '@/service/categories.service'
 import Layout from '@/layouts/Layout.astro'
 import ProductContainer from '@/components/home/ProductContainer.astro'
 
@@ -12,7 +12,14 @@ if (!productResponse.success) {
 }
 
 const productsByCategory = productResponse.data
-const description = await CategoryService.getDescriptionByName(categoryName ?? '')
+const categoryResponse = await CategoryService.getDescriptionByName(categoryName ?? '')
+
+if (!categoryResponse.success) {
+	console.error(categoryResponse.error)
+	return Astro.redirect('/home')
+}
+
+const description = categoryResponse.data
 ---
 
 <Layout>

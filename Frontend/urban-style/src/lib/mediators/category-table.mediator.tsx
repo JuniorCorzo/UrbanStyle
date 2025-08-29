@@ -1,6 +1,6 @@
 import type { Category } from '@/interface/category.interface'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { categoriesStore, CategoriesStore, categoryReportStore } from '@/state/categories.store'
+import { categoriesStore, categoryReportStore } from '@/state/categories.store'
 import type { CategoryReport } from '@/interface/report.interface'
 import { tableStore } from '@/state/table.state'
 import TableActions from '@/components/dashboard/react/components/table/TableActions'
@@ -8,8 +8,6 @@ import { Cell } from '@/components/dashboard/react/components/table/Cell'
 import { ModeSelector } from '@/components/dashboard/react/components/ModeSelector'
 
 export async function categoriesTable(): Promise<void> {
-	await CategoriesStore()
-
 	const columnAccessor = createColumnHelper<Category>()
 	const columns = [
 		columnAccessor.accessor('name', {

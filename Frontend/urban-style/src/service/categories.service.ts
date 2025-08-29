@@ -1,62 +1,65 @@
+import { extractResponse, extractSingleResponse, obtainsError } from '@/adapter/responses.adapter'
 import { PUBLIC_API_URL } from '@/config/env-config'
 import type { Category, CreateCategory } from '@/interface/category.interface'
-import type { Response } from '@/interface/response.interface'
+import type { ErrorMessage, Response } from '@/interface/response.interface'
+import { Err, Success, type Result } from '@/lib/result_pattern'
 import axios from 'axios'
 
-export async function getDescriptionByName(categoryName: string) {
-	return (
-		await axios
-			.get<Response<string>>(`${PUBLIC_API_URL}/categories/description?name=${categoryName}`)
-			.then((response) => {
-				if (response.status !== 200) throw Error()
-				return response.data
-			})
-	).data[0]
+async function getDescriptionByName(categoryName: string): Promise<Result<string, ErrorMessage>> {
+	const response = await axios.get<Response<string>>(
+		`${PUBLIC_API_URL}/categories/description?name=${categoryName}`,
+	)
+
+	return extractSingleResponse(response)
 }
 
-export async function getAllCategories() {
-	const response = await axios.get(`${PUBLIC_API_URL}/categories/all`).then((response) => {
-		return response.data as Response<Category>
-	})
+async function getAllCategories(): Promise<Result<Category[], ErrorMessage>> {
+	const response = await axios.get<Response<Category>>(`${PUBLIC_API_URL}/categories/all`)
 
-	return response.data
+	return extractResponse(response)
 }
 
-export async function createCategory(category: CreateCategory) {
-	const response = await axios
-		.post(`${PUBLIC_API_URL}/categories/create`, category, {
+async function createCategory(category: CreateCategory): Promise<Result<Category, ErrorMessage>> {
+	const response = await axios.post<Response<Category>>(
+		`${PUBLIC_API_URL}/categories/create`,
+		category,
+		{
 			withCredentials: true,
-		})
-		.then((response) => {
-			return response.data as Response<Category>
-		})
+		},
+	)
 
-	return response.data
+	return extractSingleResponse(response, 201)
 }
-export async function updateCategory(category: Category) {
-	const response = await axios
-		.put(`${PUBLIC_API_URL}/categories/update`, category, {
+
+async function updateCategory(category: Category): Promise<Result<Category, ErrorMessage>> {
+	const response = await axios.put<Response<Category>>(
+		`${PUBLIC_API_URL}/categories/update`,
+		category,
+		{
 			withCredentials: true,
-		})
-		.then((response) => {
-			return response.data as Response<Category>
-		})
+		},
+	)
 
-	return response.data
+	return extractSingleResponse(response)
 }
-export async function deleteCategory(categoryId: string) {
-	const response = await axios
-		.delete(`${PUBLIC_API_URL}/categories/delete/${categoryId}`, {
+
+async function deleteCategory(categoryId: string): Promise<Result<string, ErrorMessage>> {
+	const response = await axios.delete<Response<never>>(
+		`${PUBLIC_API_URL}/categories/delete/${categoryId}`,
+		{
 			withCredentials: true,
-		})
-		.then((response) => {
-			return response.data as Response<Category>
-		})
+		},
+	)
+	const { status, data: responseData } = response
+	if (status !== 200) {
+		const { message } = obtainsError(response)
+		return Err(message)
+	}
 
-	return response.data
+	return Success(responseData.message)
 }
 
-export default {
+export const CategoryService = {
 	getAllCategories,
 	getDescriptionByName,
 	createCategory,

@@ -1,9 +1,8 @@
-import FileInput from '@/components/react/inputs/FileInput'
 import { SelectInput } from '@/components/react/inputs/SelectInput'
 import TextInput from '@/components/react/inputs/TextInput'
 import type { SelectOptions } from '@/interface/form-mediator.interface'
 import type { Products } from '@/interface/product.interface'
-import { CategoriesStore } from '@/state/categories.store'
+import { categoriesStore } from '@/state/categories.store'
 import { useLayoutEffect, useState } from 'react'
 import { AttributeFields } from './AttributeFields'
 import { TextAreaInput } from '@/components/react/inputs/TextAreaInput'
@@ -15,7 +14,7 @@ export function ProductFormFields({ getDefaultValues }: FormFieldsProps<Products
 	const defaultValues = getDefaultValues()
 
 	const getCategories = async (): Promise<SelectOptions[]> =>
-		(await CategoriesStore()).categoriesStore.get().map((category) => ({
+		categoriesStore.get().map((category) => ({
 			value: category.id,
 			text: category.name,
 		}))
