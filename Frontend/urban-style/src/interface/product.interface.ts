@@ -31,6 +31,7 @@ export interface ProductsGroupedCategory {
 
 export interface ProductSummary extends Pick<Products, 'name' | 'price' | 'discount'> {
 	productId: Products['id']
+	sku: string
 	color: string
 	size: string
 	quantity: number
@@ -41,7 +42,7 @@ export interface DeleteImageProduct {
 	images: string[]
 }
 
-export interface AddImageProduct {
+export interface ProductImages {
 	productId: string
 	images: Images[]
 }

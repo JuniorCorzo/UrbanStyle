@@ -17,14 +17,14 @@ const { userId } = Astro.props
 	import type { CreateOrder } from '@/interface/orders.interface'
 	import { $ } from '@/lib/dom-selector'
 	import { toggleErrorMessage } from '@/lib/showErrorMessages'
+	import ToasterManager from '@/lib/utils/ToasterManager'
 	import { OrderService } from '@/service/orders.service'
 	import { getAddressById } from '@/state/address.state'
 
-	const sendOrder = (createOrder: CreateOrder) => {
-		OrderService.createOrder(createOrder).then((response) => {
-			alert('Pedido enviado correctamente')
+	const sendOrder = (createOrder: CreateOrder) =>
+		OrderService.createOrder(createOrder).then(() => {
+			window.location.reload()
 		})
-	}
 
 	const initializeListeners = () => {
 		const $sendButton = $('#send_order')
@@ -51,7 +51,14 @@ const { userId } = Astro.props
 				address,
 				paymentMethod: 'PSE',
 			}
-			sendOrder(createOrder)
+
+			ToasterManager.emitPromise({
+				promise: sendOrder(createOrder),
+				config: {
+					success: '¡Pedido realizado con éxito! Serás redirigido en unos segundos.',
+					error: 'Hubo un error al procesar tu pedido, vuelve a intentar más tarde.',
+				},
+			})
 		})
 	}
 	document.addEventListener('astro:page-load', initializeListeners)

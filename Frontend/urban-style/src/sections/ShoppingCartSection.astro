@@ -25,6 +25,7 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 
 <script>
 	import { $, $$ } from '@/lib/dom-selector'
+	import ToasterManager from '@/lib/utils/ToasterManager'
 	import { CartService } from '@/service/cart.service'
 	import { navigate } from 'astro:transitions/client'
 	/**
@@ -34,6 +35,7 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 
 	/**
 	 * Extracts dataset properties for cart item identifiers from an element.
+	 *
 	 * @param element - HTMLElement containing data attributes
 	 * @returns Object with userId, productId, color, size or null if missing
 	 */
@@ -55,11 +57,17 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 		if (!keys) return
 		const { userId, productId, color, size } = keys
 
-		CartService()
-			.removeProductFromCart(userId, productId, color, size)
-			.then(() => {
-				navigate(window.location.pathname, { history: 'replace' })
-			})
+		ToasterManager.emitPromise({
+			promise: CartService()
+				.removeProductFromCart(userId, productId, color, size)
+				.then(() => {
+					navigate(window.location.pathname, { history: 'replace' })
+				}),
+			config: {
+				success: 'Producto removido correctamente',
+				error: 'Hubo un error, vuelve a intentar más tarde',
+			},
+		})
 	}
 
 	/**
@@ -121,5 +129,6 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 		const cartSection = $('#cart-section')
 		cartSection?.addEventListener('click', handleCartClick)
 	}
+
 	document.addEventListener('astro:page-load', initCartListeners)
 </script>

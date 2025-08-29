@@ -13,8 +13,6 @@ import type { ProductReport } from '@/interface/report.interface'
 import { ModeSelector } from '@/components/dashboard/react/components/ModeSelector'
 
 export async function productTable(): Promise<void> {
-	await ProductStore()
-
 	const columnAccessor = createColumnHelper<Products>()
 	const columns = [
 		columnAccessor.display({

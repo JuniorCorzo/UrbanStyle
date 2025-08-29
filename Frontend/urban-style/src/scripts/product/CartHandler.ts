@@ -3,9 +3,10 @@ import type { ChangeVariantEvent } from '@/lib/custom-events/change-variants'
 import { $ } from '@/lib/dom-selector'
 import { showError } from '@/lib/showErrorMessages'
 import { dispatchCartCountEvent } from '@/lib/utils/cart-count-event'
+import ToasterManager from '@/lib/utils/ToasterManager'
 import { CartCreateScheme } from '@/lib/validations/cart.validation'
 import { CartService } from '@/service/cart.service'
-import { ProductStore } from '@/state/product.store'
+import { productStore } from '@/state/product.store'
 import { z } from 'zod'
 
 const SELECTORS = {
@@ -17,13 +18,12 @@ const SELECTORS = {
  *
  * @param createCart cart to send
  */
-const sendCart = (createCart: Cart) => {
+const sendCart = (createCart: Cart) =>
 	CartService()
 		.addProductToCart(createCart)
 		.then((cart) => {
 			dispatchCartCountEvent(cart.items.length)
 		})
-}
 
 /**
  * Extracts userId and productQuantity from the event.
@@ -47,7 +47,6 @@ function extractEventData(event: MouseEvent): { userId: string; productQuantity:
 async function fetchProductDetails(
 	productId: string,
 ): Promise<{ name: string; price: number; discount: number } | null> {
-	const { productStore } = await ProductStore()
 	const product = productStore.get().find((item) => item.id === productId)
 
 	if (!product || product.discount === undefined) return null
@@ -88,13 +87,14 @@ function buildCart(
 	name: string,
 	price: number,
 	discount: number,
+	sku: string,
 	color: string,
 	size: string,
 	quantity: number,
 ): Cart {
 	return {
 		userId,
-		items: [{ productId, name, color, size, discount, price, quantity }],
+		items: [{ productId, name, color, size, discount, price, quantity, sku }],
 	}
 }
 
@@ -119,21 +119,24 @@ async function handleClick(event: MouseEvent): Promise<void> {
 	const variant = getVariants()
 	const { color, size } = variant ?? {}
 
-	try {
-		CartCreateScheme.parse({ color, size })
-	} catch (err) {
-		if (err instanceof z.ZodError) {
-			showError(err)
-			return
-		}
-		console.error('Validation error:', err)
+	const cartValidate = CartCreateScheme.safeParse({ color, size })
+
+	if (!color || !size || cartValidate.error) {
+		ToasterManager.emitError('Carrito de compra', {
+			description: 'Error enviando el carrito, intente mas tarde',
+		})
+		console.error('Validation error:', cartValidate.error)
 		return
 	}
 
-	// Build and send cart
-	if (!color || !size) return
 	const cart = buildCart(userId, productId, name, price, discount, color, size, productQuantity)
-	sendCart(cart)
+	ToasterManager.emitPromise({
+		promise: sendCart(cart),
+		config: {
+			success: 'Carrito enviado con éxito',
+			error: 'Ha ocurrido un error, vuelve a intentar mas tarde',
+		},
+	})
 }
 
 /**

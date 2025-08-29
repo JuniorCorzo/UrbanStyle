@@ -1,5 +1,5 @@
 ---
-import { searchProducts } from '@/service/product.service'
+import { ProductService } from '@/service/product.service'
 import ProductCard from './ProductCard.astro'
 import ProductContainer from './ProductContainer.astro'
 
@@ -8,7 +8,12 @@ interface Props {
 }
 
 const { searchQuery } = Astro.props
-const productSearch = await searchProducts(searchQuery)
+const productResponse = await ProductService.searchProducts(searchQuery)
+if (!productResponse.success) {
+	throw new Error(productResponse.error.toString())
+}
+
+const productSearch = productResponse.data
 
 const message = productSearch.length
 	? `Se encontraron <strong>${productSearch.length}</strong> resultados para <strong>${searchQuery}</strong>`

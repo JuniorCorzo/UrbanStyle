@@ -1,43 +1,42 @@
 import type { Products, ProductsGroupedCategory } from '@/interface/product.interface'
 import type { ProductReport } from '@/interface/report.interface'
-import { getAllProducts, getProductsGroupedByCategory } from '@/service/product.service'
+import { ProductService } from '@/service/product.service'
 import { ReportService } from '@/service/report.service'
 import { atom, computed, map, onMount } from 'nanostores'
 
 export const productStore = map<Products[]>([])
-export const productReportStore = atom<ProductReport[]>([])
 
+onMount(productStore, () => {
+	initializeProducts()
+})
+
+export const initializeProducts = async () => {
+	const response = await ProductService.getAllProducts()
+
+	if (!response.success) throw Error(response.error.toString())
+	productStore.set(response.data)
+}
+
+export const productReportStore = atom<ProductReport[]>([])
 onMount(productReportStore, () => {
+	initializeReportProducts()
+})
+export const initializeReportProducts = () =>
 	ReportService()
 		.productsReport()
 		.then((report) => productReportStore.set(report))
-})
 
 export const productGroupedStore = map<ProductsGroupedCategory[]>([])
-
 export async function initializeProductGroupeStore() {
-	const products = await getProductsGroupedByCategory()
-	productGroupedStore.set(products)
+	const response = await ProductService.getProductsGroupedByCategory()
+	if (!response.success) throw Error(response.error.toString())
+
+	productGroupedStore.set(response.data)
 }
 
-export async function ProductStore() {
-	if (!productStore.get().length) {
-		const products = await getAllProducts()
-		productStore.set(products)
-	}
+export function ProductStore() {
+	const getProductById = (productId: string) =>
+		computed(productStore, (products) => products.find((product) => product.id === productId))
 
-	const productStoreUpdate = async () => {
-		const products = await getAllProducts()
-		productStore.set(products)
-	}
-
-	const getProductById = (productId: string) => {
-		const product = computed(productStore, (products) =>
-			products.find((product) => product.id === productId),
-		)
-
-		return product
-	}
-
-	return { productStore, productStoreUpdate, getProductById }
+	return { getProductById }
 }
