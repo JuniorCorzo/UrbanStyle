@@ -6,9 +6,10 @@ import { atom, map, onMount } from 'nanostores'
 
 export const categoryReportStore = atom<CategoryReport[]>([])
 onMount(categoryReportStore, () => {
-	ReportService()
-		.categoryReport()
-		.then((report) => categoryReportStore.set(report))
+	ReportService.categoryReport().then((response) => {
+		if (!response.success) throw new Error(response.error.toString())
+		categoryReportStore.set(response.data)
+	})
 })
 
 export const categoriesStore = map<Category[]>([])

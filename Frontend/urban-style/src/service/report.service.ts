@@ -1,3 +1,4 @@
+import { extractResponse, extractSingleResponse } from '@/adapter/responses.adapter'
 import { PUBLIC_API_URL } from '@/config/env-config'
 import type {
 	CategoryReport,
@@ -5,77 +6,60 @@ import type {
 	ProductReport,
 	ReportSales,
 } from '@/interface/report.interface'
-import type { Response } from '@/interface/response.interface'
+import type { ErrorMessage, Response } from '@/interface/response.interface'
+import type { Result } from '@/lib/result_pattern'
 import axios from 'axios'
 
-export function ReportService() {
-	const productsReport = async () => {
-		const resultRequest: ProductReport[] = await axios
-			.get(`${PUBLIC_API_URL}/reports/product-report`, {
-				withCredentials: true,
-			})
-			.then((response) => {
-				return (response.data as Response<ProductReport>).data
-			})
+const productsReport = async (): Promise<Result<ProductReport[], ErrorMessage>> => {
+	const response = await axios.get<Response<ProductReport>>(
+		`${PUBLIC_API_URL}/reports/product-report`,
+		{
+			withCredentials: true,
+		},
+	)
 
-		return resultRequest
-	}
+	return extractResponse(response)
+}
 
-	const categoryReport = async () => {
-		const resultRequest: CategoryReport[] = await axios
-			.get(`${PUBLIC_API_URL}/reports/category-report`, {
-				withCredentials: true,
-			})
-			.then((response) => {
-				if (response.status !== 200) throw Error(response.data)
-				console.log(response.headers)
-				return (response.data as Response<CategoryReport>).data
-			})
-			.catch((err) => {
-				console.error(err)
-				throw Error(err)
-			})
+const categoryReport = async (): Promise<Result<CategoryReport[], ErrorMessage>> => {
+	const response = await axios.get<Response<CategoryReport>>(
+		`${PUBLIC_API_URL}/reports/category-report`,
+		{
+			withCredentials: true,
+		},
+	)
 
-		return resultRequest
-	}
+	return extractResponse(response)
+}
 
-	const orderReport = async () => {
-		const resultRequest: OrderReport = await axios
-			.get(`${PUBLIC_API_URL}/reports/order-report`, {
-				withCredentials: true,
-			})
-			.then((response) => {
-				if (response.status !== 200) throw Error(response.data)
+const orderReport = async (): Promise<Result<OrderReport, ErrorMessage>> => {
+	const response = await axios.get<Response<OrderReport>>(
+		`${PUBLIC_API_URL}/reports/order-report`,
+		{
+			withCredentials: true,
+		},
+	)
 
-				return (response.data as Response<OrderReport>).data[0]
-			})
-			.catch((err) => {
-				console.error(err)
-				throw Error(err)
-			})
+	return extractSingleResponse(response)
+}
 
-		return resultRequest
-	}
+const reportSales = async (token?: string): Promise<Result<ReportSales, ErrorMessage>> => {
+	const response = await axios.get<Response<ReportSales>>(
+		`${PUBLIC_API_URL}/reports/report-sales`,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+			withCredentials: true,
+		},
+	)
 
-	const reportSales = async (token?: string) => {
-		const resultRequest: ReportSales = await axios
-			.get(`${PUBLIC_API_URL}/reports/report-sales`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
-				withCredentials: true,
-			})
-			.then((response) => {
-				return (response.data as Response<ReportSales>).data[0]
-			})
+	return extractSingleResponse(response)
+}
 
-		return resultRequest
-	}
-
-	return {
-		productsReport,
-		categoryReport,
-		orderReport,
-		reportSales,
-	}
+export const ReportService = {
+	productsReport,
+	categoryReport,
+	orderReport,
+	reportSales,
 }

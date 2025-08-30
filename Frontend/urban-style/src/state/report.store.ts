@@ -7,9 +7,10 @@ export const reportSalesStore = atom<ReportSales | null>(null)
 export const dashboardStatsStore = atom<SummaryStatProps[]>([])
 
 onMount(reportSalesStore, () => {
-	ReportService()
-		.reportSales()
-		.then((report) => reportSalesStore.set(report))
+	ReportService.reportSales().then((response) => {
+		if (!response.success) throw new Error(response.error.toString())
+		reportSalesStore.set(response.data)
+	})
 })
 
 export const getReportPreviousMonth = () =>

@@ -16,9 +16,10 @@ onMount(orderStore, () => {
 
 export const orderReportStore = atom<OrderReport | undefined>()
 onMount(orderReportStore, () => {
-	ReportService()
-		.orderReport()
-		.then((report) => orderReportStore.set(report))
+	ReportService.orderReport().then((response) => {
+		if (!response.success) throw new Error(response.error.toString())
+		orderReportStore.set(response.data)
+	})
 })
 
 export const setOrderStats = () =>

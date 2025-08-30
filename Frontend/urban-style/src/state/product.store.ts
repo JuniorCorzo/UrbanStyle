@@ -22,9 +22,11 @@ onMount(productReportStore, () => {
 	initializeReportProducts()
 })
 export const initializeReportProducts = () =>
-	ReportService()
-		.productsReport()
-		.then((report) => productReportStore.set(report))
+	ReportService.productsReport().then((response) => {
+		if (!response.success) throw new Error(response.error.toString())
+
+		productReportStore.set(response.data)
+	})
 
 export const productGroupedStore = map<ProductsGroupedCategory[]>([])
 export async function initializeProductGroupeStore() {
