@@ -12,8 +12,9 @@ export function AddressSelect({ userId }: Props) {
 	const address = useStore(AddressStore)
 
 	useEffect(() => {
-		AddressService.getAddressByUserId(userId).then((address) => {
-			AddressStore.set(address)
+		AddressService.getAddressByUserId(userId).then((response) => {
+			if (!response.success) throw new Error(response.error.toString())
+			AddressStore.set(response.data)
 		})
 	}, [])
 

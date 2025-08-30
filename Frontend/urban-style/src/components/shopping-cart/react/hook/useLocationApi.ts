@@ -1,7 +1,6 @@
-import type { Department, Municipality } from '@/interface/address.interface'
+import type { Department } from '@/interface/address.interface'
 import { AddressService } from '@/service/address.service'
 import { MunicipalityStore } from '@/state/location.state'
-import { map } from 'nanostores'
 import { useEffect, useState } from 'react'
 
 export function useLocationApi() {
@@ -9,7 +8,10 @@ export function useLocationApi() {
 	const [departments, setDepartments] = useState<Department[]>()
 
 	useEffect(() => {
-		AddressService.getDepartments().then((departments) => setDepartments(departments))
+		AddressService.getDepartments().then((response) => {
+			if (!response.success) throw new Error(response.error.toString())
+			setDepartments(response.data)
+		})
 	}, [])
 
 	useEffect(() => {
@@ -17,8 +19,10 @@ export function useLocationApi() {
 			MunicipalityStore.set([])
 			return
 		}
-		AddressService.getMunicipality(departmentCode).then((data) => {
-			MunicipalityStore.set(data)
+
+		AddressService.getMunicipality(departmentCode).then((response) => {
+			if (!response.success) throw new Error(response.error.toString())
+			MunicipalityStore.set(response.data)
 		})
 	}, [departmentCode])
 

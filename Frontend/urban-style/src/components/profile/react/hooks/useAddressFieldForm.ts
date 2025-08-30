@@ -1,6 +1,6 @@
 import { AddressAdapter } from '@/adapter/location.adapter'
 import { useMapReducer } from '@/components/react/hooks/useMapReducer'
-import type { Address } from '@/interface/address.interface'
+import type { Address, CreateAddress, UpdateAddress } from '@/interface/address.interface'
 import type { SelectOptions, SelectRefProps } from '@/interface/form-mediator.interface'
 import { showErrorOnlyField } from '@/lib/showErrorMessages'
 import { AddressScheme, type AddressValidate } from '@/lib/validations/address.validations'
@@ -11,6 +11,9 @@ import { useStore } from '@nanostores/react'
 import { type ChangeEvent, useCallback, useEffect, useRef } from 'react'
 import { useLocationApi } from '@/components/shopping-cart/react/hook/useLocationApi'
 import { formStore } from '@/state/form.state'
+import { Err } from '@/lib/result_pattern'
+import ToasterManager from '@/lib/utils/ToasterManager'
+import type { User } from '@/interface/user.interface'
 
 type AddressKey = Omit<Address, 'id' | 'country' | 'userId'>
 const addressKeys: (keyof AddressKey)[] = ['street', 'city', 'state', 'postalCode'] as const
@@ -113,6 +116,22 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 		validateFields(key, value)
 	}
 
+	const handleUpdateAddress = (addressUpdate: UpdateAddress) =>
+		AddressService.updateAddress(addressUpdate).then((response) => {
+			if (!response.success) throw new Error(response.error.toString())
+			AddressStore.set([...AddressStore.get(), response.data])
+			console.log('address updated')
+		})
+
+	const handleCreateAddress = (user: User, address: CreateAddress) =>
+		AddressService.createAddress(
+			AddressAdapter.toAddress(address as AddressValidate, user.id),
+		).then((response) => {
+			if (!response.success) throw new Error(response.error.toString())
+			AddressStore.set([...AddressStore.get(), response.data])
+			console.log('Address created')
+		})
+
 	const sendRequest = (_?: FormData, id?: string) => {
 		if (!user) return
 
@@ -125,19 +144,25 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 
 		if (id) {
 			const addressUpdate = AddressAdapter.toAddressUpdate(address as AddressValidate, user.id, id)
-			AddressService.updateAddress(addressUpdate).then((address) => {
-				AddressStore.set([...AddressStore.get(), address])
-				console.log('address updated')
+			ToasterManager.emitPromise({
+				promise: handleUpdateAddress(addressUpdate),
+				config: {
+					success: 'Dirección actualizada con éxito',
+					error: 'Hubo un error actualizando la dirección, intente mas tarde',
+				},
 			})
 			return
 		}
 
-		AddressService.createAddress(
-			AddressAdapter.toAddress(address as AddressValidate, user.id),
-		).then((address) => {
-			AddressStore.set([...AddressStore.get(), address])
-			console.log('Address created')
-			AddressState.updateAddressStore()
+		ToasterManager.emitPromise({
+			promise: handleCreateAddress(
+				user,
+				AddressAdapter.toAddress(address as AddressValidate, user.id),
+			),
+			config: {
+				success: 'Dirección creada con éxito',
+				error: 'Ha ocurrió un error creando la dirección, intente mas tarde',
+			},
 		})
 	}
 

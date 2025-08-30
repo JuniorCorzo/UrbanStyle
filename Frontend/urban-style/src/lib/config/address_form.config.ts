@@ -5,8 +5,9 @@ import { formStore } from '@/state/form.state'
 
 export function AddressForm(sendRequest: SendForm) {
 	const sendDelete = (id: string) => {
-		AddressService.deleteAddress(id).then(({ message }) => {
-			console.log(message)
+		AddressService.deleteAddress(id).then((response) => {
+			if (!response.success) throw new Error(response.error.toString())
+			console.log(response.data)
 			AddressState.updateAddressStore()
 		})
 	}
