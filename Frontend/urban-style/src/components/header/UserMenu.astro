@@ -23,9 +23,6 @@ const { name: userName, role } = user
 			<li>
 				<a href="/profile?option=personal_data">Perfil</a>
 			</li>
-			<li>
-				<a href="/orders">Mis pedidos</a>
-			</li>
 			{
 				role === 'ROLE_ADMIN' && (
 					<li>
@@ -52,7 +49,7 @@ const { name: userName, role } = user
 
 <script>
 	import { $, $$ } from '@/lib/dom-selector'
-	import { logout } from '@/service/auth.service'
+	import { AuthService } from '@/service/auth.service'
 	import { navigate } from 'astro:transitions/client'
 
 	document.addEventListener('astro:page-load', () => {
@@ -74,7 +71,10 @@ const { name: userName, role } = user
 		})
 
 		$('#logout')?.parentElement?.addEventListener('click', () => {
-			logout().then(() => location.replace('/home'))
+			AuthService.logout().then((response) => {
+				if (!response.success) return
+				location.replace('/home')
+			})
 		})
 	})
 </script>

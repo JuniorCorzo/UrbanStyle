@@ -65,38 +65,28 @@ import MessageError from './MessageError.astro'
 	import { $ } from '@/lib/dom-selector'
 	import { showError, toggleErrorMessage } from '@/lib/showErrorMessages'
 	import { userCredentialsSchema } from '@/lib/validations/user.validations'
-	import { AuthRequest } from '@/service/auth.service'
+	import { AuthService } from '@/service/auth.service'
 	import { navigate } from 'astro:transitions/client'
 	import z from 'zod'
 
+	const handleShowError = ($spanError: HTMLSpanElement) => {
+		const $parent = $spanError?.parentElement?.parentElement
+		if (!$spanError) return
+
+		toggleErrorMessage('Email o contraseña incorrectos', $spanError)
+		$parent?.classList.toggle('hidden')
+		$parent?.classList.toggle('flex')
+	}
+
 	const sendLoginRequest = ({ email, password }: UserCredentials, $spanError: HTMLElement) => {
-		AuthRequest({ email, password })
-			.then((response) => {
-				if (response.status === 200) {
-					window.location.reload()
-				}
-			})
-			.catch((error) => {
-				const $parent = $spanError.parentElement?.parentElement
-				if (!$spanError) return
+		AuthService.login({ email, password }).then((response) => {
+			if (!response.success) {
+				handleShowError($spanError)
+				return
+			}
 
-				if (error.status === 401) {
-					toggleErrorMessage('Email o contraseña incorrectos', $spanError)
-					$parent?.classList.toggle('hidden')
-					$parent?.classList.toggle('flex')
-					return
-				}
-				if (error.status === 403) {
-					toggleErrorMessage('Usuario no verificado', $spanError)
-					$parent?.classList.toggle('hidden')
-					$parent?.classList.toggle('flex')
-					return
-				}
-
-				toggleErrorMessage('Error interno del servidor', $spanError)
-				$parent?.classList.toggle('hidden')
-				$parent?.classList.toggle('flex')
-			})
+			window.location.reload()
+		})
 	}
 
 	const initializeListeners = () => {
