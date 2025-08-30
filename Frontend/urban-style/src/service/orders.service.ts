@@ -1,3 +1,4 @@
+import { extractResponse, extractSingleResponse } from '@/adapter/responses.adapter'
 import { PUBLIC_API_URL } from '@/config/env-config'
 import type {
 	CreateOrder,
@@ -6,106 +7,92 @@ import type {
 	OrderStatus,
 	OrderWithCustomer,
 } from '@/interface/orders.interface'
-import type { Pagination, Response } from '@/interface/response.interface'
+import type { ErrorMessage, Pagination, Response } from '@/interface/response.interface'
+import { Err, type Result } from '@/lib/result_pattern'
 import axios from 'axios'
 
-export class OrderService {
-	static async getAllOrders(): Promise<OrderWithCustomer[]> {
-		return (
-			await axios
-				.get<Response<OrderWithCustomer>>(`${PUBLIC_API_URL}/orders/with-customer`, {
-					withCredentials: true,
-				})
-				.then((response) => {
-					if (response.status !== 200) throw Error('unexpected error')
-					return response.data
-				})
-		).data
-	}
+async function getAllOrders(): Promise<Result<OrderWithCustomer[], ErrorMessage>> {
+	const response = await axios.get<Response<OrderWithCustomer>>(
+		`${PUBLIC_API_URL}/orders/with-customer`,
+		{
+			withCredentials: true,
+		},
+	)
 
-	static async getAllCustomers(): Promise<Customer[]> {
-		return (
-			await axios
-				.get<Response<Customer>>(`${PUBLIC_API_URL}/orders/customers`, { withCredentials: true })
-				.then((response) => {
-					if (response.status !== 200) throw Error('unexpected error')
-					return response.data
-				})
-		).data
-	}
+	return extractResponse(response)
+}
 
-	static async getOrderByUserId(
-		userId: string,
-		token: string,
-		page: number = 0,
-	): Promise<Pagination<Order[]> | undefined> {
-		if (!userId) {
-			console.error('User id not found')
-			return
-		}
+async function getAllCustomers(): Promise<Result<Customer[], ErrorMessage>> {
+	const response = await axios.get<Response<Customer>>(`${PUBLIC_API_URL}/orders/customers`, {
+		withCredentials: true,
+	})
 
-		return (
-			await axios
-				.get<Response<Pagination<Order[]>>>(
-					`${PUBLIC_API_URL}/orders/by?user-id=${userId}&page=${page}&size=10&sort=orderDate,desc`,
-					{
-						headers: {
-							Authorization: `Bearer ${token}`,
-						},
-					},
-				)
-				.then((response) => {
-					if (response.status !== 200) throw Error('Error sending request')
-					return response.data
-				})
-				.catch((error) => console.error(error))
-		)?.data[0]
-	}
+	return extractResponse(response)
+}
 
-	static async createOrder(createOrder: CreateOrder): Promise<Order[]> {
-		return (
-			await axios
-				.post<Response<Order>>(`${PUBLIC_API_URL}/orders/create`, createOrder, {
-					withCredentials: true,
-				})
-				.then((response) => {
-					if (response.status !== 200) throw Error('Response error')
-					return response.data
-				})
-		).data
-	}
+async function getOrderByUserId(
+	userId: string,
+	token: string,
+	page: number = 0,
+): Promise<Result<Pagination<Order[]>, ErrorMessage>> {
+	if (!userId) return Err('User id not found')
 
-	static async changeStatus(orderId: string, status: OrderStatus): Promise<Order> {
-		return (
-			await axios
-				.patch<Response<Order>>(
-					`${PUBLIC_API_URL}/orders/change-status?id=${orderId}&status=${status}`,
-					{},
-					{
-						withCredentials: true,
-					},
-				)
-				.then((response) => {
-					if (response.status !== 200) throw Error('expected error')
-					return response.data
-				})
-		).data[0]
-	}
+	const response = await axios.get<Response<Pagination<Order[]>>>(
+		`${PUBLIC_API_URL}/orders/by?user-id=${userId}&page=${page}&size=10&sort=orderDate,desc`,
+		{
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		},
+	)
 
-	static async cancelOrder(orderId: string): Promise<Order[]> {
-		return (
-			await axios
-				.patch<Response<Order>>(
-					`${PUBLIC_API_URL}/orders/cancel-order?id=${orderId}`,
-					{},
-					{
-						withCredentials: true,
-					},
-				)
-				.then((response) => {
-					if (response.status !== 200) throw Error('Response error')
-					return response.data
-				})
-		).data
-	}
+	return extractSingleResponse(response)
+}
+
+async function createOrder(createOrder: CreateOrder): Promise<Result<Order[], ErrorMessage>> {
+	const response = await axios.post<Response<Order>>(
+		`${PUBLIC_API_URL}/orders/create`,
+		createOrder,
+		{
+			withCredentials: true,
+		},
+	)
+
+	return extractResponse(response)
+}
+
+async function changeStatus(
+	orderId: string,
+	status: OrderStatus,
+): Promise<Result<Order, ErrorMessage>> {
+	const response = await axios.patch<Response<Order>>(
+		`${PUBLIC_API_URL}/orders/change-status?id=${orderId}&status=${status}`,
+		{},
+		{
+			withCredentials: true,
+		},
+	)
+
+	return extractSingleResponse(response)
+}
+
+async function cancelOrder(orderId: string): Promise<Result<Order[], ErrorMessage>> {
+	const response = await axios.patch<Response<Order>>(
+		`${PUBLIC_API_URL}/orders/cancel-order?id=${orderId}`,
+		{},
+		{
+			withCredentials: true,
+		},
+	)
+
+	return extractResponse(response)
+}
+
+export const OrderService = {
+	getAllOrders,
+	getAllCustomers,
+	getOrderByUserId,
+	createOrder,
+	changeStatus,
+	cancelOrder,
 }

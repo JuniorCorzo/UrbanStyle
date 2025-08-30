@@ -24,8 +24,14 @@ export function useOrderActionModal(orderId: string) {
 			return
 		}
 
-		OrderService.changeStatus(orderId, orderStatus).then(() => {
-			OrderService.getAllOrders().then((orders) => orderStore.set(orders))
+		OrderService.changeStatus(orderId, orderStatus).then((response) => {
+			if (!response.success) throw new Error(response.error.toString())
+
+			OrderService.getAllOrders().then((response) => {
+				if (!response.success) throw new Error(response.error.toString())
+
+				orderStore.set(response.data)
+			})
 		})
 	}
 

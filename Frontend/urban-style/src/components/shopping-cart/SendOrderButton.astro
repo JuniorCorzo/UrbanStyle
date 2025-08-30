@@ -22,7 +22,9 @@ const { userId } = Astro.props
 	import { getAddressById } from '@/state/address.state'
 
 	const sendOrder = (createOrder: CreateOrder) =>
-		OrderService.createOrder(createOrder).then(() => {
+		OrderService.createOrder(createOrder).then((response) => {
+			if (!response.success) throw new Error(response.error.toString())
+
 			window.location.reload()
 		})
 

@@ -8,7 +8,10 @@ import { getDashboardStats } from '@/lib/mediators/dashboard-stats.mediator'
 
 export const orderStore = atom<OrderWithCustomer[]>([])
 onMount(orderStore, () => {
-	OrderService.getAllOrders().then((order) => orderStore.set(order))
+	OrderService.getAllOrders().then((response) => {
+		if (!response.success) throw new Error(response.error.toString())
+		orderStore.set(response.data)
+	})
 })
 
 export const orderReportStore = atom<OrderReport | undefined>()
@@ -46,5 +49,8 @@ export const setOrderStats = () =>
 
 export const customerStore = atom<Customer[]>([])
 onMount(orderStore, () => {
-	OrderService.getAllCustomers().then((customers) => customerStore.set(customers))
+	OrderService.getAllCustomers().then((response) => {
+		if (!response.success) throw new Error(response.error.toString())
+		customerStore.set(response.data)
+	})
 })
