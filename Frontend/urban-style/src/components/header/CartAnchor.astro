@@ -6,7 +6,9 @@ const { user, accessToken } = Astro.locals
 const id = user?.id
 
 if (!id) return
-const cartLength = (await CartService().getCartByUserId(id, accessToken))?.items.length || 0
+const cartResponse = await CartService.getCartByUserId(id, accessToken)
+
+const cartLength = cartResponse.success ? cartResponse.data.items.length : 0
 ---
 
 <a

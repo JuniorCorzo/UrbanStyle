@@ -1,7 +1,6 @@
 import type { Cart } from '@/interface/cart.interface'
 import type { ChangeVariantEvent } from '@/lib/custom-events/change-variants'
 import { $ } from '@/lib/dom-selector'
-import { showError } from '@/lib/showErrorMessages'
 import { dispatchCartCountEvent } from '@/lib/utils/cart-count-event'
 import ToasterManager from '@/lib/utils/ToasterManager'
 import { CartCreateScheme } from '@/lib/validations/cart.validation'
@@ -19,11 +18,12 @@ const SELECTORS = {
  * @param createCart cart to send
  */
 const sendCart = (createCart: Cart) =>
-	CartService()
-		.addProductToCart(createCart)
-		.then((cart) => {
-			dispatchCartCountEvent(cart.items.length)
-		})
+	CartService.addProductToCart(createCart).then((response) => {
+		if (!response.success) {
+			throw new Error(response.error.toString())
+		}
+		dispatchCartCountEvent(response.data.items.length)
+	})
 
 /**
  * Extracts userId and productQuantity from the event.

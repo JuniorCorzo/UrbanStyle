@@ -8,7 +8,11 @@ const { user, accessToken } = Astro.locals
 const userId = user?.id
 if (!accessToken) return
 
-const items = (await CartService().getCartByUserId(userId, accessToken))?.items || []
+const cartResponse = await CartService.getCartByUserId(userId, accessToken)
+
+if (!cartResponse.success) console.error(cartResponse.error)
+
+const items = cartResponse.success ? cartResponse.data.items : []
 
 const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + price * quantity, 0))
 ---
@@ -58,11 +62,9 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 		const { userId, productId, color, size } = keys
 
 		ToasterManager.emitPromise({
-			promise: CartService()
-				.removeProductFromCart(userId, productId, color, size)
-				.then(() => {
-					navigate(window.location.pathname, { history: 'replace' })
-				}),
+			promise: CartService.removeProductFromCart(userId, productId, color, size).then(() => {
+				navigate(window.location.pathname, { history: 'replace' })
+			}),
 			config: {
 				success: 'Producto removido correctamente',
 				error: 'Hubo un error, vuelve a intentar más tarde',
@@ -92,13 +94,16 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 		// Debounce the update call
 		debounceTimers[productId] = setTimeout(() => {
 			const quantity = input.valueAsNumber
-			CartService()
-				.updateQuantityProductInCart(userId, productId, color, size, quantity)
-				.then((cart) => {
-					navigate(window.location.pathname, { history: 'replace' })
+			CartService.updateQuantityProductInCart(userId, productId, color, size, quantity).then(
+				(response) => {
+					if (!response.success) throw new Error(response.error.toString())
+					const { data: cart } = response
+
 					// Sync input dataset with confirmed quantity
 					input.setAttribute('data-value', cart.items[0].quantity.toString())
-				})
+					navigate(window.location.pathname, { history: 'replace' })
+				},
+			)
 		}, 300)
 	}
 
