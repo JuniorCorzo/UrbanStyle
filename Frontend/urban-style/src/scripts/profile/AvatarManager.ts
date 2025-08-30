@@ -1,5 +1,6 @@
 import { $ } from '@/lib/dom-selector'
 import { detectMobile } from '@/lib/utils/is_mobile'
+import ToasterManager from '@/lib/utils/ToasterManager'
 import { UserService } from '@/service/user.service'
 import { userStore } from '@/state/user.state'
 import Cropper, { CropperCanvas, CropperImage, CropperSelection } from 'cropperjs'
@@ -173,8 +174,14 @@ const handleSubmitCrop = async (crop: CropImage): Promise<void> => {
 		return
 	}
 
-	const { message } = await UserService.changeAvatar(user.id, dataUrl)
-	console.log(message)
+	const response = await UserService.changeAvatar(user.id, dataUrl)
+	if (!response.success) {
+		ToasterManager.emitError('Usuario', {
+			description: 'Ha ocurrió un error, intente mas tarde',
+		})
+
+		throw new Error(response.error.toString())
+	}
 
 	crop.destroy()
 	window.location.reload()
@@ -220,8 +227,14 @@ const handleDeleteAvatar = () => {
 		return
 	}
 
-	UserService.deleteAvatar(user.id).then(({ message }) => {
-		console.log(message)
+	UserService.deleteAvatar(user.id).then((response) => {
+		if (!response.success) {
+			ToasterManager.emitError('Usuario', {
+				description: 'Ha ocurrió un error, intente mas tarde',
+			})
+
+			throw new Error(response.error.toString())
+		}
 		window.location.reload()
 	})
 }

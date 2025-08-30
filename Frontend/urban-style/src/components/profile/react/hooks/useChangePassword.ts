@@ -1,4 +1,4 @@
-import { showError, showErrorOnlyField } from '@/lib/showErrorMessages'
+import { showErrorOnlyField } from '@/lib/showErrorMessages'
 import { debounce } from '@/lib/utils/debounce'
 import { changePasswordScheme, type ChangePasswordValid } from '@/lib/validations/user.validations'
 import { UserService } from '@/service/user.service'
@@ -6,6 +6,7 @@ import { userStore } from '@/state/user.state'
 import { useStore } from '@nanostores/react'
 import { useState, useCallback, type ChangeEvent, useRef } from 'react'
 import { useMapReducer } from '@/components/react/hooks/useMapReducer'
+import ToasterManager from '@/lib/utils/ToasterManager'
 
 type ChangePassword = {
 	oldPassword: string
@@ -45,13 +46,23 @@ export const useChangePassword = () => {
 		300,
 	)
 
+	const handleChangePassword = (userId: string, oldPassword: string, newPassword: string) =>
+		UserService.changePassword(userId, oldPassword, newPassword).then((response) => {
+			if (!response.success) throw new Error(response.error.toString())
+			console.log(response.data)
+		})
+
 	const sendRequest = () => {
 		const oldPassword = passwordValues.get('oldPassword')
 		const newPassword = passwordValues.get('newPassword')
 		if (!user?.id || !oldPassword || !newPassword) return
 
-		UserService.changePassword(user?.id, oldPassword, newPassword).then(({ message }) => {
-			console.log(message)
+		ToasterManager.emitPromise({
+			promise: handleChangePassword(user.id, oldPassword, newPassword),
+			config: {
+				success: 'Se ha cambiado la contraseña con éxito',
+				error: 'Ha ocurrió un error, vuelve a intentar mas tarde',
+			},
 		})
 	}
 
@@ -60,7 +71,16 @@ export const useChangePassword = () => {
 		const oldPassword = passwordValues.get('oldPassword')
 		if (!userId || !oldPassword) return
 
-		UserService.validatePassword(userId, oldPassword).then((response) => setPassword(response))
+		UserService.validatePassword(userId, oldPassword).then((response) => {
+			if (!response.success) {
+				ToasterManager.emitError('Usuario', {
+					description: 'Ha ocurrió un error, intente mas tarde',
+				})
+
+				throw new Error(response.error.toString())
+			}
+			setPassword(response.data)
+		})
 	}
 
 	return {

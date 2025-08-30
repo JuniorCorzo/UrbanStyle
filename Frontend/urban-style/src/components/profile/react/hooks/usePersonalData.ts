@@ -7,6 +7,7 @@ import { debounce } from '@/lib/utils/debounce'
 import { updateUserScheme, type UpdateUserValid } from '@/lib/validations/user.validations'
 import { showErrorOnlyField } from '@/lib/showErrorMessages'
 import { UserService } from '@/service/user.service'
+import ToasterManager from '@/lib/utils/ToasterManager'
 
 const userKeys: (keyof UpdateUser)[] = ['id', 'email', 'name', 'phone'] as const
 
@@ -53,9 +54,15 @@ export function usePersonalData() {
 			phone,
 		}
 
-		UserService.updateUser(updateUser).then(({ data, message }) => {
-			userStore.set(data[0])
-			console.log(message)
+		UserService.updateUser(updateUser).then((response) => {
+			if (!response.success) {
+				ToasterManager.emitError('Usuario', {
+					description: 'Ha ocurrió un error, intente mas tarde',
+				})
+
+				throw new Error(response.error.toString())
+			}
+			userStore.set(response.data)
 		})
 	}
 
