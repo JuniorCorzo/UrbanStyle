@@ -2,7 +2,7 @@
 import ProductCard from '@/components/home/ProductCard.astro'
 import Subtitle from '@/components/text/Subtitle.astro'
 import { cn } from '@/lib/cn'
-import { getProductByCategory } from '@/service/product.service'
+import { ProductService } from '@/service/product.service'
 import type { JSX } from 'astro/jsx-runtime'
 
 interface Props extends Partial<JSX.IntrinsicElements['div']> {
@@ -10,7 +10,9 @@ interface Props extends Partial<JSX.IntrinsicElements['div']> {
 }
 const { categoryName, class: className } = Astro.props
 
-const productsRecommended = await getProductByCategory(categoryName)
+const productResponse = await ProductService.getProductsByCategory(categoryName)
+
+const productsRecommended = productResponse.success ? productResponse.data : []
 ---
 
 <section class={cn('flex w-full gap-10', className)}>

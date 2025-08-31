@@ -1,21 +1,19 @@
 import { defineMiddleware } from 'astro:middleware'
-import { verifyToken } from './service/auth.service'
+import { AuthService } from './service/auth.service'
 import type { APIContext } from 'astro'
 
 export const onRequest = defineMiddleware(async (context, next) => {
 	try {
 		const cookie = context.request.headers.get('cookie')
 		if (cookie) {
-			const user = await verifyToken(cookie)
-			if (!user) return next()
+			const user = await AuthService.verifyToken(cookie)
+			if (!user.success) return next()
 
-			context.locals.user = user
+			context.locals.user = user.data
 			context.locals.accessToken = cookie
 				.split(';')
 				.filter((cookie) => cookie.startsWith('accessToken'))
 				.map((accessToken) => accessToken.split('=')[1])[0]
-
-			console.log(context.locals.accessToken)
 		}
 	} catch (error) {
 		console.error('Error validating session')
@@ -30,7 +28,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 })
 
 function validateRequest(context: APIContext) {
-	const userPermittedRoutes = ['/perfil', '/shopping-cart', '/orders']
+	const userPermittedRoutes = ['/perfil', '/shopping-cart', '/profile']
 	const adminRoutes = ['/dashboard']
 
 	const user = context.locals.user

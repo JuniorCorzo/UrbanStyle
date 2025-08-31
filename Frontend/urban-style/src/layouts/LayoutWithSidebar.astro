@@ -2,6 +2,7 @@
 import Header from '@/components/header/Header.astro'
 import { ClientRouter } from 'astro:transitions'
 import '@/styles/global.css'
+import { ToasterProvider } from '@/components/react/ToasterProvider'
 
 interface Props {
 	title?: string
@@ -27,5 +28,6 @@ const { title } = Astro.props
 			<slot />
 		</main>
 		<slot name="right_sidebar" />
+		<ToasterProvider client:load />
 	</body>
 </html>

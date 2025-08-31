@@ -1,103 +1,91 @@
+import { extractSingleResponse } from '@/adapter/responses.adapter'
 import { PUBLIC_API_URL } from '@/config/env-config'
 import type { Cart } from '@/interface/cart.interface'
-import type { Response } from '@/interface/response.interface'
+import type { ErrorMessage, Response } from '@/interface/response.interface'
+import type { Result } from '@/lib/result_pattern'
 import axios from 'axios'
 
-export function CartService() {
-	const getCartByUserId = async (userId: string, token?: string) => {
-		const headers: Record<string, string> = {
-			...(token ? { Authorization: `Bearer ${token}` } : {}),
-		}
-
-		const resultRequest: Cart | void = await axios
-			.get(`${PUBLIC_API_URL}/shopping-cart?user-id=${userId}`, {
-				withCredentials: true,
-				headers,
-			})
-			.then((response) => {
-				return (response.data as Response<Cart>).data[0]
-			})
-			.catch((error) => {
-				// console.error('Error fetching cart user by ID:', error)
-			})
-
-		return resultRequest
+const getCartByUserId = async (
+	userId: string,
+	token?: string,
+): Promise<Result<Cart, ErrorMessage>> => {
+	const headers: Record<string, string> = {
+		...(token ? { Authorization: `Bearer ${token}` } : {}),
 	}
 
-	const addProductToCart = async (cart: Cart) => {
-		const resultRequest: Cart = await axios
-			.post(`${PUBLIC_API_URL}/shopping-cart/add-product`, cart, {
-				withCredentials: true,
-			})
-			.then((response) => {
-				const data = (response.data as Response<Cart>).data[0]
-				return data
-			})
+	const response = await axios.get<Response<Cart>>(
+		`${PUBLIC_API_URL}/shopping-cart?user-id=${userId}`,
+		{
+			withCredentials: true,
+			headers,
+		},
+	)
 
-		return resultRequest
-	}
+	return extractSingleResponse(response)
+}
 
-	const updateQuantityProductInCart = async (
-		userId: string,
-		productId: string,
-		color: string,
-		size: string,
-		quantity: number,
-	) => {
-		const resultRequest: Cart = await axios
-			.patch(
-				`${PUBLIC_API_URL}/shopping-cart/change-quantity?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}&quantity=${quantity}`,
-				{},
-				{
-					withCredentials: true,
-				},
-			)
-			.then((response) => {
-				const data = (response.data as Response<Cart>).data[0]
-				return data
-			})
+const addProductToCart = async (cart: Cart): Promise<Result<Cart, ErrorMessage>> => {
+	const response = await axios.post<Response<Cart>>(
+		`${PUBLIC_API_URL}/shopping-cart/add-product`,
+		cart,
+		{
+			withCredentials: true,
+		},
+	)
 
-		return resultRequest
-	}
+	return extractSingleResponse(response)
+}
 
-	const updateProductInCart = async (cart: Cart) => {
-		const resultRequest: Cart = await axios
-			.post(`${PUBLIC_API_URL}/shopping-cart/update-product`, cart, {
-				withCredentials: true,
-			})
-			.then((response) => {
-				return (response.data as Response<Cart>).data[0]
-			})
+const updateQuantityProductInCart = async (
+	userId: string,
+	productId: string,
+	color: string,
+	size: string,
+	quantity: number,
+): Promise<Result<Cart, ErrorMessage>> => {
+	const response = await axios.patch<Response<Cart>>(
+		`${PUBLIC_API_URL}/shopping-cart/change-quantity?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}&quantity=${quantity}`,
+		{},
+		{
+			withCredentials: true,
+		},
+	)
 
-		return resultRequest
-	}
+	return extractSingleResponse(response)
+}
 
-	const removeProductFromCart = async (
-		userId: string,
-		productId: string,
-		color: string,
-		size: string,
-	) => {
-		const resultRequest: Cart = await axios
-			.delete(
-				`${PUBLIC_API_URL}/shopping-cart/delete-product?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}`,
-				{
-					withCredentials: true,
-				},
-			)
-			.then((response) => {
-				const data = (response.data as Response<Cart>).data[0]
-				return data
-			})
+const updateProductInCart = async (cart: Cart): Promise<Result<Cart, ErrorMessage>> => {
+	const response = await axios.post<Response<Cart>>(
+		`${PUBLIC_API_URL}/shopping-cart/update-product`,
+		cart,
+		{
+			withCredentials: true,
+		},
+	)
 
-		return resultRequest
-	}
+	return extractSingleResponse(response)
+}
 
-	return {
-		getCartByUserId,
-		addProductToCart,
-		updateQuantityProductInCart,
-		updateProductInCart,
-		removeProductFromCart,
-	}
+const removeProductFromCart = async (
+	userId: string,
+	productId: string,
+	color: string,
+	size: string,
+): Promise<Result<Cart, ErrorMessage>> => {
+	const response = await axios.delete(
+		`${PUBLIC_API_URL}/shopping-cart/delete-product?user-id=${userId}&product-id=${productId}&color=${color}&size=${size}`,
+		{
+			withCredentials: true,
+		},
+	)
+
+	return extractSingleResponse(response)
+}
+
+export const CartService = {
+	getCartByUserId,
+	addProductToCart,
+	updateQuantityProductInCart,
+	updateProductInCart,
+	removeProductFromCart,
 }

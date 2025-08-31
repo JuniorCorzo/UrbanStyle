@@ -1,8 +1,16 @@
+import { ResponseException } from '@/exceptions/response.exception'
 import type { User } from '@/interface/user.interface'
-import { verifyToken } from '@/service/auth.service'
+import { AuthService } from '@/service/auth.service'
 import { atom, onMount } from 'nanostores'
 
 export const userStore = atom<User | null>(null)
 onMount(userStore, () => {
-	verifyToken().then((user) => userStore.set(user))
+	initializeUser()
 })
+
+const initializeUser = async () => {
+	await AuthService.verifyToken().then((user) => {
+		if (!user.success) throw new ResponseException(user.error)
+		userStore.set(user.data)
+	})
+}

@@ -2,6 +2,7 @@
 import { ClientRouter } from 'astro:transitions'
 import Header from '../components/header/Header.astro'
 import '@/styles/global.css'
+import { ToasterProvider } from '@/components/react/ToasterProvider'
 
 interface Props {
 	title?: string
@@ -25,11 +26,12 @@ const { title } = Astro.props
 			<slot />
 		</main>
 		<slot name="sidebar" />
+		<ToasterProvider client:load transition:persist />
 	</body>
 </html>
 
 <script>
-	import { categoriesStore, CategoriesStore } from '@/state/categories.store'
+	import { categoriesStore } from '@/state/categories.store'
 	import { formStore } from '@/state/form.state'
 	import { productStore, ProductStore } from '@/state/product.store'
 	import { reportSalesStore } from '@/state/report.store'
@@ -43,8 +45,6 @@ const { title } = Astro.props
 		formStore: formStore,
 		reportStore: reportSalesStore,
 	})
-	ProductStore()
-	CategoriesStore()
 </script>
 <style is:global>
 	@import '../styles/global.css';

@@ -1,4 +1,5 @@
 import { SelectInput } from '@/components/react/inputs/SelectInput'
+import { ResponseException } from '@/exceptions/response.exception'
 import { AddressService } from '@/service/address.service'
 import { AddressStore } from '@/state/address.state'
 import { useStore } from '@nanostores/react'
@@ -12,8 +13,9 @@ export function AddressSelect({ userId }: Props) {
 	const address = useStore(AddressStore)
 
 	useEffect(() => {
-		AddressService.getAddressByUserId(userId).then((address) => {
-			AddressStore.set(address)
+		AddressService.getAddressByUserId(userId).then((response) => {
+			if (!response.success) throw new ResponseException(response.error)
+			AddressStore.set(response.data)
 		})
 	}, [])
 

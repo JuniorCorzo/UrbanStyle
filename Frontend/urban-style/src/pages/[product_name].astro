@@ -5,9 +5,12 @@ import RecommendedProductsSection from '@/sections/RecommendedProductsSection.as
 import { ProductStore } from '@/state/product.store'
 
 const productId = Astro.url.searchParams.get('id')
+if (!productId) return Astro.redirect('/home')
 
-const { productStore } = await ProductStore()
-const productById = productStore.get().filter(({ id }) => id === productId)[0]
+const { getProductById } = ProductStore()
+const productById = getProductById(productId).get()
+
+if (!productById) return Astro.redirect('/home')
 ---
 
 <Layout>

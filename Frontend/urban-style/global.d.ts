@@ -5,9 +5,13 @@ import type {
 	CalendarMultiProps,
 } from 'cally'
 import { type ChangeVariantEvent } from '@/lib/custom-events/change-variants'
+import type { ToastEvent } from '@/lib/utils/ToasterManager'
 
 type CustomEventsMap = {
 	'product:change-variant': CustomEvent<ChangeVariantEvent>
+	'toast:success': CustomEvent<ToastEvent>
+	'toast:error': CustomEvent<ToastEvent>
+	'toast:promise': CustomEvent<ToastPromiseEvent>
 }
 
 declare global {
@@ -16,6 +20,12 @@ declare global {
 			type: K,
 			listener: (this: Document, event: CustomEventsMap[k]) => any,
 			options?: boolean | AddEventListenerOptions,
+		): void
+
+		removeEventListener<K extends keyof CustomEventsMap>(
+			type: K,
+			listener: (this: Document, event: CustomEventsMap[K]) => any,
+			options?: boolean | EventListenerOptions,
 		): void
 	}
 }

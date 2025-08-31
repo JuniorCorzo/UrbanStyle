@@ -1,8 +1,7 @@
 import { Cell } from '@/components/dashboard/react/components/table/Cell'
 import TableActions from '@/components/dashboard/react/components/table/TableActions'
 import type { Address } from '@/interface/address.interface'
-import { AddressService } from '@/service/address.service'
-import { AddressStore } from '@/state/address.state'
+import { AddressState, AddressStore } from '@/state/address.state'
 import { tableStore } from '@/state/table.state'
 import { userStore } from '@/state/user.state'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
@@ -45,7 +44,7 @@ export function addressTable() {
 		const user = userStore.get()
 
 		if (address.length === 0 && user) {
-			AddressService.getAddressByUserId(user.id).then((address) => AddressStore.set(address))
+			AddressState.updateAddressStore()
 		}
 
 		return AddressStore.get()

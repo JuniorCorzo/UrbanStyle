@@ -6,6 +6,7 @@ import Subtitle from '../text/Subtitle.astro'
 import { AddressSelect } from './react/AddressSelect'
 import AddressDialogForm from './AddressDialogForm.astro'
 import SendOrderButton from './SendOrderButton.astro'
+import type { only } from 'node:test'
 
 interface Props {
 	calculateTotal: number
@@ -36,7 +37,7 @@ const total = calculateTotal
 			/>
 		</div>
 		<div class="flex flex-col items-center justify-center gap-2">
-			<AddressSelect userId={userId} client:idle />
+			<AddressSelect userId={userId} client:only="react" />
 			<Button
 				id="address_button"
 				class="bg-primary shadow-primary h-fit w-full backdrop-brightness-100 hover:shadow hover:ring-0"

@@ -1,90 +1,91 @@
 import { DepartmentAdapter, MunicipalityAdapter } from '@/adapter/location.adapter'
+import { extractResponse, extractSingleResponse, obtainsError } from '@/adapter/responses.adapter'
 import { PUBLIC_API_URL } from '@/config/env-config'
 import type {
 	Address,
 	CreateAddress,
+	Department,
 	DepartmentDTOResponse,
+	Municipality,
 	MunicipalityDTOResponse,
 	UpdateAddress,
 } from '@/interface/address.interface'
-import type { Response } from '@/interface/response.interface'
+import type { ErrorMessage, Response } from '@/interface/response.interface'
+import { Err, Success, type Result } from '@/lib/result_pattern'
 import axios from 'axios'
 
-export class AddressService {
-	static async getAddressByUserId(userId: string): Promise<Address[]> {
-		const result = await axios
-			.get<Response<Address>>(`${PUBLIC_API_URL}/address/by/users/${userId}`, {
-				withCredentials: true,
-			})
-			.then((response) => {
-				if (response.status !== 200) throw Error(response.statusText)
-				return response.data
-			})
+async function getAddressByUserId(userId: string): Promise<Result<Address[], ErrorMessage>> {
+	const response = await axios.get<Response<Address>>(
+		`${PUBLIC_API_URL}/address/by/users/${userId}`,
+		{
+			withCredentials: true,
+		},
+	)
 
-		return result.data
+	return extractResponse(response)
+}
+
+async function getDepartments(): Promise<Result<Department[], ErrorMessage>> {
+	const response = await axios.get<DepartmentDTOResponse>('/api/location/departamentos.php')
+
+	const { status, data: responseData } = response
+	if (status !== 200) return Err('Unexpect code')
+
+	return Success(DepartmentAdapter.toDepartment(responseData))
+}
+
+async function getMunicipality(
+	departmentCode: string,
+): Promise<Result<Municipality[], ErrorMessage>> {
+	const { status, data: responseData } = await axios.get<MunicipalityDTOResponse>(
+		`/api/location/municipios.php?codigo_departamento=${departmentCode}`,
+		{ withCredentials: true },
+	)
+
+	if (status !== 200) return Err('Unexpect code')
+	return Success(MunicipalityAdapter.toMunicipality(responseData))
+}
+
+async function createAddress(createAddress: CreateAddress): Promise<Result<Address, ErrorMessage>> {
+	const response = await axios.post<Response<Address>>(
+		`${PUBLIC_API_URL}/address/create`,
+		createAddress,
+		{ withCredentials: true },
+	)
+
+	return extractSingleResponse(response)
+}
+
+async function updateAddress(updateAddress: UpdateAddress): Promise<Result<Address, ErrorMessage>> {
+	const response = await axios.put<Response<Address>>(
+		`${PUBLIC_API_URL}/address/update`,
+		updateAddress,
+		{ withCredentials: true },
+	)
+
+	return extractSingleResponse(response)
+}
+
+async function deleteAddress(id: string): Promise<Result<string, ErrorMessage>> {
+	const { status, data: responseData } = await axios.delete<Response>(
+		`${PUBLIC_API_URL}/address/delete/${id}`,
+		{
+			withCredentials: true,
+		},
+	)
+	if (status !== 200) {
+		const { message } = obtainsError(responseData)
+		return Err(message)
 	}
 
-	static async getDepartments() {
-		const result = await axios
-			.get<DepartmentDTOResponse>('/api/location/departamentos.php')
-			.then((response) => {
-				if (response.status !== 200) throw Error()
-				return response.data
-			})
-			.catch(console.error)
+	return Success(responseData.message)
+}
 
-		return DepartmentAdapter.toDepartment(result as DepartmentDTOResponse)
-	}
-
-	static async getMunicipality(departmentCode: string) {
-		const result = await axios
-			.get<MunicipalityDTOResponse>(
-				`/api/location/municipios.php?codigo_departamento=${departmentCode}`,
-				{ withCredentials: true },
-			)
-			.then((response) => {
-				if (response.status !== 200) throw Error()
-				return response.data
-			})
-
-		return MunicipalityAdapter.toMunicipality(result)
-	}
-
-	static async createAddress(createAddress: CreateAddress): Promise<Address> {
-		return (
-			await axios
-				.post<
-					Response<Address>
-				>(`${PUBLIC_API_URL}/address/create`, createAddress, { withCredentials: true })
-				.then((result) => {
-					if (result.status !== 200) throw Error(result.statusText)
-
-					return result.data
-				})
-		).data[0]
-	}
-
-	static async updateAddress(updateAddress: UpdateAddress): Promise<Address> {
-		return (
-			await axios
-				.put<
-					Response<Address>
-				>(`${PUBLIC_API_URL}/address/update`, updateAddress, { withCredentials: true })
-				.then((response) => {
-					if (response.status !== 200) throw Error(response.statusText)
-					return response.data
-				})
-		).data[0]
-	}
-
-	static async deleteAddress(id: string) {
-		return await axios
-			.delete<Response>(`${PUBLIC_API_URL}/address/delete/${id}`, {
-				withCredentials: true,
-			})
-			.then((response) => {
-				if (response.status !== 200) throw Error(response.statusText)
-				return response.data
-			})
-	}
+export const AddressService = {
+	getAddressByUserId,
+	getMunicipality,
+	getDepartments,
+	createAddress,
+	updateAddress,
+	deleteAddress,
 }

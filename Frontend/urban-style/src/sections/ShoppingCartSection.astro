@@ -8,7 +8,14 @@ const { user, accessToken } = Astro.locals
 const userId = user?.id
 if (!accessToken) return
 
-const items = (await CartService().getCartByUserId(userId, accessToken))?.items || []
+const cartResponse = await CartService.getCartByUserId(userId, accessToken).catch((err) => {
+	console.error(err)
+	return undefined
+})
+
+if (!cartResponse?.success) console.error(cartResponse?.error)
+
+const items = cartResponse?.success ? cartResponse?.data.items : []
 
 const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + price * quantity, 0))
 ---
@@ -24,7 +31,9 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 </section>
 
 <script>
-	import { $, $$ } from '@/lib/dom-selector'
+	import { ResponseException } from '@/exceptions/response.exception'
+import { $, $$ } from '@/lib/dom-selector'
+	import ToasterManager from '@/lib/utils/ToasterManager'
 	import { CartService } from '@/service/cart.service'
 	import { navigate } from 'astro:transitions/client'
 	/**
@@ -34,6 +43,7 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 
 	/**
 	 * Extracts dataset properties for cart item identifiers from an element.
+	 *
 	 * @param element - HTMLElement containing data attributes
 	 * @returns Object with userId, productId, color, size or null if missing
 	 */
@@ -55,11 +65,15 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 		if (!keys) return
 		const { userId, productId, color, size } = keys
 
-		CartService()
-			.removeProductFromCart(userId, productId, color, size)
-			.then(() => {
+		ToasterManager.emitPromise({
+			promise: CartService.removeProductFromCart(userId, productId, color, size).then(() => {
 				navigate(window.location.pathname, { history: 'replace' })
-			})
+			}),
+			config: {
+				success: 'Producto removido correctamente',
+				error: 'Hubo un error, vuelve a intentar más tarde',
+			},
+		})
 	}
 
 	/**
@@ -84,13 +98,16 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 		// Debounce the update call
 		debounceTimers[productId] = setTimeout(() => {
 			const quantity = input.valueAsNumber
-			CartService()
-				.updateQuantityProductInCart(userId, productId, color, size, quantity)
-				.then((cart) => {
-					navigate(window.location.pathname, { history: 'replace' })
+			CartService.updateQuantityProductInCart(userId, productId, color, size, quantity).then(
+				(response) => {
+					if (!response.success) throw new ResponseException(response.error)
+					const { data: cart } = response
+
 					// Sync input dataset with confirmed quantity
 					input.setAttribute('data-value', cart.items[0].quantity.toString())
-				})
+					navigate(window.location.pathname, { history: 'replace' })
+				},
+			)
 		}, 300)
 	}
 
@@ -121,5 +138,6 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 		const cartSection = $('#cart-section')
 		cartSection?.addEventListener('click', handleCartClick)
 	}
+
 	document.addEventListener('astro:page-load', initCartListeners)
 </script>

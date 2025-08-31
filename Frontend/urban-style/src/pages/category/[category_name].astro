@@ -1,14 +1,22 @@
 ---
-import { getProductByCategory } from '@/service/product.service'
-import CategoryService from '@/service/categories.service'
+import { ProductService } from '@/service/product.service'
+import { CategoryService } from '@/service/categories.service'
 import Layout from '@/layouts/Layout.astro'
 import ProductContainer from '@/components/home/ProductContainer.astro'
-import Button from '@/components/Button.astro'
 
 const { category_name: categoryName } = Astro.params
 
-const productsByCategory = await getProductByCategory(categoryName ?? '')
-const description = await CategoryService.getDescriptionByName(categoryName ?? '')
+const productResponse = await ProductService.getProductsByCategory(categoryName ?? '')
+if (!productResponse.success) {
+	console.log(productResponse.error)
+}
+
+const productsByCategory = productResponse.success ? productResponse.data : []
+const categoryResponse = await CategoryService.getDescriptionByName(categoryName ?? '')
+
+if (!categoryResponse.success) console.error(categoryResponse.error)
+
+const description = categoryResponse.success ? categoryResponse.data : ''
 ---
 
 <Layout>

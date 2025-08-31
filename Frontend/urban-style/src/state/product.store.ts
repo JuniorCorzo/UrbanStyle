@@ -1,43 +1,45 @@
+import { ResponseException } from '@/exceptions/response.exception'
 import type { Products, ProductsGroupedCategory } from '@/interface/product.interface'
 import type { ProductReport } from '@/interface/report.interface'
-import { getAllProducts, getProductsGroupedByCategory } from '@/service/product.service'
+import { ProductService } from '@/service/product.service'
 import { ReportService } from '@/service/report.service'
 import { atom, computed, map, onMount } from 'nanostores'
 
 export const productStore = map<Products[]>([])
-export const productReportStore = atom<ProductReport[]>([])
 
-onMount(productReportStore, () => {
-	ReportService()
-		.productsReport()
-		.then((report) => productReportStore.set(report))
+onMount(productStore, () => {
+	initializeProducts()
 })
 
-export const productGroupedStore = map<ProductsGroupedCategory[]>([])
+export const initializeProducts = async () => {
+	const response = await ProductService.getAllProducts()
 
-export async function initializeProductGroupeStore() {
-	const products = await getProductsGroupedByCategory()
-	productGroupedStore.set(products)
+	if (!response.success) throw new ResponseException(response.error)
+	productStore.set(response.data)
 }
 
-export async function ProductStore() {
-	if (!productStore.get().length) {
-		const products = await getAllProducts()
-		productStore.set(products)
-	}
+export const productReportStore = atom<ProductReport[]>([])
+onMount(productReportStore, () => {
+	initializeReportProducts()
+})
+export const initializeReportProducts = () =>
+	ReportService.productsReport().then((response) => {
+		if (!response.success) throw new ResponseException(response.error)
 
-	const productStoreUpdate = async () => {
-		const products = await getAllProducts()
-		productStore.set(products)
-	}
+		productReportStore.set(response.data)
+	})
 
-	const getProductById = (productId: string) => {
-		const product = computed(productStore, (products) =>
-			products.find((product) => product.id === productId),
-		)
+export const productGroupedStore = map<ProductsGroupedCategory[]>([])
+export async function initializeProductGroupeStore() {
+	const response = await ProductService.getProductsGroupedByCategory()
+	if (!response.success) throw new ResponseException(response.error)
 
-		return product
-	}
+	productGroupedStore.set(response.data)
+}
 
-	return { productStore, productStoreUpdate, getProductById }
+export function ProductStore() {
+	const getProductById = (productId: string) =>
+		computed(productStore, (products) => products.find((product) => product.id === productId))
+
+	return { getProductById }
 }

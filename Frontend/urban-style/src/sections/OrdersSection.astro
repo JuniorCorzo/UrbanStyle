@@ -2,24 +2,23 @@
 import OrderItem from '@/components/orders/OrderItem.astro'
 import Pagination from '@/components/pagination/Pagination.astro'
 import Subtitle from '@/components/text/Subtitle.astro'
+import type { Page } from '@/interface/response.interface'
 import { OrderService } from '@/service/orders.service'
 
 const { user, accessToken } = Astro.locals
 
 const page = Number(Astro.url.searchParams.get('page')) - 1
 
-const orders = await OrderService.getOrderByUserId(user.id, accessToken, page)
+const response = await OrderService.getOrderByUserId(user.id, accessToken, page)
+if (!response.success) console.error(response.error)
 
-if (!orders) {
-	Astro.redirect('/404')
-	return
-}
+const orders = response.success ? response.data : { content: [], page: 0 }
 ---
 
 <section id="order_section" class="@container mt-5 flex h-full w-full flex-col gap-5 px-6">
 	<Subtitle size="3xl" Text="Mis pedidos" />
 	{orders.content.map((order) => <OrderItem order={order} />)}
-	<Pagination page={orders.page} />
+	{typeof orders === 'object' && <Pagination page={orders.page as Page} />}
 </section>
 
 <script>
