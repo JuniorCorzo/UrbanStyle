@@ -2,6 +2,7 @@ import { useState, useRef, useMemo, useEffect } from 'react'
 import type { ProductVariantSelectorsProps } from '../ProductVariantSelectors'
 import { useSearchParam } from './useSearchParam'
 import { dispatchChangeVariantEvent } from '@/lib/custom-events/change-variants'
+import type { Attribute } from '@/interface/product.interface'
 
 export function useProductVariants({
 	attributes,
@@ -22,8 +23,8 @@ export function useProductVariants({
 		[color, attributes],
 	)
 
-	const getStock = (color: string, size: string) =>
-		attributes.find((attr) => attr.color === color && attr.size === size)?.quantity ?? 0
+	const getVariant = (color: string, size: string): Attribute | undefined =>
+		attributes.find((attr) => attr.color === color && attr.size === size)
 
 	useEffect(() => {
 		if (!defaultColor) setColor(colorOptions[0])
@@ -35,8 +36,14 @@ export function useProductVariants({
 	}, [])
 
 	useEffect(() => {
-		const currentStock = getStock(color ?? '', sizeSelected.current ?? '')
-		dispatchChangeVariantEvent(currentStock)
+		const currentVariant = getVariant(color ?? '', sizeSelected.current ?? '')
+		if (!currentVariant) {
+			console.error('Variant not found')
+			return
+		}
+
+		setSearchParam('sku', currentVariant.sku)
+		dispatchChangeVariantEvent(currentVariant.quantity)
 	}, [color, sizeSelected.current])
 
 	useEffect(() => setSearchParam('color', color ?? ''), [color])

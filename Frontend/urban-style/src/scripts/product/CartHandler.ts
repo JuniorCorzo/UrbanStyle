@@ -60,12 +60,13 @@ async function fetchProductDetails(
  *
  * @returns An object containing color and size strings, or null if parsing fails
  */
-function getVariants(): Partial<{ color: string; size: string }> {
+function getVariants(): Partial<{ color: string; size: string; sku: string }> {
 	const searchParam = new URLSearchParams(location.search)
 	const color = searchParam.get('color') ?? undefined
 	const size = searchParam.get('size') ?? undefined
+	const sku = searchParam.get('sku') ?? undefined
 
-	return { color, size }
+	return { color, size, sku }
 }
 
 /**
@@ -117,11 +118,11 @@ async function handleClick(event: MouseEvent): Promise<void> {
 	const { name, price, discount } = productDetails
 
 	const variant = getVariants()
-	const { color, size } = variant ?? {}
+	const { color, size, sku } = variant ?? {}
 
 	const cartValidate = CartCreateScheme.safeParse({ color, size })
 
-	if (!color || !size || cartValidate.error) {
+	if (!color || !size || !sku || cartValidate.error) {
 		ToasterManager.emitError('Carrito de compra', {
 			description: 'Error enviando el carrito, intente mas tarde',
 		})
@@ -129,7 +130,17 @@ async function handleClick(event: MouseEvent): Promise<void> {
 		return
 	}
 
-	const cart = buildCart(userId, productId, name, price, discount, color, size, productQuantity)
+	const cart = buildCart(
+		userId,
+		productId,
+		name,
+		price,
+		discount,
+		sku,
+		color,
+		size,
+		productQuantity,
+	)
 	ToasterManager.emitPromise({
 		promise: sendCart(cart),
 		config: {
