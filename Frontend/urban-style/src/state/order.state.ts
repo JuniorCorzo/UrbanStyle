@@ -5,11 +5,12 @@ import { ReportService } from '@/service/report.service'
 import { atom, computed, onMount } from 'nanostores'
 import { dashboardStatsStore } from './report.store'
 import { getDashboardStats } from '@/lib/mediators/dashboard-stats.mediator'
+import { ResponseException } from '@/exceptions/response.exception'
 
 export const orderStore = atom<OrderWithCustomer[]>([])
 onMount(orderStore, () => {
 	OrderService.getAllOrders().then((response) => {
-		if (!response.success) throw new Error(response.error.toString())
+		if (!response.success) throw new ResponseException(response.error)
 		orderStore.set(response.data)
 	})
 })
@@ -17,7 +18,7 @@ onMount(orderStore, () => {
 export const orderReportStore = atom<OrderReport | undefined>()
 onMount(orderReportStore, () => {
 	ReportService.orderReport().then((response) => {
-		if (!response.success) throw new Error(response.error.toString())
+		if (!response.success) throw new ResponseException(response.error)
 		orderReportStore.set(response.data)
 	})
 })
@@ -51,7 +52,7 @@ export const setOrderStats = () =>
 export const customerStore = atom<Customer[]>([])
 onMount(orderStore, () => {
 	OrderService.getAllCustomers().then((response) => {
-		if (!response.success) throw new Error(response.error.toString())
+		if (!response.success) throw new ResponseException(response.error)
 		customerStore.set(response.data)
 	})
 })

@@ -1,3 +1,4 @@
+import { ResponseException } from '@/exceptions/response.exception'
 import type { Cart } from '@/interface/cart.interface'
 import type { ChangeVariantEvent } from '@/lib/custom-events/change-variants'
 import { $ } from '@/lib/dom-selector'
@@ -20,7 +21,7 @@ const SELECTORS = {
 const sendCart = (createCart: Cart) =>
 	CartService.addProductToCart(createCart).then((response) => {
 		if (!response.success) {
-			throw new Error(response.error.toString())
+			throw new ResponseException(response.error)
 		}
 		dispatchCartCountEvent(response.data.items.length)
 	})

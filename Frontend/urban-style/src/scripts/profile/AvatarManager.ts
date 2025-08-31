@@ -1,3 +1,4 @@
+import { ResponseException } from '@/exceptions/response.exception'
 import { $ } from '@/lib/dom-selector'
 import { detectMobile } from '@/lib/utils/is_mobile'
 import ToasterManager from '@/lib/utils/ToasterManager'
@@ -180,7 +181,7 @@ const handleSubmitCrop = async (crop: CropImage): Promise<void> => {
 			description: 'Ha ocurrió un error, intente mas tarde',
 		})
 
-		throw new Error(response.error.toString())
+		throw new ResponseException(response.error)
 	}
 
 	crop.destroy()
@@ -233,7 +234,7 @@ const handleDeleteAvatar = () => {
 				description: 'Ha ocurrió un error, intente mas tarde',
 			})
 
-			throw new Error(response.error.toString())
+			throw new ResponseException(response.error)
 		}
 		window.location.reload()
 	})

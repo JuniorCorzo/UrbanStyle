@@ -1,3 +1,4 @@
+import { ResponseException } from '@/exceptions/response.exception'
 import type { Category } from '@/interface/category.interface'
 import type { CategoryReport } from '@/interface/report.interface'
 import { CategoryService } from '@/service/categories.service'
@@ -7,7 +8,7 @@ import { atom, map, onMount } from 'nanostores'
 export const categoryReportStore = atom<CategoryReport[]>([])
 onMount(categoryReportStore, () => {
 	ReportService.categoryReport().then((response) => {
-		if (!response.success) throw new Error(response.error.toString())
+		if (!response.success) throw new ResponseException(response.error)
 		categoryReportStore.set(response.data)
 	})
 })
@@ -21,7 +22,7 @@ export const initializeCategory = async () => {
 	const response = await CategoryService.getAllCategories()
 
 	if (!response.success) {
-		throw Error(response.error.toString())
+		throw new ResponseException(response.error)
 	}
 
 	categoriesStore.set(response.data)

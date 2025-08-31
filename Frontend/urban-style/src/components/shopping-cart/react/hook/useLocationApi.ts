@@ -1,3 +1,4 @@
+import { ResponseException } from '@/exceptions/response.exception'
 import type { Department } from '@/interface/address.interface'
 import { AddressService } from '@/service/address.service'
 import { MunicipalityStore } from '@/state/location.state'
@@ -9,7 +10,7 @@ export function useLocationApi() {
 
 	useEffect(() => {
 		AddressService.getDepartments().then((response) => {
-			if (!response.success) throw new Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 			setDepartments(response.data)
 		})
 	}, [])
@@ -21,7 +22,7 @@ export function useLocationApi() {
 		}
 
 		AddressService.getMunicipality(departmentCode).then((response) => {
-			if (!response.success) throw new Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 			MunicipalityStore.set(response.data)
 		})
 	}, [departmentCode])

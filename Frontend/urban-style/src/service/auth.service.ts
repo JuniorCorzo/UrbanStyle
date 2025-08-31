@@ -31,6 +31,7 @@ const verifyToken = async (cookie?: string): Promise<Result<User, ErrorMessage>>
 			'Content-Type': 'application/json',
 			Cookie: cookie,
 		},
+		validateStatus: () => true,
 	})
 	return extractSingleResponse(response)
 }

@@ -1,4 +1,5 @@
 import type { SummaryStatProps } from '@/components/dashboard/react/components/stats/SummaryStat'
+import { ResponseException } from '@/exceptions/response.exception'
 import type { ReportSales } from '@/interface/report.interface'
 import { ReportService } from '@/service/report.service'
 import { atom, computed, onMount } from 'nanostores'
@@ -8,7 +9,7 @@ export const dashboardStatsStore = atom<SummaryStatProps[]>([])
 
 onMount(reportSalesStore, () => {
 	ReportService.reportSales().then((response) => {
-		if (!response.success) throw new Error(response.error.toString())
+		if (!response.success) throw new ResponseException(response.error)
 		reportSalesStore.set(response.data)
 	})
 })

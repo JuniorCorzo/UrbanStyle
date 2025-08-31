@@ -14,6 +14,7 @@ import { formStore } from '@/state/form.state'
 import { Err } from '@/lib/result_pattern'
 import ToasterManager from '@/lib/utils/ToasterManager'
 import type { User } from '@/interface/user.interface'
+import { ResponseException } from '@/exceptions/response.exception'
 
 type AddressKey = Omit<Address, 'id' | 'country' | 'userId'>
 const addressKeys: (keyof AddressKey)[] = ['street', 'city', 'state', 'postalCode'] as const
@@ -118,7 +119,7 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 
 	const handleUpdateAddress = (addressUpdate: UpdateAddress) =>
 		AddressService.updateAddress(addressUpdate).then((response) => {
-			if (!response.success) throw new Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 			AddressStore.set([...AddressStore.get(), response.data])
 			console.log('address updated')
 		})
@@ -127,7 +128,7 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 		AddressService.createAddress(
 			AddressAdapter.toAddress(address as AddressValidate, user.id),
 		).then((response) => {
-			if (!response.success) throw new Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 			AddressStore.set([...AddressStore.get(), response.data])
 			console.log('Address created')
 		})

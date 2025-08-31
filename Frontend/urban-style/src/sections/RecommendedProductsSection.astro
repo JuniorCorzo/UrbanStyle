@@ -11,11 +11,8 @@ interface Props extends Partial<JSX.IntrinsicElements['div']> {
 const { categoryName, class: className } = Astro.props
 
 const productResponse = await ProductService.getProductsByCategory(categoryName)
-if (!productResponse.success) {
-	throw new Error(productResponse.error.toString())
-}
 
-const productsRecommended = productResponse.data
+const productsRecommended = productResponse.success ? productResponse.data : []
 ---
 
 <section class={cn('flex w-full gap-10', className)}>

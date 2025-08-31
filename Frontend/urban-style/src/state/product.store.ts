@@ -1,3 +1,4 @@
+import { ResponseException } from '@/exceptions/response.exception'
 import type { Products, ProductsGroupedCategory } from '@/interface/product.interface'
 import type { ProductReport } from '@/interface/report.interface'
 import { ProductService } from '@/service/product.service'
@@ -13,7 +14,7 @@ onMount(productStore, () => {
 export const initializeProducts = async () => {
 	const response = await ProductService.getAllProducts()
 
-	if (!response.success) throw Error(response.error.toString())
+	if (!response.success) throw new ResponseException(response.error)
 	productStore.set(response.data)
 }
 
@@ -23,7 +24,7 @@ onMount(productReportStore, () => {
 })
 export const initializeReportProducts = () =>
 	ReportService.productsReport().then((response) => {
-		if (!response.success) throw new Error(response.error.toString())
+		if (!response.success) throw new ResponseException(response.error)
 
 		productReportStore.set(response.data)
 	})
@@ -31,7 +32,7 @@ export const initializeReportProducts = () =>
 export const productGroupedStore = map<ProductsGroupedCategory[]>([])
 export async function initializeProductGroupeStore() {
 	const response = await ProductService.getProductsGroupedByCategory()
-	if (!response.success) throw Error(response.error.toString())
+	if (!response.success) throw new ResponseException(response.error)
 
 	productGroupedStore.set(response.data)
 }

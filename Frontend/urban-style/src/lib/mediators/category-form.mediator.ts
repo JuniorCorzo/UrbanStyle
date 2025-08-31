@@ -6,6 +6,7 @@ import { ZodError } from 'zod'
 import { showError } from '../showErrorMessages'
 import { formStore } from '@/state/form.state'
 import ToasterManager from '../utils/ToasterManager'
+import { ResponseException } from '@/exceptions/response.exception'
 
 export async function categoriesForm() {
 	const handleUpdateCategory = async (data: Category) => {
@@ -13,7 +14,7 @@ export async function categoriesForm() {
 			CategoryScheme.parse(data)
 
 			const response = await CategoryService.updateCategory(data)
-			if (!response.success) throw Error(response.error.toLocaleString())
+			if (!response.success) throw new ResponseException(response.error)
 
 			await initializeCategory()
 		} catch (err) {
@@ -28,7 +29,7 @@ export async function categoriesForm() {
 			CategoryScheme.parse(data)
 
 			const response = await CategoryService.createCategory(data)
-			if (!response.success) throw Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 
 			await initializeCategory()
 		} catch (err) {
@@ -40,7 +41,7 @@ export async function categoriesForm() {
 
 	const handleDeleteCategory = async (id: string) => {
 		const response = await CategoryService.deleteCategory(id)
-		if (!response.success) throw Error(response.error.toString())
+		if (!response.success) throw new ResponseException(response.error)
 
 		await initializeCategory()
 	}

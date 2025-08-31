@@ -8,18 +8,15 @@ const { category_name: categoryName } = Astro.params
 
 const productResponse = await ProductService.getProductsByCategory(categoryName ?? '')
 if (!productResponse.success) {
-	throw new Error(productResponse.error.toString())
+	console.log(productResponse.error)
 }
 
-const productsByCategory = productResponse.data
+const productsByCategory = productResponse.success ? productResponse.data : []
 const categoryResponse = await CategoryService.getDescriptionByName(categoryName ?? '')
 
-if (!categoryResponse.success) {
-	console.error(categoryResponse.error)
-	return Astro.redirect('/home')
-}
+if (!categoryResponse.success) console.error(categoryResponse.error)
 
-const description = categoryResponse.data
+const description = categoryResponse.success ? categoryResponse.data : ''
 ---
 
 <Layout>

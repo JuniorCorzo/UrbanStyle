@@ -15,6 +15,7 @@ import { formStore } from '@/state/form.state'
 import ToasterManager from '../utils/ToasterManager'
 import { type Result } from '../result_pattern'
 import type { ErrorMessage } from '@/interface/response.interface'
+import { ResponseException } from '@/exceptions/response.exception'
 
 export async function productForm() {
 	const handleCreateProduct = async (data: FormData) => {
@@ -23,7 +24,7 @@ export async function productForm() {
 			CreateProductScheme.parse(product)
 
 			const response = await ProductService.createProduct(product)
-			if (!response.success) throw Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 
 			initializeReportProducts()
 		} catch (err) {
@@ -40,7 +41,7 @@ export async function productForm() {
 
 			UpdateProductScheme.parse(product)
 			const response = await ProductService.updateProduct(product)
-			if (!response.success) throw Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 
 			initializeReportProducts()
 		} catch (err) {
@@ -76,7 +77,7 @@ export async function productForm() {
 	const handleDelete = async (id: string) => {
 		const result: Result<string, ErrorMessage> = await ProductService.deleteProduct(id)
 
-		if (!result.success) throw Error(result.error.toString())
+		if (!result.success) throw new ResponseException(result.error)
 
 		initializeReportProducts()
 		return result.data
@@ -126,7 +127,7 @@ async function checkImages(productId: string) {
 
 	const handleDeleteImage = async () => {
 		const response = await ProductService.deleteImageToProduct(imagesDelete)
-		if (!response.success) throw Error(response.error.toString())
+		if (!response.success) throw new ResponseException(response.error)
 	}
 
 	const handleAddImages = async () => {
@@ -134,7 +135,7 @@ async function checkImages(productId: string) {
 			AddImageScheme.parse(imagesAdd)
 
 			const response = await ProductService.addImageToProduct(imagesAdd)
-			if (!response.success) throw Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 		} catch (err) {
 			if (err instanceof ZodError) showError(err)
 			throw Error()

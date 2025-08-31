@@ -6,9 +6,12 @@ const { user, accessToken } = Astro.locals
 const id = user?.id
 
 if (!id) return
-const cartResponse = await CartService.getCartByUserId(id, accessToken)
+const cartResponse = await CartService.getCartByUserId(id, accessToken).catch((err) => {
+	console.error(err)
+	return undefined
+})
 
-const cartLength = cartResponse.success ? cartResponse.data.items.length : 0
+const cartLength = cartResponse?.success ? cartResponse?.data.items.length : 0
 ---
 
 <a

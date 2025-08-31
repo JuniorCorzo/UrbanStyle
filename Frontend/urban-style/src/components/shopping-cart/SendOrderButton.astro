@@ -13,6 +13,7 @@ const { userId } = Astro.props
 </Button>
 
 <script>
+	import { ResponseException } from '@/exceptions/response.exception'
 	import type { Address } from '@/interface/address.interface'
 	import type { CreateOrder } from '@/interface/orders.interface'
 	import { $ } from '@/lib/dom-selector'
@@ -23,7 +24,7 @@ const { userId } = Astro.props
 
 	const sendOrder = (createOrder: CreateOrder) =>
 		OrderService.createOrder(createOrder).then((response) => {
-			if (!response.success) throw new Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 
 			window.location.reload()
 		})

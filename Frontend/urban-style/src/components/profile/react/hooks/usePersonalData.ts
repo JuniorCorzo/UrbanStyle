@@ -8,6 +8,7 @@ import { updateUserScheme, type UpdateUserValid } from '@/lib/validations/user.v
 import { showErrorOnlyField } from '@/lib/showErrorMessages'
 import { UserService } from '@/service/user.service'
 import ToasterManager from '@/lib/utils/ToasterManager'
+import { ResponseException } from '@/exceptions/response.exception'
 
 const userKeys: (keyof UpdateUser)[] = ['id', 'email', 'name', 'phone'] as const
 
@@ -60,7 +61,7 @@ export function usePersonalData() {
 					description: 'Ha ocurrió un error, intente mas tarde',
 				})
 
-				throw new Error(response.error.toString())
+				throw new ResponseException(response.error)
 			}
 			userStore.set(response.data)
 		})

@@ -3,6 +3,7 @@ import { AddressService } from '@/service/address.service'
 import { computed, onMount } from 'nanostores'
 import { persistentAtom } from '@nanostores/persistent'
 import { userStore } from './user.state'
+import { ResponseException } from '@/exceptions/response.exception'
 
 export const AddressStore = persistentAtom<Address[]>('address', [], {
 	encode: JSON.stringify,
@@ -16,14 +17,15 @@ onMount(AddressStore, () => {
 export const getAddressById = (addressId: string) =>
 	computed(AddressStore, (addressList) => addressList.find(({ id }) => id === addressId))
 
-const updateAddressStore = () => {
+const updateAddressStore = async () => {
 	const user = userStore.get()
 	if (!user) {
-		throw new Error('User not found')
+		console.error('User not found')
+		return
 	}
 
-	AddressService.getAddressByUserId(user.id).then((response) => {
-		if (!response.success) throw new Error(response.error.toString())
+	await AddressService.getAddressByUserId(user.id).then((response) => {
+		if (!response.success) throw new ResponseException(response.error)
 
 		AddressStore.set(response.data)
 	})

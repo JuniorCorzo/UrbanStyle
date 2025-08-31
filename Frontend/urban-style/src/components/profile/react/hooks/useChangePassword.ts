@@ -7,6 +7,7 @@ import { useStore } from '@nanostores/react'
 import { useState, useCallback, type ChangeEvent, useRef } from 'react'
 import { useMapReducer } from '@/components/react/hooks/useMapReducer'
 import ToasterManager from '@/lib/utils/ToasterManager'
+import { ResponseException } from '@/exceptions/response.exception'
 
 type ChangePassword = {
 	oldPassword: string
@@ -48,7 +49,7 @@ export const useChangePassword = () => {
 
 	const handleChangePassword = (userId: string, oldPassword: string, newPassword: string) =>
 		UserService.changePassword(userId, oldPassword, newPassword).then((response) => {
-			if (!response.success) throw new Error(response.error.toString())
+			if (!response.success) throw new ResponseException(response.error)
 			console.log(response.data)
 		})
 
@@ -77,7 +78,7 @@ export const useChangePassword = () => {
 					description: 'Ha ocurrió un error, intente mas tarde',
 				})
 
-				throw new Error(response.error.toString())
+				throw new ResponseException(response.error)
 			}
 			setPassword(response.data)
 		})

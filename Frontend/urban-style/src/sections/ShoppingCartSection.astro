@@ -8,11 +8,14 @@ const { user, accessToken } = Astro.locals
 const userId = user?.id
 if (!accessToken) return
 
-const cartResponse = await CartService.getCartByUserId(userId, accessToken)
+const cartResponse = await CartService.getCartByUserId(userId, accessToken).catch((err) => {
+	console.error(err)
+	return undefined
+})
 
-if (!cartResponse.success) console.error(cartResponse.error)
+if (!cartResponse?.success) console.error(cartResponse?.error)
 
-const items = cartResponse.success ? cartResponse.data.items : []
+const items = cartResponse?.success ? cartResponse?.data.items : []
 
 const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + price * quantity, 0))
 ---
@@ -28,7 +31,8 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 </section>
 
 <script>
-	import { $, $$ } from '@/lib/dom-selector'
+	import { ResponseException } from '@/exceptions/response.exception'
+import { $, $$ } from '@/lib/dom-selector'
 	import ToasterManager from '@/lib/utils/ToasterManager'
 	import { CartService } from '@/service/cart.service'
 	import { navigate } from 'astro:transitions/client'
@@ -96,7 +100,7 @@ const calculateTotal = Number(items.reduce((acc, { price, quantity }) => acc + p
 			const quantity = input.valueAsNumber
 			CartService.updateQuantityProductInCart(userId, productId, color, size, quantity).then(
 				(response) => {
-					if (!response.success) throw new Error(response.error.toString())
+					if (!response.success) throw new ResponseException(response.error)
 					const { data: cart } = response
 
 					// Sync input dataset with confirmed quantity
