@@ -15,6 +15,7 @@ export function OrderActions({ orderId, status }: OrderActionsProps) {
 	return (
 		<button
 			className="pointer-events-auto cursor-pointer"
+			title="Cambiar estado de orden"
 			onClick={handleClick}
 			aria-haspopup="dialog"
 			aria-controls={orderId}

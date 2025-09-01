@@ -116,6 +116,7 @@ export async function orderTable() {
 
 	orderStore.subscribe((orders) => {
 		tableStore.set({
+			titleSection: 'Gestión de ordenes',
 			columns,
 			data: [...(orders ?? [])],
 			subComponent: orderSubComponent as SubComponent<unknown>,

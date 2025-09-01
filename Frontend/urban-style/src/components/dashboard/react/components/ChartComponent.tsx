@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ColorType, createChart, LineSeries } from 'lightweight-charts'
 import { convertToIso } from '@/lib/utils/convert-date'
-import { SelectInput } from '../../../react/inputs/SelectInput'
+import { SelectInput } from '@/components/react/inputs/SelectInput'
 import type { SelectOptions } from '@/interface/form-mediator.interface'
 import { useStore } from '@nanostores/react'
 import { reportSalesStore } from '@/state/report.store'
@@ -89,7 +89,7 @@ export default function ChartComponent() {
 
 	return (
 		<div className="flex flex-col gap-5">
-			<div className="w-40 text-left">
+			<div className="w-40 px-1 text-left">
 				<SelectInput
 					defaultValue={{ text: 'Dia', value: 'day' }}
 					label="Agrupar por"

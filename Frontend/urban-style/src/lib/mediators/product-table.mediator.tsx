@@ -83,6 +83,7 @@ export async function productTable(): Promise<void> {
 
 	productStore.subscribe((products) => {
 		tableStore.set({
+			titleSection: 'Gestión de Productos',
 			columns: columns as ColumnDef<unknown, any>[],
 			data: [...products],
 			columnPinning: { left: ['expanded', 'name'] },
@@ -135,11 +136,13 @@ export async function productReportTable() {
 					header: 'ingresos',
 					cell: (row) => (
 						<Cell.Span>
-							{Intl.NumberFormat('es-CO', {
-								style: 'currency',
-								currency: 'COP',
-								currencyDisplay: 'code',
-							}).format(row.getValue())}
+							{row.getValue()
+								? Intl.NumberFormat('es-CO', {
+										style: 'currency',
+										currency: 'COP',
+										currencyDisplay: 'code',
+									}).format(row.getValue())
+								: 0}
 						</Cell.Span>
 					),
 				}),
@@ -147,9 +150,11 @@ export async function productReportTable() {
 					header: 'vendido',
 					cell: (row) => (
 						<Cell.Span>
-							{Intl.NumberFormat('es-CO', {
-								maximumFractionDigits: 2,
-							}).format(row.getValue())}
+							{row.getValue()
+								? Intl.NumberFormat('es-CO', {
+										maximumFractionDigits: 2,
+									}).format(row.getValue())
+								: 0}
 						</Cell.Span>
 					),
 				}),
@@ -187,6 +192,7 @@ export async function productReportTable() {
 
 	productReportStore.subscribe((productReport) => {
 		tableStore.set({
+			titleSection: 'Reporte de Productos',
 			columns: columns as ColumnDef<unknown, any>[],
 			data: [...productReport],
 			columnFilters: [],

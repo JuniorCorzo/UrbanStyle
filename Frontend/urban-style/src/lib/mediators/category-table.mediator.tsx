@@ -28,6 +28,7 @@ export async function categoriesTable(): Promise<void> {
 
 	categoriesStore.subscribe((category) => {
 		tableStore.set({
+			titleSection: 'Gestión de Categorías',
 			columns,
 			data: [...category],
 			canSearch: true,
@@ -102,6 +103,7 @@ export async function categoryReportTable() {
 
 	categoryReportStore.subscribe((categoryReport) => {
 		tableStore.set({
+			titleSection: 'Reporte de Categoría',
 			columns: columns as ColumnDef<unknown, any>[],
 			data: [...categoryReport],
 			canSearch: true,
