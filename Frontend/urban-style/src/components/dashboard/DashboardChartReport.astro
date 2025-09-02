@@ -2,7 +2,9 @@
 import ChartComponent from './react/components/ChartComponent'
 ---
 
-<div class="border-border flex flex-col justify-center rounded border px-5 py-2.5 text-center">
-	<span class="text-lg">Historial de Ventas</span>
+<div
+	class="border-border shadow-border flex flex-col justify-center gap-3 rounded border px-5 py-2.5 shadow-sm"
+>
+	<span class="text-2xl font-medium">Historial de Ventas</span>
 	<ChartComponent client:only="react" />
 </div>

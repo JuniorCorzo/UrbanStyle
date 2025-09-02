@@ -2,7 +2,7 @@
 import Dock from '@/components/dashboard/Dock.astro'
 import Layout from '@/layouts/Layout.astro'
 import { FormSidebar } from '@/components/dashboard/react/components/FormSidebar'
-import DashboardTableSection from '@/components/dashboard/DashboardTableSection.astro'
+import DashboardTableSection from '@/components/dashboard/react/components/table/DashboardTableSection'
 import DashboardSummarySection from '@/components/dashboard/DashboardSummarySection.astro'
 ---
 
@@ -10,7 +10,7 @@ import DashboardSummarySection from '@/components/dashboard/DashboardSummarySect
 	<FormSidebar slot="sidebar" client:only="react" />
 	<section class="flex h-full w-full flex-col items-center gap-5 p-5">
 		<DashboardSummarySection />
-		<DashboardTableSection />
+		<DashboardTableSection client:only="react" />
 		<Dock />
 	</section>
 </Layout>

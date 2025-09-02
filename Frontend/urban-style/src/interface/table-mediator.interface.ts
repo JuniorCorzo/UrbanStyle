@@ -42,6 +42,7 @@ export type FilterComponents = {
 export interface TableState {
 	columns: ColumnDef<unknown, any>[]
 	data: unknown[]
+	titleSection: string
 	canSearch?: boolean
 	searchFilter?: string
 	columnPinning?: ColumnPinningState

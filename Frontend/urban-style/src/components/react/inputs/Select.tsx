@@ -48,7 +48,7 @@ export const Select = React.forwardRef<SelectRefProps, SelectSingleProps>(
 			if (defaultValue !== undefined) {
 				selectItem(defaultValue)
 			}
-		}, [defaultValue])
+		}, [])
 
 		useImperativeHandle(ref, () => ({
 			selectedItems: () => selectedItem,

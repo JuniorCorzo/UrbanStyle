@@ -65,7 +65,7 @@ export function Table({ tableConfig }: Props) {
 				{tableConfig.getRowModel().rows.map((row) => (
 					<Fragment key={row.id}>
 						<tr
-							className="group h-full cursor-pointer"
+							className="not-last:border-b border-border/20 group h-full cursor-pointer"
 							key={row.id}
 							onClick={(event) => handleExpanded(event, row.getToggleExpandedHandler())}
 						>

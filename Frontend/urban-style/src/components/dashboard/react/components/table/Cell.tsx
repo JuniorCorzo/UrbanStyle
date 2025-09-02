@@ -12,7 +12,7 @@ interface CellChildrenProps extends React.ComponentProps<'div'> {
 export function Cell({ children, className, ...props }: Props) {
 	return (
 		<td
-			className={cn('group-hover:bg-foreground h-full min-h-11 w-full text-center', className)}
+			className={cn('group-hover:bg-foreground h-full min-h-11 w-full py-2 text-center', className)}
 			{...props}
 		>
 			{children}
