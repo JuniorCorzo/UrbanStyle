@@ -50,6 +50,7 @@ export function addressTable() {
 		return AddressStore.get()
 	}).subscribe((address) => {
 		tableStore.set({
+			titleSection: '',
 			columns: columns,
 			data: [...address],
 			canSearch: true,
