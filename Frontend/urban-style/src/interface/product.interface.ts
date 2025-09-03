@@ -55,5 +55,6 @@ export type ProductInventory = {
 	productId: string
 	product: string
 	sku: string
+	stock: number
 	movements: StockMovements[]
 }

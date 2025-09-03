@@ -9,6 +9,7 @@ public record ProductInventoryDTO(
         String productId,
         String sku,
         String product,
+        int stock,
         List<StockMovementsDTO> movements
 ) {
 }

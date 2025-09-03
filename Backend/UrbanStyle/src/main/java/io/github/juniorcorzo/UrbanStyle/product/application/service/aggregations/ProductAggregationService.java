@@ -71,7 +71,7 @@ public class ProductAggregationService {
 
     @NotNull
     private ProjectionOperation getProductInventoryProjection() {
-        return Aggregation.project("$movements")
+        return Aggregation.project("$movements", "$stock")
                 .andExclude("_id")
                 .and("$_id.productId")
                 .as("productId")
@@ -84,10 +84,26 @@ public class ProductAggregationService {
     @NotNull
     private GroupOperation getGroupProductMovements() {
         return Aggregation.group(Fields.from(
-                Fields.field("productId", "$productId"),
-                Fields.field("sku", "$sku"),
-                Fields.field("product", "$product.name")
-        )).push("$$ROOT").as("movements");
+                        Fields.field("productId", "$productId"),
+                        Fields.field("sku", "$sku"),
+                        Fields.field("product", "$product.name")
+                ))
+                .push("$$ROOT")
+                .as("movements")
+                .first(
+                        ObjectOperators.GetField
+                                .getField("quantity")
+                                .of(
+                                        ArrayOperators.ArrayElemAt.arrayOf(
+                                                ArrayOperators.Filter
+                                                        .filter("$product.attributes")
+                                                        .as("attr")
+                                                        .by(
+                                                                ComparisonOperators.Eq.valueOf("$$attr.sku").equalTo("$sku")
+                                                        )
+                                        ).elementAt(0)
+                                )
+                ).as("stock");
     }
 
     @NotNull

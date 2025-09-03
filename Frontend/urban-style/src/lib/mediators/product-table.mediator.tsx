@@ -238,6 +238,10 @@ export function productInventoryTable() {
 			header: 'Producto',
 			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
 		}),
+		columnAccessor.accessor('stock', {
+			header: 'Stock',
+			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
+		}),
 	] as ColumnDef<unknown, any>[]
 
 	const subComponent: SubComponent<ProductInventory> = ({ row }) => (
