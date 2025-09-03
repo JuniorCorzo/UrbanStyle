@@ -1,6 +1,11 @@
-import type { Products } from '@/interface/product.interface'
+import type { ProductInventory, Products } from '@/interface/product.interface'
 import { createColumnHelper, type ColumnDef } from '@tanstack/react-table'
-import { productReportStore, productStore, ProductStore } from '@/state/product.store'
+import {
+	productInventoryStore,
+	productReportStore,
+	productStore,
+	ProductStore,
+} from '@/state/product.store'
 import { tableStore } from '@/state/table.state'
 import TableActions from '@/components/dashboard/react/components/table/TableActions'
 import { Cell } from '@/components/dashboard/react/components/table/Cell'
@@ -11,6 +16,7 @@ import type { SubComponent } from '@/interface/table-mediator.interface'
 import { ProductFilter } from '@/components/dashboard/react/components/table/filters/ProductFilterDropdown'
 import type { ProductReport } from '@/interface/report.interface'
 import { ModeSelector } from '@/components/dashboard/react/components/ModeSelector'
+import { ProductInventorySubComponent } from '@/components/dashboard/react/components/table/ProductInventorySubComponent'
 
 export async function productTable(): Promise<void> {
 	const columnAccessor = createColumnHelper<Products>()
@@ -200,6 +206,54 @@ export async function productReportTable() {
 			canExpand: true,
 			canSearch: true,
 			hasForm: true,
+		})
+	})
+}
+
+export function productInventoryTable() {
+	const columnAccessor = createColumnHelper<ProductInventory>()
+	const columns = [
+		columnAccessor.display({
+			id: 'expanded',
+			header: undefined,
+			maxSize: 50,
+			cell: ({ row }) => {
+				return row.getCanExpand() ? (
+					<Cell.Span>
+						{row.getIsExpanded() ? (
+							<ChevronUpIcon className="size-5" />
+						) : (
+							<ChevronDownIcon className="size-5" />
+						)}
+					</Cell.Span>
+				) : null
+			},
+			enablePinning: true,
+		}),
+		columnAccessor.accessor('sku', {
+			header: 'SKU',
+			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
+		}),
+		columnAccessor.accessor('product', {
+			header: 'Producto',
+			cell: ({ getValue }) => <Cell.Span>{getValue()}</Cell.Span>,
+		}),
+	] as ColumnDef<unknown, any>[]
+
+	const subComponent: SubComponent<ProductInventory> = ({ row }) => (
+		<ProductInventorySubComponent row={row} />
+	)
+
+	productInventoryStore.subscribe((inventory) => {
+		tableStore.set({
+			titleSection: 'Inventario de productos',
+			columns: columns,
+			data: [...inventory],
+			canSearch: true,
+			filterComponents: {
+				right: () => <ModeSelector />,
+			},
+			subComponent: subComponent as SubComponent<unknown>,
 		})
 	})
 }
