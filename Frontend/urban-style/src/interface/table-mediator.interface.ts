@@ -16,6 +16,7 @@ export enum TABLE_PARAM {
 export enum TABLE_MODE {
 	ALL = 'all',
 	REPORT = 'report',
+	INVENTORY = 'inventory',
 }
 
 export enum TABLE_TYPE {

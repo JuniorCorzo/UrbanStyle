@@ -96,7 +96,7 @@ export function Table({ tableConfig }: Props) {
 						</tr>
 						{row.getIsExpanded() && subComponent ? (
 							<tr>
-								<td className="bg-foreground px-5" colSpan={row.getVisibleCells().length}>
+								<td className="bg-foreground" colSpan={row.getVisibleCells().length}>
 									{subComponent({ row })}
 								</td>
 							</tr>

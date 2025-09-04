@@ -1,12 +1,15 @@
 import { ResponseException } from '@/exceptions/response.exception'
-import type { Products, ProductsGroupedCategory } from '@/interface/product.interface'
+import type {
+	ProductInventory,
+	Products,
+	ProductsGroupedCategory,
+} from '@/interface/product.interface'
 import type { ProductReport } from '@/interface/report.interface'
 import { ProductService } from '@/service/product.service'
 import { ReportService } from '@/service/report.service'
 import { atom, computed, map, onMount } from 'nanostores'
 
 export const productStore = map<Products[]>([])
-
 onMount(productStore, () => {
 	initializeProducts()
 })
@@ -22,12 +25,26 @@ export const productReportStore = atom<ProductReport[]>([])
 onMount(productReportStore, () => {
 	initializeReportProducts()
 })
+
 export const initializeReportProducts = () =>
 	ReportService.productsReport().then((response) => {
 		if (!response.success) throw new ResponseException(response.error)
 
 		productReportStore.set(response.data)
 	})
+
+export const productInventoryStore = atom<ProductInventory[]>([])
+onMount(productInventoryStore, () => {
+	initializeProductInventory()
+})
+
+const initializeProductInventory = async () => {
+	ProductService.getProductsInventory().then((response) => {
+		if (!response.success) throw new ResponseException(response.error)
+
+		productInventoryStore.set(response.data)
+	})
+}
 
 export const productGroupedStore = map<ProductsGroupedCategory[]>([])
 export async function initializeProductGroupeStore() {

@@ -1,14 +1,18 @@
 package io.github.juniorcorzo.UrbanStyle.product.application.service;
 
+import io.github.juniorcorzo.UrbanStyle.common.infrastructure.adapter.dtos.response.ResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.product.application.command.attributes.AttributeCommand;
 import io.github.juniorcorzo.UrbanStyle.product.application.command.attributes.AttributeCommandFactory;
 import io.github.juniorcorzo.UrbanStyle.product.application.command.stock.StockCommandFactory;
 import io.github.juniorcorzo.UrbanStyle.product.application.command.stock.StockMovementCommand;
+import io.github.juniorcorzo.UrbanStyle.product.application.service.aggregations.ProductAggregationService;
 import io.github.juniorcorzo.UrbanStyle.product.application.service.bulks.ProductStockCommandOrchestrator;
+import io.github.juniorcorzo.UrbanStyle.product.domain.adapter.dtos.ProductInventoryDTO;
 import io.github.juniorcorzo.UrbanStyle.product.domain.entities.Attribute;
 import io.github.juniorcorzo.UrbanStyle.product.domain.entities.ProductEntity;
 import io.github.juniorcorzo.UrbanStyle.product.domain.repository.ProductsRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ public class ProductStockService {
     private final ProductsRepository productsRepository;
     private final ProductStockCommandOrchestrator productStockOrchestrator;
     private final StockCommandFactory stockCommandFactory;
+    private final ProductAggregationService productAggregationService;
 
 
     /**
@@ -52,6 +57,16 @@ public class ProductStockService {
         this.productStockOrchestrator.addStockMovementsCommands(stockCommands);
 
         this.productStockOrchestrator.executeCommands();
+    }
+
+    public ResponseDTO<ProductInventoryDTO> getProductsInventory(){
+        final List<ProductInventoryDTO> productInventory = this.productAggregationService.productsInventory();
+
+        return new ResponseDTO<>(
+                HttpStatus.OK,
+                productInventory,
+                "Product inventory retrieved successfully"
+        );
     }
 
 

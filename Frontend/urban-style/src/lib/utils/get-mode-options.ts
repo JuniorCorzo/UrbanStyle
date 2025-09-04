@@ -4,7 +4,8 @@ export function getModeOptions(mode: string) {
 	const modeMap = new Map<keyof typeof TABLE_MODE, string>([
 		['ALL', 'Todos los datos'],
 		['REPORT', 'Reporte de ventas'],
+		['INVENTORY', 'Inventario'],
 	])
 
-	return modeMap.get(mode as keyof typeof TABLE_MODE) ?? ""
+	return modeMap.get(mode as keyof typeof TABLE_MODE) ?? ''
 }

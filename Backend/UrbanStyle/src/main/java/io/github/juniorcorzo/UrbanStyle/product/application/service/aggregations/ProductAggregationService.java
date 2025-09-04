@@ -1,9 +1,12 @@
 package io.github.juniorcorzo.UrbanStyle.product.application.service.aggregations;
 
-import io.github.juniorcorzo.UrbanStyle.product.domain.adapter.dtos.ProductAggregationDomain;
-import io.github.juniorcorzo.UrbanStyle.product.domain.entities.ProductEntity;
 import io.github.juniorcorzo.UrbanStyle.order.domain.enums.OrderStatus;
+import io.github.juniorcorzo.UrbanStyle.product.domain.adapter.dtos.ProductAggregationDomain;
+import io.github.juniorcorzo.UrbanStyle.product.domain.adapter.dtos.ProductInventoryDTO;
+import io.github.juniorcorzo.UrbanStyle.product.domain.entities.ProductEntity;
+import io.github.juniorcorzo.UrbanStyle.product.domain.entities.StockMovementsEntity;
 import lombok.RequiredArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.aggregation.*;
@@ -18,17 +21,18 @@ import java.util.List;
 public class ProductAggregationService {
     private final MongoTemplate mongoTemplate;
 
-    public boolean existsByIdAndSku(final String productId,final String sku) {
+
+    public boolean existsByIdAndSku(final String productId, final String sku) {
         final Query query = Query.query(Criteria.where("_id").is(productId).and("attributes.sku").is(sku));
 
-        return  this.mongoTemplate.exists(query, ProductEntity.class);
+        return this.mongoTemplate.exists(query, ProductEntity.class);
     }
 
     public List<ProductAggregationDomain> productsGroupedByCategory() {
-        final LookupOperation orderLookup = createOrderLookup();
-        final GroupOperation groupByCategory = createGroupByCategory();
-        final ArrayOperators.Filter ordersFilter = createOrdersFilter();
-        final ProjectionOperation projection = createProjectionWithSoldCount(ordersFilter);
+        final LookupOperation orderLookup = this.createOrderLookup();
+        final GroupOperation groupByCategory = this.createGroupByCategory();
+        final ArrayOperators.Filter ordersFilter = this.createOrdersFilter();
+        final ProjectionOperation projection = this.createProjectionWithSoldCount(ordersFilter);
 
         final Aggregation aggregation = Aggregation.newAggregation(
                 orderLookup,
@@ -46,6 +50,69 @@ public class ProductAggregationService {
 
         AggregationResults<ProductAggregationDomain> aggregationResults = mongoTemplate.aggregate(aggregation, "products", ProductAggregationDomain.class);
         return aggregationResults.getMappedResults();
+    }
+
+    public List<ProductInventoryDTO> productsInventory() {
+        final LookupOperation productLookup = this.getProductLookup();
+        final GroupOperation groupProductMovements = this.getGroupProductMovements();
+        final ProjectionOperation projection = this.getProductInventoryProjection();
+
+        final Aggregation aggregation = Aggregation.newAggregation(
+                productLookup,
+                Aggregation.unwind("product"),
+                groupProductMovements,
+                UnsetOperation.unset("$movements.product"),
+                projection
+        );
+
+        AggregationResults<ProductInventoryDTO> aggregationResults = mongoTemplate.aggregate(aggregation, StockMovementsEntity.class, ProductInventoryDTO.class);
+        return aggregationResults.getMappedResults();
+    }
+
+    @NotNull
+    private ProjectionOperation getProductInventoryProjection() {
+        return Aggregation.project("$movements", "$stock")
+                .andExclude("_id")
+                .and("$_id.productId")
+                .as("productId")
+                .and("$_id.sku")
+                .as("sku")
+                .and("$_id.product")
+                .as("product");
+    }
+
+    @NotNull
+    private GroupOperation getGroupProductMovements() {
+        return Aggregation.group(Fields.from(
+                        Fields.field("productId", "$productId"),
+                        Fields.field("sku", "$sku"),
+                        Fields.field("product", "$product.name")
+                ))
+                .push("$$ROOT")
+                .as("movements")
+                .first(
+                        ObjectOperators.GetField
+                                .getField("quantity")
+                                .of(
+                                        ArrayOperators.ArrayElemAt.arrayOf(
+                                                ArrayOperators.Filter
+                                                        .filter("$product.attributes")
+                                                        .as("attr")
+                                                        .by(
+                                                                ComparisonOperators.Eq.valueOf("$$attr.sku").equalTo("$sku")
+                                                        )
+                                        ).elementAt(0)
+                                )
+                ).as("stock");
+    }
+
+    @NotNull
+    private LookupOperation getProductLookup() {
+        return LookupOperation.newLookup()
+                .from("products")
+                .localField("productId")
+                .foreignField("_id")
+                .as("product");
     }
 
     private LookupOperation createOrderLookup() {

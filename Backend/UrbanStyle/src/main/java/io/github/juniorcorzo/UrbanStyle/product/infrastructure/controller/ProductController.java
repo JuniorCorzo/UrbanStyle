@@ -6,7 +6,9 @@ import io.github.juniorcorzo.UrbanStyle.product.application.service.ProductServi
 import io.github.juniorcorzo.UrbanStyle.common.domain.annotations.constraint.IdFormatConstraint;
 import io.github.juniorcorzo.UrbanStyle.common.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.common.domain.annotations.groups.OnUpdate;
+import io.github.juniorcorzo.UrbanStyle.product.application.service.ProductStockService;
 import io.github.juniorcorzo.UrbanStyle.product.domain.adapter.dtos.ProductAggregationDomain;
+import io.github.juniorcorzo.UrbanStyle.product.domain.adapter.dtos.ProductInventoryDTO;
 import io.github.juniorcorzo.UrbanStyle.product.infrastructure.adapters.dto.common.ProductDTO;
 import io.github.juniorcorzo.UrbanStyle.product.infrastructure.adapters.dto.request.ProductImagesDTO;
 import io.github.juniorcorzo.UrbanStyle.common.infrastructure.adapter.dtos.response.ResponseDTO;
@@ -26,6 +28,7 @@ public class ProductController {
     private final ProductService productService;
     private final ProductSearchService productSearchService;
     private final ProductImageService productImageService;
+    private final ProductStockService productStockService;
 
     @GetMapping("/all")
     public ResponseDTO<ProductDTO> getAllProducts() {
@@ -35,6 +38,12 @@ public class ProductController {
     @GetMapping
     public ResponseDTO<ProductDTO> getProductById(@IdFormatConstraint @RequestParam String id) {
         return productService.getProductById(id);
+    }
+
+    @GetMapping("/inventory")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseDTO<ProductInventoryDTO> getProductsInventory() {
+        return this.productStockService.getProductsInventory();
     }
 
     @GetMapping("/group")

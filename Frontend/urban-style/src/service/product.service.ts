@@ -5,6 +5,7 @@ import type {
 	Products,
 	ProductsGroupedCategory,
 	UpdateProduct,
+	ProductInventory,
 } from '@/interface/product.interface'
 import type { ErrorMessage, Response } from '@/interface/response.interface'
 import { PUBLIC_API_URL } from '@/config/env-config'
@@ -50,6 +51,17 @@ const getProductsByCategory = async (
 
 const searchProducts = async (searchQuery: string): Promise<Result<Products[], ErrorMessage>> => {
 	const response = await axios.get(`${PUBLIC_API_URL}/products/search?search=${searchQuery}`)
+
+	return extractResponse(response)
+}
+
+const getProductsInventory = async (): Promise<Result<ProductInventory[], ErrorMessage>> => {
+	const response = await axios.get<Response<ProductInventory>>(
+		`${PUBLIC_API_URL}/products/inventory`,
+		{
+			withCredentials: true,
+		},
+	)
 
 	return extractResponse(response)
 }
@@ -117,6 +129,7 @@ export const ProductService = {
 	getProductById,
 	getProductsByCategory,
 	getProductsGroupedByCategory,
+	getProductsInventory,
 	searchProducts,
 	addImageToProduct,
 	deleteImageToProduct,
