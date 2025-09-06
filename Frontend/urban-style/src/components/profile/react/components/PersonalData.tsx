@@ -3,8 +3,15 @@ import { ActionsFooter } from './ActionsFooter'
 import { usePersonalData } from '../hooks/usePersonalData'
 
 export function PersonalData() {
-	const { user, userValues, handleChange, reset, canSubmit, canReset, sendRequest } =
-		usePersonalData()
+	const {
+		user,
+		userValues,
+		handleInputChange: handleInputChange,
+		reset,
+		canSubmit,
+		canReset,
+		sendRequest,
+	} = usePersonalData()
 	const { name, email, phone } = user ?? {}
 
 	return (
@@ -17,19 +24,19 @@ export function PersonalData() {
 						className="max-h-12"
 						label="Nombre de Usuario"
 						value={userValues.get('name') ?? name}
-						onChange={(event) => handleChange(event, 'name')}
+						onChange={handleInputChange}
 					/>
 					<TextInput
 						name="email"
 						label="Email"
 						value={userValues.get('email') ?? email}
-						onChange={(event) => handleChange(event, 'email')}
+						onChange={handleInputChange}
 					/>
 					<TextInput
 						name="phone"
 						label="Teléfono"
 						value={userValues.get('phone') ?? phone}
-						onChange={(event) => handleChange(event, 'phone')}
+						onChange={handleInputChange}
 					/>
 				</div>
 			</div>

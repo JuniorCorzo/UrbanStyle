@@ -5,7 +5,7 @@ import { UserService } from '@/service/user.service'
 import { userStore } from '@/state/user.state'
 import { useStore } from '@nanostores/react'
 import { useState, useCallback, type ChangeEvent, useRef } from 'react'
-import { useMapReducer } from '@/components/react/hooks/useMapReducer'
+import { useFormHandler } from '@/components/react/hooks/useFormHandler'
 import ToasterManager from '@/lib/utils/ToasterManager'
 import { ResponseException } from '@/exceptions/response.exception'
 
@@ -18,34 +18,11 @@ type ChangePassword = {
 export const useChangePassword = () => {
 	const user = useStore(userStore)
 	const [isPassword, setPassword] = useState<boolean>()
-	const { formState: passwordValues, updateValue } = useMapReducer<ChangePassword>()
-	const canSubmit = useRef<boolean>(false)
-
-	const validateField = useCallback(
-		(key: keyof ChangePassword, value: string) => {
-			const data: Partial<ChangePasswordValid> = {
-				oldPassword: passwordValues.get('oldPassword'),
-				newPassword: passwordValues.get('newPassword'),
-				confirmPassword: passwordValues.get('confirmPassword'),
-				[key]: value,
-			}
-
-			const isValid = changePasswordScheme.safeParse(data)
-
-			canSubmit.current = isValid.success
-			if (isValid.error) showErrorOnlyField<ChangePassword>(isValid.error, key)
-		},
-		[passwordValues],
-	)
-
-	const handleChange = debounce(
-		(event: ChangeEvent<HTMLInputElement>, key: keyof ChangePassword) => {
-			const value = event.target.value
-			updateValue(key, value)
-			validateField(key, value)
-		},
-		300,
-	)
+	const {
+		formState: passwordValues,
+		handleInputChange,
+		canSubmit,
+	} = useFormHandler<ChangePassword>()
 
 	const handleChangePassword = (userId: string, oldPassword: string, newPassword: string) =>
 		UserService.changePassword(userId, oldPassword, newPassword).then((response) => {
@@ -86,9 +63,9 @@ export const useChangePassword = () => {
 
 	return {
 		isPassword,
-		handleChange,
+		handleInputChange,
 		handleValidatePassword,
-		canSubmit: canSubmit.current,
+		canSubmit,
 		sendRequest,
 	}
 }

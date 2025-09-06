@@ -10,7 +10,7 @@ import type React from 'react'
 import { cn } from '@/lib/cn'
 
 type DepartmentSelectProps = SelectSingleProps & {
-	ref: React.Ref<SelectRefProps>
+	ref?: React.Ref<SelectRefProps>
 }
 
 export function DepartmentSelect({ className, onChange, ref, ...props }: DepartmentSelectProps) {

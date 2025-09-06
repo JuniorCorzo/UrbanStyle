@@ -8,10 +8,15 @@ import { AttributeFields } from './AttributeFields'
 import { TextAreaInput } from '@/components/react/inputs/TextAreaInput'
 import type { FormFieldsProps } from '../FormSidebar'
 import { ImagesFileInput } from '@/components/react/inputs/ImagesFileInput'
+import { useFormHandler } from '@/components/react/hooks/useFormHandler'
+import { CreateProductScheme } from '@/lib/validations/product.validations'
 
 export function ProductFormFields({ getDefaultValues }: FormFieldsProps<Products>) {
-	const [categories, setCategories] = useState<SelectOptions[]>()
-	const defaultValues = getDefaultValues()
+	const [categoriesOptions, setCategories] = useState<SelectOptions[]>()
+	const { formState: productState, handleInputChange } = useFormHandler({
+		initializerData: getDefaultValues(),
+		validate: CreateProductScheme,
+	})
 
 	const getCategories = async (): Promise<SelectOptions[]> =>
 		categoriesStore.get().map((category) => ({
@@ -19,52 +24,53 @@ export function ProductFormFields({ getDefaultValues }: FormFieldsProps<Products
 			text: category.name,
 		}))
 
-	const {
-		name,
-		description,
-		categories: defaultCategory,
-		price,
-		discount,
-		attributes,
-		images,
-	} = (defaultValues ?? {}) as Products
-
 	useLayoutEffect(() => {
 		getCategories().then(setCategories)
 	}, [])
 
+	const { name, description, price, discount, categories, attributes, images } =
+		productState.getAll()
 	return (
 		<>
 			<TextInput
 				label="Nombre del producto"
 				name="name"
 				placeholder="Ej: Camiseta básica unisex"
-				defaultValue={name ?? ''}
+				value={name}
+				onChange={handleInputChange}
 			/>
 			<TextAreaInput
 				label="Descripción"
 				name="description"
 				placeholder="Describe el producto, materiales, uso…"
-				value={description ?? ''}
+				value={description}
+				onChange={handleInputChange}
 			/>
-			<TextInput label="Precio" name="price" placeholder="Ej: 59.900" defaultValue={price ?? ''} />
+			<TextInput
+				label="Precio"
+				name="price"
+				placeholder="Ej: 59.900"
+				value={price}
+				onChange={handleInputChange}
+			/>
 			<TextInput
 				label="Descuento (%)"
 				name="discount"
 				placeholder="Ej: 15"
 				type="number"
-				defaultValue={discount?.toLocaleString() ?? ''}
+				value={discount}
+				onChange={handleInputChange}
 			/>
 			<SelectInput
 				label="Categoría"
 				name="categories"
 				placeholder="Selecciona una o más categorías"
 				isMultiple={true}
-				defaultValue={defaultCategory?.map(({ categoryId, name }) => ({
+				defaultValue={categories?.map(({ categoryId, name }) => ({
 					text: name,
 					value: categoryId,
 				}))}
-				options={categories}
+				options={categoriesOptions}
 			/>
 			<AttributeFields
 				name="attributes"

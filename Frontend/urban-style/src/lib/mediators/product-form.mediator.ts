@@ -29,7 +29,7 @@ export async function productForm() {
 			initializeReportProducts()
 		} catch (err) {
 			if (err instanceof ZodError) showError(err)
-			console.error(err)
+			throw err
 		}
 	}
 
@@ -58,7 +58,7 @@ export async function productForm() {
 				promise: handleUpdateProduct(id, data),
 				config: {
 					success: 'Product actualizado con éxito',
-					error: 'Ocurrió un error actualizando el producto, intente mas tarde',
+					error: 'Ocurrió un error actualizando el producto',
 				},
 			})
 
@@ -68,8 +68,9 @@ export async function productForm() {
 		ToasterManager.emitPromise({
 			promise: handleCreateProduct(data),
 			config: {
+				position: 'top-right',
 				success: 'Producto creado con éxito',
-				error: 'Hubo un error creando el producto, intente mas tarde',
+				error: 'Hubo un error creando el producto',
 			},
 		})
 	}
