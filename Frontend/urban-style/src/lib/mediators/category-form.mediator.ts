@@ -21,6 +21,7 @@ export async function categoriesForm() {
 			if (err instanceof ZodError) {
 				showError(err)
 			}
+			throw err
 		}
 	}
 
@@ -36,6 +37,7 @@ export async function categoriesForm() {
 			if (err instanceof ZodError) {
 				showError(err)
 			}
+			throw err
 		}
 	}
 
@@ -56,7 +58,7 @@ export async function categoriesForm() {
 				promise: handleUpdateCategory(categoryData),
 				config: {
 					success: 'Se ha actualizado la categoría con éxito',
-					error: 'Ha ocurrió un error actualizando la categoría, intente mas tarde',
+					error: 'Ha ocurrió un error actualizando la categoría',
 				},
 			})
 			return
@@ -66,7 +68,7 @@ export async function categoriesForm() {
 			promise: handleCreateCategory(categoryData),
 			config: {
 				success: 'La categoría se ha creado con éxito',
-				error: 'Ha ocurrió un error creando la categoría, intente mas tarde',
+				error: 'Ha ocurrió un error creando la categoría',
 			},
 		})
 	}

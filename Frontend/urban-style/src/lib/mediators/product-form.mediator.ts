@@ -46,7 +46,7 @@ export async function productForm() {
 			initializeReportProducts()
 		} catch (err) {
 			if (err instanceof ZodError) showError(err)
-			console.error(err)
+			throw err
 		}
 	}
 

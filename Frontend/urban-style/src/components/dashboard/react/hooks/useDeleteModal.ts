@@ -35,6 +35,7 @@ export function useDeleteModal() {
 		if (detailsEvent) {
 			const { id } = detailsEvent
 			formState?.sendDelete(id)
+			dialogRef.current?.close()
 		}
 	}
 
