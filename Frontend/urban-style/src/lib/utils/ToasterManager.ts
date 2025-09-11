@@ -1,6 +1,6 @@
 import type { ExternalToast } from 'sonner'
 
-export type ToastEvent = { title: string; config: ExternalToast }
+export type ToastEvent = { title: string; config?: ExternalToast }
 export type ToastPromiseEvent = {
 	promise: Promise<unknown>
 	config: ExternalToast & {
@@ -17,7 +17,7 @@ export const TOAST_EVENTS = {
 	PROMISE: 'toast:promise',
 } as const
 
-function emitSuccess(title: string, config: ExternalToast) {
+function emitSuccess(title: string, config?: ExternalToast) {
 	document.dispatchEvent(
 		new CustomEvent<ToastEvent>(TOAST_EVENTS.SUCCESS, {
 			detail: {
@@ -28,7 +28,7 @@ function emitSuccess(title: string, config: ExternalToast) {
 	)
 }
 
-function emitError(title: string, config: ExternalToast) {
+function emitError(title: string, config?: ExternalToast) {
 	document.dispatchEvent(
 		new CustomEvent<ToastEvent>(TOAST_EVENTS.ERROR, {
 			detail: {
