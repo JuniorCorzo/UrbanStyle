@@ -4,22 +4,30 @@ import { MunicipalitySelect } from '@/components/shopping-cart/react/Municipalit
 import { useAddressFieldForm } from '../hooks/useAddressFieldForm'
 import type { FormFieldsProps } from '@/components/dashboard/react/components/FormSidebar'
 import type { Address } from '@/interface/address.interface'
-import { useMemo } from 'react'
+import { Fragment, useMemo } from 'react'
 
 export function AddressFieldForm({ getDefaultValues }: FormFieldsProps<Address>) {
-	const defaultValue = useMemo(() => getDefaultValues(), [getDefaultValues])
+	console.log()
+	const defaultValue = useMemo(() => {
+		if (typeof getDefaultValues === 'function') return getDefaultValues()
+	}, [getDefaultValues])
 
-	const { handleInputChange, handleSelectChange, departmentSelectRef, municipalitySelectRef } =
-		useAddressFieldForm(defaultValue)
+	const {
+		address,
+		handleInputChange,
+		handleSelectChange,
+		departmentSelectRef,
+		municipalitySelectRef,
+	} = useAddressFieldForm(defaultValue)
 
 	return (
-		<>
+		<Fragment key={defaultValue?.id ?? crypto.randomUUID()}>
 			<TextInput
 				name="street"
 				label="Dirección completa"
 				placeholder="Ej: Calle 10 #15-45, Apto 302"
-				onChange={(event) => handleInputChange(event, 'street')}
-				defaultValue={defaultValue?.street}
+				onChange={handleInputChange}
+				value={address.street}
 			/>
 			<DepartmentSelect
 				className="border"
@@ -35,9 +43,9 @@ export function AddressFieldForm({ getDefaultValues }: FormFieldsProps<Address>)
 				name="postalCode"
 				label="Codigo postal"
 				placeholder="Ej: 540001"
-				onChange={(event) => handleInputChange(event, 'postalCode')}
-				defaultValue={defaultValue?.postalCode}
+				onChange={handleInputChange}
+				value={address.postalCode}
 			/>
-		</>
+		</Fragment>
 	)
 }

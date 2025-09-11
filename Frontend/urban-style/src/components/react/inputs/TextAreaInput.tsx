@@ -1,20 +1,20 @@
 import type { FieldProperties } from '@/interface/form-mediator.interface'
 import LabelInput from './LabelInput'
-import { useState } from 'react'
+import { type ChangeEvent } from 'react'
 import { MessageError } from './MessageError'
 
-export interface TextAreaProps extends Omit<FieldProperties, 'value' | 'options'> {
-	value?: string
+export interface TextAreaProps extends React.ComponentPropsWithoutRef<'textarea'> {
+	label?: string
 }
 
 export function TextAreaInput({
 	className,
-	disable,
 	label,
 	name,
 	placeholder,
-	required,
-	value = '',
+	onChange,
+	defaultValue,
+	...props
 }: TextAreaProps) {
 	return (
 		<LabelInput label={label}>
@@ -24,7 +24,9 @@ export function TextAreaInput({
 					className="border-border focus:custom-ring field-sizing-content max-h-32 min-h-16 w-full border p-2"
 					name={name}
 					placeholder={placeholder}
-					defaultValue={value}
+					defaultValue={defaultValue}
+					onChange={onChange}
+					{...props}
 				/>
 			</span>
 		</LabelInput>

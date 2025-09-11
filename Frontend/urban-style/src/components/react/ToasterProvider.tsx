@@ -5,7 +5,7 @@ export function ToasterProvider() {
 	useToasterProvider()
 	return (
 		<Toaster
-			position="bottom-right"
+			position="top-right"
 			className=""
 			toastOptions={{
 				classNames: {

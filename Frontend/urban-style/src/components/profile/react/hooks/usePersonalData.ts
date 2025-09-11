@@ -1,11 +1,9 @@
-import { useMapReducer } from '@/components/react/hooks/useMapReducer'
+import { useFormHandler } from '@/components/react/hooks/useFormHandler'
 import { userStore } from '@/state/user.state'
 import { useStore } from '@nanostores/react'
 import type { UpdateUser } from '@/interface/user.interface'
-import { useCallback, useEffect, useMemo, useRef, useState, type ChangeEvent } from 'react'
-import { debounce } from '@/lib/utils/debounce'
-import { updateUserScheme, type UpdateUserValid } from '@/lib/validations/user.validations'
-import { showErrorOnlyField } from '@/lib/showErrorMessages'
+import { useEffect, useMemo } from 'react'
+import { updateUserScheme } from '@/lib/validations/user.validations'
 import { UserService } from '@/service/user.service'
 import ToasterManager from '@/lib/utils/ToasterManager'
 import { ResponseException } from '@/exceptions/response.exception'
@@ -14,8 +12,16 @@ const userKeys: (keyof UpdateUser)[] = ['id', 'email', 'name', 'phone'] as const
 
 export function usePersonalData() {
 	const user = useStore(userStore) ?? { id: '', name: '', email: '', phone: '' }
-	const { formState: userValues, updateValue } = useMapReducer<UpdateUser>()
-	const [canSubmit, setCanSubmit] = useState(false)
+	const {
+		formState: userValues,
+		updateValue,
+		handleInputChange,
+		canSubmit,
+		setSubmit,
+	} = useFormHandler<UpdateUser>({
+		initializerData: user,
+		validate: updateUserScheme,
+	})
 
 	const canReset = useMemo(() => {
 		if (!user) return false
@@ -26,26 +32,11 @@ export function usePersonalData() {
 	const resetUser = (user?: UpdateUser | null) => {
 		if (!user) return
 		userKeys.map((key) => updateValue(key, user[key]))
-		setCanSubmit(false)
-	}
-
-	const validateField = (key: keyof UpdateUser, value: string) => {
-		const userData: Partial<UpdateUserValid> = {
-			name: userValues.get('name'),
-			email: userValues.get('email'),
-			phone: userValues.get('phone'),
-			[key]: value,
-		}
-		const userIsValid = updateUserScheme.safeParse(userData)
-
-		if (userIsValid.error) showErrorOnlyField(userIsValid.error, key)
-		setCanSubmit(userIsValid.success && canReset)
+		setSubmit(false)
 	}
 
 	const sendRequest = () => {
-		const name = userValues.get('name')
-		const email = userValues.get('email')
-		const phone = userValues.get('phone')
+		const { name, email, phone } = userValues.getAll()
 		if (!name || !email || !phone) return
 
 		const updateUser: UpdateUser = {
@@ -67,15 +58,6 @@ export function usePersonalData() {
 		})
 	}
 
-	const debounceValid = useCallback(debounce(validateField, 350), [userValues])
-
-	const handleChange = (event: ChangeEvent<HTMLInputElement>, key: keyof UpdateUser) => {
-		const value = event.target.value
-
-		updateValue(key, event.target.value)
-		debounceValid(key, value)
-	}
-
 	useEffect(() => {
 		if (!user) {
 			console.error('User no found')
@@ -84,13 +66,14 @@ export function usePersonalData() {
 
 		userKeys.map((key) => updateValue(key, user[key]))
 	}, [user])
+
 	return {
 		user,
 		userValues,
 		reset: () => resetUser(user),
 		updateValue,
 		sendRequest,
-		handleChange,
+		handleInputChange,
 		userKeys,
 		canSubmit,
 		canReset,

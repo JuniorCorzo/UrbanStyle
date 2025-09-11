@@ -29,7 +29,7 @@ const userId = Astro.locals.user?.id ?? ''
 			<form
 				id="address_form"
 				method="dialog"
-				class="relative flex flex-col items-end justify-center gap-y-5 px-3 py-5 sm:grid sm:grid-flow-row-dense sm:grid-cols-[repeat(auto-fill,minmax(15rem,17rem))]"
+				class="relative flex flex-col items-end justify-center gap-x-2 gap-y-5 px-3 py-5 sm:grid sm:grid-flow-row-dense sm:grid-cols-[repeat(auto-fill,max(15rem))]"
 				data-user-id={userId}
 			>
 				<InputField

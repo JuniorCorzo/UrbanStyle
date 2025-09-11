@@ -7,7 +7,7 @@ import { useStore } from '@nanostores/react'
 import type React from 'react'
 
 type MunicipalitySelectProps = SelectSingleProps & {
-	ref: React.Ref<SelectRefProps>
+	ref?: React.Ref<SelectRefProps>
 }
 
 export function MunicipalitySelect({

@@ -5,7 +5,7 @@ import { useChangePassword } from '../hooks/useChangePassword'
 import { ActionsFooter } from './ActionsFooter'
 
 export function UserSecurity() {
-	const { isPassword, handleChange, handleValidatePassword, canSubmit, sendRequest } =
+	const { isPassword, handleInputChange, handleValidatePassword, canSubmit, sendRequest } =
 		useChangePassword()
 
 	return (
@@ -23,7 +23,7 @@ export function UserSecurity() {
 							label="Contraseña actual"
 							placeholder="Ingresa tu contraseña actual"
 							type="password"
-							onChange={(event) => handleChange(event, 'oldPassword')}
+							onChange={handleInputChange}
 						/>
 						<Button
 							className="h-full max-h-10 text-nowrap font-semibold"
@@ -38,7 +38,7 @@ export function UserSecurity() {
 						label="Nueva contraseña"
 						placeholder="Mínimo 8 caracteres"
 						type="password"
-						onChange={(event) => handleChange(event, 'newPassword')}
+						onChange={handleInputChange}
 						disabled={!isPassword}
 					/>
 					<TextInput
@@ -46,7 +46,7 @@ export function UserSecurity() {
 						label="Confirmar nueva contraseña"
 						placeholder="Confirma tu nueva contraseña"
 						type="password"
-						onChange={(event) => handleChange(event, 'confirmPassword')}
+						onChange={handleInputChange}
 						disabled={!isPassword}
 					/>
 				</div>

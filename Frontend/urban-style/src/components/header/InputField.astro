@@ -13,9 +13,7 @@ interface Props {
 const { label, name, type, placeholder, errorId } = Astro.props
 ---
 
-<label
-	class="border-l-3 text-text flex w-full flex-col justify-center border-transparent px-2 transition-all duration-300"
->
+<label class="text-text flex w-full flex-col justify-center transition-all duration-300">
 	<span>{label}:</span>
 	<MessageError errorId={errorId} />
 	<input
