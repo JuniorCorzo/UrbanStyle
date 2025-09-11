@@ -43,9 +43,10 @@ async function getOrderByUserId(
 			headers: {
 				Authorization: `Bearer ${token}`,
 			},
+			validateStatus: () => true,
 		},
 	)
-
+	console.log(response)
 	return extractSingleResponse(response)
 }
 

@@ -6,11 +6,11 @@ import type { Page } from '@/interface/response.interface'
 import { OrderService } from '@/service/orders.service'
 
 const { user, accessToken } = Astro.locals
-
-const page = Number(Astro.url.searchParams.get('page')) - 1
+console.log(accessToken)
+const page = Number(Astro.url.searchParams.get('page')) > 0 ? -1 : 1
 
 const response = await OrderService.getOrderByUserId(user.id, accessToken, page)
-if (!response.success) console.error(response.error)
+if (!response.success) console.error(response.error, 'ERror')
 
 const orders = response.success ? response.data : { content: [], page: 0 }
 ---
