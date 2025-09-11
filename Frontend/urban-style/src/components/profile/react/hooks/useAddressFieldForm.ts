@@ -5,7 +5,7 @@ import type { SelectRefProps } from '@/interface/form-mediator.interface'
 import { showErrorOnlyField } from '@/lib/showErrorMessages'
 import { AddressScheme, type AddressValidate } from '@/lib/validations/address.validations'
 import { AddressService } from '@/service/address.service'
-import { AddressStore } from '@/state/address.state'
+import { AddressState, AddressStore } from '@/state/address.state'
 import { userStore } from '@/state/user.state'
 import { useStore } from '@nanostores/react'
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
@@ -87,7 +87,7 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 	const handleUpdateAddress = (addressUpdate: UpdateAddress) =>
 		AddressService.updateAddress(addressUpdate).then((response) => {
 			if (!response.success) throw new ResponseException(response.error)
-			AddressStore.set([...AddressStore.get(), response.data])
+			AddressState.updateAddressStore()
 			console.log('address updated')
 		})
 
@@ -96,7 +96,7 @@ export function useAddressFieldForm(defaultValue?: Address | undefined) {
 			AddressAdapter.toAddress(address as AddressValidate, user.id),
 		).then((response) => {
 			if (!response.success) throw new ResponseException(response.error)
-			AddressStore.set([...AddressStore.get(), response.data])
+			AddressState.updateAddressStore()
 			console.log('Address created')
 		})
 
