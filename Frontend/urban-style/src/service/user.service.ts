@@ -34,6 +34,7 @@ async function signUp(createUser: CreateUser): Promise<Result<User, ErrorMessage
 		createUser,
 		{
 			withCredentials: true,
+			validateStatus: () => true,
 		},
 	)
 

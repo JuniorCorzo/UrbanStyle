@@ -37,6 +37,10 @@ export const createUserSchema = userCredentialsSchema
 				message: 'Número inválido',
 			}),
 		password: passwordSchema,
+		accepted: z.literal('on', {
+			message: 'Debes aceptar los términos y condiciones',
+		}),
+
 		confirm_password: z.string({
 			required_error: 'La confirmación de contraseña es requerida',
 		}),
