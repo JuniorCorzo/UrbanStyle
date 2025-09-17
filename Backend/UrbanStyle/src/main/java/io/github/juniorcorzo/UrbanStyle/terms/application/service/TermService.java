@@ -6,6 +6,7 @@ import io.github.juniorcorzo.UrbanStyle.terms.application.exceptions.TermsInsert
 import io.github.juniorcorzo.UrbanStyle.terms.application.utils.SemverHelper;
 import io.github.juniorcorzo.UrbanStyle.terms.domain.entities.TermsEntity;
 import io.github.juniorcorzo.UrbanStyle.terms.domain.enums.Semver;
+import io.github.juniorcorzo.UrbanStyle.terms.domain.projections.ObtainCurrentVersion;
 import io.github.juniorcorzo.UrbanStyle.terms.domain.repository.TermsRepository;
 import io.github.juniorcorzo.UrbanStyle.terms.infrastructure.adapter.dto.TermsDTO;
 import io.github.juniorcorzo.UrbanStyle.terms.infrastructure.adapter.mapper.TermMapper;
@@ -84,7 +85,8 @@ public class TermService {
     private String updateVersion(Semver semverType) {
         final String currentVersion = this.termsRepository
                 .findCurrentVersion()
-                .getVersion();
+                .map(ObtainCurrentVersion::getVersion)
+                .orElse(null);
 
 
         return new SemverHelper(currentVersion, semverType).getNewVersion();

@@ -19,7 +19,7 @@ public interface TermsRepository extends MongoRepository<TermsEntity, String> {
   Optional<TermsEntity> findTermsByVersion(String version);
 
   @Query(value = "{ valid: true }")
-  ObtainCurrentVersion findCurrentVersion();
+  Optional<ObtainCurrentVersion> findCurrentVersion();
 
   @Query("{ valid: true }")
   @Update("{ $set: { valid: false } }")
