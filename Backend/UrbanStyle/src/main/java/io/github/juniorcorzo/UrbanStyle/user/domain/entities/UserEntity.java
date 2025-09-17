@@ -23,6 +23,7 @@ public class UserEntity implements GrantedAuthority {
     private String email;
     private String password;
     private String avatar = "default_profile.webp";
+    private DataConsent dataConsent;
     private Roles role;
     private String phone;
     private LocalDateTime createdAt = LocalDateTime.now();

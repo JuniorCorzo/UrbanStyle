@@ -8,6 +8,7 @@ import io.github.juniorcorzo.UrbanStyle.common.domain.annotations.groups.OnUpdat
 import io.github.juniorcorzo.UrbanStyle.user.infrastructure.adapter.dto.common.UserDTO;
 import io.github.juniorcorzo.UrbanStyle.user.infrastructure.adapter.dto.request.UserAvatarDTO;
 import io.github.juniorcorzo.UrbanStyle.common.infrastructure.adapter.dtos.response.ResponseDTO;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
@@ -39,8 +40,8 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseDTO<UserDTO> createUser(@Validated(OnCreate.class) @RequestBody UserDTO userDTO) {
-        return userService.createUser(userDTO);
+    public ResponseDTO<UserDTO> createUser(@Validated(OnCreate.class) @RequestBody UserDTO userDTO, HttpServletRequest request) {
+        return userService.createUser(userDTO, request);
     }
 
     @PutMapping("/update")

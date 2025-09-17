@@ -16,6 +16,7 @@ public interface UserMapper {
             @Mapping(target = "avatar", source = "avatar"),
             @Mapping(target = "role", source = "role", defaultValue = "ROLE_USER"),
             @Mapping(target = "phone", source = "phone"),
+            @Mapping(target = "dataConsent", source = "dataConsent"),
             @Mapping(target = "createdAt", ignore = true),
             @Mapping(target = "updatedAt", ignore = true)
     })
@@ -28,7 +29,8 @@ public interface UserMapper {
             @Mapping(target = "avatar", source = "avatar"),
             @Mapping(target = "role", source = "role"),
             @Mapping(target = "phone", source = "phone"),
-            @Mapping(target = "createdAt", source =  "createdAt"),
+            @Mapping(target = "dataConsent", source = "dataConsent"),
+            @Mapping(target = "createdAt", source = "createdAt"),
             @Mapping(target = "updatedAt", source = "updatedAt")
     })
     UserDTO toDto(UserEntity userEntity);
