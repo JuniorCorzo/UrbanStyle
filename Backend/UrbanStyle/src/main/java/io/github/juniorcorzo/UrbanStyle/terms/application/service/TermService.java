@@ -6,7 +6,7 @@ import io.github.juniorcorzo.UrbanStyle.terms.application.exceptions.TermsInsert
 import io.github.juniorcorzo.UrbanStyle.terms.application.utils.SemverHelper;
 import io.github.juniorcorzo.UrbanStyle.terms.domain.entities.TermsEntity;
 import io.github.juniorcorzo.UrbanStyle.terms.domain.enums.Semver;
-import io.github.juniorcorzo.UrbanStyle.terms.domain.projections.ObtainCurrentVersion;
+import io.github.juniorcorzo.UrbanStyle.terms.domain.projections.ObtainVersion;
 import io.github.juniorcorzo.UrbanStyle.terms.domain.repository.TermsRepository;
 import io.github.juniorcorzo.UrbanStyle.terms.infrastructure.adapter.dto.TermsDTO;
 import io.github.juniorcorzo.UrbanStyle.terms.infrastructure.adapter.mapper.TermMapper;
@@ -24,6 +24,7 @@ import java.util.Collections;
 @RequiredArgsConstructor
 public class TermService {
     private final TermsRepository termsRepository;
+    private final MarkdownService markdownService;
     private final TermMapper termMapper;
 
     public ResponseDTO<TermsDTO> getCurrentTerms() {
@@ -63,9 +64,11 @@ public class TermService {
         try {
             log.info("Publishing terms with version: {}", version);
 
+            final String content = this.markdownService.process(new String(multipartFile.getBytes()), version);
+
             this.termsRepository.removeValid();
             TermsEntity terms = TermsEntity.builder()
-                    .content(new String(multipartFile.getBytes()))
+                    .content(content)
                     .version(version)
                     .valid(true)
                     .build();
@@ -85,7 +88,7 @@ public class TermService {
     private String updateVersion(Semver semverType) {
         final String currentVersion = this.termsRepository
                 .findCurrentVersion()
-                .map(ObtainCurrentVersion::getVersion)
+                .map(ObtainVersion::getVersion)
                 .orElse(null);
 
 

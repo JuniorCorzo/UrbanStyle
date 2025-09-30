@@ -1,0 +1,20 @@
+---
+import Sidebar from '@/components/Sidebar.astro'
+import { ArchiveBoxIcon, UserIcon } from '@heroicons/react/24/outline'
+import MenuItem from '@/components/profile/MenuItem.astro'
+
+const pathname = Astro.url.pathname
+---
+
+<Sidebar>
+	<MenuItem
+		label="Mi perfil"
+		href="/profile?option=personal_data"
+		highlight={pathname === '/profile'}
+	>
+		<UserIcon className="size-5" />
+	</MenuItem>
+	<MenuItem label="Mis pedidos" href="/profile/orders" highlight={pathname === '/profile/orders'}>
+		<ArchiveBoxIcon className="size-6" />
+	</MenuItem>
+</Sidebar>

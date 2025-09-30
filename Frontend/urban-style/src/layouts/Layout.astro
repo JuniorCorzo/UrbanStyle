@@ -3,11 +3,12 @@ import { ClientRouter } from 'astro:transitions'
 import Header from '../components/header/Header.astro'
 import '@/styles/global.css'
 import { ToasterProvider } from '@/components/react/ToasterProvider'
+import Footer from '@/sections/Footer.astro'
 
 interface Props {
 	title?: string
 }
-const { title } = Astro.props
+const { title = "Urban Style" } = Astro.props
 ---
 
 <!doctype html>
@@ -16,7 +17,7 @@ const { title } = Astro.props
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
 		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<title>{title || 'Urban Style'}</title>
+		<title>{title}</title>
 
 		<ClientRouter />
 	</head>
@@ -27,6 +28,7 @@ const { title } = Astro.props
 		</main>
 		<slot name="sidebar" />
 		<ToasterProvider client:load transition:persist />
+		<Footer/>
 	</body>
 </html>
 

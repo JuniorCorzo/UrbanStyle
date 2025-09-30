@@ -1,0 +1,68 @@
+---
+import Button from '@/components/Button.astro'
+import Dialog from '@/components/Dialog.astro'
+import TextArrow from '@/components/text/TextArrow.astro'
+import { NewspaperIcon } from '@heroicons/react/24/outline'
+---
+
+<Dialog id="terms_dialog" title="Confirmar cambio">
+	<span slot="icon" class="text-yellow-500">
+		<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="size-8">
+			<!-- Fondo (triángulo) -->
+			<path
+				d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003Z"
+				class="fill-yellow-500"></path>
+			<!-- Línea vertical de la exclamación -->
+			<path
+				d="M12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Z"
+				class="fill-text"></path>
+			<!-- Punto de la exclamación -->
+			<path d="M12 16.5a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" class="fill-text"></path>
+		</svg>
+	</span>
+	<div class="flex flex-col items-center gap-2 py-3">
+		<div>
+			<span class="text-text flex flex-col gap-3 px-3 text-base">
+				<span> ¿Estás seguro de que deseas cambiar los Términos y Condiciones? </span>
+				<p class="w-full">
+					Esta acción aplicará la <strong> nueva versión </strong> y será visible para todos los usuarios.
+				</p>
+				<hr class="w-full border border-gray-300" />
+			</span>
+		</div>
+		<div class="flex w-full flex-col gap-3 px-3">
+			<span class="w-full">
+				<h3 class="text-text inline-flex items-center gap-2 text-left text-lg font-semibold">
+					<NewspaperIcon className="size-7" />
+					Guía rápida de versiones (SemVer)
+				</h3>
+			</span>
+			<span class="text-text flex flex-col gap-3 px-2">
+				<ul class="flex list-disc flex-col gap-2 px-5">
+					<li>
+						<TextArrow key="Major" value="Cambios grandes que pueden romper compatibilidad." />
+					</li>
+					<li>
+						<TextArrow key="Minor" value="Nuevas funcionalidades sin romper lo existente." />
+					</li>
+					<li>
+						<TextArrow key="Minor" value="Correcciones menores o ajustes de texto." />
+					</li>
+				</ul>
+				<a
+					href="/guides/terms"
+					target="_blank"
+					class="underline-offset-3 w-fit hover:font-semibold hover:underline"
+					>Consulta la guía para más detalles.</a
+				>
+			</span>
+			<hr class="w-full border border-gray-300" />
+		</div>
+		<div class="inline-flex w-full justify-end gap-3 px-3">
+			<Button id="cancel_terms_change" class="bg-foreground border-0 hover:border" size="md">
+				Cancelar
+			</Button>
+			<Button id="confirm_terms_change" size="md" title="">Confirmar</Button>
+		</div>
+	</div>
+</Dialog>

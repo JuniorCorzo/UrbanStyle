@@ -1,14 +1,17 @@
 ---
-import MenuItem from '@/components/profile/MenuItem.astro'
-import { ArchiveBoxIcon, ChevronDoubleRightIcon, UserIcon } from '@heroicons/react/24/outline'
+import { ChevronDoubleRightIcon } from '@heroicons/react/24/outline'
 
-const pathname = Astro.url.pathname
+interface Props {
+	open?: 'true' | 'false'
+}
+
+const { open = 'true' } = Astro.props
 ---
 
 <aside
 	id="container_sidebar"
 	class="@container group relative max-h-[calc(100dvh_-_3.5rem)] w-full max-w-12 shrink-0 transition-all duration-500 aria-expanded:max-w-sm aria-expanded:max-md:max-w-12 aria-expanded:md:max-w-xs"
-	aria-expanded="true"
+	aria-expanded={open}
 >
 	<nav
 		id="menu_sidebar"
@@ -16,16 +19,7 @@ const pathname = Astro.url.pathname
 		aria-label="Navegación del perfil"
 		role="menu"
 	>
-		<MenuItem
-			label="Mi perfil"
-			href="/profile?option=personal_data"
-			highlight={pathname === '/profile'}
-		>
-			<UserIcon className="size-5" />
-		</MenuItem>
-		<MenuItem label="Mis pedidos" href="/profile/orders" highlight={pathname === '/profile/orders'}>
-			<ArchiveBoxIcon className="size-6" />
-		</MenuItem>
+		<slot />
 		<button
 			id="toggle_sidebar"
 			class="border-border absolute bottom-0 z-20 inline-flex w-full min-w-0 max-w-12 shrink-0 cursor-pointer items-center justify-center border-t p-2 text-center transition-all duration-500 group-aria-[expanded='true']:max-w-xs group-aria-[expanded='true']:max-md:max-w-52"
@@ -41,8 +35,8 @@ const pathname = Astro.url.pathname
 </aside>
 
 <script>
-	import { $ } from '@/lib/dom-selector'
-	import { detectMobile } from '@/lib/utils/is_mobile'
+	import { $ } from '@/lib/dom-selector.ts'
+	import { detectMobile } from '@/lib/utils/is_mobile.ts'
 
 	const handleSidebarToggle = () => {
 		const $containerSidebar = $<HTMLElement>('#container_sidebar')

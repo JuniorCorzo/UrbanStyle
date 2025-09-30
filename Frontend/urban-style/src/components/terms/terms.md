@@ -1,11 +1,8 @@
 ---
-title: 'Tratamiento de datos'
-autor: 'Angel Corzo'
----
 
 # Política de Tratamiento de Datos Personales
 
-**Versión vigente: v1.0 – Última actualización: 11 de septiembre de 2025**
+**Versión vigente: {{version}} – Última actualización: {{publishedAt}}**
 
 ---
 
@@ -101,7 +98,7 @@ Las solicitudes serán atendidas en los plazos establecidos por la Ley 1581 de 2
 
 ## 9. Vigencia
 
-Esta política entra en vigencia a partir del **11 de septiembre de 2025** y permanecerá vigente mientras se mantenga el uso de la plataforma.
+Esta política entra en vigencia a partir del **{{publishedAt}}** y permanecerá vigente mientras se mantenga el uso de la plataforma.
 
 ---
 
@@ -110,7 +107,7 @@ Esta política entra en vigencia a partir del **11 de septiembre de 2025** y per
 Esta política puede ser actualizada. Cada versión será identificada con un número y fecha de publicación.  
 En caso de cambios sustanciales, se notificará a los usuarios y se solicitará nuevamente su aceptación.
 
-- **v1.0 – 11/09/2025**: Versión inicial.
+{{versionHistory}}
 
 ---
 

@@ -1,0 +1,31 @@
+---
+import { cn } from '@/lib/cn.ts'
+import { TABLE_TYPE } from '@/interface/table-mediator.interface.ts'
+
+interface Props {
+	title: string
+	mediator?: TABLE_TYPE
+	href?: string
+}
+
+const { title, mediator, href } = Astro.props
+---
+
+<li
+	class={cn(
+		"aria-selected:bg-crust  aria-selected:text-slate-100 border-border hover:bg-accent flex w-full items-center group-aria-[expanded='false']:justify-center gap-2 rounded-md border p-2 transition-all duration-200 hover:scale-105 shadow-inner shadow-border group-aria-[expanded='false']:aspect-square group-aria-[expanded='false']:size-8 group-aria-[expanded=true]:px-3 group-aria-[expanded=true]:py-2",
+	)}
+	title={title}
+	role="menuitem"
+	data-mediator={mediator}
+	data-href={href}
+>
+	<i class="pointer-events-none">
+		<slot/>
+	</i>
+	<span
+		class="overflow-hidden text-ellipsis text-nowrap font-medium group-aria-[expanded='false']:hidden"
+	>
+		{title}
+	</span>
+</li>

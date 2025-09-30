@@ -10,7 +10,7 @@ import io.github.juniorcorzo.UrbanStyle.common.infrastructure.adapter.dtos.respo
 import io.github.juniorcorzo.UrbanStyle.common.infrastructure.adapter.mapper.UserMapper;
 import io.github.juniorcorzo.UrbanStyle.product.application.service.ImageStorageService;
 import io.github.juniorcorzo.UrbanStyle.product.domain.adapter.proyections.ObtainPassword;
-import io.github.juniorcorzo.UrbanStyle.terms.domain.projections.ObtainCurrentVersion;
+import io.github.juniorcorzo.UrbanStyle.terms.domain.projections.ObtainVersion;
 import io.github.juniorcorzo.UrbanStyle.terms.domain.repository.TermsRepository;
 import io.github.juniorcorzo.UrbanStyle.user.domain.entities.DataConsent;
 import io.github.juniorcorzo.UrbanStyle.user.domain.entities.UserEntity;
@@ -194,7 +194,7 @@ public class UserService {
 
     private DataConsent prepareDataConsent(final DataConsent dataConsent, final HttpServletRequest request) {
         final String termsVersion = this.termsRepository.findCurrentVersion()
-                .map(ObtainCurrentVersion::getVersion)
+                .map(ObtainVersion::getVersion)
                 .orElse(null);
 
         dataConsent.setAcceptedAt(LocalDateTime.now());

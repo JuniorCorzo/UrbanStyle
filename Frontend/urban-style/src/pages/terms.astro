@@ -1,12 +1,14 @@
 ---
 import LayoutWithoutHeader from '@/layouts/LayoutWithoutHeader.astro'
-import { Content } from '@/components/terms/terms.md'
+import { marked } from 'marked'
+import { TermsManage } from '@/scripts/terms/TermsManage.ts'
+
+const termManage = new TermsManage(Astro.url.searchParams)
+const renderedContent = await termManage.renderedContent()
 ---
 
 <LayoutWithoutHeader>
 	<section class="@container py-16">
-		<article class="prose mx-auto">
-			<Content />
-		</article>
+		<article class="prose mx-auto" set:html={renderedContent} />
 	</section>
 </LayoutWithoutHeader>

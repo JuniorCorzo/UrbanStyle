@@ -1,0 +1,126 @@
+---
+import { TermsFormFields } from '@/components/dashboard/react/components/terms/TermsFormFields.tsx'
+import Button from '@/components/Button.astro'
+import TermsDialog from './TermsDialog.astro'
+---
+
+<article
+	class="border-border shadow-border flex h-fit w-full max-w-md flex-col items-center gap-3 rounded border px-5 py-3 shadow-sm"
+>
+	<div class="w-full leading-tight">
+		<h2 class="w-full text-left text-2xl font-medium">Terminos y Condiciones</h2>
+		<p class="text-text/80 text-sm">Administra las versiones y cambios</p>
+	</div>
+	<form id="term_form" class="flex w-full flex-col gap-8">
+		<TermsFormFields client:idle />
+		<Button type="submit"> Enviar </Button>
+	</form>
+
+	<TermsDialog />
+</article>
+
+<script>
+	import { $ } from '@/lib/dom-selector.ts'
+	import { SEMVER_TYPE, type SemverType } from '@/const/terms.const.ts'
+	import { TermsService } from '@/service/terms.service.ts'
+	import { ResponseException } from '@/exceptions/response.exception.ts'
+	import ToasterManager from '@/lib/utils/ToasterManager.ts'
+	import { TermsScheme } from '@/lib/validations/terms.validations'
+	import { showError } from '@/lib/showErrorMessages'
+
+	const SELECTORS = {
+		FORM: '#term_form',
+		SEMVER_SELECTED: "input[type='checkbox']:checked",
+		DIALOG: '#terms_dialog',
+		CLOSE_DIALOG: '#close_terms_dialog',
+		CONFIRM_TERMS: '#confirm_terms_change',
+		CANCEL_TERMS: '#cancel_terms_change',
+	} as const
+
+	function isSemverType(value: string | undefined): value is SemverType {
+		return !!SEMVER_TYPE[value as SemverType]
+	}
+
+	function getSemverSelected(): SemverType | undefined {
+		const $inputChecked = $<HTMLInputElement>(SELECTORS.SEMVER_SELECTED)
+		if (!$inputChecked) return
+
+		const { value } = $inputChecked.dataset
+		if (!isSemverType(value)) return
+
+		return value
+	}
+
+	async function sendRequest(formData: FormData) {
+		const response = await TermsService.publishTerm(formData)
+
+		if (!response.success) throw new ResponseException(response.error)
+	}
+
+	function validateFormData(formData: FormData) {
+		const termsData = Object.fromEntries(formData)
+
+		const validated = TermsScheme.safeParse(termsData)
+		if (!validated.success) {
+			showError(validated.error)
+			throw new Error('Validation error', validated.error)
+		}
+	}
+
+	function showConfirmDialog(formData: FormData) {
+		const $dialog = $<HTMLDialogElement>(SELECTORS.DIALOG)
+		const $confirmButtom = $<HTMLButtonElement>(SELECTORS.CONFIRM_TERMS)
+		if (!$dialog || !$confirmButtom) return
+		$dialog.showModal()
+
+		const { listenerAdded } = $confirmButtom.dataset
+		if (listenerAdded === 'true') return
+
+		$(SELECTORS.CONFIRM_TERMS)?.addEventListener('click', () => handleConfirmTerms(formData))
+		$confirmButtom.setAttribute('data-listener-added', 'true')
+	}
+
+	function handleCloseDialog() {
+		const $dialog = $<HTMLDialogElement>(SELECTORS.DIALOG)
+		if (!$dialog) return
+
+		$dialog.close()
+	}
+
+	async function handleConfirmTerms(formData: FormData) {
+		try {
+			sendRequest(formData)
+			ToasterManager.emitSuccess('Terminos y Condiciones', {
+				description: 'Términos y condiciones actualizados correctamente.',
+			})
+
+			handleCloseDialog()
+		} catch (error) {
+			ToasterManager.emitError('Terminos y Condiciones', {
+				description: 'Lo sentimos, ocurrió un error.',
+			})
+		}
+	}
+
+	function handleSubmit(event: Event): void {
+		event.preventDefault()
+		const target = event.currentTarget as HTMLFormElement
+		const formData = new FormData(target)
+		const semverType = getSemverSelected()
+
+		if (!semverType || !formData) return
+		formData.set('semver', String(semverType))
+		validateFormData(formData)
+		showConfirmDialog(formData)
+	}
+
+	function setupListener() {
+		console.log($(SELECTORS.CLOSE_DIALOG))
+
+		$(SELECTORS.FORM)?.addEventListener('submit', handleSubmit)
+		$(SELECTORS.CLOSE_DIALOG)?.addEventListener('click', handleCloseDialog)
+		$(SELECTORS.CANCEL_TERMS)?.addEventListener('click', handleCloseDialog)
+	}
+
+	document.addEventListener('astro:page-load', setupListener, { once: true })
+</script>

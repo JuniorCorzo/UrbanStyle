@@ -29,7 +29,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
 function validateRequest(context: APIContext) {
 	const userPermittedRoutes = ['/perfil', '/shopping-cart', '/profile']
-	const adminRoutes = ['/dashboard']
+	const adminRoutes = ['/dashboard', '/dashboard/management', '/guides/terms']
 
 	const user = context.locals.user
 	const urlRequest = context.url.pathname

@@ -1,6 +1,6 @@
 package io.github.juniorcorzo.UrbanStyle.terms.domain.projections;
 
 @FunctionalInterface
-public interface ObtainCurrentVersion {
+public interface ObtainVersion {
     String getVersion();
 }

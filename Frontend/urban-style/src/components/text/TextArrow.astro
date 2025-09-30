@@ -1,0 +1,13 @@
+---
+import { ArrowLongRightIcon } from '@heroicons/react/24/outline'
+interface Props {
+	key: string
+	value: string
+}
+const { key, value } = Astro.props
+---
+
+<span class="gap-2">
+	<strong class="font-semibold">{key}:</strong>
+	{value}
+</span>
