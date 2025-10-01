@@ -10,12 +10,12 @@ const { open = 'true' } = Astro.props
 
 <aside
 	id="container_sidebar"
-	class="@container group relative max-h-[calc(100dvh_-_3.5rem)] w-full max-w-12 shrink-0 transition-all duration-500 aria-expanded:max-w-sm aria-expanded:max-md:max-w-12 aria-expanded:md:max-w-xs"
+	class="@container group relative w-full max-w-12 shrink-0 transition-all duration-500 aria-expanded:max-w-sm aria-expanded:max-md:max-w-12 aria-expanded:md:max-w-xs"
 	aria-expanded={open}
 >
 	<nav
 		id="menu_sidebar"
-		class="bg-foreground border-border fixed z-10 flex h-full max-h-[calc(100dvh_-_3.5rem)] w-full shrink-0 flex-col items-center gap-5 border-r px-2 pt-4 transition-all duration-500 group-aria-[expanded='false']:max-w-12 group-aria-[expanded='true']:px-6 group-aria-[expanded='true']:max-md:max-w-52 md:w-full group-aria-[expanded='true']:md:max-w-xs"
+		class="bg-foreground border-border z-10 flex h-full w-full shrink-0 flex-col items-center gap-5 border-r px-2 pt-4 transition-all duration-500 group-aria-[expanded='false']:max-w-12 group-aria-[expanded='true']:px-6 group-aria-[expanded='true']:max-md:max-w-52 md:w-full group-aria-[expanded='true']:md:max-w-xs"
 		aria-label="Navegación del perfil"
 		role="menu"
 	>
