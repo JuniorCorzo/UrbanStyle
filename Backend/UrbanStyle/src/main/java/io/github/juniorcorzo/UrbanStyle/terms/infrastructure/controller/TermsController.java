@@ -23,6 +23,11 @@ public class TermsController {
     return this.termService.getCurrentTerms();
   }
 
+  @GetMapping("/current-version")
+  ResponseDTO<String> getCurrentVersion() {
+      return this.termService.getCurrentVerion();
+  }
+
   @GetMapping()
   ResponseDTO<TermsDTO> getTermsByVersion(@RequestParam String version) {
       return this.termService.getTermsByVersion(version);

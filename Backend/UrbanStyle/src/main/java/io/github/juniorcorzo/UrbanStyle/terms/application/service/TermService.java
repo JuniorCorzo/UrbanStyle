@@ -40,6 +40,20 @@ public class TermService {
         );
     }
 
+    public ResponseDTO<String> getCurrentVerion() {
+        final String version = this.termsRepository
+                .findCurrentVersion()
+                .map(ObtainVersion::getVersion)
+                .orElseThrow(NotFoundTermsValid::new);
+
+        return new ResponseDTO<>(
+                HttpStatus.OK,
+                Collections.singletonList(version),
+                "Current version found"
+
+        );
+    }
+
     public ResponseDTO<TermsDTO> getTermsByVersion(String version) {
         TermsEntity terms = this.termsRepository
                 .findTermsByVersion(version)
