@@ -1,47 +1,8 @@
 import { defineMiddleware } from 'astro:middleware'
-import { AuthService } from './service/auth.service'
-import type { APIContext } from 'astro'
+import { AuthManager } from './scripts/auth/AuthManager'
 
 export const onRequest = defineMiddleware(async (context, next) => {
-	try {
-		const cookie = context.request.headers.get('cookie')
-		if (cookie) {
-			const user = await AuthService.verifyToken(cookie)
-			if (!user.success) return next()
-
-			context.locals.user = user.data
-			context.locals.accessToken = cookie
-				.split(';')
-				.filter((cookie) => cookie.startsWith('accessToken'))
-				.map((accessToken) => accessToken.split('=')[1])[0]
-		}
-	} catch (error) {
-		console.error('Error validating session')
-	} finally {
-		const isRedirect = validateRequest(context)
-		if (isRedirect) return isRedirect
-
-		if (context.url.pathname === '/') return context.redirect('/home')
-	}
-
+	const isSessionValid = await AuthManager.authenticate(context)
+	if (typeof isSessionValid !== 'boolean') return isSessionValid
 	return next()
 })
-
-function validateRequest(context: APIContext) {
-	const userPermittedRoutes = ['/perfil', '/shopping-cart', '/profile']
-	const adminRoutes = ['/dashboard', '/dashboard/management', '/guides/terms']
-
-	const user = context.locals.user
-	const urlRequest = context.url.pathname
-	const isUserRoute = userPermittedRoutes.some((route) => urlRequest.startsWith(route))
-
-	const isAdminRoute = adminRoutes.some((route) => urlRequest.startsWith(route))
-
-	if (!user && (isUserRoute || isAdminRoute)) {
-		return context.redirect('/404')
-	}
-
-	if (user?.role === 'ROLE_USER' && isAdminRoute) {
-		return context.redirect('/404')
-	}
-}

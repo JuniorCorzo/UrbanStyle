@@ -5,6 +5,15 @@ import type { Term } from '@/interface/terms.interface'
 import { Err, type Result, Success } from '@/lib/result_pattern'
 import axios from 'axios'
 
+async function getCurrentVersion(): Promise<Result<string, ErrorMessage>> {
+	const response = await axios.get<Response<string>>(`${PUBLIC_API_URL}/terms/current-version`, {
+		validateStatus: () => true,
+	})
+	console.log(extractSingleResponse(response))
+
+	return extractSingleResponse(response)
+}
+
 async function getCurrentTerms(): Promise<Result<Term, ErrorMessage>> {
 	const response = await axios.get<Response<Term>>(`${PUBLIC_API_URL}/terms/current`, {
 		validateStatus: () => true,
@@ -37,6 +46,7 @@ async function publishTerm(formData: FormData): Promise<Result<string, ErrorMess
 }
 
 export const TermsService = {
+	getCurrentVersion,
 	getCurrentTerms,
 	getTermByVersion,
 	publishTerm,
