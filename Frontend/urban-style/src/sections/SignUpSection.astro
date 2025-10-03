@@ -1,8 +1,9 @@
 ---
 import Button from '@/components/Button.astro'
 import InputField from '@/components/header/InputField.astro'
+import MessageError from '@/components/header/MessageError.astro'
 import Subtitle from '@/components/text/Subtitle.astro'
-import { ChevronLeftIcon } from '@heroicons/react/24/outline'
+import { CheckIcon, ChevronLeftIcon } from '@heroicons/react/24/outline'
 ---
 
 <section class="relative flex min-h-dvh items-start justify-center py-5 sm:items-center sm:py-0">
@@ -57,6 +58,29 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 						errorId="confirm_password_error"
 					/>
 				</div>
+				<div>
+					<label class="flex cursor-pointer flex-col gap-2">
+						<MessageError errorId="accepted_error" />
+						<div class="inline-flex items-center gap-2 text-sm font-normal leading-none">
+							<div class="relative aspect-square size-5">
+								<input
+									name="accepted"
+									class="bg-background border-border checked:bg-accent-2 focus:custom-ring peer size-5 appearance-none rounded border transition-colors duration-150 focus:outline-none"
+									type="checkbox"
+								/>
+								<CheckIcon
+									className="-translate-1/2 text-crust stroke-3 invisible absolute left-1/2 top-1/2 size-4 rounded-full stroke-current transition-all duration-75 peer-checked:visible"
+								/>
+							</div>
+							<span>
+								Acepto la
+								<a class="font-medium underline" href="/terms" target="_blank">
+									política de tratamiento de datos personales.
+								</a>
+							</span>
+						</div>
+					</label>
+				</div>
 				<div
 					class="flex w-full flex-col-reverse items-center justify-center gap-2 sm:flex-row sm:gap-4"
 				>
@@ -74,13 +98,20 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 	import { userSchemeToUser } from '@/adapter/user.adapter'
 	import { $ } from '@/lib/dom-selector'
 	import { showError } from '@/lib/showErrorMessages'
+	import ToasterManager from '@/lib/utils/ToasterManager'
 	import { createUserSchema, type CreateUserValid } from '@/lib/validations/user.validations'
 	import { UserService } from '@/service/user.service'
 	import { navigate } from 'astro:transitions/client'
 	import z from 'zod'
 
-	const sendRequest = (user: CreateUserValid) => {
-		UserService.signUp(userSchemeToUser(user))
+	const sendRequest = async (user: CreateUserValid) => {
+		const response = await UserService.signUp(userSchemeToUser(user))
+		if (!response.success) {
+			ToasterManager.emitError(response.error.toString(), {})
+			return
+		}
+
+		ToasterManager.emitSuccess('Usuario creado con éxito')
 		navigate('/home')
 	}
 
@@ -90,12 +121,14 @@ import { ChevronLeftIcon } from '@heroicons/react/24/outline'
 		$form?.addEventListener('submit', (event) => {
 			event.preventDefault()
 			const formData = new FormData($form)
-			const data = Object.fromEntries(formData) as Record<string, string> as CreateUserValid
+			const data = Object.fromEntries(formData) as unknown as CreateUserValid
 
+			console.log(data)
 			try {
 				const userCreate = createUserSchema.parse(data)
 				sendRequest(userCreate)
 			} catch (error) {
+				console.log(error)
 				if (error instanceof z.ZodError) {
 					showError(error)
 					return

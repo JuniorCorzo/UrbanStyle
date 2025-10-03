@@ -1,5 +1,6 @@
 package io.github.juniorcorzo.UrbanStyle.user.domain.repository;
 
+import io.github.juniorcorzo.UrbanStyle.user.domain.entities.DataConsent;
 import io.github.juniorcorzo.UrbanStyle.user.domain.entities.UserEntity;
 import io.github.juniorcorzo.UrbanStyle.common.domain.enums.Roles;
 import io.github.juniorcorzo.UrbanStyle.product.domain.adapter.proyections.ObtainPassword;
@@ -27,6 +28,10 @@ public interface UserRepository extends MongoRepository<UserEntity, String> {
     @Query("{'_id': ?#{[0].id} }")
     @Update(value = "{ '$set': { 'name': ?#{[0].name}, 'email': ?#{[0].email}, 'phone': ?#{[0].phone}, 'updatedAt': ?#{[0].updatedAt} } }" )
     void updateUser(UserEntity user);
+
+    @Query("{ '_id': ?0 }")
+    @Update("{ '$set': { 'dataConsent': ?1} }")
+    void updateUserConsent(String userId, DataConsent dataConsent);
 
     @Query("{ '_id': ?0 }")
     @Update("{ '$set': { 'avatar': ?1 } }")

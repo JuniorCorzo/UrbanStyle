@@ -1,10 +1,12 @@
 package io.github.juniorcorzo.UrbanStyle.common.infrastructure.controller;
 
+import io.github.juniorcorzo.UrbanStyle.common.domain.dtos.ResponseError;
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.*;
 import io.github.juniorcorzo.UrbanStyle.order.application.service.exceptions.FailedChangeStatusInOrder;
 import io.github.juniorcorzo.UrbanStyle.product.application.exceptions.FailedDeletingImagesToR2;
 import io.github.juniorcorzo.UrbanStyle.product.application.exceptions.FailedSendImagesToR2;
-import io.github.juniorcorzo.UrbanStyle.common.domain.dtos.ResponseError;
+import io.github.juniorcorzo.UrbanStyle.terms.application.exceptions.NotFoundTermsValid;
+import io.github.juniorcorzo.UrbanStyle.terms.application.exceptions.TermsInsertionException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -140,4 +142,21 @@ public class HandlerController {
                 e.getMessage()
         ), HttpStatus.UNAUTHORIZED);
     }
+
+    @ExceptionHandler(TermsInsertionException.class)
+    public ResponseEntity<ResponseError> handleTermsInsertionException(TermsInsertionException e) {
+        return new ResponseEntity<>(new ResponseError(
+                HttpStatus.BAD_REQUEST,
+                e.getMessage()
+        ), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(NotFoundTermsValid.class)
+    public ResponseEntity<ResponseError> handleNotFoundTermsValid(NotFoundTermsValid e) {
+        return new ResponseEntity<>(new ResponseError(
+                HttpStatus.NOT_FOUND,
+                e.getMessage()
+        ), HttpStatus.NOT_FOUND);
+    }
+
 }

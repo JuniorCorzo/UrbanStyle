@@ -1,0 +1,86 @@
+---
+import Sidebar from '@/components/Sidebar.astro'
+import DashboardMenuItem from '@/components/dashboard/DashboardMenuItem.astro'
+import { TABLE_TYPE } from '@/interface/table-mediator.interface.ts'
+import { ShoppingBagIcon, TagIcon, QueueListIcon, Cog8ToothIcon } from '@heroicons/react/24/outline'
+---
+
+<Sidebar open="false">
+	<ul class="flex w-full flex-col gap-5" id="items_container">
+		<DashboardMenuItem title="Producto" mediator={TABLE_TYPE.PRODUCTS}>
+			<ShoppingBagIcon className="pointer-events-none size-6" />
+		</DashboardMenuItem>
+		<DashboardMenuItem title="Categoria" mediator={TABLE_TYPE.CATEGORIES}>
+			<TagIcon className="pointer-events-none size-6" />
+		</DashboardMenuItem>
+		<DashboardMenuItem title="Ordenes" mediator={TABLE_TYPE.ORDERS}>
+			<QueueListIcon className="pointer-events-none size-6" />
+		</DashboardMenuItem>
+		<DashboardMenuItem title="Configuracion" href="/dashboard/management">
+			<Cog8ToothIcon className="pointer-events-none size-6" />
+		</DashboardMenuItem>
+	</ul>
+</Sidebar>
+
+<script>
+	import { $ } from '@/lib/dom-selector.ts'
+	import { TABLE_PARAM } from '@/interface/table-mediator.interface.ts'
+	import { selectMediator } from '@/lib/utils/select-mediator.ts'
+	import { dispatchMediatorEvent } from '@/lib/utils/change-mediator-event.ts'
+
+	const SELECTORS = {
+		ITEMS_CONTAINER: '#items_container',
+	} as const
+
+	const setSearchParam = (param: string, value: string) => {
+		const url = new URL(location.href)
+		url.searchParams.set(param, value)
+		history.replaceState({}, '', url)
+	}
+
+	const updatedTableData = () => {
+		selectMediator()
+	}
+
+	const updateMediator = (mediator: string | undefined) => {
+		if (!mediator) return
+
+		if (location.pathname === '/dashboard') {
+			setSearchParam(TABLE_PARAM.TYPE, mediator)
+			updatedTableData()
+
+			dispatchMediatorEvent({ mediator })
+			return
+		}
+
+		const url = new URL(location.href)
+		url.pathname = `/dashboard`
+		url.search = `?${TABLE_PARAM.TYPE}=${mediator}`
+
+		location.assign(url)
+	}
+
+	const updateHref = (href: string | undefined) => {
+		if (!href) return
+		const url = new URL(location.href)
+		url.pathname = '/dashboard/management'
+		url.search = ''
+
+		location.assign(url)
+	}
+
+	const handleClick = (event: Event) => {
+		const target = event.target as HTMLElement
+		const { mediator, href } = target.dataset
+
+		updateMediator(mediator)
+		updateHref(href)
+	}
+
+	const setupListener = () => {
+		const $itemsContainer = $<HTMLUListElement>(SELECTORS.ITEMS_CONTAINER)
+		$itemsContainer?.addEventListener('click', handleClick)
+	}
+
+	document.addEventListener('astro:page-load', setupListener)
+</script>

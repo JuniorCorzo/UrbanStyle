@@ -1,0 +1,46 @@
+---
+import { FormSidebar } from '@/components/dashboard/react/components/FormSidebar.tsx'
+import DashboardTableSection from '@/components/dashboard/react/components/table/DashboardTableSection.tsx'
+import DashboardSummarySection from '@/components/dashboard/DashboardSummarySection.astro'
+import LayoutWithSidebar from '@/layouts/LayoutWithSidebar.astro'
+import DashboardSidebar from '@/components/dashboard/DashboardSidebar.astro'
+---
+
+<LayoutWithSidebar>
+	<DashboardSidebar />
+	<section class="@container flex h-full w-full flex-col items-center gap-5 p-5">
+		<DashboardSummarySection />
+		<DashboardTableSection client:only="react" />
+	</section>
+	<FormSidebar slot="right_sidebar" client:only="react" />
+</LayoutWithSidebar>
+
+<script>
+	import { selectMediator } from '@/lib/utils/select-mediator.ts'
+	import { TABLE_MODE, TABLE_PARAM, TABLE_TYPE } from '@/interface/table-mediator.interface.ts'
+
+	function checkSearchParams() {
+		const url = new URL(location.href)
+		const searchParams = url.searchParams
+
+		if (!searchParams.has(TABLE_PARAM.MODE)) searchParams.set(TABLE_PARAM.MODE, TABLE_MODE.ALL)
+		if (!searchParams.has(TABLE_PARAM.TYPE)) searchParams.set(TABLE_PARAM.TYPE, TABLE_TYPE.PRODUCTS)
+
+		history.replaceState({}, '', url)
+	}
+
+	async function executeTable() {
+		const table = (await selectMediator())?.table
+		if (typeof table === 'function') table()
+	}
+
+	const setup = () => {
+		checkSearchParams()
+		executeTable()
+	}
+
+	document.addEventListener('astro:page-load', setup)
+	document.addEventListener('astro:after-swap', () => {
+		document.removeEventListener('astro:page-load', setup)
+	})
+</script>

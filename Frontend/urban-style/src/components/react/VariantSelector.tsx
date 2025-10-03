@@ -13,6 +13,7 @@ export function VariantSelector({ value, text, selected, onSelect }: VarianSelec
 				checked={selected}
 				onChange={() => onSelect(value)}
 				className="peer hidden size-0 overflow-hidden whitespace-nowrap opacity-0"
+				data-value={value}
 			/>
 			<span className="bg-accent-2 border-border hover:border-crust peer-checked:bg-crust cursor-pointer rounded-md border px-2 py-0.5 font-medium transition-all ease-in-out peer-checked:text-slate-100">
 				{text}

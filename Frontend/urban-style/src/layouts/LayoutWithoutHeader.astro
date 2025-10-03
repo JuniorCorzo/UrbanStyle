@@ -1,6 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions'
 import '@/styles/global.css'
+import { ToasterProvider } from '@/components/react/ToasterProvider'
 ---
 
 <!doctype html>
@@ -14,9 +15,10 @@ import '@/styles/global.css'
 		<ClientRouter />
 	</head>
 	<body class="bg-background flex min-h-dvh flex-col gap-5 overflow-auto">
-		<main>
+		<main class="flex-grow">
 			<slot />
 		</main>
+		<ToasterProvider client:load />
 	</body>
 </html>
 

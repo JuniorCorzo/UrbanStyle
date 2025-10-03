@@ -28,6 +28,7 @@
 		"downshift": "^9.0.9",
 		"jwt-decode": "^4.0.0",
 		"lightweight-charts": "^5.0.6",
+		"marked": "^16.3.0",
 		"nanostores": "^1.0.1",
 		"react": "^19.1.0",
 		"react-dom": "^19.1.0",

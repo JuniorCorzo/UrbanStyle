@@ -34,6 +34,7 @@ async function signUp(createUser: CreateUser): Promise<Result<User, ErrorMessage
 		createUser,
 		{
 			withCredentials: true,
+			validateStatus: () => true,
 		},
 	)
 
@@ -44,6 +45,18 @@ async function updateUser(user: UpdateUser): Promise<Result<User, ErrorMessage>>
 	const response = await axios.put<Response<User>>(
 		`${PUBLIC_API_URL}/users/update?user-id=${user.id}`,
 		user,
+		{
+			withCredentials: true,
+		},
+	)
+
+	return extractSingleResponse(response)
+}
+
+async function updateUserConsent(userId: string) {
+	const response = await axios.patch<Response<User>>(
+		`${PUBLIC_API_URL}/users/update-consent?user-id=${userId}`,
+		null,
 		{
 			withCredentials: true,
 		},
@@ -114,6 +127,7 @@ export const UserService = {
 	getUserById,
 	signUp,
 	updateUser,
+	updateUserConsent,
 	validatePassword,
 	changePassword,
 	changeAvatar,

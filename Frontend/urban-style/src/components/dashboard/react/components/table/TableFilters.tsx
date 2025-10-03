@@ -25,7 +25,7 @@ export function TableFilters() {
 	return (
 		<div className="flex w-full flex-col gap-y-3 sm:flex-row">
 			{filterComponents?.right && (
-				<div className="lg:min-w-3xl flex w-full items-center">{filterComponents.right()}</div>
+				<div className=" flex w-fit items-center">{filterComponents.right()}</div>
 			)}
 			<div className="relative flex w-full items-center gap-2 sm:justify-end">
 				<div className="flex min-h-10 flex-col gap-2 sm:flex-row sm:justify-end" title="Filtros">

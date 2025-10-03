@@ -6,16 +6,20 @@ function checkResponseError(responseError: unknown): responseError is ResponseEr
 	return typeof responseError === 'string' || typeof responseError === 'object'
 }
 
-export function obtainsError(response: unknown): {
+export function obtainsError<T>(response: AxiosResponse<Response<T>, any>): {
 	message: ErrorMessage
 	responseError?: ResponseError
 } {
-	if (!checkResponseError(response))
+	const errorResponse = response.data
+	if (!checkResponseError(errorResponse)) {
 		return {
 			message: 'Unexpected error',
 		}
-	const responseError = response
+	}
+
+	const responseError = errorResponse
 	const { error, errors } = responseError
+	console.log(responseError)
 
 	return {
 		message: error ? error : errors,

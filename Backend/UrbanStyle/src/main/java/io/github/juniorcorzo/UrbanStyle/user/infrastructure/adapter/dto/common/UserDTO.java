@@ -7,6 +7,7 @@ import io.github.juniorcorzo.UrbanStyle.common.domain.annotations.groups.OnCreat
 import io.github.juniorcorzo.UrbanStyle.common.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.user.domain.entities.UserEntity;
 import io.github.juniorcorzo.UrbanStyle.common.domain.enums.Roles;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -32,6 +33,8 @@ public record UserDTO(
         @NotNull(groups = {OnCreate.class, OnUpdate.class})
         @Pattern(regexp = "^\\d{10}$", message = "Phone must be numeric", groups = {OnCreate.class, OnUpdate.class})
         String phone,
+        @Valid
+        DataConsentDTO dataConsent,
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
         LocalDateTime createdAt,
         @JsonProperty(access = JsonProperty.Access.READ_ONLY)
