@@ -3,6 +3,24 @@ import { TermsService } from '@/service/terms.service'
 import type { APIContext } from 'astro'
 
 /**
+ * Enum-like object that defines all possible states during terms validation
+ * @readonly
+ */
+const TermsValidationStatus = {
+	/** User has accepted the current version of terms */
+	TERMS_ACCEPTED: 'TERMS_ACCEPTED',
+	/** User has not accepted the current version of terms */
+	TERMS_NOT_ACCEPTED: 'TERMS_NOT_ACCEPTED',
+	/** An error occurred during terms validation */
+	ERROR: 'ERROR',
+	/** No user is currently logged in */
+	USER_NOT_LOGGED: 'USER_NOT_LOGGED',
+} as const
+
+/** Type representing all possible terms validation states */
+type TermsValidationState = keyof typeof TermsValidationStatus
+
+/**
  * Class responsible for handling authentication and authorization logic
  * including session validation, terms acceptance, and route permissions.
  */
@@ -17,19 +35,29 @@ class Auth {
 	constructor(readonly context: APIContext) {}
 
 	/**
-	 * Main authentication method that validates the user session,
-	 * checks route permissions, and validates terms acceptance.
-	 * @returns A Promise that resolves to either true or a redirect Response
+	 * Main authentication method that orchestrates the authentication flow:
+	 * 1. Validates the user session
+	 * 2. Checks route permissions
+	 * 3. Validates terms acceptance and manages the terms dialog visibility
+	 * @returns A Promise that resolves to either a redirect Response or undefined
+	 * If undefined is returned, the request can proceed normally
 	 */
-	async authenticate() {
+	async authenticate(): Promise<Response | undefined> {
 		await this.validateSession()
 
 		const isPermited = this.requestPermited()
 		if (isPermited) return isPermited
 
 		const consentAccepted = await this.validateTerms()
-		if (consentAccepted) return true
-		return this.context.redirect(this.setSearchParam())
+		const hasSearchParam = this.context.url.searchParams.has(Auth.SEARCH_PARAM)
+		switch (consentAccepted) {
+			case TermsValidationStatus.TERMS_NOT_ACCEPTED:
+				if (!hasSearchParam) return this.context.redirect(this.setSearchParam())
+				return
+			case TermsValidationStatus.TERMS_ACCEPTED:
+				if (hasSearchParam) return this.context.redirect(this.delSearchParam())
+				return
+		}
 	}
 
 	/**
@@ -53,19 +81,32 @@ class Auth {
 
 	/**
 	 * Validates if the user has accepted the latest version of the terms.
-	 * @returns Promise<boolean> - Returns true if terms are accepted or user is not logged in
+	 * This method performs the following checks in order:
+	 * 1. Retrieves the current version of terms from the service
+	 * 2. If service call fails, returns ERROR
+	 * 3. If no user is logged in, returns USER_NOT_LOGGED
+	 * 4. Checks if user has accepted current version:
+	 *    - If accepted, returns TERMS_ACCEPTED
+	 *    - If not accepted, returns TERMS_NOT_ACCEPTED
+	 *
+	 * @returns Promise<Cases> - Returns the appropriate case indicating the terms validation status
 	 */
-	private async validateTerms(): Promise<boolean> {
-		if (this.context.url.searchParams.has(Auth.SEARCH_PARAM)) return true
+	private async validateTerms(): Promise<TermsValidationState> {
 		const response = await TermsService.getCurrentVersion()
 		if (!response.success) {
 			console.error(response.error)
-			return false
+			return TermsValidationStatus.ERROR
 		}
 
 		const { user } = this.context.locals
-		if (!user) return true
-		return !!user.dataConsent && user.dataConsent.version !== response.data
+		if (!user) return TermsValidationStatus.USER_NOT_LOGGED
+
+		const hasAcceptedCurrentVersion = user.dataConsent && user.dataConsent.version === response.data
+		if (hasAcceptedCurrentVersion) {
+			return TermsValidationStatus.TERMS_ACCEPTED
+		}
+
+		return TermsValidationStatus.TERMS_NOT_ACCEPTED
 	}
 
 	/**
@@ -106,6 +147,17 @@ class Auth {
 	private setSearchParam() {
 		const url: URL = this.context.url
 		url.searchParams.set(Auth.SEARCH_PARAM, 'true')
+		return url.toString()
+	}
+
+	/**
+	 * Removes the showDialog search parameter from the current URL.
+	 * Used when redirecting away from the terms dialog after terms are accepted.
+	 * @returns The URL string without the showDialog parameter
+	 */
+	private delSearchParam() {
+		const url: URL = this.context.url
+		url.searchParams.delete(Auth.SEARCH_PARAM)
 		return url.toString()
 	}
 }

@@ -53,6 +53,18 @@ async function updateUser(user: UpdateUser): Promise<Result<User, ErrorMessage>>
 	return extractSingleResponse(response)
 }
 
+async function updateUserConsent(userId: string) {
+	const response = await axios.patch<Response<User>>(
+		`${PUBLIC_API_URL}/users/update-consent?user-id=${userId}`,
+		null,
+		{
+			withCredentials: true,
+		},
+	)
+
+	return extractSingleResponse(response)
+}
+
 async function changeAvatar(
 	userId: string,
 	avatarBase64: string,
@@ -115,6 +127,7 @@ export const UserService = {
 	getUserById,
 	signUp,
 	updateUser,
+	updateUserConsent,
 	validatePassword,
 	changePassword,
 	changeAvatar,

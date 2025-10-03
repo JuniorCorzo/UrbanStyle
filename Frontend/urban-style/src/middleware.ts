@@ -3,6 +3,6 @@ import { AuthManager } from './scripts/auth/AuthManager'
 
 export const onRequest = defineMiddleware(async (context, next) => {
 	const isSessionValid = await AuthManager.authenticate(context)
-	if (typeof isSessionValid !== 'boolean') return isSessionValid
+	if (isSessionValid) return isSessionValid
 	return next()
 })

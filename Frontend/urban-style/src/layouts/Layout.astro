@@ -4,11 +4,14 @@ import Header from '../components/header/Header.astro'
 import '@/styles/global.css'
 import { ToasterProvider } from '@/components/react/ToasterProvider'
 import Footer from '@/sections/Footer.astro'
+import AcceptNewTermsDialog from '@/components/AcceptNewTermsDialog.astro'
 
 interface Props {
 	title?: string
 }
-const { title = "Urban Style" } = Astro.props
+const { title = 'Urban Style' } = Astro.props
+
+const showDialog = !!Astro.url.searchParams.get('showDialog')
 ---
 
 <!doctype html>
@@ -27,8 +30,9 @@ const { title = "Urban Style" } = Astro.props
 			<slot />
 		</main>
 		<slot name="sidebar" />
+		{showDialog && <AcceptNewTermsDialog />}
 		<ToasterProvider client:load transition:persist />
-		<Footer/>
+		<Footer />
 	</body>
 </html>
 

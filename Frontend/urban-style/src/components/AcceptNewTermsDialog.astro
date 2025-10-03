@@ -1,0 +1,81 @@
+---
+import { ArrowRightIcon } from '@heroicons/react/24/outline'
+import Button from './Button.astro'
+import Dialog from './Dialog.astro'
+
+const { id: userId } = Astro.locals.user
+---
+
+<Dialog open title="Politicas Actualizadas" class={'max-w-3xl'}>
+	<div class="text-text space-y-5 px-6 py-5 leading-relaxed">
+		<p>
+			Hemos realizado cambios en nuestros Términos y Condiciones y en la Política de Privacidad.
+			Para continuar utilizando Urban Style, es necesario que revises y aceptes las nuevas
+			versiones. Tu privacidad es importante para nosotros, por lo que te recomendamos leer los
+			documentos en su totalidad. Puedes consultar los documentos actualizados aquí:
+		</p>
+		<ul class="w-full">
+			<li class="w-full">
+				<a
+					id="terms_link"
+					href="/terms"
+					class="text-text flex w-full cursor-pointer items-center justify-between gap-2 py-2"
+				>
+					Términos y Condiciones
+					<ArrowRightIcon className="inline-block size-5" />
+				</a>
+			</li>
+		</ul>
+		<div class="flex justify-end gap-3">
+			<Button id="reject_terms" class="bg-foreground border-0 hover:border"> Rechazar </Button>
+			<Button id="accept_terms" data-user-id={userId}> Aceptar y Continuar </Button>
+		</div>
+	</div>
+</Dialog>
+
+<script>
+	import { ResponseException } from '@/exceptions/response.exception'
+	import { $ } from '@/lib/dom-selector'
+	import ToasterManager from '@/lib/utils/ToasterManager'
+	import { AuthService } from '@/service/auth.service'
+	import { UserService } from '@/service/user.service'
+
+	const SELECTORS = {
+		ACCEPT_TERMS: '#accept_terms',
+		REJECT_TERMS: '#reject_terms',
+	} as const
+
+	async function sendAcceptedRequest(userId: string) {
+		const response = await UserService.updateUserConsent(userId)
+		if (!response.success) throw new ResponseException(response.error)
+
+		return response.data
+	}
+
+	async function handleAcceptedTerms(event: Event) {
+		const { userId } = (event.target as HTMLButtonElement).dataset
+		if (!userId) throw new Error('User ID is required to accept terms.')
+
+		ToasterManager.emitPromise({
+			promise: sendAcceptedRequest(userId),
+			config: {
+				success: 'Términos aceptados correctamente.',
+				error: 'Error al aceptar los términos.',
+			},
+		})
+	}
+
+	async function handleRejectTerms() {
+		await AuthService.logout()
+		window.location.href = '/home'
+	}
+
+	function setupListeners() {
+		const $acceptButton = $(SELECTORS.ACCEPT_TERMS)
+		const $rejectButton = $(SELECTORS.REJECT_TERMS)
+
+		$acceptButton?.addEventListener('click', handleAcceptedTerms)
+		$rejectButton?.addEventListener('click', handleRejectTerms)
+	}
+	document.addEventListener('astro:page-load', setupListeners)
+</script>
