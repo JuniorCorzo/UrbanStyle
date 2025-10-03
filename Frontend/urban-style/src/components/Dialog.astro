@@ -1,20 +1,25 @@
 ---
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import Subtitle from './text/Subtitle.astro'
+import type { JSX } from 'astro/jsx-runtime'
+import { cn } from '@/lib/cn'
 
-interface Props {
+interface Props extends JSX.DialogHTMLAttributes {
 	title: string
 	id?: string
-	open?: boolean
 }
 
-const { id = 'dialog', open = false, title } = Astro.props
+const { id = 'dialog', open = false, title, class: className, ...props } = Astro.props
 ---
 
 <dialog
 	open={open}
 	id={id}
-	class="-translate-1/2 fixed inset-0 left-1/2 top-1/2 z-[999] w-full max-w-xl bg-transparent px-3"
+	class={cn(
+		'-translate-1/2 fixed inset-0 left-1/2 top-1/2 z-[999] w-full max-w-xl bg-transparent px-3',
+		className,
+	)}
+	{...props}
 >
 	<div
 		class="bg-background border-border shadow-crust overflow-visible rounded-2xl border-2 shadow-md"
