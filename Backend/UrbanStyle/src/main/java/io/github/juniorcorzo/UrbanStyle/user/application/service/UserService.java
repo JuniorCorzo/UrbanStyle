@@ -100,12 +100,10 @@ public class UserService {
                 request
         );
 
+        this.userRepository.updateUserConsent(userId, dataConsent);
         final UserEntity userEntity = this.userRepository
                 .findById(userId)
                 .orElseThrow(() -> new DocumentNotFound(DocumentsName.USER, userId));
-
-        userEntity.setDataConsent(dataConsent);
-        this.userRepository.updateUser(userEntity);
 
         return new ResponseDTO<>(
                 HttpStatus.OK,
