@@ -21,9 +21,11 @@ public class UserDeletingService {
     /**
      * Performs a comprehensive deletion of a user's account and associated data.
      * This process includes:
-     * 1. Soft-deleting the user record by unsetting personal information.
-     * 2. Deleting all associated addresses.
-     * 3. Deleting the user's avatar from storage.
+     * <ol>
+     * <li>Deleting the user's avatar from storage.</li>
+     * <li>Soft-deleting the user record by unsetting personal information.</li>
+     * <li>Deleting all associated addresses.</li>
+     * <ol/>
      * The entire operation is transactional.
      *
      * @param userId The ID of the user to be deleted.
@@ -32,9 +34,9 @@ public class UserDeletingService {
      */
     @Transactional
     public ResponseDTO<Object> deleteUser(String userId, String reason) {
+        this.userAvatarService.deleteAvatar(userId);
         this.userRepository.deleteById(userId, reason);
         this.addressRepository.deleteByUserId(userId);
-        this.userAvatarService.deleteAvatar(userId);
 
         return new ResponseDTO<>(
                 HttpStatus.OK,
