@@ -1,6 +1,7 @@
 package io.github.juniorcorzo.UrbanStyle.auth.infrastructure.controller;
 
 import io.github.juniorcorzo.UrbanStyle.auth.application.service.AuthService;
+import io.github.juniorcorzo.UrbanStyle.common.application.utils.CookiesUtils;
 import io.github.juniorcorzo.UrbanStyle.user.infrastructure.adapter.dto.common.UserDTO;
 import io.github.juniorcorzo.UrbanStyle.auth.infrastructure.adapter.dto.request.UserCredentials;
 import io.github.juniorcorzo.UrbanStyle.auth.infrastructure.adapter.dto.response.AuthResponse;
@@ -27,13 +28,7 @@ public class AuthController {
     @PostMapping("/login")
     public AuthResponse login(@Valid @RequestBody UserCredentials credentials, HttpServletResponse response) {
         String accessToken = authService.login(credentials);
-        ResponseCookie cookie = ResponseCookie.from("accessToken", accessToken)
-                .httpOnly(true)
-                .maxAge(Duration.ofDays(30))
-                .path("/")
-                .build();
-
-        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        CookiesUtils.createCookie(response, "accessToken", accessToken, 30);
 
         return new AuthResponse(accessToken);
     }
@@ -47,15 +42,7 @@ public class AuthController {
     @DeleteMapping("/sign-out")
     @PreAuthorize("hasRole('USER')")
     public ResponseDTO<Object> signOut(HttpServletResponse response){
-        response.addHeader(
-                HttpHeaders.SET_COOKIE,
-                ResponseCookie.from("accessToken", "chaooooo-no-vuelvas-a-volver")
-                        .httpOnly(true)
-                        .maxAge(0)
-                        .path("/")
-                        .build()
-                        .toString()
-        );
+        CookiesUtils.clearCookie(response, "accessToken");
 
         return new ResponseDTO<>(
                 HttpStatus.OK,

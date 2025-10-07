@@ -1,11 +1,13 @@
 package io.github.juniorcorzo.UrbanStyle.user.infrastructure.controller;
 
 import io.github.juniorcorzo.UrbanStyle.auth.application.service.TokenService;
+import io.github.juniorcorzo.UrbanStyle.common.application.utils.CookiesUtils;
 import io.github.juniorcorzo.UrbanStyle.common.domain.annotations.constraint.IdFormatConstraint;
 import io.github.juniorcorzo.UrbanStyle.common.domain.annotations.groups.OnCreate;
 import io.github.juniorcorzo.UrbanStyle.common.domain.annotations.groups.OnUpdate;
 import io.github.juniorcorzo.UrbanStyle.common.infrastructure.adapter.dtos.response.ResponseDTO;
 import io.github.juniorcorzo.UrbanStyle.user.application.service.UserAvatarService;
+import io.github.juniorcorzo.UrbanStyle.user.application.service.UserDeletingService;
 import io.github.juniorcorzo.UrbanStyle.user.application.service.UserPasswordService;
 import io.github.juniorcorzo.UrbanStyle.user.application.service.UserService;
 import io.github.juniorcorzo.UrbanStyle.user.infrastructure.adapter.dto.common.UserDTO;
@@ -32,6 +34,7 @@ public class UserController {
     private final UserService userService;
     private final UserAvatarService userAvatarService;
     private final UserPasswordService userPasswordService;
+    private final UserDeletingService userDeletingService;
     private final TokenService tokenService;
 
     @GetMapping
@@ -95,11 +98,21 @@ public class UserController {
         return userDTO;
     }
 
-    @DeleteMapping("/delete/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseDTO<UserDTO> deleteUser(@IdFormatConstraint @PathVariable String id) {
-        return userService.deleteUser(id);
+    @DeleteMapping("/delete")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseDTO<Object> deleteUser(
+            @RequestParam("user-id")
+            @IdFormatConstraint
+            String id,
+            @RequestParam("reason")
+            @NotBlank
+            String reason,
+            HttpServletResponse response
+    ) {
+        CookiesUtils.clearCookie(response, "accessToken");
+        return userDeletingService.deleteUser(id, reason);
     }
+
 
     @DeleteMapping("/delete-avatar")
     @PreAuthorize("hasRole('USER')")
@@ -109,14 +122,8 @@ public class UserController {
     }
 
     private void addSetCookieHeader(HttpServletResponse response, UserDTO userDTO) {
-
         String token = this.tokenService.generateToken(userDTO);
-        response.addHeader(HttpHeaders.SET_COOKIE, ResponseCookie.from("accessToken", token)
-                .httpOnly(true)
-                .maxAge(Duration.ofDays(30))
-                .path("/")
-                .build()
-                .toString());
+        CookiesUtils.createCookie(response, "accessToken", token, 30);
     }
 
 }
