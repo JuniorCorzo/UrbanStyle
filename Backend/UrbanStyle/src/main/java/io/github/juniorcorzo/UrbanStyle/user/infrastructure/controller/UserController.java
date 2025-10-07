@@ -98,6 +98,14 @@ public class UserController {
         return userDTO;
     }
 
+    /**
+     * Deletes a user account and clears the authentication cookie.
+     *
+     * @param id The ID of the user to be deleted.
+     * @param reason The reason for the deletion.
+     * @param response The HttpServletResponse to clear the cookie.
+     * @return A {@link ResponseDTO} indicating the result of the operation.
+     */
     @DeleteMapping("/delete")
     @PreAuthorize("hasRole('USER')")
     public ResponseDTO<Object> deleteUser(

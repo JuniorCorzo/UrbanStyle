@@ -122,21 +122,6 @@ public class UserService {
         return new ResponseDTO<>(HttpStatus.OK, this.getUserById(id).data(), "User role updated");
     }
 
-    public ResponseDTO<UserDTO> deleteUser(String id) {
-        try {
-            UserEntity userEntity = this.userRepository.findById(id)
-                    .orElseThrow(() -> new DocumentNotFound(DocumentsName.USER, id));
-
-            this.userAvatarService.deleteAvatar(id);
-            this.userRepository.delete(userEntity);
-
-            return new ResponseDTO<>(HttpStatus.OK, List.of(userMapper.toDto(userEntity)), "User deleted");
-        } catch (Exception e) {
-            log.error("Error deleting user: {}", e.getMessage(), e);
-            throw new DeleteDocumentFailed(DocumentsName.USER, id);
-        }
-    }
-
     private void changeStatus(String id, Roles role) {
         this.userRepository.changeRole(id, role);
     }
