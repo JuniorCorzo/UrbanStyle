@@ -30,6 +30,6 @@ export function useDragging() {
 		isDragging,
 		handleDrag: handleDragEnter,
 		handleDragLeave,
-		handleDrop
+		handleDrop,
 	}
 }

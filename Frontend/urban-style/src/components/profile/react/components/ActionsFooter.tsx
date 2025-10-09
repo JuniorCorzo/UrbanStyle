@@ -10,12 +10,7 @@ type ActionFooterProps = {
 
 export function ActionsFooter({ canSubmit, canReset, resetFn, sendFn }: ActionFooterProps) {
 	return (
-		<div
-			className={cn(
-				'bg-foreground/90 bottom-0 flex w-full gap-5 px-5 py-2 backdrop-blur-lg',
-				canReset ? 'justify-between' : 'justify-end',
-			)}
-		>
+		<div className={cn('bottom-0 flex w-full justify-end gap-5 py-2 backdrop-blur-lg')}>
 			<Button
 				className={cn(!canReset && 'hidden')}
 				size="sm"

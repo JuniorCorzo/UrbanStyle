@@ -7,7 +7,7 @@ interface Props extends PropsWithChildren {
 export function LabelInput({ label, children }: Props) {
 	return (
 		// biome-ignore lint/a11y/noLabelWithoutControl: <explanation>
-		<label className="flex w-full flex-col gap-1">
+		<label className="text-text flex w-full flex-col gap-1">
 			<span>{`${label}`}</span>
 			{children}
 		</label>

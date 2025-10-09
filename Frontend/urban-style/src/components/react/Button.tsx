@@ -16,7 +16,7 @@ export function Button({ id, size = 'md', children, className, ...props }: Props
 			id={id}
 			className={cn(
 				sizeClasses[size],
-				'bg-accent-2/70 backdrop-blur-xs backdrop-brightness-80 text-text border-border shadow-accent-2 cursor-pointer rounded border text-lg font-semibold hover:shadow disabled:cursor-not-allowed disabled:opacity-90',
+				'bg-accent-2 text-text border-border shadow-accent-2 not-disabled:hover:scale-105 not-disabled:hover:shadow cursor-pointer rounded border text-lg font-semibold transition-all duration-200 disabled:cursor-not-allowed disabled:opacity-90',
 				className,
 			)}
 			{...props}
