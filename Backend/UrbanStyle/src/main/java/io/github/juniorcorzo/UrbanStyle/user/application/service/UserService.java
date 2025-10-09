@@ -2,7 +2,6 @@ package io.github.juniorcorzo.UrbanStyle.user.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.common.domain.enums.DocumentsName;
 import io.github.juniorcorzo.UrbanStyle.common.domain.enums.Roles;
-import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.DeleteDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.DocumentNotFound;
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.FieldExists;
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.SaveDocumentFailed;
@@ -30,11 +29,6 @@ public class UserService {
     private final UserAvatarService userAvatarService;
     private final UserPasswordService userPasswordService;
     private final DataConsentService dataConsentService;
-
-    public ResponseDTO<UserDTO> getUserByCredentials(String email) {
-        UserEntity userResponse = this.userRepository.findUserByEmail(email);
-        return new ResponseDTO<>(HttpStatus.OK, List.of(userMapper.toDto(userResponse)), "User found");
-    }
 
     public ResponseDTO<UserDTO> getUserById(String id) {
         UserEntity userResponse = this.userRepository.findById(id)

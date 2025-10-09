@@ -9,10 +9,13 @@ import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.MissingClaimExc
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.TokenExpiredException;
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.TokenGenerationException;
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.TokenValidationException;
+import io.github.juniorcorzo.UrbanStyle.common.infrastructure.adapter.mapper.UserMapper;
+import io.github.juniorcorzo.UrbanStyle.user.domain.repository.UserRepository;
 import io.github.juniorcorzo.UrbanStyle.user.infrastructure.adapter.dto.common.UserDTO;
-import io.github.juniorcorzo.UrbanStyle.user.application.service.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
@@ -21,15 +24,16 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Optional;
 
+
 @Service
+@RequiredArgsConstructor
 public class TokenService {
-    private final UserService userService;
+    private final UserRepository userRepository;
+    private final UserMapper userMapper;
     @Value("${SECRET_KEY}")
+    @SuppressWarnings("unused")
     private String SECRET_KEY;
 
-    public TokenService(UserService userService) {
-        this.userService = userService;
-    }
 
     private static JWTClaimsSet getJwtClaimsSet(UserDTO user) {
         Instant now = Instant.now();
@@ -44,7 +48,13 @@ public class TokenService {
     }
 
     public String generateToken(Authentication authentication) {
-            UserDTO user = this.userService.getUserByCredentials(authentication.getName()).data().getFirst();
+        final UserDTO user = userMapper.toDto(
+                this.userRepository
+                        .findUserByEmail(authentication.getName())
+                        .orElseThrow(() -> new UsernameNotFoundException(
+                                String.format("User with email %s not found", authentication.getName()))
+                        )
+        );
         return this.generateToken(user);
     }
 

@@ -22,7 +22,7 @@ public interface UserRepository extends MongoRepository<UserEntity, String> {
      * @return The {@link UserEntity} found.
      */
     @Query("{ 'email': ?0 }")
-    UserEntity findUserByEmail(String email);
+    Optional<UserEntity> findUserByEmail(String email);
 
     /**
      * Finds the password for a given user ID.

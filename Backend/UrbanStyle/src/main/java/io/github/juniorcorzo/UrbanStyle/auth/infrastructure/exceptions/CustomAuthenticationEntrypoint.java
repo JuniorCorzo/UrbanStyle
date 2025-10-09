@@ -11,6 +11,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @Component
 @RequiredArgsConstructor
@@ -22,10 +23,14 @@ public class CustomAuthenticationEntrypoint implements AuthenticationEntryPoint 
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         response.setContentType("application/json");
 
-        this.objectMapper.writeValue(response.getOutputStream(), ResponseError.builder()
+        final ResponseError responseError = ResponseError.builder()
                 .status(HttpStatus.UNAUTHORIZED)
                 .error(authException.getMessage())
-                .build()
-        );
+                .build();
+
+        final String jsonResponse = this.objectMapper.writeValueAsString(responseError);
+        PrintWriter printStream = response.getWriter();
+        printStream.write(jsonResponse);
+        printStream.flush();
     }
 }
