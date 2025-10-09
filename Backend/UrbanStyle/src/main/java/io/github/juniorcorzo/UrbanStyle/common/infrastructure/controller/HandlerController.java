@@ -11,6 +11,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -153,6 +154,13 @@ public class HandlerController {
 
     @ExceptionHandler(NotFoundTermsValid.class)
     public ResponseEntity<ResponseError> handleNotFoundTermsValid(NotFoundTermsValid e) {
+        return new ResponseEntity<>(new ResponseError(
+                HttpStatus.NOT_FOUND,
+                e.getMessage()
+        ), HttpStatus.NOT_FOUND);
+    }
+    @ExceptionHandler(UsernameNotFoundException.class)
+    public ResponseEntity<ResponseError> handleUsernameNotFound(UsernameNotFoundException e) {
         return new ResponseEntity<>(new ResponseError(
                 HttpStatus.NOT_FOUND,
                 e.getMessage()

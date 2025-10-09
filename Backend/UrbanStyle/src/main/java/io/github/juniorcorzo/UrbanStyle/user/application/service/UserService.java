@@ -2,7 +2,6 @@ package io.github.juniorcorzo.UrbanStyle.user.application.service;
 
 import io.github.juniorcorzo.UrbanStyle.common.domain.enums.DocumentsName;
 import io.github.juniorcorzo.UrbanStyle.common.domain.enums.Roles;
-import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.DeleteDocumentFailed;
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.DocumentNotFound;
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.FieldExists;
 import io.github.juniorcorzo.UrbanStyle.common.domain.exceptions.SaveDocumentFailed;
@@ -30,11 +29,6 @@ public class UserService {
     private final UserAvatarService userAvatarService;
     private final UserPasswordService userPasswordService;
     private final DataConsentService dataConsentService;
-
-    public ResponseDTO<UserDTO> getUserByCredentials(String email) {
-        UserEntity userResponse = this.userRepository.findUserByEmail(email);
-        return new ResponseDTO<>(HttpStatus.OK, List.of(userMapper.toDto(userResponse)), "User found");
-    }
 
     public ResponseDTO<UserDTO> getUserById(String id) {
         UserEntity userResponse = this.userRepository.findById(id)
@@ -120,21 +114,6 @@ public class UserService {
     public ResponseDTO<UserDTO> changeUserRole(String id) {
         this.changeStatus(id, Roles.ROLE_USER);
         return new ResponseDTO<>(HttpStatus.OK, this.getUserById(id).data(), "User role updated");
-    }
-
-    public ResponseDTO<UserDTO> deleteUser(String id) {
-        try {
-            UserEntity userEntity = this.userRepository.findById(id)
-                    .orElseThrow(() -> new DocumentNotFound(DocumentsName.USER, id));
-
-            this.userAvatarService.deleteAvatar(id);
-            this.userRepository.delete(userEntity);
-
-            return new ResponseDTO<>(HttpStatus.OK, List.of(userMapper.toDto(userEntity)), "User deleted");
-        } catch (Exception e) {
-            log.error("Error deleting user: {}", e.getMessage(), e);
-            throw new DeleteDocumentFailed(DocumentsName.USER, id);
-        }
     }
 
     private void changeStatus(String id, Roles role) {

@@ -1,10 +1,9 @@
 import { showErrorOnlyField } from '@/lib/showErrorMessages'
 import { debounce } from '@/lib/utils/debounce'
-import { changePasswordScheme, type ChangePasswordValid } from '@/lib/validations/user.validations'
+import { changePasswordScheme } from '@/lib/validations/user.validations'
 import { UserService } from '@/service/user.service'
 import { userStore } from '@/state/user.state'
 import { useStore } from '@nanostores/react'
-import { useState, useCallback, type ChangeEvent, useRef } from 'react'
 import { useFormHandler } from '@/components/react/hooks/useFormHandler'
 import ToasterManager from '@/lib/utils/ToasterManager'
 import { ResponseException } from '@/exceptions/response.exception'
@@ -15,14 +14,19 @@ type ChangePassword = {
 	confirmPassword: string
 }
 
+/**
+ * Custom hook to manage the change password form.
+ * @returns An object with event handlers and form state.
+ */
 export const useChangePassword = () => {
 	const user = useStore(userStore)
-	const [isPassword, setPassword] = useState<boolean>()
 	const {
 		formState: passwordValues,
 		handleInputChange,
 		canSubmit,
-	} = useFormHandler<ChangePassword>()
+	} = useFormHandler<ChangePassword>({
+		validate: changePasswordScheme,
+	})
 
 	const handleChangePassword = (userId: string, oldPassword: string, newPassword: string) =>
 		UserService.changePassword(userId, oldPassword, newPassword).then((response) => {
@@ -57,12 +61,10 @@ export const useChangePassword = () => {
 
 				throw new ResponseException(response.error)
 			}
-			setPassword(response.data)
 		})
 	}
 
 	return {
-		isPassword,
 		handleInputChange,
 		handleValidatePassword,
 		canSubmit,

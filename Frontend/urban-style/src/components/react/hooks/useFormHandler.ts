@@ -1,11 +1,15 @@
 import type { SelectOptions } from '@/interface/form-mediator.interface'
 import { showErrorOnlyField } from '@/lib/showErrorMessages'
-import { useEffect, useRef, useState, type ChangeEvent } from 'react'
-import type { ZodObject, ZodRawShape } from 'zod'
+import { useEffect, useState, type ChangeEvent } from 'react'
+import type { ZodEffects, ZodObject, ZodRawShape } from 'zod'
 
+/**
+ * @property {T} [initializerData] - Initial data for the form.
+ * @property {ZodObject<ZodRawShape> | ZodEffects<ZodObject<ZodRawShape>>} [validate] - A Zod schema or a Zod schema with effects to validate the form.
+ */
 type useFormHandlerProps<T> = {
 	initializerData?: T
-	validate?: ZodObject<ZodRawShape>
+	validate?: ZodObject<ZodRawShape> | ZodEffects<ZodObject<ZodRawShape>>
 }
 
 export const useFormHandler = <T>(initial?: useFormHandlerProps<T>) => {

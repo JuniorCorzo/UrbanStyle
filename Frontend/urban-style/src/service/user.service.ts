@@ -107,6 +107,28 @@ async function changePassword(
 	return Success(responseData.message)
 }
 
+/**
+ * Deletes a user account.
+ * @param userId - The ID of the user to delete.
+ * @param reason - The reason for deleting the account.
+ * @returns A promise that resolves with a success message or an error message.
+ * @throws {ResponseException} If the request fails.
+ */
+async function deleteUser(userId: string, reason: string): Promise<Result<string, ErrorMessage>> {
+	const response = await axios.delete<Response<never>>(
+		`${PUBLIC_API_URL}/users/delete?user-id=${userId}&reason=${reason}`,
+		{ withCredentials: true },
+	)
+	const { status, data: responseData } = response
+
+	if (status !== 200) {
+		const { message } = obtainsError(response)
+		return Err(message)
+	}
+
+	return Success(responseData.message)
+}
+
 async function deleteAvatar(userId: string): Promise<Result<string, ErrorMessage>> {
 	const response = await axios.delete<Response<never>>(
 		`${PUBLIC_API_URL}/users/delete-avatar?user-id=${userId}`,
@@ -131,5 +153,6 @@ export const UserService = {
 	validatePassword,
 	changePassword,
 	changeAvatar,
+	deleteUser,
 	deleteAvatar,
 }
